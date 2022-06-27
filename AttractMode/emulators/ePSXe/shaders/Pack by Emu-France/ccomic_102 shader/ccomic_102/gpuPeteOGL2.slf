@@ -1,0 +1,39 @@
+uniform sampler2D OGL2Texture;
+
+void main(){
+	vec3  c,h,o,c0,c1,c2,c3,c4,c5,c6,c7,c8;
+	float i,k;
+	
+	c4=texture2D(OGL2Texture,gl_TexCoord[0].xy).rgb;
+	c3=texture2D(OGL2Texture,gl_TexCoord[1].xy).rgb;
+	c5=texture2D(OGL2Texture,gl_TexCoord[1].zw).rgb;
+	c1=texture2D(OGL2Texture,gl_TexCoord[2].xy).rgb;
+	c7=texture2D(OGL2Texture,gl_TexCoord[2].zw).rgb;
+	c0=texture2D(OGL2Texture,gl_TexCoord[3].xy).rgb;
+	c8=texture2D(OGL2Texture,gl_TexCoord[3].zw).rgb;
+	c2=texture2D(OGL2Texture,gl_TexCoord[3].zy).rgb;
+	c6=texture2D(OGL2Texture,gl_TexCoord[3].xw).rgb;
+	
+	k=0.003;
+	h=0.001*o;
+	o=vec3(1.0,1.0,1.0);
+	c0=(h+c0)/(dot(o,c0)+k);
+	c1=(h+c1)/(dot(o,c1)+k);
+	c2=(h+c2)/(dot(o,c2)+k);
+	c3=(h+c3)/(dot(o,c3)+k);
+	c =(h+c4)/(dot(o,c4)+k);
+	c5=(h+c5)/(dot(o,c5)+k);
+	c6=(h+c6)/(dot(o,c6)+k);
+	c7=(h+c7)/(dot(o,c7)+k);
+	c8=(h+c8)/(dot(o,c8)+k);
+	k=0.01;
+	h=c-c0; i =k/(dot(h,h)+k);
+	h=c-c1; i+=k/(dot(h,h)+k);
+	h=c-c2; i+=k/(dot(h,h)+k);
+	h=c-c3; i+=k/(dot(h,h)+k);
+	h=c-c5; i+=k/(dot(h,h)+k);
+	h=c-c6; i+=k/(dot(h,h)+k);
+	h=c-c7; i+=k/(dot(h,h)+k);
+	h=c-c8; i+=k/(dot(h,h)+k);
+	gl_FragColor.rgb=min(o,min(c4+0.2*o,c4+dot(o,c4)*o))*i*0.125;
+}

@@ -1,0 +1,8 @@
+gametitle = Metal Gear Solid 2 - Subsistence
+comment=Cheats
+
+//Bullets Shells
+patch=1,EE,2015E0B8,extended,00000000
+
+//Items Shells
+patch=1,EE,2015E114,extended,00000000

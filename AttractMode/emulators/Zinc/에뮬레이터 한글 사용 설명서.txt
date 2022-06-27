@@ -1,0 +1,119 @@
+에뮬레이터에 사용되는 롬 파일은 시스템 기판 또는 카트리지를 소유하고 있지 않은 사용자는 24시간 안에 
+자신의 컴퓨터에서 파일을 삭제해야합니다. 
+
+에뮬레이터에 사용되는 게임(롬) 파일의 저작권은 해당 제작자 또는 제작사에 있습니다.
+
+에뮬레이터는 프리웨어로 무료로 복제하고 계속 사용할 수 있는 공개 소프트웨어입니다.
+
+
+
+ZiNc(징크)는 캡콤의 아케이드 ZN-1, ZN-2 기판 및 남코 시스템 11, 12, 코나미 GV 기판등을 에뮬레이팅하는 
+윈도우용 에뮬레이터입니다. 현재 1.1이 최종 버전이며 더 이상의 개발은 없습니다.
+
+Zenith(제니스)는 징크를 조금 더 편리하게 사용하기 위한 프런트 엔드입니다.  
+
+남코 시스템 11, 12를 조금 더 원활한 속도로 사용하기 위해 s11player.dll 파일을 교체 업데이트하였습니다. 
+
+제니스를 한글화하였으며.ZincFE 2.2(징크 프론트-엔드) 또한 한글화하여 제니스와 같이 사용할 수 있도록 
+하였습니다.
+
+Zinc trainer 1.1은 치트 트레이너로 원활한 게임을 위해 같이 첨부하였습니다. (치트를 너무 많이 사용하면 
+게임 불감증이 생깁니다.
+
+
+
+ 제니스 설치 및 실행 방법
+ ========================
+
+1. 원하는 곳에 압축을 해제하여 설치를 하십시오.
+
+2. "pr1data.8k" 파일을 복사를 하여 C:\ 드라이브에 붙여 넣기를 합니다.
+   (C:\ 드라이브 루트, 내 컴퓨터를 열고 C:\ 드라이브 들어가서 바로 설치)
+
+※ pr1data.8k를 C:\ 드라이브에 붙여넣기를 하지 않았을 경우 모든 남코 시스템 11, 12
+   게임(예. 철권)이 작동하지 못하고 EXE 오류를 발생합니다.
+
+3. zenith.exe를 클릭하여 실행합니다. 
+
+
+ 키 설정
+ =======
+1. 에뮬레이터를 실행한 후 조정장치 창으로 이동합니다.
+2. 사용자 1 또는 사용자 2를 선택한 후 하단 창에서 변경하고자 하는 키를 더블 클릭 후 사용하고자 하는 키를 
+   누르시면 입력이 됩니다.
+3. 고정 키 또한 2에서 설명한 방법으로 변경하시면 됩니다. 
+
+
+ 비디오 설정
+ ===========
+3D인터페이스 : OpenGL (오픈 GL) 
+               Direct3D (다이렉트 3D)
+               Software (소프트웨어)
+
+               위 3개의 플러그인중 사용하고자 하는 그래픽 플러그인을 선택하시면 됩니다.
+
+ZincFE 2.2(징크 프론트-엔드)는 다이렉트 3D만 사용합니다.
+
+Software(소프트웨어) 설정시 우측 하단에 레지스트리 설정을 체크하시면 레지스트리 고급 설정 버튼이 나오며 
+버튼을 누르시면 사용자 고급 설정 창이 나옵니다. 
+사용자가 임의적으로 플러그인을 조정할 수 있습니다.  
+
+
+ ZeNith 1.0.1.0
+ ==============
+
+ ZeNith 홈 페이지 : http://www.sovmax.narod.ru/zenith/index-en.html 
+
+- ZeNith 1.0.1.0 (C) 2007 Sannikov M.A. - http://www.sovmax.narod.ru
+- ZiNc 1.1 (C) 1997-2005 Drunken Muppets - http://www.emuhype.com
+  오리지널 ZiNc 에뮬레이터 (C) 1997 The_Author & DynaChicken
+  징크 1.0 시리즈 기능향상 (C) 2005 R. Belmont & smf
+  ZiNc OpenGL/D3D 렌더러 1.2 (C) 2004 Pete Bernert & Lewpy
+  P.E.Op.S. 소프트웨어 렌더러 1.17 (C) 2005 P.E.Op.S. Team
+  SPU 사운드 플러그-인 (C) Pete Bernert - http://www.pbernert.com
+  시스템 11 사운드 dll (C) R. Belmont - http://rbelmont.mameworld.info
+  Winterblast's 입력 플러그-인 1.6 (C) 2004 Winterblast
+- 아케이드 히스토리 정보 - http://caesar.logiqx.com
+- 기술 지원 - http://emu-russia.km.ru
+
+ 주의사항
+ ========
+
+ 1. The games on Konami GV System hardware do not work together
+    with Winterblast's input plug-in 1.6. So they are used
+    default controller plug-in from ZiNc 1.1 distributive with
+    the appropriate controls configuration
+
+ 2. Advanced video settings for P.E.Op.S. software renderer are
+    stored in Windows registry. So it is necessary to remember
+    what if you use this plug-in with others module based emulators
+    Sony PlayStation (for example, ePSXe), changing settings by
+    ZeNith also change they in the others emulators and vice versa
+
+ 3. If game is not running press Ctrl+F11, in this case in the
+    root folder of emulator will appear file zenith.bat. After
+    starting it you can see messages of ZiNc console and to
+    determine the reason of the problem
+
+ 4. ZeNith distributive included the files of others developers:
+    - ZiNc OpenGL and D3D renderers 1.2 from htp://emuhype.com
+    - P.E.Op.S. Software renderer 1.17 from
+                             https://sourceforge.net/projects/peops
+    - Winterblast's input plug-in 1.6 from http://emulator-zone.com
+    - System 11 Player version 03/03/06 from Official ZiNc Forum
+
+
+
+한글화된 에뮬레이터는  Gameplanet 사이트 (http://www.gameplanet.co.kr) 이외의 장소에 업로드하실 경우 
+출처를 밝히시기 바랍니다.
+
+한글화된 에뮬레이터를 수정 및 무단 전제하는 것을 금지합니다.
+
+한글화 : 2007년 8월 에뮬레이터 한글화 사이트 C.E. 朴 正旭 ®MrGiKILL
+
+
+
+
+
+
+

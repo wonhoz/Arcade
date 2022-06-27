@@ -1,0 +1,20 @@
+// "Broken glass": GLslang vertex shader by Pete Bernert
+//
+// Nothing special here. Don't forget to pass the texture coords of the TMU0-TMU8
+// units to the fragment shader, though :)
+// We are using three textures (main display in TMU0 and two custom textures in 
+// TMU1 and TMU2) here.
+
+uniform vec4 OGL2Param;
+uniform vec4 OGL2Size;
+
+void main()
+{
+ float temp;
+
+ gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+ gl_TexCoord[0] = gl_MultiTexCoord0;
+ gl_TexCoord[1] = gl_MultiTexCoord1;
+ gl_TexCoord[2] = gl_MultiTexCoord2;
+}
+

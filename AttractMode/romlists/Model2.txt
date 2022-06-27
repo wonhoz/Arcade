@@ -1,0 +1,26 @@
+#Name;SEGA Model 2;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
+gunblade;건블레이드 뉴욕;Model2;;1995;SEGA;Gun Shooting;;;;;;;;;;
+dynamcop;다이나마이트 캅;Model2;;1998;SEGA;Arcade;;;;;;;;;;
+doa;데드 오어 얼라이브;Model2;;1996;Tecmo;VS Fighting;;;;;;;;;;
+daytona;데이토나USA;Model2;;1993;SEGA;Racing;;;;;;;;;;
+daytonagtx;데이토나USA: GTX2004;Model2;;1993;SEGA;Racing;;;;;;;;;;
+lastbrnx;라스트 브롱크스;Model2;;1996;SEGA;VS Fighting;;;;;;;;;;
+rchase2;레일 체이스 2;Model2;;1995;SEGA;3D Action;;;;;;;;;;
+motoraid;모토 레이드;Model2;;1997;SEGA;Racing;;;;;;;;;;
+vcop2;버추어 캅 2;Model2;;1995;SEGA;Gun Shooting;;;;;;;;;;
+vstriker;버추어 스트라이커;Model2;;1994;SEGA;Sports;;;;;;;;;;
+von;버추얼 온 사이버트루퍼스;Model2;;1996;SEGA;VS Fighting;;;;;;;;;;
+vf2;버추어 파이터 2;Model2;;1995;SEGA;VS Fighting;;;;;;;;;;
+bel;비하인드 에너미라인;Model2;;1998;SEGA;Gun Shooting;;;;;;;;;;
+srallyc;세가 랠리 챔피언쉽;Model2;;1995;SEGA;Racing;;;;;;;;;;
+stcc;세가 투어링 카 챔피언쉽;Model2;;1996;SEGA;Racing;;;;;;;;;;
+sfight;소닉 더 파이터즈;Model2;;1996;SEGA;VS Fighting;;;;;;;;;;
+schamp;소닉 챔피언쉽;Model2;;1996;SEGA;VS Fighting;;;;;;;;;;
+skytargt;스카이 타겟;Model2;;1995;SEGA;Shooting;;;;;;;;;;
+indy500;인디애나폴리스 500;Model2;;1995;SEGA;Racing;;;;;;;;;;
+zerogun;제로 건너;Model2;;1997;Psikyo;Shooting;;;;;;;;;;
+fvipers;파이팅 바이퍼즈;Model2;;1995;SEGA;VS Fighting;;;;;;;;;;
+pltkids;파일럿 키즈;Model2;;1998;Psikyo;Shooting;;;;;;;;;;
+hotd;하우스 오브 더 데드;Model2;;1997;SEGA;Gun Shooting;;;;;;;;;;
+
+

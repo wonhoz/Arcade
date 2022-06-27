@@ -1,0 +1,155 @@
+/*
+   Hyllian's 5xBR v3.7a Shader
+   
+   Copyright (C) 2011 Hyllian/Jararaca - sergiogdb@gmail.com
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License
+   as published by the Free Software Foundation; either version 2
+   of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+*/
+#version 120
+uniform sampler2D tex0;
+uniform vec4 OGL2Param;
+uniform vec4 OGL2Size;
+uniform vec4 OGL2InvSize;
+
+float CL(vec3 e1)
+{
+return dot(vec3(3.0,4.0,2.0),e1);
+}
+
+vec4 CL4(mat4x3 e1)
+{
+return vec3(3.0,4.0,2.0)*e1;
+}
+
+const float coef = 2.0;
+
+vec4 MatD(vec4 a, vec4 b)
+{
+a = a-b;
+return a*a;
+}
+
+bvec4 xBR(vec4 e, vec4 c, vec4 g, vec4 i, vec4 h5, vec4 f4, vec4 h, vec4 f, vec4 d, vec4 i5, vec4 i4, vec4 b)
+{
+vec4 weighted_distance = MatD(e,c)+MatD(e,g)+MatD(i,h5)+MatD(i,f4)-MatD(h,d)-MatD(h,i5)-MatD(f,i4)-MatD(f,b)+4.0*(MatD(h,f)-MatD(e,i));
+return lessThan(weighted_distance,vec4(0.0)); 
+}
+
+void main (void)
+{
+vec2 Size = vec2(1024.0,512.0);
+vec2 fp = fract(gl_TexCoord[2].yw*Size);
+
+//    A1 B1 C1
+// A0  A  B  C C4
+// D0  D  E  F F4
+// G0  G  H  I I4
+//    G5 H5 I5
+
+vec3 A1 = texture2D(tex0, gl_TexCoord[0].xw).rgb;
+vec3 B1 = texture2D(tex0, gl_TexCoord[0].yw).rgb;
+vec3 C1 = texture2D(tex0, gl_TexCoord[0].zw).rgb;
+
+vec3 A0 = texture2D(tex0, gl_TexCoord[5].xy).rgb;
+vec3 A  = texture2D(tex0, gl_TexCoord[1].xw).rgb;
+vec3 C  = texture2D(tex0, gl_TexCoord[1].zw).rgb;
+vec3 C4 = texture2D(tex0, gl_TexCoord[6].xy).rgb;
+
+vec3 D0 = texture2D(tex0, gl_TexCoord[5].xz).rgb;
+vec3 F4 = texture2D(tex0, gl_TexCoord[6].xz).rgb;
+
+vec3 G0 = texture2D(tex0, gl_TexCoord[5].xw).rgb;
+vec3 G  = texture2D(tex0, gl_TexCoord[3].xw).rgb;
+vec3 I  = texture2D(tex0, gl_TexCoord[3].zw).rgb;
+vec3 I4 = texture2D(tex0, gl_TexCoord[6].xw).rgb;
+
+vec3 G5 = texture2D(tex0, gl_TexCoord[4].xw).rgb;
+vec3 H5 = texture2D(tex0, gl_TexCoord[4].yw).rgb;
+vec3 I5 = texture2D(tex0, gl_TexCoord[4].zw).rgb;
+
+vec3 B  = texture2D(tex0, gl_TexCoord[1].yw).rgb;
+vec3 D  = texture2D(tex0, gl_TexCoord[2].xw).rgb;
+vec3 E  = texture2D(tex0, gl_TexCoord[2].yw).rgb;
+vec3 F  = texture2D(tex0, gl_TexCoord[2].zw).rgb;
+vec3 H  = texture2D(tex0, gl_TexCoord[3].yw).rgb;
+
+vec4 e = vec4(CL(E)); 
+vec4 b = CL4(mat4x3(B,D,H,F)); 
+vec4 d = b.yzwx; 
+vec4 f = b.wxyz; 
+vec4 h = b.zwxy; 
+vec4 c = CL4(mat4x3(C,A,G,I)); 
+vec4 g = c.zwxy; 
+vec4 i = c.wxyz; 
+
+vec4 i4 = CL4(mat4x3(I4,C1,A0,G5)); 
+vec4 i5 = CL4(mat4x3(I5,C4,A1,G0)); 
+vec4 h5 = CL4(mat4x3(H5,F4,B1,D0)); 
+vec4 f4 = h5.yzwx; 
+
+bvec4 interp_restriction_lv1      = (notEqual(e,f) && notEqual(e,h));
+bvec4 interp_restriction_lv2_left = (notEqual(e,g) && notEqual(d,g));
+bvec4 interp_restriction_lv2_up   = (notEqual(e,c) && notEqual(b,c));
+
+vec4 fg = MatD(f,g);
+vec4 hc = MatD(h,c);
+
+bvec4 edr      = interp_restriction_lv1      && xBR( e, c, g, i, h5, f4, h, f, d, i5, i4, b);
+bvec4 edr_left = interp_restriction_lv2_left && lessThanEqual(coef*fg, hc);
+bvec4 edr_up   = interp_restriction_lv2_up   && greaterThanEqual( fg, coef*hc);
+
+// These inequations define the line below which interpolation occurs.
+
+vec4 Ao = vec4( 1.0,-1.0,-1.0, 1.0)*fp.y;
+vec4 Bo = vec4( 1.0, 1.0,-1.0,-1.0)*fp.x;
+vec4 Co = vec4( 1.5, 0.5,-0.5, 0.5);
+
+vec4 Bx = vec4( 0.5, 2.0,-0.5,-2.0)*fp.x;
+vec4 Cx = vec4( 1.0, 1.0,-0.5, 0.0);
+
+vec4 By = Bx.yxwz;
+vec4 Cy = vec4( 2.0, 0.0,-1.0, 0.5);
+
+bvec4 fx      = greaterThan(Bo+Ao, Co);
+bvec4 fx_left = greaterThan(Bx+Ao, Cx);
+bvec4 fx_up   = greaterThan(By+Ao, Cy);
+
+bvec4 nc = ((fx || fx_left && edr_left || fx_up && edr_up) && edr);
+
+bvec4 px = lessThanEqual(MatD(e,f), MatD(e,h));
+
+if ((nc.x && px.x) || (nc.y && !px.y)) 
+{
+	E = F;
+} 
+else
+if ((nc.y && px.y) || (nc.z && !px.z)) 
+{
+	E = B;
+} 
+else
+if ((nc.z && px.z) || (nc.w && !px.w)) 
+{
+	E = D;
+} 
+else
+if ((nc.w && px.w) || (nc.x && !px.x)) 
+{
+	E = H;
+} 
+ 
+gl_FragColor.rgb = E;
+}

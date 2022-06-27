@@ -1,0 +1,70 @@
+// http://ngemu.com/threads/links-and-guides-to-custom-shaders-for-petes-opengl2-plugin.76098/page-31#post-2424465
+
+uniform vec4 OGL2Param;
+uniform vec4 OGL2Size;
+
+void main()
+{
+
+ gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex ;
+ gl_TexCoord[0] = gl_MultiTexCoord0;
+ float temp;
+
+
+ if(OGL2Param.z==0.0)
+  {
+
+   gl_Position.y = gl_Position.y*  1.155 +0.04;
+   gl_Position.x = gl_Position.x/ (1.155* 5/4) ;
+  }
+
+
+
+ if(OGL2Param.z==1.0)
+  {
+   gl_Position.y = gl_Position.y* 1.155 +0.04;
+   gl_Position.x = gl_Position.x/1.333 ;
+  }
+
+  
+ if(OGL2Param.z==2.0)
+  {
+   gl_Position.y = gl_Position.y*1.155+0.04;
+  }
+
+
+  if(OGL2Param.z==3.0)
+  {
+   gl_Position.y = gl_Position.y*1.155+ 0.04;
+   gl_Position.x = gl_Position*1.155 ;
+  }
+
+
+
+
+ if(OGL2Param.z==4.0)
+  {
+   temp          = gl_Position.x;
+   gl_Position.x = gl_Position.y * (OGL2Size.z * OGL2Size.z) / (OGL2Size.w * OGL2Size.w);
+   gl_Position.y = -temp;
+  }
+
+ if(OGL2Param.z==5.0)
+  {
+   gl_Position.x = -gl_Position.x;
+   gl_Position.y = -gl_Position.y;
+  }
+
+ if(OGL2Param.z==6.0)
+  {
+   temp          = gl_Position.x;
+   gl_Position.x = -gl_Position.y * (OGL2Size.z * OGL2Size.z) / (OGL2Size.w * OGL2Size.w);
+   gl_Position.y = temp;
+  }
+/*
+*/
+
+}   
+  
+
+

@@ -1,0 +1,25 @@
+comment=KOR
+gametitle=Zone of the Enders 2 ANUBIS
+
+//MASTER
+patch=1,EE,F01001C0,word,001A883F
+
+//HP MAX
+patch=1,EE,21FD7A6C,word,0000270F
+
+//HP FULL
+patch=1,EE,21FD7A78,word,0000270F
+
+//SUB MAX
+patch=1,EE,21FD7A84,word,0000270F
+
+//SUB FULL
+patch=1,EE,21FD7A90,word,0000270F
+
+//END ALL CHARACTER
+patch=1,EE,41FD821C,word,000A0001
+patch=1,EE,00000001,word,00000000
+
+//END EX 100%
+patch=1,EE,21FDDE20,word,FFFFFFFF
+patch=1,EE,21FDDF04,word,00000002

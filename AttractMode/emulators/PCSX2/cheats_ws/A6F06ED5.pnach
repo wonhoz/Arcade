@@ -1,0 +1,34 @@
+
+//(PS2) Gundam Musou 2(J).ps2	
+
+//All Missions
+patch=1,EE,201F6540,extended,24020001
+patch=1,EE,201F6548,extended,03E00008
+
+//All Licenses
+patch=1,EE,406924B8,extended,00280014
+patch=1,EE,FFFFFFFF,extended,00000000
+
+//All Characters
+patch=1,EE,406924BC,extended,00280014
+patch=1,EE,FFFFFFFF,extended,00000000
+
+//All Skills
+patch=1,EE,206D2FC8,extended,FFFFFFFF
+patch=1,EE,006D2FCC,extended,000000FF
+
+//Max Level & Max Pilot Point
+patch=1,EE,202A2224,extended,00000000
+
+
+
+
+
+
+
+
+
+
+
+
+

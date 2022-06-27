@@ -1,0 +1,456 @@
+세가 모델 2 에뮬레이터
+by ElSemi
+http://nebula.emulatronia.com
+
+에뮬레이터 한글화 및 사용자 설명서 번역 : 朴 正旭 (닉네임: 몽실이, MrGiKILL) 
+
+
+한글화된 에뮬레이터 배포 사이트
+
+에뮬레이터 한글화 사이트 C.E. : http://cafe.naver.com/emulkr.cafe
+
+게임플래닛 : http://www.gameplanet.co.kr
+
+
+
+★ 주의사항 ★
+
+이 에뮬레이터 및 사용 설명서를 상업적 용도로 사용하시면 저작권법에 적용되어 처벌을 받습니다.
+
+이 에뮬레이터를 불법 개조 또는 변조하지 마십시오.
+
+
+
+☆ 사용 방법 ☆
+
+사용법은 간단합니다. 롬을 선택하면 에뮬레이터가 불러들여 그냥 실행됩니다 :).
+누락된 롬 파일은 콘솔 창에 보고됩니다.
+
+
+롬 디렉토리 구성에 능숙하시면 EMULATOR.INI를 읽어보시고 옵션을 변경하십시오
+
+
+고정된 키:
+
+	PAUSE	- 에뮬레이터를 중지
+		중지하는 동안:
+		ENTER	- 한 프레임씩 이동
+		SPACE	- 중지를 해제하는 동안 화면 고정 (스페이스 바를 누르는 동안 게임 진행)
+
+	SCROLL LOCK - 프레임 제한 On/Off 전환
+	ALT-ENTER - 전체화면으로 전환 (때로는 에뮬레이터가 전체화면에서 돌아오지 않습니다.
+		    ALT-F4를 눌러 창을 원래 해상도로 복귀한 후 닫으시면 됩니다)
+	F9	- 속도 표시 (초당 프레임 수 및 프레임 시간)
+	CTRL-F9 - 더 많은 상태 표시
+	F8	- 렌더링 상태 표시
+	F7	- 타일맵 렌더링 전환 (큰 속도 상승)
+	Keypad+ - 프레임 생략 증가
+	Keypad- - 프레임 생략 감소
+
+게임을 불러들인 후 입력 설정 화면에서 나머지 키 부분을 확인하십시오. (게임->컨트롤러 구성...)
+
+
+※ 게임 실행 전 알아두어야 할 사항 
+
+F2 키 : 테스트 모드 진입 및 테스트 모드에서 시스템 메뉴 입력(Enter)
+F1 키 : 테스트 모드에서 시스템 메뉴 탐색 (이동)  
+
+
+
+★ 알려진 문제점 ★
+
+일반적인 문제점
+특별한 옵션이 없습니다. 그렇다고 망치질하지 마십시오... :)
+때로는 에뮬레이터가 전체화면에서 되돌아가지 않습니다 (해결 방법 : ALT+F4 강제 종료)
+밉맵이 너무 흐릿하게 텍스처을 제공합니다 (잘못된 밉맵 레벨 선택).
+밉맵이 활성화될 때, 당신은 투명한 텍스처의 테두리에 잘못된 색상을 볼 수 있습니다 (실제 색상과 "투명한"색의 혼합).
+
+
+슈퍼 GT 24시
+테스트 모드로 들어가 컨트롤 종류를 설정하거나 페달 컨트롤을 반전해야 합니다.
+
+하우스 오브 더 데드, 건블레드 뉴욕과 비하인드 에너미 라인은 재생하기 전에 총(조준점)을 교정해야 합니다!!
+
+세가 스키 슈퍼 G
+문자가 표시된 뒤, 화면이 전부 흰색(로고가 표시되어야 합니다)으로 나옵니다. 이때, 동전을 삽입하거나 기다리시면 됩니다.
+
+오버 Rev
+데모 모드(오프닝 화면)에서의 자동차는 아주 이상하게 드라이브합니다.
+
+○ 데이토나 USA 초기 실행 방법
+
+게임을 실행한 후 F2 키를 눌러 테스트 방식(MVS 설정)으로 들어 갑니다.
+F1 (시스템 메뉴 탐색) 키를 사용하여 GAME SYSTEM 메뉴로 이동합니다. 
+F2 키를 눌러서 GAME SYSTEM 설정으로 들어갑니다. 
+F1 키로 LINK ID로 이동 후 F2 키를 눌러 SINGLE로 변경을 합니다.
+메뉴 하단에 Exit로 이동 후 F2 키 눌러 종료합니다.
+다음 화면에서도 마찬가지로 EXIT로 이동 후 F2 키를 눌러 종료합니다.
+게임이 재부팅이되고 정상적으로 게임을 즐길 수 있습니다.
+
+위 방법으로 데이토나 USA 시리즈 모두를 같은 설정으로 변경을 하셔야만 정상적으로 게임을 실행하실 수 있습니다.
+
+
+○ 세가 망스TT 슈퍼바이크 초기 실행 방법
+
+처음 게임을 실행하시면 경고 문구만 나오고 게임이 진행되지 않습니다. 
+이때 F2 키를 눌러 테스트 방식으로 들어간 후 메뉴 하단의 EXIT를 선택하여 재부팅하시면 됩니다. 
+(EXIT 하시기 전에 난이도를 조정하는 것도 괜찮습니다.)
+
+
+○ 하우스 오브 더 데드, 버추어 캅 및 비하인드 에너미 라인 등 총을 사용하는 게임에서 조준점이 맞지 않을 경우!!
+
+총의 조준점 (십자선 포인트) 조정 방법
+
+각각의 게임을 실행한 후 F2 키를 눌러 테스트 방식(MVS 설정)으로 들어갑니다.
+F1 (시스템 메뉴 탐색) 키를 사용하여 GUN SETTING 메뉴로 이동합니다.
+F2 키를 눌러 GUN SETTING 설정으로 들어갑니다.
+GUN SETTING 설정 메뉴에서 PLAYER 1 GUN ADJUSTMENT 메뉴로 이동 선택합니다.
+화면 좌측 상단에 십자선 건 마크가 있으며 이 부분을 마우스 또는 총을 이용하여 포인트(조준점)와 일치시킨 후 마우스의 
+좌측 버튼 또는 총의 방아쇠(트리거)를 누릅니다.
+화면 우측 하단에 다시 십자선 건 마크가 한 번 더 나오며 위와 같이 마우스 또는 총을 이용하여 포인트에 일치시킨 후 
+마우스 좌측 버튼 또는 총의 방아쇠(트리거)를 한 번 더 누릅니다.
+잠시 기다리시면 하얀색 화면으로 전환되며 전환 후 F2 키를 누릅니다.
+전환된 메뉴에서 EXIT로 이동 후 F2 키로 설정을 종료하시면 게임이 재부팅됩니다.
+이와 같은 방법으로 건 포인트(조준점)을 수정해 주시면 됩니다. 
+
+(게임에 사용되는 피의 색상도 위와 비슷한 방식으로 설정이 가능하며 테스트 모드(MVS 설정)을 읽어보시고 조정하시기 바랍니다)
+
+
+○ 와이드 화면 출력을 위한 기본 설정
+
+1. EMULATOR.INI 파일을 메모장으로 열어서 다음 항목들을 수정한 후 저장하시면 됩니다.
+ 
+※ 주의 : 아래 수정은 예시이며 사용중인 모니터의 해상도가 가로 1680, 세로 1050, 화면비가 16:10인 경우입니다.
+          수정하시기 전 현재 사용중인 모니터의 해상도를 확인하신 후 수정해 주십시오.
+
+   <만일 게임 실행시 화면이 끊어져 보인다면 싱크를 맞추기 위해 ForceSync 옵션을 1로 설정하십시오.>
+
+            .....
+
+         ForceSync=1
+
+            .....
+
+   <전체화면으로 실행(Alt + Enter)시 출력할 모니터의 해상도를 설정해 주십시오.>
+
+    단, 강제로 크기를 맞추는 부분이므로 성능이 낮은 컴퓨터에서는 느려 질 수도 있습니다.
+
+              .....
+
+         FullScreenWidth=1680
+         FullScreenHeight=1050
+
+              .....
+
+   <FullScreenWidth 및 FullsScreenHeight 변경 부분을 실제 에뮬 상에 적용>
+
+    FullScreenWidth 및 FullScreenHeight의 크기를 설정하셨으면 에뮬레이터 메뉴에서 비디오 -> 전체화면 해상도 ->
+
+    사용자 지정(EMULATOR.ini에 설정)을 선택하면 적용됩니다.
+
+
+   <창 방식에서 와이드 화면 형태로 출력하기 위한 환경설정>
+
+    이 선택사항을 반드시 수정해 주셔야 lua 파일에 설정한 대로 와이드 화면 방식이 작동하게 됩니다.
+
+    전체화면 해상도 설정시와 마찬가지로 현재 사용중인 모니터의 화면비율(16:9, 16:10 등...)을 확인한 후 설정해 주십시오.
+
+        WideScreenWindow=2           ;Set widescreen in windows mode: 0 - 4:3, 1 - 16:9, 2 - 16:10
+
+     ※ FSAA=1			     ;Direct3D에서 전체화면 안티 앨리어싱을 활성화합니다. (그래픽 성능 향상)
+
+
+2. 각 게임을 와이드 화면에 맞게 lua 파일을 메모장으로 열어서 다음 항목을 수정 또는 추가한 후 저장하시면 됩니다.
+
+※ 주의 : script 폴더에 들어가 보시면 현제 데이토나 USA(DAYTONA USA) 및 세가 랠리 챔피언쉽(SEGA RALLY HAMPIONSHIP) 게임만 
+          lua 파일이 있습니다. 그러므로 나머지 게임들은 직접 lua 파일을 만들어 줘야 합니다.
+          그리고 모든 게임은 전부 완벽하게 와이드 해상도로 출력되지 않습니다. 일정부분이 살짝 어긋나는 게임도 있습니다.
+          데이토나 USA(DAYTONA USA) 및 세가 랠리 챔피언쉽(SEGA RALLY HAMPIONSHIP)의 lua 파일 이름을 적용하고자 하는 게임 
+          이름으로 수정하신 뒤 사용하셔도 됩니다. 
+          
+(lua 파일을 게임마다 하나 하나 수정하여 만들지 마시고 하나만 수정하여 만든 뒤 lua 파일 이름만 변경하시고 적용하시면 됩니다)
+
+
+  ●예 : Virtual Fighter 2 (2.1버젼)의 롬파일명은 vf2.zip 이므로 같은 이름의 vf2.lua 파일이 필요합니다.
+
+         메모장을 실행하시고 아래 코드를 붙여 넣으신후 Script 폴더에 vf2.lua 라는 이름으로 저장합니다.
+
+function Frame()
+    Model2_SetWideScreen(1)    -- 와이드 화면으로 설정 
+    Model2_SetStretchAHigh(1)  -- A화면 윗부분 늘리기 설정
+    Model2_SetStretchALow(1)   -- A화면 아랫부분 늘리기 설정
+    Model2_SetStretchBHigh(1)  -- B화면 윗부분 늘리기 설정
+    Model2_SetStretchBLow(1)   -- B화면 아랫부분 늘리기 설정
+end
+ 
+
+  ● 위에 처럼 모든 화면을 늘린 이유는 어떠한 상황에서 어떠한 화면이 사용될지 알 수가 없기 때문입니다.
+
+     MODELER의 모든 게임이 3D화면(움직이는 캐릭터 3D 배경등...)과 2D화면(타이틀화면, 글자, 멀리 보이는 배경등...)을 한 화면에
+
+     동시에 사용하기 때문에 어느 한부분이라로 일치시켜 주지 않으면 화면에 오류가 발생합니다.
+
+     ()안에 1은 화면 늘리기를 사용한다는 표시하며 (0)으로 표시할 경우 늘이기를 사용하지 않음으로 설정하는 것입니다. 
+
+
+
+네트워크
+
+Model 2 network is designed as a ring linking all games together. In order to use it, you must properly emulate
+the ring with your machines running the emulator. The original games are designed to run in a high speed, low latency,
+no packet drop, optic fiber network, so it's very likely it won't work over internet. It works fine on LAN.
+To configure the network, create a m2network.ini file like this in the same directory where emulator.ini is:
+
+
+[Network]
+RxPort=1978
+NextIP=xxx.xxx.xxx.xxx
+NextPort=1978
+
+
+where:
+RxPort is the port where your machine is listening for packets
+NextIP is the IP of the next machine in the ring
+NextPort is the port where the next machine is listening for packets
+
+Remember to setup them so they make a ring. For example, for 3 computers connected
+
+Computer1 (192.168.1.1): RxPort=1978	NextIP=192.168.1.2 	NextPort=1978
+Computer2 (192.168.1.2): RxPort=1978	NextIP=192.168.1.3	NextPort=1978
+Computer3 (192.168.1.3): RxPort=1978	NextIP=192.168.1.1	NextPort=1978
+
+If you want to run several emulator instances in the same machine, you must use different
+RxPorts for each instance.
+
+Once the network is setup, enter test mode in each emulator and set one as master and the rest as
+slaves (some games also allow you to select Relay mode that is like a live tv show of the race :) )
+
+When running with network enabled, it's very likely that Windows or your firewall will warn about
+the emulator trying to access the network. You must allow it (or open these ports in your firewalls) or
+the network won't run.
+
+
+--- 연혁 ---
+v1.1a
+- Added back the game options that were removed in the previous version due to compilation issues (Cheats & options, dump texture cache, reload LUA script)
+- Fixed texture replacement that was also removed.
+- Diferent alpha filtering code that should improve the extra lines in some textures.
+
+v1.1
+- Fixed sound output only outputting mono audio
+- Added customizable pixel shader for texture replacement (see model2lua.txt)
+- Fixed Emulator->Exit not saving configuration
+- The emulator will now try to use pixel shader 2.0 when pixel shader 3.0 is unavailable
+- Added Full screen antialiasing (fsaa=1 in emulator.ini)
+- Fixed some 3D errors in dynamite cop causing low res textures to be used
+- Fixed texture replacement when two textures share the same tag data
+
+
+v1.0
+- Finally fixed VF2 hair problems, now all graphics are correct
+- Added LUA script support for options, cheats and other uses (check model2lua.txt in SCRIPTS folder)
+- Added texture replacement support (check model2lua.txt in SCRIPTS folder)
+- Added widescreen support (needs per-game lua scripts to know when to enable it). Requires a wide
+fullscreen resolution or WideScreenWindow set in emulator.ini
+- Fixed texture border detection for textures that caused wrong colors & pixelation on borders
+- Simplified pixel shaders (half the texture fetches)
+- Improved House of the dead FM sound
+- Fixed VF2 wrong sound speeds
+- Fixed background distortion on Dural stage in VF2
+- Added STCC Euro
+- Added Sonic the fighters.
+- Fixed Virtual On missing background color on title screen
+- Rewritten SCSP code for improved accuracy
+- Fixed ATI video card gfx problems
+- Fixed audio stuttering on some windows 7 machines
+- Added Sega Rally Championship rev B
+
+
+v0.9
+Lots of changes in this version:
+- Fixed TGP emulation bugs and added missing opcodes. Virtua Fighter 2 and Virtua Cop 2 are now
+playable. There is still a bug with VF2 hair/body collisions, probably another TGP bug, but it's
+quite hard to find...
+- Fixed I960 bug that caused daytona invisible walls/holes in the road.
+- Fixed timer bug that caused missing hair in Fighting vipers, tails in sonic and slow cars in 
+Sega Rally (although they still don't work properly).
+- Added support for "return to neutral". Enable it with HoldGears=1 option in emulator.ini. This
+setting will cause the emu to return to neutral when no gear button is pressed.
+- Redone rasterizer color decoding and texture mapping. Now it works the same way the real hardware
+does, performing all the same table lookups and calculations, so color should be accurate now. The 
+color decoding is now done at pixel shader level so you'll need a PS 2.0 capable video card in order
+to run the emulator now.
+- Fixed white borders in some transparent textures.
+- Redone texture caching code. Improved dirty texture detection. Fixes wrong textures in some
+games when a new texture overlaps partially with an existing one.
+- Changed ManxTT sound roms to the Twin ones. The previous romset was using the Deluxe ones that
+have 2 sound boards. Fixes the "japanese speech when braking" bug :).Set the machine to Twin.
+- Added 2 mice support for shooting games. Enable it with RawInput=1 in emulator.ini. Read some
+other options there to tell the emu how to map a mouse to a player. When using RawInput the mouse
+will be locked to the emulator window. In order to switch to another window, either press Alt to
+bring the menu and unlock the mouse or use Alt-Tab to switch to another application.
+- Fixed Alt key not activating the window menu.
+- Fixed MB86235 bug when handling denormalized numbers that caused top skater and overrev lock the
+emu sometimes.
+- Fixed corrupt textures sometimes when loading a savestate
+- Fixed frameskipping bug that caused some data not being updated in the TGP memory when 
+frameskipping (daytona windows not updating windows after entering/leaving the tunnel)
+- Added an option to hide the crosshair in shooting games (DrawCross=0 in emulator.ini)
+- Fixed Daytona to the maxx rom loading that caused wrong and missing graphics.
+- Improved FM emulation support to the SCSP for some HOTD tunes requiring it.
+- Fixed various bugs in the new MultiPCM sound emulation, causing some wrong loops and sounds.
+- Fixed meshed transparencies size. Now they will scale to the selected resolution.
+- Fixed specular highlights calculation.
+- Added Daytona USA '93 edition and Daytona USA: GTX 2004.
+- Added Rail Chase 2
+- Added Virtua Cop 2
+- Added Virtua Fighter 2, Rev A, Rev B and 2.1
+- Added Sega Water Ski. The current sound rom dump seems to be bad so the game will run without
+sound. This game will start in Japan region mode. To change the region, enter Test menu (F2) and
+press the sequence up,up,down,down,service (f1),test (f2)
+- Added Indianapolis 500 Rev A
+- Changed romsets to match MAME as much as possible.
+
+
+v0.8a
+- Fixed missing trigger buttons in gun games
+- Fixed desert tank locked into test mode
+- Improved main cpu/sound cpu sync in Model2 Original games.
+
+v0.8
+
+- Rewritten the MultiPCM sound chip emulation. It fixes Original Model2 games sounds and music.
+- Fixed eye paremeters being read as unsigned by the display list parser, causing bad geometry
+in daytona 4 players attract and sega rally 2 players attract.
+- Fixed network board detection for sgt24h and overrev. Now you don't need to enable network to
+have them boot.
+- Adjusted daytona steering limits to the real machine limits (according to the service manual). It should
+have a more accurate handling now.
+- Added force feedback for car driving games. You need to enable it in the .ini using the 
+option EnableFF=1 in the Input section. You can tweak more force parameters in that section. Also some
+games only enable the force feedback if the cabinet type is set to Deluxe in the test mode.
+- Added XInput support. You can enable XInput support in the .ini in the Input section. XInput allows direct
+access to XBox360 compatible controllers for vibration (they don't support vibration through DirectInput).
+Keep in mind that the windows XInput libraries only support vibration force feedback so an XBox360 driving
+controller won't have working force effects.
+- Added optional meshed polygons for translucency (like the hardware does). Enable it with
+MeshTransparency=1 in the ini. This option requires a Pixel Shader 3 capable videocard.
+- Fixed HOTD rom loading that caused missing tilemap graphics (how to play, map on gameover).
+- Added preliminary savestates support. The sound engine state is not being saved yet. I've added this so I can
+ask for states to try to fix the invisible walls problem in daytona.
+
+
+v0.7a
+
+Fixed network code not fully working (I accidentally left a part disabled in the last build).
+Improved daytona video & sound sync
+
+v0.7
+
+More accurate emulation of some TGP by using the data tables from the mainboard. You'll need these
+table roms in Model2.zip or inside the game zip. Thanks to Peabo for the donation of a Daytona board
+that helped to understand how they worked. This has fixed most of the bugs in daytona usa (reverse and most
+invisble wall hits) and sega rally (automatic transmission).
+Improved color table decoding that gives more bright colors for some games.
+Improved SCSP timing. It should be more accurate and musics should not sound out of sync anymore. As a 
+bonus feature I've left in a debug sound player that allows you to load a SSF (Saturn Sound Format) file
+for playing. To use it, load a game using SCSP (model 2a,b or c) and enter test mode (so it doesn't send
+sound commands) then press LeftControl+F5 and choose the ssf file to play.
+Improved clipping. By moving to vertex/pixel shaders I've got rid of all the clipping issues that happened
+with ATI video cards and recent NVIDIA ones. Remember to remove set SoftwareVertexProcessing to 0. You'll need
+a pixel shader 1.1 and vertex shader 1.1 capable card. It's the lowest shader version so any video should work. As
+a side effect of this change, there is only a geometrizer now, so the Geometrizer opion in the ini file is not used.
+Fixed problems with textures ending in the lowest line of the texture sheet not being uploaded to direct3d (sega
+rally black background in 2nd stage and topskater missing floors).
+Added Wave Runner (Model 2C)
+Added support for direct3d automimpap generation (see emulator.ini AutoMip option)
+Added network emulation (see NETWORK section below)
+
+
+v0.6
+So many changes that I can't remember...Lighting fixes, control fixes, sound fixes...
+ManxTT is working, but sound is broken.
+Merged some features from the cps3 emu (vsync, custom fullscreen res,...)
+
+
+v0.5a
+
+This is a small bugfix release:
+Fixed (hopefully at last) the analog wraparound bug.
+Fixed wrong colour table translation in vcop madium and expert levels.
+
+Added a couple of useful features:
+Launch game from commandline (just add the driver name. ex: Emulator.exe stcc)
+Auto-switch to fullscreen after game loading (the option is in the Video menu)
+
+
+v0.5
+
+This release fixes several playability bugs in Daytona USA (analog controls
+wraparound and windows disappearing when going to fullscreen) and adds a new
+playable game: Motor Raid.
+
+It also contains a modified color lookup table processing that improves the
+colors in the original model 2 games (daytona, vcop and dtank).
+
+The emulator now includes a nice icon and background image, thanks to jordigahan
+and Peabo for them.
+
+v0.4 Daytonaaaaa
+
+This version includes the (still preliminary) emulation of the Fujitsu MB86234 DSP
+present in the original Model 2 and Model 2 A-CRX boards. This means that some of
+the games running in these boards are playable now.
+The emulation is still preliminary because it has been done by reverse engineering
+the complete instruction set of the DSP and there are still bugs. This has been 
+possible thanks to the help of Olivier Galibert (that helped me starting writting the
+DSP disassembler some years ago) and Ernesto Corvi (that analyzed my disassemblies and
+compared against other games and the model1 HLE in mame).
+I'll list now the known problems and gliches in the games:
+
+Daytona USA games: when stopping the car, or starting a course from a stop (advanced and
+expert) the screen says REVERSE.
+Sega Rally: Automatic transmission doesn't work, only manual.
+Original Model 2 games have wrong colours in the 3D textures and wrong lighting.
+
+To play Daytona USA, when the network check screen appears, press F2 to enter test mode
+and in Game Settings set the game mode to Standalone.
+
+This package includes the single threaded and the multithreaded version. Use the
+multithreaded version in systems with more than a cpu, dual core, core duo, etc...
+There are several fixes in the syncronization code that should reduce the crashes
+in the emulator.
+
+v0.3 MultiCPU Experimental build
+
+This version contains an experimental multithreaded emulation code that will make
+different parts of the emulation run in a separate thread (Currently separates CPU,
+GPU and Sound emulation). This will allow multi-core CPUs (Dual core and Core Duo) 
+to take advantage of both processors and boost the emulator performance a lot 
+(all games are 60fps now in my Athlon 3800+ X2).
+It is only recommended for multi-core cpu users, as single core processor might have
+slower performance than the single threaded build.
+As a bonus, this version includes a preliminary recompiler SCSP DSP emulation. The recompiler
+is very fast and shouldn't affect the performance. The DSP effects still aren't 100% correct, but
+it sounds quite right.
+
+v0.3 (well, there was an unreleased 0.2 somewhere in my HD so this is 0.3)
+
+I've rewritten part of the emulator for increased speed.
+The SHARC core has also been speedup by removing unused SHARC features that weren't used by model2.
+Added frameskip and autoframeskip (with + and - in the keypad).
+Added Ski Super G and OverRev.
+Fixed topskater and virtualon control maps.
+This is probably the last version of the emulator, unless some Fujitsu TGP MB86234 docs appear
+to finish the emulation of the 2 and 2A cores. Sorry, I know I still have to do the digital
+sound board emulation for STCC and TopSkater but I have no free time.
+
+
+v0.1 Alpha
+
+This is a major rewrite of the Model 2 core from Nebula M2.
+Basically it supports the same games than Nebula M2, except the music in
+games using the Digital Sound Board.
+It uses a new (lighter) framework that requires DirectX 9.0.
+
+

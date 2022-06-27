@@ -1,0 +1,17 @@
+void main()
+{
+const vec2 OGLSize    = vec2( 1024.0, 512.0);
+vec2 OGLInvSize = 1.0/OGLSize;
+float dx = OGLInvSize.x;
+float dy = OGLInvSize.y;
+
+gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+gl_TexCoord[0] = gl_MultiTexCoord0;
+gl_TexCoord[1] = gl_TexCoord[0].xxxy + vec4( -dx, 0, dx,-2.0*dy); // A1 B1 C1
+gl_TexCoord[2] = gl_TexCoord[0].xxxy + vec4( -dx, 0, dx,    -dy); //  A  B  C
+gl_TexCoord[3] = gl_TexCoord[0].xxxy + vec4( -dx, 0, dx,      0); //  D  E  F
+gl_TexCoord[4] = gl_TexCoord[0].xxxy + vec4( -dx, 0, dx,     dy); //  G  H  I
+gl_TexCoord[5] = gl_TexCoord[0].xxxy + vec4( -dx, 0, dx, 2.0*dy); // G5 H5 I5
+gl_TexCoord[6] = gl_TexCoord[0].xyyy + vec4(-2.0*dx,-dy, 0,  dy); // A0 D0 G0
+gl_TexCoord[7] = gl_TexCoord[0].xyyy + vec4( 2.0*dx,-dy, 0,  dy); // C4 F4 I4
+}

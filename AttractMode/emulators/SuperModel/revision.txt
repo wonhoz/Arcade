@@ -1,0 +1,164 @@
+mod only x32, x64 and xp32 :
+This is not the build from the original source code
+I've just added my little patch for sr2 music fix, that's all
+using vc2017 so may be need new lib from ms (look for vc2017 redist x32 and x64)
+
+
+r757
+Optimise depth calculation for quad shader.
+r756
+Update Games.xml for games that were recently dumped - *
+r755
+??????
+r754
+Fade out microtextures with higher textures LODs. Fixes incorrectly applied microtextures in LA machineguns.
+r753
+Debug code should be disabled
+r752
+Smooth texture repeat makes no sense for alpha/contour textures with pixel dilate. HW seems to treat them as non smooth anyway. Also implement some line of sight stuff, used by Scud. Really need to check the threading/synchronisation of the register reads but it basically works.
+r751
+Return correct PCI ID
+
+svn 740
+Quad rendering engine. Set QuadRendering = 1 in the ini file to use, or -quad-rendering at the end of the command line to use.
+svn 739
+Sega bass fishing is starting some off the meshes with a shared vertex. Without having a previous vertex to share with, the values were just uninitialised and junk. The hardware itself seems to hold the value from the previous mesh, and sega bass fishing relies on this undefined behaviour to function correctly. Storing the cached vertices as member variables instead of locally to the function means it holds the values from the last mesh, and uses those values instead of random garbage.
+svn 738
+remove dead variable
+svn 737
+Use correct PCI IDs (Harry Tuttle)
+svn 736
+add crosshair effect (Harry Tuttle)
+svn 735
+fix cast, and remove extra ; that had snuck into the shaders
+svn 734
+Opaque polys definitely depth test with less than or equal. Virtua striker is drawing co-planar polys for the bar gfx
+svn 733
+Draw transparent polys to separate layers and composite at the end. This solves a tonne of transparency errors we had been battling with for a long time. The model3 is strange in the fact it only supports a max of two translucent overlapped polys. They are not blended into the frame normally. Doing this means the topmost translucent polys only are visible in the scene, the equivalent of doing a depth pass first, but without the added cost.
+svn 732
+forgot parentheses
+svn 731
+svn 730
+optimise hash function and parse out transparency layer select bit
+svn 729
+select correct bit ..
+svn 728
+Parse out TranslucencyPatternSelect
+svn 727
+Fixed Makefiles for non-MSYS builds. Unfortunately had to revert a lot of the automated configuration that Harry had inserted. Users will again need to hand-edit Makefile.Win32 for their configuration. Verbose warnings (-Wall) have been restored.
+svn 726
+Parse siblings after children. It's the only way to get Daytona water fall to look correct without h/w poly sorting.
+svn 725
+Added a stretch mode (-stretch) and modified new renderer's viewport code (hopefully correctly) to handle aspect ratio correction and widening the way the legacy one does.
+svn 724
+Render the opaque part of texture transparency in the first pass. Fixes numerous transparency related issues in lemans24 and some in ocean hunter. I don't really know if this is the 'correct' way of solving this because the real3d pro-1000 is a complete black box. There is still a lot we don't understand about how it handles transparency. 
+svn 723
+remove unnecessary copies 
+svn 722
+Fix controller inputs (Spindizzi)
+svn 721
+Inconsequential typo
+svn 720
+Reverted version to 0.3a-WIP. Release version will be updated to 0.4a.
+svn 719
+Added ability to load save state at startup using -load-state or InitStateFile (in config file)
+svn 718
+work around for non working jtag code in star wars
+svn 717
+Clamping must be applied before the spotlight is applied on step 1.0 h/w. 
+svn 716
+Fix step 1.0 games with NET_BOARD defined (Spindizzi)
+svn 715
+Update network code (Spindizzi)
+svn 714
+white space
+svn 713
+Support both types of lightgun in lost world. 2nd type fixes some missing fx. Thanks to Any for pointing this out. To use the old type change analog_gun1 to gun1 in the xml file.
+svn 712
+fix a few compile warnings
+svn 711
+Add the netboard stuff to the ini file. Stops crashes when they are missing.
+svn 710
+A hack to get spikeout to work (uncomment to enable) (Spindizzi)
+svn 709
+Disable the netboard if EmulateNet=0 (Spindizzi)
+svn 708
+remove extra qualifier 
+svn 707
+Update make files and fix build for the various options (Harry Tuttle)
+svn 706
+fix header files
+svn 705
+Remove using namespace std from the header files ..
+svn 704
+Parse out line of sight position. Only known to be used by scud.
+svn 703
+make the logic a bit clearer
+svn 702
+fix Ian's bad maths :)
+svn 701
+Update microtexture coordinate logic (Harry Tuttle)
+svn 700
+fix illegal xml character sequence
+svn 699
+simplify maths
+svn 698
+comment out unneeded code
+svn 697
+top/bottom were swapped for off axis projection
+svn 696
+Rewrite projection maths based upon previously unknown viewport values. The previous values used roughly worked as the normals for frustum planes. Perhaps they were only used for culling and not actually rendering, as sometimes the values don't work correctly.
+svn 695
+fix build
+svn 694
+add the rest of the network board code (Spindizzi)
+svn 693
+use the correct c++ deleters 
+svn 692
+use a few macros to make debugging less painful
+svn 691
+Add network board emulation. Currently not linked with the rest of the project.
+svn 690
+remove using namespace from headers ..
+svn 689
+rename to avoid clash with a #define
+svn 688
+add asynchronous sending functions 
+svn 687
+remove dead variable 
+svn 686
+Add basic networking files to supermodel. Currently these are win32 specific but can port to SDL or whatever later.
+svn 685
+Fix the smallest texture lods  (Harry Tuttle)
+svn 684
+fix array out of bounds 
+svn 683
+remove debug code
+svn 682
+mark as static
+svn 681
+Implement sub 8x8 tile encoding. Fixes incomplete mipmap chains which previously only went down to 8x8 pixels before. It wasn't known these textures existed before. (Harry Tuttle)
+svn 680
+Fix some bad/missing textures in fighting vipers. The game is referencing totally illegal texture sizes. The real h/w was just handling it somehow, whilst we were returning null for the textures. This might produce junk textures for the lower mipmaps, but this can be clamped in a later update.
+svn 679
+Shift fog maths to fragment shader to fix bug in virtua on.
+svn 678
+The vertex shader is run before clipping is done. If fogging values are calculated and clamped in the vertex shader it can interpolate bad values, since the range has been truncated. This happens if the polys overlap the near plane. The solution to clamp the values in the fragment shader. This fixes a bunch of fogging errors I long thought were transparency related errors in the ocean hunter.
+svn 677
+Fixed shading also works with untextured polys. Fixes some shading issues in La machineguns. (Harry Tuttle)
+svn 676
+Update step 1.5 luminous logic with Harry's findings. Fixes various shading issues.
+svn 675
+Finish the hash function (Harry Tuttle)
+svn 674
+Remove fixed shading check from specular.
+svn 673
+Makefile fixes: Moved Windows-specific source files out of Makefile.inc, using 'bin' and 'obj' when bits are not explicitly set, and changed output file to Supermodel rather than Supermodel.exe, which works on all platforms.
+svn 672
+Star wars is the only game to pass unsigned fixed shaded values (per vertex brightness) to the renderer. Originally we thought that the specular flag would turn on unsigned values since it's the only game to set specular with these polys, but this logic turned out to be incorrect. The JTAG interface seems to config the GPU to turn on this functionality. (Harry Tuttle)
+svn 671
+update visual studio project
+svn 670
+update spotlight code (Harry Tuttle)
+
+

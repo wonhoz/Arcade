@@ -1,0 +1,37 @@
+// Storybook shader I
+// by guest(r)
+// License: GNU-GPL
+
+uniform vec4 OGL2Param;
+uniform vec4 OGL2Size;
+uniform sampler2D OGL2Texture;
+uniform sampler2D OGL2TMU1;
+
+
+const float th = 0.07;      // outlines sensitivity, recommended from 0.00...0.50
+const float bb = 1.80;      // outlines strength,    recommended from 0.50...2.00
+const float pp = 1.25;      // outlines blackening,  recommended from 0.25...2.00
+
+
+void main()
+
+{
+
+ vec3 ink   = vec3(0.375,0.365,0.365);
+ vec3 paper = texture2D(OGL2TMU1, gl_TexCoord[6].xy).xyz;
+ vec3 uy = texture2D(OGL2Texture, gl_TexCoord[1].xy).xyz; 
+ vec3 lx = texture2D(OGL2Texture, gl_TexCoord[4].xy).xyz; 
+ vec3 rx = texture2D(OGL2Texture, gl_TexCoord[5].xy).xyz; 
+ vec3 dy = texture2D(OGL2Texture, gl_TexCoord[2].xy).xyz; 
+ 
+ vec3 dt = vec3(1.0,1.0,1.0); 
+ float d;
+ d = dot(abs(lx-rx),dt)/(dot(lx+rx,dt)+0.25);
+ d+= dot(abs(uy-dy),dt)/(dot(uy+dy,dt)+0.25);
+ d = bb*pow(max(d-th,0.0),pp);
+
+ if (d == 0.0) gl_FragColor.xyz = paper;
+ else
+ gl_FragColor.xyz = (1.0-d)*ink;
+ 
+}

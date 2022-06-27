@@ -1,0 +1,64 @@
+#Name;Unrated Games;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
+7ordi;7 오디;MAME AD;0;2002;Yunsung;Adult;;;;;;;;;;
+ryouran;VS 마작소녀 요란;MAME AD;0;1998;kaneko;Adult;;;;;;;;;;
+bnstars1;VS 작사 뉴 브랜드 스타즈;MAME AD;0;1997;Jaleco;Adult;;;;;;;;;;
+wownfant;WOW 뉴 판타지아;MAME AD;0;2002;Comad;Adult;;;;;;;;;;
+galpanic;갈스 패닉;MAME AD;0;1990;kaneko;Adult;;;;;;;;;;
+galpani2;갈스 패닉 2;MAME AD;0;1993;kaneko;Adult;;;;;;;;;;
+galpani3;갈스 패닉 3;MAME AD;0;1995;kaneko;Adult;;;;;;;;;;
+galpani4;갈스 패닉 4;MAME AD;0;1996;kaneko;Adult;;;;;;;;;;
+galpanis;갈스 패닉 S - 특별판;MAME AD;0;1997;Kaneko;Adult;;;;;;;;;;
+galpans2;갈스 패닉 S2;MAME AD;0;1999;kaneko;Adult;;;;;;;;;;
+galpans3;갈스 패닉 S3;MAME AD;0;2003;kaneko;Adult;;;;;;;;;;
+kotbinyo;꽃비녀;MAME AD;hanakanz;1997;Dynax;Adult;;;;;;;;;;
+kotbinsp;꽃비녀 스페셜;MAME AD;0;1997;Dynax;Adult;;;;;;;;;;
+fromanc2;대전 마작 파이널 로맨스 2;MAME AD;0;1995;Video System;Adult;;;;;;;;;;
+fromanc4;대전 마작 파이널 로맨스 4;MAME AD;0;1998;Video System;Adult;;;;;;;;;;
+fromancr;대전 마작 파이널 로맨스 R;MAME AD;0;1995;Video System;Adult;;;;;;;;;;
+hotgmck;대전 핫기믹;MAME AD;0;1997;Psikyo;Adult;;;;;;;;;;
+hotgmck3;대전 핫기믹 3 디지털서핑;MAME AD;0;1999;Psikyo;Adult;;;;;;;;;;
+hotgmcki;대전 핫기믹 인테그럴;MAME AD;0;2001;Psikyo;Adult;;;;;;;;;;
+hgkairak;대전 핫기믹 쾌락천;MAME AD;0;1998;Psikyo;Adult;;;;;;;;;;
+danceyes;댄싱 아이즈;PSXmame;0;1996;Namco;Adult;;;;;;;cpzn2;;;
+ddenlovrk;돈 덴 러버 : 오델로;MAME AD;0;1995;Dynax;Adult;0;0;0;;;;;;;
+tmmjprd;두근두근 마작 파라다이스;MAME AD;0;1997;Media;Adult;;;;;;;;;;
+landbrk;땅 자르기, 랜드 브레이커;MAME AD;0;1999;Eolith;Adult;;;;;;;;;;
+mjgtaste;마작 G-테이스트;MAME AD;0;2002;Psikyo;Adult;;;;;;;;;;
+hypreac2;마작 하이퍼 리액션 2;MAME AD;0;1997;Sammy;Adult;;;;;;;;;;
+nmg5;멀티 5;MAME AD;0;1998;Yunsung;Adult;;;;;;;;0;0;4
+missw96;미스 월드 '96;MAME AD;0;1996;Comad;Adult;;;;;;;;;;
+realbrk;빌리어드 아카데미 리얼 브레이크;MAME AD;0;1998;나카니혼;Adult;2;0;Joystick (8-way);imperfect;1;raster;0;0;0;2
+spbactn;슈퍼 핀볼 액션;MAME AD;0;1991;Tecmo;Adult;;;;;;;;;;
+suchie2;아이돌 작사 스치파이 2;MAME AD;0;1994;Jaleco;Adult;;;;;;;;;;
+suchie3;아이돌 작사 스치파이 3;MAME AD;0;1999;Jaleco;Adult;;;;;;;;;;
+wondstck;원더 스틱;MAME AD;0;????;Yunsung;Adult;;;;;;;;;;
+kirarast;유성의 마작사 키라라 스타;MAME AD;0;1996;Jaleco;Adult;1;0;mahjong;imperfect;1;raster;0;0;0;0
+mj4simai;작은아씨들 마작 4자매;MAME AD;0;1996;Maboroshi Ware;Adult;;;;;;;;;;
+jjparads;쟝쟝 파라다이스;MAME AD;0;1996;kaneko;Adult;;;;;;;;;;
+jjparad2;쟝쟝 파라다이스 2;MAME AD;0;1997;kaneko;Adult;;;;;;;;;;
+hotdebut;퀴즈 아이돌 핫 데뷔;MAME AD;0;2000;Psikyo;Adult;2;;;;;;;;;
+finalgdr;파이널 고도리;MAME AD;0;2001;Semicom;Adult;1;0;Joystick (4-way);;1;raster;0;0;0;2
+sxyreac2;파칭코 섹시 리액션 2;MAME AD;0;1999;Sammy;Adult;;;;;;;;;;
+pkgnsh;파칭코 은구슬 승부;MAME AD;0;1998;Dynax;Adult;;;;;;;;;;
+fantsia2;판티지아 2;MAME AD;0;1997;Comad;Adult;;;;;;;;0;0;4
+funybubl;퍼니 버블;MAME AD;0;1999;Comad;Adult;;;;;;;;0;0;4
+hanamai;하나노마이;MAME AD;0;1988;Dynax;Adult;;;;;;;;;;
+hotpinbl;핫 핀볼;MAME AD;0;1995;Comad;Adult;;;;;;;;;;
+hexa;헥사;MAME AD;0;199?;D.R.Korea;Adult;1;0;Joystick (4-way);imperfect;1;raster;0;0;0;2
+mahjong;CD 마작 미소녀 중심파 (일본판);MAME pcecd_gecd;0;1993;Game Express;Adult Board Game;;;;;;;;;;
+pachislt;CD 빠찡코 미소녀 겜블러 (일본판);MAME pcecd_gecd;0;1994;Game Express;Adult Board Game;;;;;;;;;;
+pachinko;CD 빠찡코 미소녀 구마 네자매 (일본판);MAME pcecd_gecd;0;1995;Game Express;Adult Board Game;;;;;;;;;;
+cardangl;카드 엔젤스 (일본판);MAME pcecd;0;1994;Fujicom;Adult Board Game;;;;;;;;;;
+#Blonde Justice (USA);블론드 저스티스;3DO;;1994;Vivid Interactive;Adult;;;;;;;;;;
+#Coven, The (USA);더 코븐;3DO;;1994;Vivid Interactive;Adult;;;;;;;;;;
+#Immortal Desire (USA);임모탈 디자이어;3DO;;1994;Vivid Interactive;Adult;;;;;;;;;;
+#Love Bites (USA);러브 바이트;3DO;;1995;Vivid Interactive;Adult;;;;;;;;;;
+Onee-san to Isshoo! Kise Kae Paradise (Japan);오네상과 함께! 탈부착 파라다이스;3DO;;;;Adult;;;;;;;;;;
+Onee-san to Isshoo! Shanken Paradise (Japan);오네상과 함께! 쟝껜 파라다이스;3DO;;;;Adult;;;;;;;;;;
+Twinkle Knights (Japan);트윙클 나이츠;3DO;;;;Adult;;;;;;;;;;
+#Virtual Cameraman Part 1 - Naomi Sawada & Anna Juri (Japan);버추얼 카메라맨 파트 1;3DO;;1995;Naxat Soft;Adult;;;;;;;;;;
+Virtual Cameraman Part 2 - Natsumi Kawai & Kimi Tachihara (Japan);버추얼 카메라맨 파트 2;3DO;;1995;Naxat Soft;Adult;;;;;;;;;;
+#Virtual Cameraman Part 3 - Yumika Sugimoto (Japan);버추얼 카메라맨 파트 3;3DO;Virtual Cameraman Part 1 - Naomi Sawada & Anna Juri (Japan);1995;Naxat Soft;Adult;;;;;;;;;;
+#Virtual Cameraman Part 4 - Shiori Fujitani (Japan);버추얼 카메라맨 파트 4;3DO;Virtual Cameraman Part 1 - Naomi Sawada & Anna Juri (Japan);1995;Naxat Soft;Adult;;;;;;;;;;
+#Virtual Cameraman Part 5 - Yuri Andou (Japan);버추얼 카메라맨 파트 5;3DO;Virtual Cameraman Part 1 - Naomi Sawada & Anna Juri (Japan);1995;Naxat Soft;Adult;;;;;;;;;;
+#Yakyuuken Special, The (Japan);야구권 스페셜;3DO;;1994;Societa Daikanyama;Adult;;;;;;;;;;

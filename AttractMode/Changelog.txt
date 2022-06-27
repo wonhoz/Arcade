@@ -1,0 +1,50 @@
+# Changelog #
+
+## Commits from v2.4.1 to v2.5.0
+
+### Andrew Mickelson (27 commits)
+
+* Fix compile with older SFML
+* Bump to version 2.5.0
+* Added change missed in previous commit
+* Issue #481: Allow use of any of the 'magic tokens' in emulator arguments
+* Fix some compile warnings
+* Corrections to commit 94b521cd96df965206d930912663c19f541c54b5
+* Optimization for quicker artwork loading
+* [Windows] extra measures to stop losing foreground focus
+* [Windows] Issue #482 - Fix for unicode filenames in squirrel standard lib
+* Fixed line endings
+* Added "Please Wait" message
+* Only compile and link nowide "lib" on Windows builds
+* [Windows] Fix handling of unicode characters in filenames
+* Added fe.get_text() function for getting translated strings from a script
+* Switched to use libcurl for network scraping (#486)
+* Fixed pause on raspberry pi
+* Added Pause Emulator functionality (#479)
+* Added missing #ifdef omitted from last commit
+* [linux] Always close frontend window when launching from fullscreen mode linux
+* Issue #334 - removed git dependency from Makefile
+* [Windows] make output from fe.plugin_command() consistent with Linux/OS X
+* Issues #379, #248 - Fix to allow user to escape hung artwork scraping
+* Added ChangedTag transition when a game is faved or tagged
+* Update expat xml parser to version 2.2.6 (#480)
+* Issue #472 - Added setting to control pointer moving on emu launch
+* Issue # 325 - tweaked selection acceleration, added the "selection_max_step" option to attract.cfg
+* Issue #471 - fix scraping of overview info (blank entries)
+
+### Keil Miller (1 commits)
+
+* Display link typo resolved (#485)
+
+### Matthew Barnes (1 commits)
+
+* Add 'Exit Message' option to General settings (#363)
+
+### Radek Dutkiewicz (2 commits)
+
+* Added Overlay.Favourite command to Transition.ShowOverlay (#484)
+* Added BlendMode.Subtract, fixed line endings in default shader files (#477)
+
+### xin (1 commits)
+
+* Improve french translation (#495)

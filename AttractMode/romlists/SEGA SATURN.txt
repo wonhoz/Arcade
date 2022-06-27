@@ -1,0 +1,21 @@
+#Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
+Guardian Heroes (U);가디언 히어로즈. 영문판;SEGA Saturn_mdf;Guardian Heroes (Japan);1996;Treasure;Arcade;;;;;;;;;;
+Grandia(K);그란디아 Disc 1 (한글판);SEGA Saturn;Grandia (Japan) (Disc 1);1997;Game Arts;RPG;;;;;;;;;;
+Grandia(K) 2;그란디아 Disc 2 (한글판);SEGA Saturn;Grandia (Japan) (Disc 1);1997;Game Arts;RPG;;;;;;;;;;
+NiGHTS Into Dreams(1996)(Samsung)(KR);나이츠 인투 드림스 (한글판);SEGA Saturn_ccd;NiGHTS into Dreams... (Japan);1996;SEGA;Action;;;;;;;;;;
+Dragon Force (U);드래곤 포스. 영문판;SEGA Saturn;Dragon Force (Japan);1996;SEGA;SRPG;;;;;;;;;;
+Langrisser V The End of Legend (K);랑그릿사 5 - 전설의 끝 (한글판);SEGA Saturn;Langrisser V - The End of Legend (Japan);1996;SEGA;SRPG;;;;;;;;;;
+mist (K);미스트 (한글판);SEGA Saturn;Myst (Japan);1993;Sunsoft;Adventure;;;;;;;;;;
+Virtua Fighter Kids (1996)(Samsung)(KR);버추어 파이터 키즈;SEGA Saturn_ccd;Virtua Fighter Kids (Japan);1996;SEGA;VS Fighting;;;;;;;;;;
+Sangokushi IV (K);삼국지 IV (한글판);SEGA Saturn;Sangokushi IV (Japan);1997;Koei;SLG;;;;;;;;;;
+Shining Force 3 Senario (K);샤이닝 포스 3 시나리오1: 왕도의 거신(한글판);SEGA Saturn;Shining Force III - Scenario 1 - Outo no Kyoshin (Japan);1997;SEGA;SRPG;;;;;;;;;;
+Shining Force 3 Senario 2 (K);샤이닝 포스 3 시나리오2: 노려진 신자 (한글판);SEGA Saturn;Shining Force III - Scenario 2 - Nerawareta Miko (Japan);1998;SEGA;SRPG;;;;;;;;;;
+Shining Force 3 Senario 3 (K);샤이닝 포스 3 시나리오3: 빙벽의 사신궁 (한글판);SEGA Saturn;Shining Force III - Scenario 3 - Hyouheki no Jashinguu (Japan);1998;SEGA;SRPG;;;;;;;;;;
+Sonic R (J);소닉 R;SEGA Saturn_ccd;Sonic R (Japan);1997;SEGA;Racing;;;;;;;;;;
+Thor2 - Seireioukiden (K);스토리 오브 도어 2 (한글판);SEGA Saturn;Thor - Seireioukiden (Japan);1996;SEGA;RPG;;;;;;;;;;
+Steam-Heart's (1998)(Technical Group Laboratory)(JP);스팀 하츠;SEGA Saturn_ccd;Steam-Heart's (Japan);1998;TGL;Shooting;;;;;;;;;;
+ELHAZARD(kor);신비의 세계 엘하자드 (한글판);SEGA Saturn_mdf;Shinpi no Sekai - El-Hazard (Japan);1997;Pioneer;Adventure;;;;;;;;;;
+DRACULA_X;악마성 드라큐라 - 월하의 야상곡 (한글판);SEGA Saturn;Akumajou Dracula X - Gekka no Yasoukyoku (Japan);1997;Atlus;RPG;;;;;;;;;;
+Albert Odyssey Gaiden (K);알버트 오딧세이 외전 - 엘딘의 전설 (한글판);SEGA Saturn;Albert Odyssey Gaiden - Legend of Eldean (Japan);1996;Sunsoft;RPG;;;;;;;;;;
+Panzer Dragoon;팬저 드래군 (한글판);SEGA Saturn;Panzer Dragoon (Japan) (5A);1995;SEGA;Shooting;;;;;;;;;;
+Panzer Dragoon 2 Zwei;팬저 드래군 2 쯔바이;SEGA Saturn_ccd;Panzer Dragoon II Zwei (Japan);1996;SEGA;Shooting;;;;;;;;;;

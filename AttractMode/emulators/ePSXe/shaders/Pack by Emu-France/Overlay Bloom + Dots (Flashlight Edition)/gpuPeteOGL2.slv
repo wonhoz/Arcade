@@ -1,0 +1,45 @@
+/*
+Overlay Bloom + Dots (Flashlight Edition) by KrossX
+***************************************************
+
+It applies a sort of common Photoshop effect of duplicating the background
+layer, blurring it and setting it on top with the overlay blending mode.
+
+The shader level controls the strength of the effect. And, there are some 
+more options near the top of the fragment file.
+
+Flashlight Edition 
+		Added the black circle thingy texture as requested by lillium02.
+
+v1.0 - Reworked the shader a bit, added some option macros, removed all the f's
+	   and also added this description.	  
+*/
+
+uniform vec4 OGL2InvSize;
+
+#define invr2 0.70710678118654752440084436210485
+#define blur 4
+
+varying vec2 offset[8];
+
+void main(void)
+{	
+	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+	gl_TexCoord[0] = gl_MultiTexCoord0;
+	gl_TexCoord[1] = gl_MultiTexCoord1;
+	
+	vec2 dx = vec2(blur * OGL2InvSize.x, 0.0);
+	vec2 dy = vec2(0.0, blur * OGL2InvSize.y);
+	
+	vec2 dx2 = vec2(blur * invr2 * OGL2InvSize.x, 0.0);
+	vec2 dy2 = vec2(0.0, blur * invr2 * OGL2InvSize.y);
+		
+	 offset[0] = -dx2-dy2;
+	 offset[1] = dx2+dy2;
+	 offset[2] = dx2-dy2;
+	 offset[3] = -dx2+dy2;
+	 offset[4] = dx;
+	 offset[5] = -dx;
+	 offset[6] = dy;
+	 offset[7] = -dy;
+}

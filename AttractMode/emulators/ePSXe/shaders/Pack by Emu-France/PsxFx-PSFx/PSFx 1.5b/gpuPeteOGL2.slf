@@ -1,0 +1,1646 @@
+/*===============================================================================*\
+|########################    [PSFx Shader Suite v1.50]    ########################|
+|##########################        By Asmodean          ##########################|
+||                                                                               ||
+||          This program is free software; you can redistribute it and/or        ||
+||          modify it under the terms of the GNU General Public License          ||
+||          as published by the Free Software Foundation; either version 2       ||
+||          of the License, or (at your option) any later version.               ||
+||                                                                               ||
+||          This program is distributed in the hope that it will be useful,      ||
+||          but WITHOUT ANY WARRANTY; without even the implied warranty of       ||
+||          MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        ||
+||          GNU General Public License for more details. (c)2014                 ||
+||                                                                               ||
+|#################################################################################|
+\*===============================================================================*/
+#version 150 compatibility
+
+#extension GL_NV_gpu_shader5 : enable
+#extension GL_ARB_gpu_shader5 : enable
+#extension GL_ARB_shader_precision : enable
+#extension GL_ARB_texture_rectangle : enable
+
+/*------------------------------------------------------------------------------
+						[DEFINITIONS & ON/OFF OPTIONS]
+------------------------------------------------------------------------------*/
+
+//---------------------------#[CHOOSE EFFECTS]#--------------------------------\\
+
+//-#[ANTIALIASING TECHNIQUES]   [1=ON|0=OFF]  #READ: For best results: Only enable one type of post antialiasing at one time. Use post antialiasing OR FS filtering. Not both.
+#define FXAA_PASS					 1		//#High Quality Fast Approximate Anti Aliasing. Adapted from Timothy Lottes FXAA 3.11. (Recommended) [3D]
+#define NFAA_PASS				 	 0		//#Normal Filter Anti Aliasing. (Subtle AA, with good edge detection). [3D(UseColor 0)/2D(UseColor 1)]
+
+//-#[FS FILTERING TECHNIQUES] 	[1=ON|0=OFF]  #READ: For best results: Only enable one type of FS filtering at one time. Use post antialiasing OR FS filtering. Not both.
+#define BILINEAR_FILTERING			 0		//#BiLinear Fullscreen Texture Filtering. BiLinear filtering - light to medium filtering of textures. [2D]
+#define BICUBIC_FILTERING			 0		//#BiCubic Fullscreen Texture Filtering. BiCubic filtering - medium to strong filtering of textures. [2D]
+#define GAUSSIAN_FILTERING			 0		//#Gaussian Fullscreen Texture Filtering. BiLinear filtering - strong to extra strong filtering of textures. [2D]
+
+//-#[LIGHTING & COLOUR] 	    [1=ON|0=OFF]  #READ: These can all be turned on & off independently of each other. [For High Dynamic Range(HDR) - use Bloom, Tonemapping, & Gamma Correction together]
+#define BLENDED_BLOOM				 1		//#High Quality Bloom, using blend techniques. Blooms naturally, per environment.
+#define SCENE_TONEMAPPING			 1		//#Scene Tonemapping & RGB colour Correction. Corrects colour, and tonemaps the scene.
+#define GAMMA_CORRECTION			 1		//#RGB Post Gamma Correction Curve. sRGB->Linear->sRGB correction curve. 
+#define S_CURVE_CONTRAST			 1		//#S-Curve Scene Contrast Enhancement. Naturally adjusts contrast using S-curves.
+#define TEXTURE_SHARPENING			 1		//#HQ Luma-Based Texture Sharpen, looks similar to a negative mip LOD Bias, enhances texture fidelity.
+#define PIXEL_VIBRANCE			 	 1		//#Pixel Vibrance. Intelligently adjusts pixel vibrance depending on original saturation.
+#define COLOR_GRADING				 0		//#Post-Complement Colour Grading. Alters individual colour components on a scene, to enhance selected colour tones.
+#define CEL_SHADING				 	 0		//#Cel Shaded toon look, simulates the look of animation/toon. Typically best suited for animated-style games. (cel edges interfere with post AA.)
+
+//-#[TV EMU TECHNIQUES] 		[1=ON|0=OFF]  #READ: These can all be turned on & off independently of each other. These effects are typically used to simulated older TVs/CRT etc.
+#define SCANLINES					 0		//#Scanlines to simulate the look of a CRT TV. Typically best suited for 2D/sprite games.
+#define VIGNETTE					 0		//#Darkens the edges of the screen, to make it look more like it was shot with a camera lens.
+#define DITHERING			 		 0		//#Subpixel Dithering to simulate more colors than your monitor can display. Smoothes gradiants, this can reduce color banding.
+
+/*------------------------------------------------------------------------------
+						 [SHADER FX CONFIG OPTIONS]
+------------------------------------------------------------------------------*/
+
+//-[FXAA OPTIONS]
+#define FxaaSubpixMax 2.00				//[0.00 to 1.00] Amount of subpixel aliasing removal. Higher values: more subpixel antialiasing(softer). Lower values: less subpixel antialiasing(sharper). 0.00: Edge only antialiasing (no blurring)
+#define FxaaQuality 4					//[1|2|3|4] Overall Fxaa quality preset (pixel coverage). 1: Low, 2: Medium, 3: High, 4: Ultra. I use these labels lightly, as even the 'low coverage' preset is in fact, still pretty high quality.
+#define FxaaEarlyExit 1					//[0 or 1] Use Fxaa early exit pathing. This basically tells the algorithm to offset only luma-edge detected pixels. When disabled, the entire scene is antialiased(FSAA). 0 is off, 1 is on.
+#define FxaaEdgeThreshold 0.08			//FXAA edge reduction mul. best leave this as it is.
+#define FxaaEdgeThresholdMin 0.04		//FXAA edge reduction min. best leave this as it is.
+
+//-[NFAA OPTIONS]
+#define NFAAStrength 0.75				//[0.5 to 1.5] NFAA strength. Filter Strength Adjusts the overall power of the filter.
+#define FilterSpread 4.0				//[2.0 to 6.0] NFAA spread width. Filter Spread controls how large an area the filter tries to sample.
+#define BilinearSampling 0				//[0 or 1] Uses Bilinear filtering in the NFAA texture sampling(Extra optional filtering. nice for 2D). Using this & UseColor 1, can be nice for sprite games.
+#define UseColor 1						//[0 or 1] Uses colour detection, instead of luma edge detection (more coverage, less accuracy, but better for 2D).
+#define DebugNFAA 0						//[0 or 1] Visualize the edge detection.
+
+//-[BILINEAR OPTIONS]
+#define FilterStrength 1.00				//[0.10 to 1.50] Bilinear filtering strength. Controls the overall strength of the filtering.
+#define OffsetAmount 0.0				//[0.0 to 1.5] Pixel offset amount. If you want to use an st offset, 0.5 is generally recommended. 0.0 is off.
+
+//-[BICUBIC OPTIONS]
+#define Interpolation Cubic				//[CatMullRom, Bell, BSpline, Triangular, Cubic] Type of interpolation to use, from left to right light<->heavy filtering. Try them out, and use what you prefer.
+#define BicubicStrength 0.50			//[0.10 to 1.50] Bicubic filtering strength. Controls the overall strength of the filtering.
+#define PixelOffset 0.0					//[0.0 to 1.5] Pixel offset amount. If you want to use an st offset, 0.5 is generally recommended. 0.0 is off.
+
+//-[GAUSSIAN OPTIONS]
+#define FilterAmount 1.00				//[0.10 to 1.50] Gaussian filtering strength. Controls the overall strength of the filtering.
+#define GaussianSpread 0.50				//[0.50 to 2.00] The filtering spread & offset levels. Controls the sampling spread of the filtering.
+
+//-[BLOOM OPTIONS]
+#define BloomType BlendBloom			//[BlendBloom, BlendScreen, BlendOverlay, BlendAddLight] The type of blend for the bloom (Default: BlendBloom). If using BlendOverlay set ToneAmount to 2.20, or it may be too dark.
+#define BloomPower 0.250     			//[0.000 to 2.000] Strength of the bloom. You may need to readjust for each blend type.
+#define BlendPower 1.000				//[0.000 to 2.000] Strength of the bloom blend. Lower for less blending, higher for more. Default is 1.000.
+#define BlendSpread 2.000    			//[0.000 to 8.000] Width of the bloom glow spread. Scales with BloomPower. Raising SharpenClamp affects this. 0.000 = off.
+#define BloomMixType 1					//[1|2|3] The interpolation mix type between the base colour, and bloom. (Default is 1) BloomPower/BlendSpread may need re-adjusting depending on type.
+
+//-[TONEMAP OPTIONS]
+#define TonemapType 1					//[1 or 2] Type of tone mapping. 1 is Natural(default), 2 is Filmic(cinematic) You might want to increase/decrease ToneAmount to compensate for diff types.
+#define ToneAmount 1.98					//[1.00 to 4.00] Tonemapping & Gamma curve (Tonemapping/Shadow correction). Lower values for darker tones, Higher values for lighter tones. Default: 2.20 (gl compiler doesn't seem to like 2.00, don't use it)
+#define Luminance 1.00					//[0.10 to 2.00] Luminance Average (luminance correction) Higher values to decrease luminance average, lower values to increase luminance. Adjust by small amounts, eg: increments of 0.1
+#define Exposure 1.00					//[0.10 to 2.00] White Correction (brightness) Higher values = more Exposure, lower = less Exposure. Adjust by small amounts, eg: increments of 0.1
+#define WhitePoint 1.00					//[0.10 to 2.00] Whitepoint Avg (lum correction) Adjust by small amounts, eg: increments of 0.01. Generally it's best left at 1.00.
+#define RedCurve 1.00					//[1.00 to 8.00] Red channel component of the RGB correction curve. Use this to reduce/correct the red colour component. Higher values equals more red reduction. 1.00 is default.
+#define GreenCurve 1.00					//[1.00 to 8.00] Green channel component of the RGB correction curve. Use this to reduce/correct the green colour component. Higher values equals more green reduction. 1.00 is default.
+#define BlueCurve 1.00					//[1.00 to 8.00] Blue channel component of the RGB correction curve. Use this to reduce/correct the blue colour component. Higher values equals more blue reduction. 1.00 is default.
+
+//-[CONTRAST OPTIONS]
+#define CurveType 0						//[0|1|2] Choose what to apply contrast to. 0 = Luma, 1 = Chroma, 2 = both Luma and Chroma. Default is 0 (Luma)
+#define CurvesContrast 0.50				//[0.00 to 2.00] The amount of contrast you want. Controls the overall strength of the texture sharpening.
+
+//-[SHARPEN OPTIONS]
+#define SharpeningType 2				//[1 or 2] The type of sharpening to use. Type 1 is the original High Pass Gaussian(faster, less accurate), and type 2 is a new Bicubic Sampling type(slower, more accurate).
+#define SharpenStrength 0.50	   		//[0.10 to 2.00] Strength of the texture sharpening effect. This is the maximum strength that will be used. The clamp below limits the minimum, and maximum that is allowed per pixel.
+#define SharpenClamp 0.015				//[0.005 to 0.500] Reduces the clamping/limiting on the maximum amount of sharpening each pixel recieves. Raise this to reduce the clamping.
+#define SharpenBias 1.50				//[1.00 to 4.00] Sharpening edge bias. Lower values for clean subtle sharpen, and higher values for a deeper textured sharpen. For SharpeningType 2, best stay under ~2.00, or it may look odd.
+
+//-[GRADING OPTIONS]
+#define RedGrading 0.65					//[0.0 to 3.0] Red colour grading coefficient. Adjust to influence the red channel coefficients of the grading, and highlight tones.
+#define GreenGrading 0.30				//[0.0 to 3.0] Green colour grading coefficient. Adjust to influence the Green channel coefficients of the grading, and highlight tones.
+#define BlueGrading 0.35				//[0.0 to 3.0] Blue colour grading coefficient. Adjust to influence the Blue channel coefficients of the grading, and highlight tones.
+#define GradingStrength 0.75			//[0.00 to 1.00] The overall max strength of the colour grading effect. Raise to increase, lower to decrease the amount.
+#define Correlation 1.00				//[0.10 to 1.50] Correlation between the base colour, and the grading influence. Lower = more of the scene is graded, Higher = less of the scene is graded.
+
+//-[VIBRANCE OPTIONS]
+#define Vibrance -0.02 					//[-1.00 to 1.00] Intelligently saturates (or desaturates with negative values) pixels depending on their original saturation. 0.00 is original vibrance.
+
+//-[GAMMA OPTIONS]
+#define Gamma 2.2  						//Gamma Correction. Lower for more gamma toning(darker), higher for brighter (2.2 correction is generally recommended, gl compiler doesn't seem to like 2.00, don't use it)
+
+//-[TOON OPTIONS]
+#define EdgeStrength 1.00				//[0.00 to 4.00] Strength of the cel edge outline effect. 0.00 = no outlines.
+#define EdgeFilter 0.65					//[0.10 to 2.00] Raise this to filter out fainter cel edges. You might need to increase the power to compensate, when raising this.
+#define EdgeThickness 1.20				//[0.50 to 4.00] Thickness of the cel edges. Decrease for thinner outlining, Increase for thicker outlining. 1.00 is default thickness.
+#define PaletteType 2					//[1|2|3] The colour palette to use. 1 is Original, 2 is Animated Shading, 3 is Water Painting (Default is 2: Animated Shading). Below options don't affect palette 1.
+#define UseYuvLuma 1					//[0 or 1] Uses YUV luma calculations, or base colour luma calculations. 0 is base luma, 1 is Yuv luma. Color luma can be more accurate. Yuv luma can be better for a shaded look.
+#define LumaConversion 1				//[0 or 1] Uses BT.601, or BT.709, RGB<-YUV->RGB conversions. Some games prefer 601, but most prefer 709. BT.709 is typically recommended. 
+#define ColorRounding 1					//[0 or 1] Uses rounding methods on colors. This can emphasise shaded toon colors. Looks good in some games, and odd in others. Try it in-game and see. 
+
+//-[SCANLINE OPTIONS]
+#define ScanlineType 0					//[0|1|2] The type & orientation of the scanlines. 0 is x(horizontal), 1 is y(vertical), 2 is both(xy).
+#define ScanlineIntensity 0.18			//[0.10 to 1.00] The intensity of the scanlines. Lower values for less intense, higher for more intense.
+#define ScanlineThickness 0.50			//[0.20 to 0.80] The thickness of the scanlines. Lower values for thinner, higher for thicker.
+#define ScanlineBrightness 2.00			//[0.50 to 4.00] The brightness of the scanlines. Lower values for darker, higher for brighter.
+
+//-[VIGNETTE OPTIONS]
+#define VignetteRatio 1.77  			//[0.15 to 6.00] Sets the espect ratio of the vignette. 1.77 for 16:9, 1.60 for 16:10, 1.33 for 4:3, 1.00 for 1:1.
+#define VignetteRadius 1.00  			//[0.50 to 3.00] Radius of the vignette effect. Lower values for stronger radial effect from center
+#define VignetteAmount 0.25  			//[0.00 to 1.00] Strength of black edge occlusion. Increase for higher strength, decrease for lower.
+#define VignetteSlope 8 				//[2|4|8|12|16] How far away from the center the vignetting will start.
+
+//-[DITHERING OPTIONS]
+#define DitherMethod 2  				//[1 or 2] 1 is Ordering dithering(faster, lower quality), 2 is Random dithering (better dithering, but not as fast)
+
+//-[END OF USER OPTIONS]
+
+/*------------------------------------------------------------------------------
+							 [GLOBALS|FUNCTIONS]
+------------------------------------------------------------------------------*/
+
+uniform vec4 OGL2Param;
+uniform vec4 OGL2Size;
+uniform vec4 OGL2InvSize;
+uniform sampler2D OGL2Texture;
+uniform vec4 resolution;
+smooth vec2 uv0 = gl_TexCoord[0].st;
+smooth out vec4 ocol0;
+const float GammaConst = 2.2;
+
+float RGBLuminance(vec3 color)
+{
+	const vec3 lumCoeff = vec3(0.2126729, 0.7151522, 0.0721750);
+	return dot(color.rgb, lumCoeff);
+}
+
+float TrueLuminance(vec3 color)
+{
+	float maxRGB;
+	float minRGB;
+
+	float r = color.x;
+	float g = color.y;
+	float b = color.z;
+
+	if (r >= g) { maxRGB = r; }
+	if (r >= b) { maxRGB = r; }
+	if (g >= r) { maxRGB = g; }
+	if (g >= b) { maxRGB = g; }
+	if (b >= r) { maxRGB = b; }
+	if (b >= g) { maxRGB = b; }
+
+	if (r <= g) { minRGB = r; }
+	if (r <= b) { minRGB = r; }
+	if (g <= r) { minRGB = g; }
+	if (g <= b) { minRGB = g; }
+	if (b <= r) { minRGB = b; }
+	if (b <= g) { minRGB = b; }
+
+	float lumin = ((maxRGB + minRGB) / 2.0);
+
+	return lumin;
+}
+
+vec3 RGBGammaToLinear(vec3 color, float gamma)
+{
+	color.rgb = abs(color.rgb);
+	
+	color.r = (color.r <= 0.0404482362771082) ? clamp(color.r / 12.92, 0.0, 1.0) : 
+	clamp(pow((color.r + 0.055) / 1.055, gamma), 0.0, 1.0);
+
+	color.g = (color.g <= 0.0404482362771082) ? clamp(color.g / 12.92, 0.0, 1.0) : 
+	clamp(pow((color.g + 0.055) / 1.055, gamma), 0.0, 1.0);
+
+	color.b = (color.b <= 0.0404482362771082) ? clamp(color.b / 12.92, 0.0, 1.0) : 
+	clamp(pow((color.b + 0.055) / 1.055, gamma), 0.0, 1.0);
+
+	return color.rgb;
+}
+
+vec3 LinearToRGBGamma(vec3 color, float gamma)
+{
+	color.rgb = abs(color.rgb);
+	
+	color.r = (color.r <= 0.00313066844250063) ? clamp(color.r * 12.92, 0.0, 1.0) : 1.055 * 
+	clamp(pow(color.r, 1.0 / gamma), 0.0, 1.0) - 0.055;
+
+	color.g = (color.g <= 0.00313066844250063) ? clamp(color.g * 12.92, 0.0, 1.0) : 1.055 * 
+	clamp(pow(color.g, 1.0 / gamma), 0.0, 1.0) - 0.055;
+
+	color.b = (color.b <= 0.00313066844250063) ? clamp(color.b * 12.92, 0.0, 1.0) : 1.055 * 
+	clamp(pow(color.b, 1.0 / gamma), 0.0, 1.0) - 0.055;
+
+	return color.rgb;
+}
+
+#define GammaCorrection(color, gamma) pow(color, gamma)
+#define InverseGammaCorrection(color, gamma) pow(color, 1.0/gamma)
+
+/*------------------------------------------------------------------------------
+						 [GAMMA PREPASS CODE SECTION]
+------------------------------------------------------------------------------*/
+
+vec4 GammaPrePass(vec4 color, vec2 uv0)
+{	
+	color = texture(OGL2Texture, uv0);
+	color.rgb = RGBGammaToLinear(color.rgb, GammaConst);
+	color.rgb = LinearToRGBGamma(color.rgb, GammaConst);
+	color.a = RGBLuminance(color.rgb);
+
+	return color;
+}
+
+/*------------------------------------------------------------------------------
+                             [FXAA CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (FXAA_PASS == 1)
+#define FXAA_QUALITY__P0 1.0
+#define FXAA_QUALITY__P1 2.0
+#define FXAA_QUALITY__P2 4.0
+#define FXAA_QUALITY__P11 8.0
+#define FXAA_GATHER4_ALPHA 1
+#define FXAA_QUALITY__SUBPIX (0.5)
+#define FXAA_QUALITY__EDGE_THRESHOLD (0.063)
+#define FXAA_QUALITY__EDGE_THRESHOLD_MIN (0.0312)
+
+smooth in vec4 posPos;
+#define FxaaInt2 ivec2
+#define Fxaavec2 vec2
+#define Fxaavec4 vec4
+#define FxaaSat(x) clamp(x, 0.0, 1.0)
+#define FxaaLerp(x,y,s) mix(x,y,s)
+#define FxaaTexLod0(t, p) textureLod(t, p, 0.0)
+#define FxaaTexOff(t, p, o, r) textureLodOffset(t, p, 0.0, o)
+#define FxaaTexAlpha4(t, p, r) textureGather(t, p, 3)
+#define FxaaTexOffAlpha4(t, p, o, r) textureGatherOffset(t, p, o, 3)
+	
+vec3 FxaaPixelShader(vec4 posPos, sampler2D tex, vec2 rcpFrame)
+{	
+	vec2 posM;
+	posM.x = posPos.x;
+	posM.y = posPos.y;
+	
+	#if (GL_NV_gpu_shader5)
+	vec4 luma4A = FxaaTexAlpha4(tex, posM, rcpFrame.xy);
+	vec4 luma4B = FxaaTexOffAlpha4(tex, posM, FxaaInt2(-1, -1), rcpFrame.xy);
+	#endif
+	
+	vec4 rgbyM = FxaaTexLod0(tex, posM);
+
+	float lumaS = FxaaTexOff(tex, posM, FxaaInt2( 0, 1), rcpFrame.xy).w;
+	float lumaE = FxaaTexOff(tex, posM, FxaaInt2( 1, 0), rcpFrame.xy).w;
+	float lumaN = FxaaTexOff(tex, posM, FxaaInt2( 0,-1), rcpFrame.xy).w;
+	float lumaW = FxaaTexOff(tex, posM, FxaaInt2(-1, 0), rcpFrame.xy).w;
+	
+	vec3 rgbNW = FxaaTexLod0(tex, posPos.zw).xyz;
+	vec3 rgbNE = FxaaTexOff(tex, posPos.zw, FxaaInt2(1,0), rcpFrame.xy).xyz;
+	vec3 rgbSW = FxaaTexOff(tex, posPos.zw, FxaaInt2(0,1), rcpFrame.xy).xyz;
+	vec3 rgbSE = FxaaTexOff(tex, posPos.zw, FxaaInt2(1,1), rcpFrame.xy).xyz;
+	vec3 rgbM  = FxaaTexLod0(tex, posPos.xy).xyz;
+
+	vec3 luma = vec3(0.2125, 0.7154, 0.0721);
+	float lumaNW = dot(rgbNW, luma);
+	float lumaNE = dot(rgbNE, luma);
+	float lumaSW = dot(rgbSW, luma);
+	float lumaSE = dot(rgbSE, luma);
+	float lumaM  = dot(rgbM,  luma);
+	
+	float maxSM = max(lumaS, lumaM);
+	float minSM = min(lumaS, lumaM);
+	float maxESM = max(lumaE, maxSM);
+	float minESM = min(lumaE, minSM);
+	float maxWN = max(lumaN, lumaW);
+	float minWN = min(lumaN, lumaW);
+	float rangeMax = max(maxWN, maxESM);
+	float rangeMin = min(minWN, minESM);
+	float rangeMaxScaled = rangeMax * FXAA_QUALITY__EDGE_THRESHOLD;
+	float range = rangeMax - rangeMin;
+	float rangeMaxClamped = max(FXAA_QUALITY__EDGE_THRESHOLD_MIN, rangeMaxScaled);
+	bool earlyExit = range < rangeMaxClamped;
+	
+	float lumaNS = lumaN + lumaS;
+	float lumaWE = lumaW + lumaE;
+	float subpixRcpRange = 1.0/range;
+	float subpixNSWE = lumaNS + lumaWE;
+	float edgeHorz1 = (-2.0 * lumaM) + lumaNS;
+	float edgeVert1 = (-2.0 * lumaM) + lumaWE;
+
+	float lumaNESE = lumaNE + lumaSE;
+	float lumaNWNE = lumaNW + lumaNE;
+	float edgeHorz2 = (-2.0 * lumaE) + lumaNESE;
+	float edgeVert2 = (-2.0 * lumaN) + lumaNWNE;
+
+	float lumaNWSW = lumaNW + lumaSW;
+	float lumaSWSE = lumaSW + lumaSE;
+	float edgeHorz4 = (abs(edgeHorz1) * 2.0) + abs(edgeHorz2);
+	float edgeVert4 = (abs(edgeVert1) * 2.0) + abs(edgeVert2);
+	float edgeHorz3 = (-2.0 * lumaW) + lumaNWSW;
+	float edgeVert3 = (-2.0 * lumaS) + lumaSWSE;
+	float edgeHorz = abs(edgeHorz3) + edgeHorz4;
+	float edgeVert = abs(edgeVert3) + edgeVert4;
+	
+	float subpixNWSWNESE = lumaNWSW + lumaNESE;
+	float lengthSign = rcpFrame.x;
+	bool horzSpan = edgeHorz >= edgeVert;
+	float subpixA = subpixNSWE * 2.0 + subpixNWSWNESE;
+	
+	if(!horzSpan) lumaN = lumaW;
+	if(!horzSpan) lumaS = lumaE;
+	if(horzSpan) lengthSign = rcpFrame.y;
+	float subpixB = (subpixA * (1.0/12.0)) - lumaM;
+	
+	float gradientN = lumaN - lumaM;
+	float gradientS = lumaS - lumaM;
+	float lumaNN = lumaN + lumaM;
+	float lumaSS = lumaS + lumaM;
+	bool pairN = abs(gradientN) >= abs(gradientS);
+	float gradient = max(abs(gradientN), abs(gradientS));
+	if(pairN) lengthSign = -lengthSign;
+	float subpixC = FxaaSat(abs(subpixB) * subpixRcpRange);
+	
+	vec2 posB;
+	posB.x = posM.x;
+	posB.y = posM.y;
+	vec2 offNP;
+	offNP.x = (!horzSpan) ? 0.0 : rcpFrame.x;
+	offNP.y = ( horzSpan) ? 0.0 : rcpFrame.y;
+	if(!horzSpan) posB.x += lengthSign * 0.5;
+	if( horzSpan) posB.y += lengthSign * 0.5;
+	
+	vec2 posN;
+	posN.x = posB.x - offNP.x * FXAA_QUALITY__P0;
+	posN.y = posB.y - offNP.y * FXAA_QUALITY__P0;
+	vec2 posP;
+	posP.x = posB.x + offNP.x * FXAA_QUALITY__P0;
+	posP.y = posB.y + offNP.y * FXAA_QUALITY__P0;
+	float subpixD = ((-2.0)*subpixC) + 3.0;
+	float lumaEndN = FxaaTexLod0(tex, posN).w;
+	float subpixE = subpixC * subpixC;
+	float lumaEndP = FxaaTexLod0(tex, posP).w;
+	
+	if(!pairN) lumaNN = lumaSS;
+	float gradientScaled = gradient * 1.0/4.0;
+	float lumaMM = lumaM - lumaNN * 0.5;
+	float subpixF = subpixD * subpixE;
+	bool lumaMLTZero = lumaMM < 0.0;
+	
+	lumaEndN -= lumaNN * 0.5;
+	lumaEndP -= lumaNN * 0.5;
+	bool doneN = abs(lumaEndN) >= gradientScaled;
+	bool doneP = abs(lumaEndP) >= gradientScaled;
+	if(!doneN) posN.x -= offNP.x * FXAA_QUALITY__P1;
+	if(!doneN) posN.y -= offNP.y * FXAA_QUALITY__P1;
+	bool doneNP = (!doneN) || (!doneP);
+	if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P1;
+	if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P1;
+	
+	if(doneNP){
+	if(!doneN) lumaEndN = FxaaTexLod0(tex, posN.xy).w;
+	if(!doneP) lumaEndP = FxaaTexLod0(tex, posP.xy).w;
+	if(!doneN) lumaEndN = lumaEndN - lumaNN * 0.5;
+	if(!doneP) lumaEndP = lumaEndP - lumaNN * 0.5;
+	doneN = abs(lumaEndN) >= gradientScaled;
+	doneP = abs(lumaEndP) >= gradientScaled;
+	if(!doneN) posN.x -= offNP.x * FXAA_QUALITY__P11;
+	if(!doneN) posN.y -= offNP.y * FXAA_QUALITY__P11;
+	doneNP = (!doneN) || (!doneP);
+	if(!doneP) posP.x += offNP.x * FXAA_QUALITY__P11;
+	if(!doneP) posP.y += offNP.y * FXAA_QUALITY__P11; }
+	
+	float dstN = posM.x - posN.x;
+	float dstP = posP.x - posM.x;
+	if(!horzSpan) dstN = posM.y - posN.y;
+	if(!horzSpan) dstP = posP.y - posM.y;
+	
+	bool goodSpanN = (lumaEndN < 0.0) != lumaMLTZero;
+	float spanLength = (dstP + dstN);
+	bool goodSpanP = (lumaEndP < 0.0) != lumaMLTZero;
+	float spanLengthRcp = 1.0f/spanLength;
+
+	bool directionN = dstN < dstP;
+	float dst = min(dstN, dstP);
+	bool goodSpan = directionN ? goodSpanN : goodSpanP;
+	float subpixG = subpixF * subpixF;
+	float pixelOffset = (dst * (-spanLengthRcp)) + 0.5;
+	float subpixH = subpixG * FXAA_QUALITY__SUBPIX;
+
+	float pixelOffsetGood = goodSpan ? pixelOffset : 0.0;
+	float pixelOffsetSubpix = max(pixelOffsetGood, subpixH);
+	if(!horzSpan) posM.x += pixelOffsetSubpix * lengthSign;
+	if( horzSpan) posM.y += pixelOffsetSubpix * lengthSign;
+
+	float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));
+	float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));
+
+	vec2 dir; 
+	dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));
+	dir.y =  ((lumaNW + lumaSW) - (lumaNE + lumaSE));
+
+	float dirReduce = max(
+		(lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * 
+		FxaaEdgeThreshold), FxaaEdgeThresholdMin);
+	float rcpDirMin = 1.0f/(min(abs(dir.x), abs(dir.y)) + dirReduce);
+	dir = min(Fxaavec2( FxaaSubpixMax,  FxaaSubpixMax), 
+		  max(Fxaavec2(-FxaaSubpixMax, -FxaaSubpixMax), 
+		  dir * rcpDirMin)) * rcpFrame.xy;
+
+	vec3 rgbA = (1.0/2.0) * (
+		FxaaTexLod0(tex, posPos.xy + dir * (1.0/3.0 - 0.5)).xyz +
+		FxaaTexLod0(tex, posPos.xy + dir * (2.0/3.0 - 0.5)).xyz);
+	vec3 rgbB = rgbA * (1.0/2.0) + (1.0/4.0) * (
+		FxaaTexLod0(tex, posPos.xy + dir * (0.0/3.0 - 0.5)).xyz +
+		FxaaTexLod0(tex, posPos.xy + dir * (3.0/3.0 - 0.5)).xyz);
+	float lumaB = dot(rgbB, luma);
+	
+	if((lumaB < lumaMin) || (lumaB > lumaMax)) return rgbA;
+	return rgbB;
+}
+
+vec4 DoFXAA(sampler2D FxaaTex, vec2 texcoord)
+{
+	vec2 rcpFrame;
+	vec4 FxaaColor = texture(OGL2Texture, texcoord);
+
+	rcpFrame.x = 1.0 / textureSize(OGL2Texture, 0).x;
+	rcpFrame.y = 1.0 / textureSize(OGL2Texture, 0).y;
+	
+	FxaaColor.rgb = FxaaPixelShader(posPos, FxaaTex, rcpFrame);
+	FxaaColor.a = RGBLuminance(FxaaColor.rgb);
+	
+	return FxaaColor;
+}
+
+vec4 FXAAPass(vec4 FxaaColor, vec2 texcoord) 
+{
+	FxaaColor = DoFXAA(OGL2Texture, texcoord);
+	return FxaaColor;
+}
+#endif
+
+/*------------------------------------------------------------------------------
+                             [NFAA CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (NFAA_PASS == 1)
+float filterSpread = FilterSpread;
+float filterStrength = NFAAStrength;
+
+float GetColorLuminance(vec3 color)
+{
+	vec3 lumCoeff = vec3(0.2126729, 0.7151522, 0.0721750);
+	return dot(color.rgb, lumCoeff);
+}
+
+vec4 textureBiLinear(sampler2D texSample, vec2 uv0)
+{
+	float texelSizeX = 1.0 / textureSize(OGL2Texture, 0).x;
+	float texelSizeY = 1.0 / textureSize(OGL2Texture, 0).y;
+
+	int nX = int(uv0.x * textureSize(OGL2Texture, 0).x);
+	int nY = int(uv0.y * textureSize(OGL2Texture, 0).y);
+
+	vec2 uvCoord = vec2((float(nX) + OffsetAmount) / textureSize(OGL2Texture, 0).x,
+						(float(nY) + OffsetAmount) / textureSize(OGL2Texture, 0).y);
+
+	vec4 SampleA = texture(texSample, uvCoord);
+	vec4 SampleB = texture(texSample, uvCoord + vec2(texelSizeX, 0.0));
+	vec4 SampleC = texture(texSample, uvCoord + vec2(0.0, texelSizeY));
+	vec4 SampleD = texture(texSample, uvCoord + vec2(texelSizeX , texelSizeY));
+
+	float LX = fract(uv0.x * textureSize(OGL2Texture, 0).x);
+	float LY = fract(uv0.y * textureSize(OGL2Texture, 0).y);
+
+	vec4 InterpolateA = mix(SampleA, SampleB, LX);
+	vec4 InterpolateB = mix(SampleC, SampleD, LX);
+
+	return mix(InterpolateA, InterpolateB, LY);
+}
+
+vec2 findContrastByLuminance(vec2 uv0) 
+{
+	// Normal offsets, scale by filter spread
+	vec2 upOffset = vec2(0, (1.0 / textureSize(OGL2Texture, 0)).x) * filterSpread;
+	vec2 rightOffset = vec2((1.0 / textureSize(OGL2Texture, 0)).y, 0) * filterSpread;
+
+	float topHeight = GetColorLuminance(texture( OGL2Texture, uv0 + upOffset).rgb);
+	float bottomHeight = GetColorLuminance(texture( OGL2Texture, uv0 - upOffset).rgb);
+	float rightHeight = GetColorLuminance(texture( OGL2Texture, uv0 + rightOffset).rgb);
+	float leftHeight = GetColorLuminance(texture( OGL2Texture, uv0 - rightOffset).rgb);
+	float leftTopHeight = GetColorLuminance(texture( OGL2Texture, uv0 - rightOffset + upOffset).rgb);
+	float leftBottomHeight = GetColorLuminance(texture( OGL2Texture, uv0 - rightOffset - upOffset).rgb);
+	float rightBottomHeight = GetColorLuminance(texture( OGL2Texture, uv0 + rightOffset + upOffset).rgb);
+	float rightTopHeight = GetColorLuminance(texture( OGL2Texture, uv0 + rightOffset - upOffset).rgb);
+
+	float sum0 = rightTopHeight    + bottomHeight + leftTopHeight;
+	float sum1 = leftBottomHeight  + topHeight    + rightBottomHeight;
+	float sum2 = leftTopHeight     + rightHeight  + leftBottomHeight;
+	float sum3 = rightBottomHeight + leftHeight   + rightTopHeight;
+
+	// Subtract the opposite sample set for final vectors
+	float vector1 = (sum0 - sum1) * filterStrength;
+	float vector2 = (sum3 - sum2) * filterStrength;
+
+	vec2 Vectors = vec2(vector1, vector2);
+
+	return Vectors;
+}
+
+vec2 findContrastByColor(vec2 uv0)
+{
+	// Normal offsets, scale by filter spread
+	vec2 upOffset = vec2(0, (1.0 / textureSize(OGL2Texture, 0)).x) * filterSpread;
+	vec2 rightOffset = vec2((1.0 / textureSize(OGL2Texture, 0)).y, 0) * filterSpread;
+
+	vec3 topHeight = texture(OGL2Texture, uv0 + upOffset).rgb;
+	vec3 bottomHeight = texture(OGL2Texture, uv0 - upOffset).rgb;
+	vec3 rightHeight = texture(OGL2Texture, uv0 + rightOffset).rgb;
+	vec3 leftHeight = texture(OGL2Texture, uv0 - rightOffset).rgb;
+	vec3 leftTopHeight = texture(OGL2Texture, uv0 - rightOffset + upOffset).rgb;
+	vec3 leftBottomHeight = texture(OGL2Texture, uv0 - rightOffset - upOffset).rgb;
+	vec3 rightBottomHeight = texture(OGL2Texture, uv0 + rightOffset + upOffset).rgb;
+	vec3 rightTopHeight = texture(OGL2Texture, uv0 + rightOffset - upOffset).rgb;
+
+	vec3 sum0 = rightTopHeight    + bottomHeight + leftTopHeight;
+	vec3 sum1 = leftBottomHeight  + topHeight    + rightBottomHeight;
+	vec3 sum2 = leftTopHeight     + rightHeight  + leftBottomHeight;
+	vec3 sum3 = rightBottomHeight + leftHeight   + rightTopHeight;
+
+	// Subtract the opposite sample set for final vectors
+	float vector1 = length(sum0 - sum1) * filterStrength;
+	float vector2 = length(sum3 - sum2) * filterStrength;
+
+	vec2 Vectors = vec2(vector1, vector2);
+
+	return Vectors;
+}
+
+vec4 NFAAPass(vec4 color, vec2 uv0) 
+{
+	vec2 Vectors;
+	filterStrength += (filterSpread / 2.0);
+	
+	#if (UseColor == 1) 
+		Vectors = findContrastByColor(uv0.xy);
+	#else
+		Vectors = findContrastByLuminance(uv0.xy);
+	#endif
+
+	float filterClamp = (filterStrength / filterSpread);
+
+	Vectors.xy = clamp(Vectors, -vec2(filterClamp, filterClamp), vec2(filterClamp, filterClamp));
+
+	vec2 Normal = vec2(Vectors.x, Vectors.y) * (1.0 / textureSize(OGL2Texture, 0));	
+	
+	#if (BilinearSampling == 1)
+	vec4 NFScene = textureBiLinear(OGL2Texture, uv0.xy);
+	NFScene += textureBiLinear(OGL2Texture, uv0.xy + Normal.xy);
+	NFScene += textureBiLinear(OGL2Texture, uv0.xy - Normal.xy);
+	NFScene += textureBiLinear(OGL2Texture, uv0.xy + vec2(Normal.x, -Normal.y));
+	NFScene += textureBiLinear(OGL2Texture, uv0.xy - vec2(Normal.x, -Normal.y));
+	NFScene += textureBiLinear(OGL2Texture, uv0.xy + vec2(-Normal.x, Normal.y));
+	NFScene += textureBiLinear(OGL2Texture, uv0.xy - vec2(-Normal.x, Normal.y));
+	#else
+	vec4 NFScene = textureLod(OGL2Texture, uv0.xy, 0.0);
+	NFScene += textureLod(OGL2Texture, uv0.xy + Normal.xy, 0.0);
+	NFScene += textureLod(OGL2Texture, uv0.xy - Normal.xy, 0.0);
+	NFScene += textureLod(OGL2Texture, uv0.xy + vec2(Normal.x, -Normal.y), 0.0);
+	NFScene += textureLod(OGL2Texture, uv0.xy - vec2(Normal.x, -Normal.y), 0.0);
+	NFScene += textureLod(OGL2Texture, uv0.xy + vec2(-Normal.x, Normal.y), 0.0);
+	NFScene += textureLod(OGL2Texture, uv0.xy - vec2(-Normal.x, Normal.y), 0.0);
+	#endif
+
+	NFScene /= 7.0;
+	
+	color = NFScene;
+
+	#if (DebugNFAA == 1) 
+		color.xyz = normalize(vec3(Vectors.x, Vectors.y, 1.0) * 0.5 + 0.5); //Debug Output
+	#endif
+
+	return color;
+}
+#endif
+
+/*------------------------------------------------------------------------------
+                       [TEXTURE FILTERING FUNCTIONS]
+------------------------------------------------------------------------------*/
+
+float BSpline(float x)
+{
+	float f = x;
+	
+	if(f < 0.0)
+	{
+		f = -f;
+	}
+	if(f >= 0.0 && f <= 1.0)
+	{
+		return (2.0 / 3.0) + (0.5) * (f* f * f) - (f*f);
+	}
+	else if(f > 1.0 && f <= 2.0)
+	{
+		return 1.0 / 6.0 * pow(( 2.0 - f  ), 3.0);
+	}
+	return 1.0;
+}
+
+float CatMullRom(float x)
+{
+    float b = 0.0;
+    float c = 0.5;
+    float f = x;
+
+    if( f < 0.0 )
+    {
+        f = -f;
+    }
+    if( f < 1.0 )
+    {
+        return ((12.0 - 9.0 * b - 6.0 * c) * (f * f * f) +
+				(-18.0 + 12.0 * b + 6.0 * c) * (f * f) +
+				(6.0 - 2.0 * b) ) / 6.0;
+    }
+    else if( f >= 1.0 && f < 2.0 )
+    {
+        return (( -b - 6.0 * c) * (f * f * f)
+            + 	(6.0 * b + 30.0 * c) * (f *f) +
+				(- (12.0 * b) - 48.0 * c ) * f +
+				8.0 * b + 24.0 * c)/ 6.0;
+    }
+    else
+    {
+        return 0.0;
+    }
+}
+
+float Bell(float x)
+{
+	float f = (x / 2.0) * 1.5;
+
+	if(f > -1.5 && f < -0.5)
+	{
+		return(0.5 * pow(f + 1.5, 2.0));
+	}
+	else if(f > -0.5 && f < 0.5)
+	{
+		return 3.0 / 4.0 - (f * f);
+	}
+	else if(( f > 0.5 && f < 1.5 ))
+	{
+		return(0.5 * pow(f - 1.5, 2.0));
+	}
+	return 0.0;
+}
+
+float Triangular(float x)
+{
+	x = x / 2.0;
+
+	if(x < 0.0)
+	{
+		return (x + 1.0);
+	}
+	else
+	{
+		return (1.0 - x);
+	}
+	return 0.0;
+}
+
+float Cubic(float x)
+{
+	float x2 = x * x;
+	float x3 = x2 * x;
+
+	float cx =  -x3 + 3.0 * x2 - 3.0 * x + 1.0;
+	float cy =  3.0 * x3 - 6.0 * x2 + 4.0;
+	float cz = -3.0 * x3 + 3.0 * x2 + 3.0 * x + 1.0;
+	float cw =  x3;
+
+	return (mix(cx, cy, 0.5) + mix(cz, cw, 0.5)) / 6.0;
+}
+
+/*------------------------------------------------------------------------------
+                       [BILINEAR FILTERING CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (BILINEAR_FILTERING == 1)
+vec4 SampleBiLinear(sampler2D texSample, vec2 uv0)
+{
+	float texelSizeX = 1.0 / textureSize(OGL2Texture, 0).x;
+	float texelSizeY = 1.0 / textureSize(OGL2Texture, 0).y;
+
+	int nX = int(uv0.x * textureSize(OGL2Texture, 0).x);
+	int nY = int(uv0.y * textureSize(OGL2Texture, 0).y);
+
+	vec2 uvCoord = vec2((float(nX) + OffsetAmount) / textureSize(OGL2Texture, 0).x,
+						(float(nY) + OffsetAmount) / textureSize(OGL2Texture, 0).y);
+
+	// Take nearest two data in current row.
+	vec4 SampleA = texture(texSample, uvCoord);
+	vec4 SampleB = texture(texSample, uvCoord + vec2(texelSizeX, 0.0));
+
+	// Take nearest two data in bottom row.
+	vec4 SampleC = texture(texSample, uvCoord + vec2(0.0, texelSizeY));
+	vec4 SampleD = texture(texSample, uvCoord + vec2(texelSizeX , texelSizeY));
+
+	float LX = fract(uv0.x * textureSize(OGL2Texture, 0).x); //Get Interpolation factor for X direction.
+	float LY = fract(uv0.y * textureSize(OGL2Texture, 0).y); //Get Interpolation factor for Y direction.
+
+	// Interpolate in X direction.
+	vec4 InterpolateA = mix(SampleA, SampleB, LX); //Top row in X direction.
+	vec4 InterpolateB = mix(SampleC, SampleD, LX); //Bottom row in X direction.
+
+	return mix(InterpolateA, InterpolateB, LY); //Interpolate in Y direction.
+}
+
+vec4 BiLinearPass(vec4 color, vec2 uv0)
+{
+   vec4 bilinear = SampleBiLinear(OGL2Texture, uv0);
+   color = mix(color, bilinear, FilterStrength);
+   
+   return color;
+}
+#endif
+
+/*------------------------------------------------------------------------------
+                       [BICUBIC FILTERING CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (BICUBIC_FILTERING == 1)
+vec4 SampleBiCubic(sampler2D texSample, vec2 uv0)
+{
+	float texelSizeX = 1.0 / textureSize(OGL2Texture, 0).x;
+	float texelSizeY = 1.0 / textureSize(OGL2Texture, 0).y;
+	
+    vec4 nSum = vec4(0.0, 0.0, 0.0, 0.0);
+    vec4 nDenom = vec4(0.0, 0.0, 0.0, 0.0);
+
+    float a = fract(uv0.x * textureSize(OGL2Texture, 0).x);
+    float b = fract(uv0.y * textureSize(OGL2Texture, 0).y);
+
+	int nX = int(uv0.x * textureSize(OGL2Texture, 0).x);
+	int nY = int(uv0.y * textureSize(OGL2Texture, 0).y);
+	
+	vec2 uvCoord = vec2( float(nX) / textureSize(OGL2Texture, 0).x + PixelOffset / textureSize(OGL2Texture, 0).x,
+					     float(nY) / textureSize(OGL2Texture, 0).y + PixelOffset / textureSize(OGL2Texture, 0).y );
+
+    for(int m = -1; m <= 2; m++)
+    {
+        for(int n = -1; n <= 2; n++)
+        {
+			vec4 Samples = texture(texSample, uvCoord +
+			vec2(texelSizeX * float(m), texelSizeY * float(n)));
+
+			float vc1  = Interpolation(float(m) - a);
+			vec4 vecCoeff1 = vec4(vc1, vc1, vc1, vc1);
+
+			float vc2 = Interpolation(-(float(n) - b));
+			vec4 vecCoeff2 = vec4(vc2, vc2, vc2, vc2);
+
+            nSum = nSum + (Samples * vecCoeff2 * vecCoeff1);
+            nDenom = nDenom + (vecCoeff2 * vecCoeff1);
+        }
+    }
+    return nSum / nDenom;
+}
+
+vec4 BiCubicPass(vec4 color, vec2 uv0)
+{
+   vec4 bicubic = SampleBiCubic(OGL2Texture, uv0);
+   color = mix(color, bicubic, BicubicStrength);
+   return color;
+}
+#endif
+
+/*------------------------------------------------------------------------------
+                       [GAUSSIAN FILTERING CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (GAUSSIAN_FILTERING == 1)
+vec4 GaussianPass(vec4 color, vec2 uv0)
+{
+	vec2 ddx = vec2(1.0/textureSize(OGL2Texture, 0).x * GaussianSpread, 0.0);
+	vec2 ddy = vec2(0.0, 1.0/textureSize(OGL2Texture, 0).y * GaussianSpread);
+
+	vec2 ddx2 = 2.0 * ddx;
+	vec2 ddy2 = 2.0 * ddy;
+	
+	vec4 gaussianTap = vec4(0.0, 0.0, 0.0, 0.0);
+
+	gaussianTap += texture(OGL2Texture, uv0 -ddx2 +ddy2); 
+	gaussianTap += texture(OGL2Texture, uv0 -ddx +ddy2); 
+	gaussianTap += texture(OGL2Texture, uv0 +ddy2); 
+	gaussianTap += texture(OGL2Texture, uv0 +ddx +ddy2); 
+	gaussianTap += texture(OGL2Texture, uv0 +ddx2 +ddy2); 
+
+	gaussianTap += texture(OGL2Texture, uv0 -ddx2 +ddy);
+	gaussianTap += texture(OGL2Texture, uv0 -ddx +ddy);
+	gaussianTap += texture(OGL2Texture, uv0 +ddy);
+	gaussianTap += texture(OGL2Texture, uv0 +ddx +ddy);
+	gaussianTap += texture(OGL2Texture, uv0 +ddx2 +ddy);
+
+	gaussianTap += texture(OGL2Texture, uv0 -ddx2);
+	gaussianTap += texture(OGL2Texture, uv0 -ddx);	
+	gaussianTap += texture(OGL2Texture, uv0 +ddx);
+	gaussianTap += texture(OGL2Texture, uv0 +ddx2);
+
+	gaussianTap += texture(OGL2Texture, uv0 -ddx2 -ddy);
+	gaussianTap += texture(OGL2Texture, uv0 -ddx -ddy);
+	gaussianTap += texture(OGL2Texture, uv0 -ddy);
+	gaussianTap += texture(OGL2Texture, uv0 +ddx -ddy);
+	gaussianTap += texture(OGL2Texture, uv0 +ddx2 -ddy);
+
+	gaussianTap += texture(OGL2Texture, uv0 -ddx2 -ddy2);
+	gaussianTap += texture(OGL2Texture, uv0 -ddx -ddy2);
+	gaussianTap += texture(OGL2Texture, uv0 -ddy2);
+	gaussianTap += texture(OGL2Texture, uv0 +ddx -ddy2);
+	gaussianTap += texture(OGL2Texture, uv0 +ddx2 -ddy2);
+
+	gaussianTap /= 24.0;
+
+	color = mix(color, gaussianTap, FilterAmount);
+
+	return color;
+}
+#endif
+
+/*------------------------------------------------------------------------------
+						[GAMMA CORRECTION CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (GAMMA_CORRECTION == 1)
+vec4 PostGammaPass(vec4 color, vec2 uv0)
+{
+	color.rgb = RGBGammaToLinear(color.rgb, GammaConst);
+	color.rgb = LinearToRGBGamma(color.rgb, Gamma);
+	color.a = RGBLuminance(color.rgb);
+
+	return color;
+}
+#endif
+
+/*------------------------------------------------------------------------------
+                        [TEXTURE SHARPEN CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (TEXTURE_SHARPENING == 1)
+#define px 1.0 / textureSize(OGL2Texture, 0).x
+#define py 1.0 / textureSize(OGL2Texture, 0).y
+#define SLumCoeff vec3(0.2126729, 0.7151522, 0.0721750)
+
+#if(SharpeningType == 2)
+vec4 textureBicubic(sampler2D texSample, vec2 uv0)
+{
+	float texelSizeX = 1.0 / textureSize(OGL2Texture, 0).x * SharpenBias;
+	float texelSizeY = 1.0 / textureSize(OGL2Texture, 0).y * SharpenBias;
+	
+	vec4 nSum = vec4(0.0, 0.0, 0.0, 0.0);
+    vec4 nDenom = vec4(0.0, 0.0, 0.0, 0.0);
+
+    float a = fract(uv0.x * textureSize(OGL2Texture, 0).x);
+    float b = fract(uv0.y * textureSize(OGL2Texture, 0).y);
+
+	int nX = int(uv0.x * textureSize(OGL2Texture, 0).x);
+	int nY = int(uv0.y * textureSize(OGL2Texture, 0).y);
+	
+	vec2 uvCoord = vec2(float(nX) / textureSize(OGL2Texture, 0).x, 
+						float(nY) / textureSize(OGL2Texture, 0).y);
+
+    for(int m = -1; m <= 2; m++)
+    {
+        for(int n = -1; n <= 2; n++)
+        {
+			vec4 Samples = texture(texSample, uvCoord +
+			vec2(texelSizeX * float(m), texelSizeY * float(n)));
+
+			float vc1  = Cubic(float(m) - a);
+			vec4 vecCoeff1 = vec4(vc1, vc1, vc1, vc1);
+
+			float vc2 = Cubic(-(float(n) - b));
+			vec4 vecCoeff2 = vec4(vc2, vc2, vc2, vc2);
+
+            nSum = nSum + (Samples * vecCoeff2 * vecCoeff1);
+            nDenom = nDenom + (vecCoeff2 * vecCoeff1);
+        }
+    }
+	return nSum / nDenom;
+}
+
+vec4 TexSharpenPass(vec4 color, vec2 uv0) 
+{
+	vec3 calcSharpen = (SLumCoeff * SharpenStrength);
+
+	vec4 blurredColor = textureBicubic(OGL2Texture, uv0);
+	vec3 sharpenedColor = (color.rgb - blurredColor.rgb);
+
+	float sharpenLuma = dot(sharpenedColor, calcSharpen);
+	sharpenLuma = clamp(sharpenLuma, -SharpenClamp, SharpenClamp);
+
+	color.rgb = color.rgb + sharpenLuma;
+	color.a = RGBLuminance(color.rgb);
+	
+	#if (DebugSharpen == 1)
+		color = clamp(0.5f + (sharpenLuma * 4), 0.0, 1.0).rrrr;
+	#endif
+	
+	return clamp(color, 0.0, 1.0);
+}
+#else
+
+vec4 TexSharpenPass(vec4 color, vec2 uv0) 
+{	
+	vec3 blurredColor;
+
+	blurredColor  = textureLod(OGL2Texture, uv0 + vec2(-px,py) * SharpenBias, 0.0).rgb;	//North West
+	blurredColor += textureLod(OGL2Texture, uv0 + vec2(px,-py) * SharpenBias, 0.0).rgb;	//South East
+	blurredColor += textureLod(OGL2Texture, uv0 + vec2(-px,-py) * SharpenBias, 0.0).rgb;	//South West
+	blurredColor += textureLod(OGL2Texture, uv0 + vec2(px,py) * SharpenBias, 0.0).rgb;	//North East
+
+	blurredColor += textureLod(OGL2Texture, uv0 + vec2(0.0,py) * SharpenBias, 0.0).rgb;	//North
+	blurredColor += textureLod(OGL2Texture, uv0 + vec2(0.0,-py) * SharpenBias, 0.0).rgb;	//South
+	blurredColor += textureLod(OGL2Texture, uv0 + vec2(-px,0.0) * SharpenBias, 0.0).rgb;	//West
+	blurredColor += textureLod(OGL2Texture, uv0 + vec2(px,0.0) * SharpenBias, 0.0).rgb;	//East
+	
+	blurredColor /= 8.0;
+
+	vec3 sharpenedColor = color.rgb - blurredColor;
+	vec3 calcSharpen = (SLumCoeff * SharpenStrength);
+
+	float sharpenLuma = dot(sharpenedColor, calcSharpen);
+	sharpenLuma = clamp(sharpenLuma, -SharpenClamp, SharpenClamp);
+
+	color.rgb = color.rgb + sharpenLuma;
+	color.a = RGBLuminance(color.rgb);
+	
+	#if (DebugSharpen == 1)
+		color = clamp(0.5f + (sharpenLuma * 4), 0.0, 1.0).rrrr;
+	#endif
+	
+	return clamp(color, 0.0, 1.0);
+}
+#endif
+#endif
+
+/*------------------------------------------------------------------------------
+							[VIBRANCE CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (PIXEL_VIBRANCE == 1)
+vec4 VibrancePass(vec4 color, vec2 uv0)
+{
+	float luma = RGBLuminance(color.rgb);
+	float colorVib = Vibrance;
+	float colorMax = max(color.r, max(color.g, color.b));
+	float colorMin = min(color.r, min(color.g, color.b));
+	float colorSaturation = (colorMax - colorMin);
+
+	color.rgb = mix(vec3(luma), color.rgb, (1.0 + (colorVib * (1.0 - (sign(colorVib) * colorSaturation)))));
+	color.a = RGBLuminance(color.rgb);
+
+	return clamp(color, 0.0, 1.0); //Debug: return colorSaturation.xxxx;
+}
+#endif
+
+/*------------------------------------------------------------------------------
+						   [BLOOM PASS CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (BLENDED_BLOOM == 1)
+vec3 BlendBloom(vec3 color, vec3 bloom)
+{
+	color = (bloom + bloom) - (bloom * bloom);	
+	return color;
+}
+
+vec3 BlendScreen(vec3 color, vec3 bloom)
+{
+	return (color + bloom) - (color * bloom);
+}
+
+vec3 BlendAddLight(vec3 color, vec3 bloom)
+{
+	return color + bloom;
+}
+
+vec3 BlendOverlay(vec3 color, vec3 bloom)
+{
+	return vec3((bloom.x <= 0.5) ? (2.0 * color.x * bloom.x) 
+				: (1.0 - 2.0 * (1.0 - bloom.x) * (1.0 - color.x)),
+				(bloom.y <= 0.5) ? (2.0 * color.y * bloom.y) 
+				: (1.0 - 2.0 * (1.0 - bloom.y) * (1.0 - color.y)),
+				(bloom.z <= 0.5) ? (2.0 * color.z * bloom.z) 
+				: (1.0 - 2.0 * (1.0 - bloom.z) * (1.0 - color.z)));
+}
+
+vec4 BloomPass(vec4 color, vec2 uv0)
+{
+	vec4 bloom;
+
+	vec2 dx = vec2(1.0 / textureSize(OGL2Texture, 0).x * BlendSpread, 0.0);
+	vec2 dy = vec2(0.0, 1.0 / textureSize(OGL2Texture, 0).y * BlendSpread);
+
+	vec2 dx2 = 2.0 * dx;
+	vec2 dy2 = 2.0 * dy;
+	
+	vec4 bloomBlend = color * 0.22520613262190495;
+
+	bloomBlend += 0.002589001911021066 * texture(OGL2Texture, uv0 -dx2 +dy2); 
+	bloomBlend += 0.010778807494659370 * texture(OGL2Texture, uv0 -dx +dy2); 
+	bloomBlend += 0.024146616900339800 * texture(OGL2Texture, uv0 +dy2); 
+	bloomBlend += 0.010778807494659370 * texture(OGL2Texture, uv0 +dx +dy2); 
+	bloomBlend += 0.002589001911021066 * texture(OGL2Texture, uv0 +dx2 +dy2); 
+
+	bloomBlend += 0.010778807494659370 * texture(OGL2Texture, uv0 -dx2 +dy);
+	bloomBlend += 0.044875475183061630 * texture(OGL2Texture, uv0 -dx +dy);
+	bloomBlend += 0.100529757860782610 * texture(OGL2Texture, uv0 +dy);
+	bloomBlend += 0.044875475183061630 * texture(OGL2Texture, uv0 +dx +dy);
+	bloomBlend += 0.010778807494659370 * texture(OGL2Texture, uv0 +dx2 +dy);
+
+	bloomBlend += 0.024146616900339800 * texture(OGL2Texture, uv0 -dx2);
+	bloomBlend += 0.100529757860782610 * texture(OGL2Texture, uv0 -dx);	
+	bloomBlend += 0.100529757860782610 * texture(OGL2Texture, uv0 +dx);
+	bloomBlend += 0.024146616900339800 * texture(OGL2Texture, uv0 +dx2);
+
+	bloomBlend += 0.010778807494659370 * texture(OGL2Texture, uv0 -dx2 -dy);
+	bloomBlend += 0.044875475183061630 * texture(OGL2Texture, uv0 -dx -dy);
+	bloomBlend += 0.100529757860782610 * texture(OGL2Texture, uv0 -dy);
+	bloomBlend += 0.044875475183061630 * texture(OGL2Texture, uv0 +dx -dy);
+	bloomBlend += 0.010778807494659370 * texture(OGL2Texture, uv0 +dx2 -dy);
+
+	bloomBlend += 0.002589001911021066 * texture(OGL2Texture, uv0 -dx2 -dy2);
+	bloomBlend += 0.010778807494659370 * texture(OGL2Texture, uv0 -dx -dy2);
+	bloomBlend += 0.024146616900339800 * texture(OGL2Texture, uv0 -dy2);
+	bloomBlend += 0.010778807494659370 * texture(OGL2Texture, uv0 +dx -dy2);
+	bloomBlend += 0.002589001911021066 * texture(OGL2Texture, uv0 +dx2 -dy2);				
+	
+	bloomBlend.a = RGBLuminance(bloomBlend.rgb);
+	bloomBlend = mix(color, bloomBlend, BlendPower);
+	bloom.rgb = BloomType(color.rgb, bloomBlend.rgb);	
+
+	bloom.r = bloom.r * 1.010778807494659370;
+	color.a = RGBLuminance(color.rgb);
+	bloom.a = RGBLuminance(bloom.rgb);
+	
+	#if (BloomMixType == 1)
+		color = mix(color, bloom, BloomPower);
+	#elif (BloomMixType == 2)
+		color = (mix(color, bloom, BloomPower) + mix(bloom, bloomBlend, BloomPower)) / 2.0;
+	#elif (BloomMixType == 3)
+		color = mix(color, bloom, mix(color.a * 0.5, bloom.a, BloomPower));
+	#endif
+
+	return color;
+}
+#endif
+
+/*------------------------------------------------------------------------------
+               [COLOR CORRECTION/TONE MAPPING PASS CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (SCENE_TONEMAPPING == 1)
+float YXYLuminance(vec3 YXY)
+{
+	return (-0.9692660 * YXY.x)
+		  + (1.8760108 * YXY.y)
+		  + (0.0415560 * YXY.z);
+}
+
+vec3 FilmicTonemap(vec3 x)
+{
+	float A = 0.10;
+	float B = 0.36;
+	float C = 0.10;
+	float D = 0.30;
+	float E = 0.02;
+	float F = 0.30;
+
+    return ((x*(A*x+C*B)+D*E) / (x*(A*x+B)+D*F))- E / F;
+}
+
+vec3 ColorCorrection(vec3 color)
+{
+	float X = 1.0 / (1.0 + exp(RedCurve / 2.0));
+	float Y = 1.0 / (1.0 + exp(GreenCurve / 2.0));
+	float Z = 1.0 / (1.0 + exp(BlueCurve / 2.0));
+
+	color.r = (1.0 / (1.0 + exp(- RedCurve
+	* (color.r - 0.5))) - X) / (1.0 - 2.0 * X);
+	color.g = (1.0 / (1.0 + exp(- GreenCurve
+	* (color.g - 0.5))) - Y) / (1.0 - 2.0 * Y);
+	color.b = (1.0 / (1.0 + exp(- BlueCurve
+	* (color.b - 0.5))) - Z) / (1.0 - 2.0 * Z);
+	
+	return color;
+}
+
+vec4 TonemapPass(vec4 color, vec2 uv0)
+{
+	vec3 lumScale = 1.0/FilmicTonemap(vec3(1.0));
+
+	color.rgb = ColorCorrection(color.rgb);
+	color.rgb = FilmicTonemap(Exposure * color.rgb);
+    color.rgb = color.rgb * lumScale;
+	
+	// RGB -> XYZ conversion
+	const mat3 RGB2XYZ = mat3(0.4124564,  0.3575761,  0.1804375,
+							  0.2126729,  0.7151522,  0.0721750,
+							  0.0193339,  0.1191920,  0.9503041);
+							  
+	vec3 XYZ = (RGB2XYZ * color.rgb);
+	
+	const vec3 lumCoeff = vec3(0.2126729, 0.7151522, 0.0721750);
+  
+	// XYZ -> Yxy conversion
+	vec3 Yxy = lumCoeff;
+
+	Yxy.r = XYZ.g;                            	// copy luminance Y
+	Yxy.g = XYZ.r / (XYZ.r + XYZ.g + XYZ.b ); 	// x = X / (X + Y + Z)
+	Yxy.b = XYZ.g / (XYZ.r + XYZ.g + XYZ.b ); 	// y = Y / (X + Y + Z)
+	
+	// (Lp) Map average luminance to the middlegrey zone by scaling pixel luminance
+	#if (TonemapType == 1)
+	float Lp = Yxy.r * Exposure / Luminance;
+
+	#elif (TonemapType == 2)
+	float Lp = ((Yxy.r * (YXYLuminance(Yxy.rrr) / 1.5)) +
+				(Yxy.g * (YXYLuminance(Yxy.rrr) / 1.5)) +
+				(Yxy.b * (YXYLuminance(Yxy.rrr) / 1.5)))*(Exposure / Luminance);
+	#endif
+	
+	// (Ld) Scale all luminance within a displayable range of 0 to 1
+	Yxy.r = (Lp * (1.0 + Lp/(WhitePoint * WhitePoint)))/(1.0 + Lp);
+  
+	// Yxy -> XYZ conversion
+	XYZ.r = Yxy.r * Yxy.g / Yxy. b;               	// X = Y * x / y
+	XYZ.g = Yxy.r;                                	// copy luminance Y
+	XYZ.b = Yxy.r * (1.0 - Yxy.g - Yxy.b) / Yxy.b;	// Z = Y * (1-x-y) / y
+	
+	// XYZ -> RGB conversion
+	const mat3 XYZ2RGB = mat3(3.2404542, -1.5371385, -0.4985314,
+							 -0.9692660,  1.8760108,  0.0415560,
+							  0.0556434, -0.2040259,  1.0572252);
+
+	color.rgb = clamp(XYZ2RGB * XYZ, 0.0, 1.0);
+
+	color.rgb = RGBGammaToLinear(color.rgb, GammaConst);
+	color.rgb = LinearToRGBGamma(color.rgb, ToneAmount);
+	color.a = RGBLuminance(color.rgb);
+	
+	return color;
+}
+#endif
+
+/*------------------------------------------------------------------------------
+						[S-CURVE CONTRAST CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (S_CURVE_CONTRAST == 1)
+vec4 CurvesPass(vec4 color, vec2 uv0)
+{
+	#if (CurveType != 2)
+		vec3 luma = vec3(RGBLuminance(color.rgb));
+		vec3 chroma = color.rgb - luma;
+	#endif
+
+	#if (CurveType == 2)
+		vec3 x = color.rgb;
+	#elif (CurveType == 1)
+		vec3 x = chroma;
+		x = x * 0.5 + 0.5;
+	#else
+		vec3 x = luma;
+	#endif
+
+	// -- Curve -- Cubic Bezier spline
+	vec3 a = vec3(0.00, 0.00, 0.00);	//start point
+	vec3 b = vec3(0.25, 0.25, 0.25);	//control point 1
+	vec3 c = vec3(0.80, 0.80, 0.80);	//control point 2
+	vec3 d = vec3(1.00, 1.00, 1.00);	//endpoint
+
+	vec3 ab = mix(a, b, x);				//point between a and b (green)
+	vec3 bc = mix(b, c, x);				//point between b and c (green)
+	vec3 cd = mix(c, d, x);				//point between c and d (green)
+	vec3 abbc = mix(ab, bc, x);			//point between ab and bc (blue)
+	vec3 bccd = mix(bc, cd, x);			//point between bc and cd (blue)
+	vec3 dest = mix(abbc, bccd, x);		//point on the bezier-curve (black)
+
+	x = dest;
+
+	#if (CurveType == 0) //Only Luma
+		x = mix(luma, x, CurvesContrast);
+		color.rgb = x + chroma;
+	#elif (CurveType == 1) //Only Chroma
+		x = x * 2 - 1;
+		vec3 LColor = luma + x;
+		color.rgb = mix(color.rgb, LColor, CurvesContrast);
+	#elif (CurveType == 2) //Both Luma and Chroma
+		vec3 LColor = x; 
+		color.rgb = mix(color.rgb, LColor, CurvesContrast);
+	#endif
+	
+	color.a = RGBLuminance(color.rgb);
+	
+	return clamp(color, 0.0, 1.0);
+}
+#endif
+
+/*------------------------------------------------------------------------------
+							[CEL SHADING CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (CEL_SHADING == 1)
+#define RoundingOffset vec2(0.20, 0.40)
+
+const int NUM = 9;
+const vec3 thresholds = vec3(5.0, 8.0, 6.0);
+
+#if (LumaConversion == 1)
+const vec3 celLumaCoef = vec3(0.2126729, 0.7151522, 0.0721750);
+#else
+const vec3 celLumaCoef = vec3(0.299, 0.587, 0.114);
+#endif
+
+vec3 GetYUV(const vec3 rgb)
+{
+	#if (LumaConversion == 1)
+	const mat3 RGB2YUV = mat3(0.2126, 0.7152, 0.0722,
+							 -0.09991, -0.33609, 0.436,
+							  0.615, -0.55861, -0.05639);
+
+	#else
+
+	const mat3 RGB2YUV = mat3(0.299, 0.587, 0.114,
+							 -0.14713, -0.28886f, 0.436,
+							  0.615, -0.51499, -0.10001);
+	#endif
+	
+	return (rgb * RGB2YUV);
+}
+
+vec3 GetRGB(const vec3 yuv)
+{
+    #if (LumaConversion == 1)
+	const mat3 YUV2RGB = mat3(1.000, 0.000, 1.28033,
+							  1.000, -0.21482, -0.38059,
+							  1.000, 2.12798, 0.000);
+	#else
+
+	const mat3 YUV2RGB = mat3(1.000, 0.000, 1.13983,
+							  1.000, -0.39465, -0.58060,
+							  1.000, 2.03211, 0.000);
+	#endif
+	
+	return (yuv * YUV2RGB);
+}
+
+float GetCelLuminance(const vec3 rgb)
+{
+    return dot(rgb, celLumaCoef);
+}
+
+vec4 CelPass(vec4 color, vec2 uv0)
+{
+	vec3 yuv;
+	vec3 sum = color.rgb;
+
+	vec2 c[NUM] = vec2[NUM](
+	vec2(-0.0078125,-0.0078125),
+	vec2( 0.00 ,    -0.0078125),
+	vec2( 0.0078125,-0.0078125),
+	vec2(-0.0078125, 0.00),
+	vec2( 0.00,      0.00),
+	vec2( 0.0078125, 0.00),
+	vec2(-0.0078125, 0.0078125),
+	vec2( 0.00 ,     0.0078125),
+	vec2( 0.0078125, 0.0078125));
+	
+	vec3 col[NUM];
+	float lum[NUM];
+
+	for (int i = 0; i < NUM; i++)
+	{
+		col[i] = texture(OGL2Texture, uv0 + c[i] * RoundingOffset).rgb;
+		
+		#if (ColorRounding == 1)
+			col[i].r = clamp(round(col[i].r * thresholds.r) / thresholds.r, 0.0, 1.0);
+			col[i].g = clamp(round(col[i].g * thresholds.g) / thresholds.g, 0.0, 1.0);
+			col[i].b = clamp(round(col[i].b * thresholds.b) / thresholds.b, 0.0, 1.0);
+		#endif
+		
+		lum[i] = GetCelLuminance(col[i].xyz);
+
+		yuv = GetYUV(col[i]);
+		
+		if (UseYuvLuma == 0)
+			{ yuv.r = clamp(round(yuv.r * lum[i]) / thresholds.r + lum[i], 0.0, 1.0); }
+		else
+			{ yuv.r = clamp(round(yuv.r * thresholds.r) / thresholds.r + lum[i] / (255.0 / 5.0), 0.0, 1.0); }
+		
+		yuv = GetRGB(yuv);
+ 
+		sum += yuv;
+	}
+	
+	vec3 shadedColor = (sum / NUM);
+	
+	vec2 celPixel = vec2(1.0 / textureSize(OGL2Texture, 0).x * EdgeThickness, 1.0 / textureSize(OGL2Texture, 0).y * EdgeThickness);
+
+	float edgeX = dot(texture(OGL2Texture, uv0 + celPixel).rgb, celLumaCoef);
+	edgeX = dot(vec4(texture(OGL2Texture, uv0 - celPixel).rgb, edgeX), vec4(celLumaCoef, -1.0));
+
+	float edgeY = dot(texture(OGL2Texture, uv0 + vec2(celPixel.x, -celPixel.y)).rgb, celLumaCoef);
+	edgeY = dot(vec4(texture(OGL2Texture, uv0 + vec2(-celPixel.x, celPixel.y)).rgb, edgeY), vec4(celLumaCoef, -1.0));
+
+	float edge = dot(vec2(edgeX, edgeY), vec2(edgeX, edgeY));
+
+	#if (PaletteType == 1)
+		color.rgb = mix(color.rgb, color.rgb + pow(edge, EdgeFilter) * -EdgeStrength, EdgeStrength);
+	#elif (PaletteType == 2)
+		color.rgb = mix(color.rgb + pow(edge, EdgeFilter) * -EdgeStrength, shadedColor, 0.33);
+	#elif (PaletteType == 3)
+		color.rgb = mix(shadedColor + edge * -EdgeStrength, pow(edge, EdgeFilter) * -EdgeStrength + color.rgb, 0.5);
+	#endif
+	
+	color.a = RGBLuminance(color.rgb);
+
+	return clamp(color, 0.0, 1.0);
+}
+#endif
+
+/*------------------------------------------------------------------------------
+						[COLOR GRADING CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (COLOR_GRADING == 1)
+float RGBCVtoHUE(vec3 RGB, float C, float V)
+{
+    vec3 Delta = (V - RGB) / C;
+
+    Delta.rgb -= Delta.brg;
+    Delta.rgb += vec3(2.0, 4.0, 6.0);
+    Delta.brg = step(V, RGB) * Delta.brg;
+
+    float H;
+    H = max(Delta.r, max(Delta.g, Delta.b));
+    return fract(H / 6.0);
+}
+ 
+vec3 RGBtoHSV(vec3 RGB)
+{
+    vec3 HSV = vec3(0.0, 0.0, 0.0);
+    HSV.z = max(RGB.r, max(RGB.g, RGB.b));
+    float M = min(RGB.r, min(RGB.g, RGB.b));
+    float C = HSV.z - M;
+
+    if (C != 0)
+    {
+        HSV.x = RGBCVtoHUE(RGB, C, HSV.z);
+        HSV.y = C / HSV.z;
+    }
+
+    return HSV;
+}
+ 
+vec3 HUEtoRGB(float H)
+{
+    float R = abs(H * 6.0 - 3.0) - 1.0;
+    float G = 2 - abs(H * 6.0 - 2.0);
+    float B = 2 - abs(H * 6.0 - 4.0);
+
+    return clamp(vec3(R, G, B), 0.0, 1.0);
+}
+ 
+vec3 HSVtoRGB(vec3 HSV)
+{
+    vec3 RGB = HUEtoRGB(HSV.x);
+    return ((RGB - 1.0) * HSV.y + 1.0) * HSV.z;
+}
+ 
+vec3 HSVComplement(vec3 HSV)
+{
+	vec3 complement = HSV;
+	complement.x -= 0.5;
+	if (complement.x < 0.0) { complement.x += 1.0; }
+
+	return(complement);
+}
+
+float HueLerp(float h1, float h2, float v)
+{
+    float d = abs(h1 - h2);
+
+    if(d <= 0.5)
+    {
+        return mix(h1, h2, v);
+    }
+    else if(h1 < h2)
+    {
+        return fract(mix((h1 + 1.0), h2, v));
+    }
+    else
+    {
+        return fract(mix(h1, (h2 + 1.0), v));
+    }
+}
+
+vec4 ColorGrading(vec4 color, vec2 uv0)
+{
+	vec3 guide = vec3(1.0/RedGrading, 1.0/GreenGrading, 1.0/BlueGrading);
+	float amount = GradingStrength;
+	float correlation = Correlation;
+	float concentration = 2.2;
+
+	vec3 colorHSV = RGBtoHSV(color.rgb);
+	vec3 huePoleA = RGBtoHSV(guide);
+	vec3 huePoleB = HSVComplement(huePoleA);
+
+	float dist1 = abs(colorHSV.x - huePoleA.x); if (dist1 > 0.5) dist1 = 1.0 - dist1;
+	float dist2 = abs(colorHSV.x - huePoleB.x); if (dist2 > 0.5) dist2 = 1.0 - dist2;
+	float descent = smoothstep(0.0, correlation, colorHSV.y);
+
+	vec3 HSVColor = colorHSV;
+
+    if(dist1 < dist2)
+    {
+        float c = descent * amount * (1.0 - pow((dist1 * 2.0), 1.0 / concentration));
+        HSVColor.x = HueLerp(colorHSV.x, huePoleA.x, c);
+        HSVColor.y = mix(colorHSV.y, huePoleA.y, c);
+    }
+    else
+    {
+        float c = descent * amount * (1.0 - pow((dist2 * 2.0), 1.0 / concentration));
+        HSVColor.x = HueLerp(colorHSV.x, huePoleB.x, c);
+        HSVColor.y = mix(colorHSV.y, huePoleB.y, c);
+    }
+ 
+    color.rgb = HSVtoRGB(HSVColor);
+	color.a = RGBLuminance(color.rgb);
+
+	return clamp(color, 0.0, 1.0);
+}
+#endif
+
+/*------------------------------------------------------------------------------
+                           [SCANLINES CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (SCANLINES == 1)
+vec4 ScanlinesPass(vec4 color, vec2 uv0)
+{
+	vec4 intensity;
+	
+	#if (ScanlineType == 0)
+		if (fract(gl_FragCoord.y * 0.25) > ScanlineThickness)
+	#elif (ScanlineType == 1)
+		if (fract(gl_FragCoord.x * 0.25) > ScanlineThickness)
+	#elif (ScanlineType == 2)
+		if (fract(gl_FragCoord.x * 0.25) > ScanlineThickness && fract(gl_FragCoord.y * 0.25) > ScanlineThickness)
+	#endif
+		{
+			intensity = vec4(0);
+		}
+		else
+		{
+			intensity = smoothstep(0.2, ScanlineBrightness, color) + normalize(vec4(color.xyz, RGBLuminance(color.xyz)));
+		}
+	
+	float level = (4.0-uv0.x) * ScanlineIntensity;
+	
+	color = intensity * (0.5-level) + color * 1.1;
+
+	return color;
+}
+#endif
+
+/*------------------------------------------------------------------------------
+							[VIGNETTE CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (VIGNETTE == 1)
+#define VignetteCenter vec2(0.500, 0.500)
+
+vec4 VignettePass(vec4 color, vec2 uv0)
+{
+	vec2 tc = uv0 - VignetteCenter;
+
+	tc *= vec2((textureSize(OGL2Texture, 0).x / textureSize(OGL2Texture, 0).y), VignetteRatio);
+	tc /= VignetteRadius;
+
+	float v = dot(tc, tc);
+
+	color.rgb *= (1.0 + pow(v, VignetteSlope * 0.5) * -VignetteAmount);
+
+	return color;
+}
+#endif
+
+/*------------------------------------------------------------------------------
+						[SUBPIXEL DITHERING CODE SECTION]
+------------------------------------------------------------------------------*/
+
+#if (DITHERING == 1)
+vec4 DitherPass(vec4 color, vec2 uv0)
+{  
+   float ditherSize = 2.0;
+   float ditherBits  = 8.0;
+
+   #if DitherMethod == 2 //random subpixel dithering
+
+	float seed = dot(uv0, vec2(12.9898,78.233));
+	float sine = sin(seed);
+	float noise = fract(sine * 43758.5453 + uv0.x);
+
+	float ditherShift = (1.0 / (pow(2.0, ditherBits) - 1.0));
+	float ditherHalfShift = (ditherShift * 0.5);
+	ditherShift = ditherShift * noise - ditherHalfShift;
+
+	color.rgb += vec3(-ditherShift, ditherShift, -ditherShift);
+     
+   #else //ordered dithering
+
+     float gridPosition = fract(dot(uv0, (textureSize(OGL2Texture, 0).xy / ditherSize)) + (0.5 / ditherSize));
+     float ditherShift = (0.75) * (1.0 / (pow(2.0, ditherBits) - 1.0));
+
+     vec3 RGBShift = vec3(ditherShift, -ditherShift, ditherShift);
+     RGBShift = lerp(2.0 * RGBShift, -2.0 * RGBShift, gridPosition);
+
+     color.rgb += RGBShift;
+   #endif
+
+   color.a = RGBLuminance(color.rgb);
+   
+   return color;
+}
+#endif
+
+/*------------------------------------------------------------------------------
+                      [MAIN() & COMBINE PASS CODE SECTION]
+------------------------------------------------------------------------------*/
+
+void main()
+{
+	vec4 color = texture(OGL2Texture, uv0);
+	color = GammaPrePass(color, uv0);
+
+	#if (BILINEAR_FILTERING == 1)
+		color = BiLinearPass(color, uv0);
+	#endif
+	
+	#if (GAUSSIAN_FILTERING == 1)
+		color = GaussianPass(color, uv0);
+	#endif
+	
+	#if (BICUBIC_FILTERING == 1)
+		color = BiCubicPass(color, uv0);
+	#endif
+
+	#if (NFAA_PASS == 1)
+		color = NFAAPass(color, uv0);
+	#endif
+	
+	#if (FXAA_PASS == 1)
+		color = FXAAPass(color, uv0);
+	#endif
+	
+	#if (TEXTURE_SHARPENING == 1)
+		color = TexSharpenPass(color, uv0);
+	#endif
+	
+	#if (CEL_SHADING == 1)
+		color = CelPass(color, uv0);
+	#endif
+
+	#if (SCANLINES == 1)
+		color = ScanlinesPass(color, uv0);
+	#endif
+	
+	#if (BLENDED_BLOOM == 1)
+		color = BloomPass(color, uv0);
+	#endif
+
+	#if (SCENE_TONEMAPPING == 1)
+		color = TonemapPass(color, uv0);
+	#endif
+	
+	#if (PIXEL_VIBRANCE == 1)
+		color = VibrancePass(color, uv0);
+	#endif
+	
+	#if (COLOR_GRADING == 1)
+		color = ColorGrading(color, uv0);
+	#endif
+
+	#if (S_CURVE_CONTRAST == 1)
+		color = CurvesPass(color, uv0);
+	#endif
+	
+	#if (GAMMA_CORRECTION == 1)
+		color = PostGammaPass(color, uv0);
+	#endif
+	
+	#if (VIGNETTE == 1)
+		color = VignettePass(color, uv0);
+	#endif
+	
+	#if (DITHERING == 1)
+		color = DitherPass(color, uv0);
+	#endif
+	
+	ocol0 = color;
+}

@@ -1,0 +1,11 @@
+#Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
+Kishin Douji Zenki FX - Vajra Fight (J);귀신동자 젠키 FX- 금강염투 바쥬라 파이트;NEC PC-FX;0;1995;Hudson;Arcade;;;;;;;;;;
+Der Langrisser FX (J);데어 랑그릿사 FX;NEC PC-FX;0;1996;NCS;SRPG;;;;;;;;;;
+Battle Heat (J);배틀 히트;NEC PC-FX;0;1994;Hudson;Anime Fighting;;;;;;;;;;
+Ginga Ojousama Densetsu Yuna FX (J);은하 아가씨 전설 유나 FX - 비애의 세이렌;NEC PC-FX;0;1996;Hudson;Adventure;;;;;;;;;;
+Hataraku Shoujo - Tekipaki Working Love FX (J);일하는 소녀 테키파키 워킹 러브 FX;NEC PC-FX;0;1998;NEC;Adventure;;;;;;;;;;
+Tengai Makyu - Dennou Karakuri Kakutouden (J);천외마경 전뇌낙조격투전;NEC PC-FX;0;1995;Hudson;Anime Fighting;;;;;;;;;;
+Tyoushin Heiki Zeroigar (J);초신병기 제로이가;NEC PC-FX;0;1997;Sugeiya;Shooting;;;;;;;;;;
+Chip Chan Kick! (J);칩짱 킥!;NEC PC-FX;0;1996;NEC;Action;;;;;;;;;;
+Cutey Honey FX (J);큐티 하니 FX;NEC PC-FX;0;1995;DataWest;Adventure;;;;;;;;;;
+Kokuu Hyouryuu Nirgends (J);허공표류 닐겐츠;NEC PC-FX;0;1996;Micro Cabin;Shooting;;;;;;;;;;

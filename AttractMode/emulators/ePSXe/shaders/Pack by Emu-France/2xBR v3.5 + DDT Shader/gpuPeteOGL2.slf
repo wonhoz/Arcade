@@ -1,0 +1,472 @@
+/*
+   Hyllian's 2xBR v3.5abcd + DDT Shader - ported to GLSL by 2015 guest(r)
+   
+   Copyright (C) 2011 Hyllian/Jararaca - sergiogdb@gmail.com
+
+   Hyllian's Data Dependent Triangulation Shader
+
+
+   
+Copyright (C) 2011-2012 Hyllian/Jararaca - sergiogdb@gmail.com 
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License
+   as published by the Free Software Foundation; either version 2
+   of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+Shader notes:
+
+	Shader level 1: a cornering
+
+	Shader level 2: b cornering
+
+	Shader level 3: c cornering
+
+	Shader level 4: d cornering
+
+*/
+
+
+uniform sampler2D OGL2Texture;
+uniform vec4 OGL2Param;
+
+
+vec2 size = vec2(2048.0,1024.0);
+
+
+const vec3 dtt = vec3(65536.0,255.0,1.0);
+
+
+
+float reduce(vec3 color)
+
+{
+
+	return dot(color, dtt);
+
+} 
+
+
+vec3 bilinear(float p, float q, vec3 A, vec3 B, vec3 C, vec3 D)
+
+{
+
+	return ((1-p)*(1-q)*A + p*(1-q)*B + (1-p)*q*C + p*q*D);
+
+} 
+
+
+
+float GET_RESULT(float A, float B, float C, float D)
+{
+    return (sign(abs(A-C)+abs(A-D)) - sign(abs(B-C)+abs(B-D))); 
+}
+
+
+
+const float coef        = 2.0;
+const vec3  rgbw        = vec3(14.352, 28.176, 5.472);
+const   float XBR_EQ_THRESHOLD     = 15.0; 
+const   vec2 OGLSize    = vec2( 1024.0, 512.0);
+const   vec2 OGLInvSize = vec2( 0.0009765625, 0.001953125); 
+const   vec2 dx         = vec2( 0.0009765625, 0.0);
+const   vec2 dy         = vec2( 0.0, 0.001953125 );
+const   vec2 x2         = vec2( 0.001953125 , 0.0);
+const   vec2 y2         = vec2( 0.0 , 0.00390625 );
+const   vec4 xy         = vec4( 0.0009765625, 0.001953125,-0.0009765625,-0.001953125);  
+const   vec4 zw         = vec4( 0.001953125 , 0.001953125,-0.001953125 ,-0.00390625 );  
+const   vec4 wz         = vec4( 0.0009765625, 0.00390625 ,-0.0009765625,-0.00390625 );  
+
+
+vec4 noteq(vec4 A, vec4 B)
+{
+	return vec4(notEqual(A, B));
+}
+
+vec4 not(vec4 A)
+{
+	return vec4(1.0)-A;
+}
+
+vec4 df(vec4 A, vec4 B)
+{
+	return abs(A-B);
+}
+
+vec4 eq(vec4 A, vec4 B)
+
+{
+	return vec4(lessThan(df(A, B),vec4(XBR_EQ_THRESHOLD)));
+}
+
+
+vec4 weighted_distance(vec4 a, vec4 b, vec4 c, vec4 d, vec4 e, vec4 f, vec4 g, vec4 h)
+{
+    return (df(a,b) + df(a,c) + df(d,e) + df(d,f) + 4.0*df(g,h));
+}
+
+vec3 texture2d (sampler2D OGL2Texture, vec2 texcoord) {
+
+    vec4  edr, edr_left, edr_up; bvec4 px; // px = pixel, edr = edge detection rule
+    vec4  interp_restriction_lv1, interp_restriction_lv2_left, interp_restriction_lv2_up;
+    bvec4 nc; // new_color
+    vec4  fx, fx_left, fx_up; // inequations of straight lines.
+
+
+    vec2 fp  = fract(texcoord*OGLSize);
+    vec2 TexCoord_0 = texcoord-fp*OGLInvSize + 0.5*OGLInvSize;
+
+    vec3 A  = texture2D(OGL2Texture, TexCoord_0 + xy.zw ).xyz;
+    vec3 B  = texture2D(OGL2Texture, TexCoord_0     -dy ).xyz;
+    vec3 C  = texture2D(OGL2Texture, TexCoord_0 + xy.xw ).xyz;
+    vec3 D  = texture2D(OGL2Texture, TexCoord_0 - dx    ).xyz;
+    vec3 E  = texture2D(OGL2Texture, TexCoord_0         ).xyz;
+    vec3 F  = texture2D(OGL2Texture, TexCoord_0 + dx    ).xyz;
+    vec3 G  = texture2D(OGL2Texture, TexCoord_0 + xy.zy ).xyz;
+    vec3 H  = texture2D(OGL2Texture, TexCoord_0     +dy ).xyz;
+    vec3 I  = texture2D(OGL2Texture, TexCoord_0 + xy.xy ).xyz;
+    vec3 A1 = texture2D(OGL2Texture, TexCoord_0 + wz.zw ).xyz;
+    vec3 C1 = texture2D(OGL2Texture, TexCoord_0 + wz.xw ).xyz;
+    vec3 A0 = texture2D(OGL2Texture, TexCoord_0 + zw.zw ).xyz;
+    vec3 G0 = texture2D(OGL2Texture, TexCoord_0 + zw.zy ).xyz;
+    vec3 C4 = texture2D(OGL2Texture, TexCoord_0 + zw.xw ).xyz;
+    vec3 I4 = texture2D(OGL2Texture, TexCoord_0 + zw.xy ).xyz;
+    vec3 G5 = texture2D(OGL2Texture, TexCoord_0 + wz.zy ).xyz;
+    vec3 I5 = texture2D(OGL2Texture, TexCoord_0 + wz.xy ).xyz;
+    vec3 B1 = texture2D(OGL2Texture, TexCoord_0 - y2    ).xyz;
+    vec3 D0 = texture2D(OGL2Texture, TexCoord_0 - x2    ).xyz;
+    vec3 H5 = texture2D(OGL2Texture, TexCoord_0 + y2    ).xyz;
+    vec3 F4 = texture2D(OGL2Texture, TexCoord_0 + x2    ).xyz;
+
+    vec4 b  = vec4(dot(B ,rgbw), dot(D ,rgbw), dot(H ,rgbw), dot(F ,rgbw));
+    vec4 c  = vec4(dot(C ,rgbw), dot(A ,rgbw), dot(G ,rgbw), dot(I ,rgbw));
+    vec4 d  = b.yzwx;
+    vec4 e  = vec4(dot(E,rgbw));
+    vec4 f  = b.wxyz;
+    vec4 g  = c.zwxy;
+    vec4 h  = b.zwxy;
+    vec4 i  = c.wxyz;
+    vec4 i4 = vec4(dot(I4,rgbw), dot(C1,rgbw), dot(A0,rgbw), dot(G5,rgbw));
+    vec4 i5 = vec4(dot(I5,rgbw), dot(C4,rgbw), dot(A1,rgbw), dot(G0,rgbw));
+    vec4 h5 = vec4(dot(H5,rgbw), dot(F4,rgbw), dot(B1,rgbw), dot(D0,rgbw));
+    vec4 f4 = h5.yzwx;
+    vec4 c1 = i4.yzwx;
+    
+vec4 g0 = i5.wxyz;
+    
+vec4 b1 = h5.zwxy;
+
+    vec4 d0 = h5.wxyz;
+
+    if (OGL2Param.z == 0.0)
+    {    interp_restriction_lv1 = sign(noteq(e,f) * noteq(e,h));}
+
+    if (OGL2Param.z == 1.0)
+    {    interp_restriction_lv1 = sign(noteq(e,f) * noteq(e,h) * ( not(eq(f,b)) * not(eq(h,d)) + eq(e,i) * not(eq(f,i4)) * not(eq(h,i5)) + eq(e,g) + eq(e,c)));}
+
+    if (OGL2Param.z == 2.0)
+    {    interp_restriction_lv1 = sign(noteq(e,f)*noteq(e,h)*(not(eq(f,b))* not(eq(h,d)) + eq(e,i) * not(eq(f,i4)) * not(eq(h,i5)) + eq(e,g) + eq(e,c) )  * (noteq(f,f4)* noteq(f,i) + noteq(h,h5) * noteq(h,i) + noteq(h,g) + noteq(f,c) + eq(b,c1) * eq(d,g0)));}
+
+    if (OGL2Param.z == 3.0)
+    {    interp_restriction_lv1 = sign(noteq(e,f) * noteq(e,h) * ( not(eq(f,b)) * not(eq(f,c)) + not(eq(h,d)) * not(eq(h,g)) + eq(e,i) * (not(eq(f,f4)) * not(eq(f,i4)) + not(eq(h,h5)) * not(eq(h,i5))) + eq(e,g) + eq(e,c)) );}
+
+
+
+    interp_restriction_lv2_left = vec4(notEqual(e,g))*vec4(notEqual(d,g));
+    interp_restriction_lv2_up   = vec4(notEqual(e,c))*vec4(notEqual(b,c));
+
+    edr      = vec4(lessThan(weighted_distance( e, c, g, i, h5, f4, h, f), weighted_distance( h, d, i5, f, i4, b, e, i)))*interp_restriction_lv1;
+    edr_left = vec4(lessThanEqual(coef*df(f,g),df(h,c)))*interp_restriction_lv2_left; 
+    edr_up   = vec4(greaterThanEqual(df(f,g),coef*df(h,c)))*interp_restriction_lv2_up;
+
+
+    vec3 E0 = E;
+    vec3 E1 = E;
+    vec3 E2 = E;
+    vec3 E3 = E;
+ 
+
+
+    px = lessThanEqual(df(e,f),df(e,h));
+
+    vec3 P[4];
+
+    P[0] = px.x ? F : H;
+
+    P[1] = px.y ? B : F;
+
+    P[2] = px.z ? D : B;
+
+    P[3] = px.w ? H : D;
+
+	if (edr.x)
+
+	{
+
+		if (bool(float(edr_left.x) * float(edr_up.x)))
+
+		{
+
+			E3  = mix(E3 , P[0],  0.833333);
+
+			E2  = mix(E2 , P[0],  0.25);
+
+			E1  = mix(E1 , P[0],  0.25);
+
+		}
+
+		else if (edr_left.x)
+
+		{
+
+			E3  = mix(E3 , P[0],  0.75);
+
+			E2  = mix(E2 , P[0],  0.25);
+
+		}
+
+		else if (edr_up.x)
+
+		{
+
+			E3  = mix(E3 , P[0],  0.75);
+
+			E1  = mix(E1 , P[0],  0.25);
+
+		}
+
+		else
+
+		{
+
+			E3  = mix(E3 , P[0],  0.5);
+
+		}
+
+	}
+
+	if (edr.y)
+
+	{
+
+		if (bool(float(edr_left.y) * float(edr_up.y)))
+
+		{
+
+			E1  = mix(E1 , P[1],  0.833333);
+
+			E3  = mix(E3 , P[1],  0.25);
+
+			E0  = mix(E0 , P[1],  0.25);
+
+		}
+
+		else if (edr_left.y)
+
+		{
+
+			E1  = mix(E1 , P[1],  0.75);
+
+			E3  = mix(E3 , P[1],  0.25);
+
+		}
+
+		else if (edr_up.y)
+
+		{
+
+			E1  = mix(E1 , P[1],  0.75);
+
+			E0  = mix(E0 , P[1],  0.25);
+
+		}
+
+		else
+
+		{
+
+			E1  = mix(E1 , P[1],  0.5);
+
+		}
+
+	}
+ 
+
+	if (edr.z)
+
+	{
+
+		if (bool(float(edr_left.z) * float(edr_up.z)))
+
+		{
+
+			E0  = mix(E0 , P[2],  0.833333);
+
+			E1  = mix(E1 , P[2],  0.25);
+
+			E2  = mix(E2 , P[2],  0.25);
+
+		}
+
+		else if (edr_left.z)
+
+		{
+
+			E0  = mix(E0 , P[2],  0.75);
+
+			E1  = mix(E1 , P[2],  0.25);
+
+		}
+
+		else if (edr_up.z)
+
+		{
+
+			E0  = mix(E0 , P[2],  0.75);
+
+			E2  = mix(E2 , P[2],  0.25);
+
+		}
+
+		else
+
+		{
+
+			E0  = mix(E0 , P[2],  0.5);
+
+		}
+
+	} 
+
+	if (edr.w)
+
+	{
+
+		if (bool(float(edr_left.w) * float(edr_up.w)))
+
+		{
+
+			E2  = mix(E2 , P[3],  0.833333);
+
+			E0  = mix(E0 , P[3],  0.25);
+
+			E3  = mix(E3 , P[3],  0.25);
+
+		}
+
+		else if (edr_left.w)
+
+		{
+
+			E2  = mix(E2 , P[3],  0.75);
+
+			E0  = mix(E0 , P[3],  0.25);
+
+		}
+
+		else if (edr_up.w)
+
+		{
+
+			E2  = mix(E2 , P[3],  0.75);
+
+			E3  = mix(E3 , P[3],  0.25);
+
+		}
+
+		else
+
+		{
+
+			E2  = mix(E2 , P[3],  0.5);
+
+		}
+
+	}
+ 
+
+
+    vec3 res = (fp.x < 0.50) ? (fp.y < 0.50 ? E0 : E2) : (fp.y < 0.50 ? E1: E3); 
+
+
+
+
+
+    return res;
+} 
+
+
+void main()
+{
+	vec2 pos = fract(gl_TexCoord[0].xy*size)-vec2(0.5, 0.5); // pos = pixel position
+	
+	vec2 dir = sign(pos); // dir = pixel direction
+
+	vec2 g1 = dir*gl_TexCoord[1].xy;
+
+	vec2 g2 = dir*gl_TexCoord[1].zw; 
+
+	vec3 A = texture2d(OGL2Texture, gl_TexCoord[0].xy          ).xyz; 
+	vec3 B = texture2d(OGL2Texture, gl_TexCoord[0].xy + g1     ).xyz; 
+	vec3 C = texture2d(OGL2Texture, gl_TexCoord[0].xy      + g2).xyz; 
+	vec3 D = texture2d(OGL2Texture, gl_TexCoord[0].xy + g1 + g2).xyz; 
+
+	float a = reduce(A);
+
+	float b = reduce(B);
+
+	float c = reduce(C);
+
+	float d = reduce(D); 
+
+	float p = abs(pos.x);
+	
+	float q = abs(pos.y);
+
+
+
+	float k = distance(pos,g1);
+
+	float l = distance(pos,g2); 
+
+	if (abs(a-d) < abs(b-c))
+
+	{
+
+		if (k < l)
+
+		{
+
+			C = A + D - B;
+
+		}
+
+		else if (k >= l)
+
+		{
+
+			B = A + D - C;
+
+		}
+
+	}
+
+	else if (abs(a-d) > abs(b-c))
+
+	{
+
+		D = B + C - A;
+
+	} 
+
+	gl_FragColor.xyz=bilinear(p, q, A, B, C, D);
+}

@@ -1,0 +1,271 @@
+Supermodel v0.3a-WIP Error Log
+------------------------------
+
+Started as:
+  argv[0] = emulators\SuperModel\Supermodel.exe
+  argv[1] = Roms\vf3.zip
+  argv[2] = -res=1024,768
+  argv[3] = -fullscreen
+  argv[4] = -quad-rendering
+
+Opened Roms\vf3.zip.
+vf3c:
+  banked_crom: stride=zu, chunk size=zu, byte swap=8
+    mpr-19196.4, crc32=0xf386b850, offset=0x00000000
+    mpr-19195.3, crc32=0xbd5e27a3, offset=0x00000002
+    mpr-19194.2, crc32=0x66254702, offset=0x00000004
+    mpr-19193.1, crc32=0x7bab33d2, offset=0x00000006
+    mpr-19200.8, crc32=0x74941091, offset=0x01000000
+    mpr-19199.7, crc32=0x9f80d6fe, offset=0x01000002
+    mpr-19198.6, crc32=0xd8ee5032, offset=0x01000004
+    mpr-19197.5, crc32=0xa22d76c9, offset=0x01000006
+    mpr-19204.12, crc32=0x2f93310a, offset=0x02000000
+    mpr-19203.11, crc32=0x0afa6334, offset=0x02000002
+    mpr-19202.10, crc32=0xaaa086c6, offset=0x02000004
+    mpr-19201.9, crc32=0x7c4a8c31, offset=0x02000006
+    mpr-19208.16, crc32=0x08f30f71, offset=0x03000000
+    mpr-19207.15, crc32=0x2ce1612d, offset=0x03000002
+    mpr-19206.14, crc32=0x71a98d73, offset=0x03000004
+    mpr-19205.13, crc32=0x199c328e, offset=0x03000006
+  crom: stride=zu, chunk size=zu, byte swap=8
+    epr-19230c.20, crc32=0x736a9431, offset=0x00000000
+    epr-19229c.19, crc32=0x731b6b78, offset=0x00000002
+    epr-19228c.18, crc32=0x9c5727e2, offset=0x00000004
+    epr-19227c.17, crc32=0xa7df4d75, offset=0x00000006
+  sound_program: stride=zu, chunk size=zu, byte swap=1
+    epr-19231.21, crc32=0xb416fe96, offset=0x00000000
+  sound_samples: stride=zu, chunk size=zu, byte swap=1
+    mpr-19209.22, crc32=0x3715e38c, offset=0x00000000
+    mpr-19210.24, crc32=0xc03d6502, offset=0x00400000
+  vrom: stride=zu, chunk size=zu, byte swap=32
+    mpr-19211.26, crc32=0x9c8f5df1, offset=0x00000000
+    mpr-19212.27, crc32=0x75036234, offset=0x00000002
+    mpr-19213.28, crc32=0x67b123cf, offset=0x00000004
+    mpr-19214.29, crc32=0xa6f5576b, offset=0x00000006
+    mpr-19215.30, crc32=0xc6fd9f0d, offset=0x00000008
+    mpr-19216.31, crc32=0x201bb1ed, offset=0x0000000a
+    mpr-19217.32, crc32=0x4dadd41a, offset=0x0000000c
+    mpr-19218.33, crc32=0xcff91953, offset=0x0000000e
+    mpr-19219.34, crc32=0xc610d521, offset=0x00000010
+    mpr-19220.35, crc32=0xe62924d0, offset=0x00000012
+    mpr-19221.36, crc32=0x24f83e3c, offset=0x00000014
+    mpr-19222.37, crc32=0x61a6aa7d, offset=0x00000016
+    mpr-19223.38, crc32=0x1a8c1980, offset=0x00000018
+    mpr-19224.39, crc32=0x0a79a1bd, offset=0x0000001a
+    mpr-19225.40, crc32=0x91a985eb, offset=0x0000001c
+    mpr-19226.41, crc32=0x00091722, offset=0x0000001e
+Runtime configuration:
+  GameXMLFile=Config/Games.xml
+  InitStateFile=
+  MultiThreaded=1
+  GPUMultiThreaded=1
+  PowerPCFrequency=50
+  MultiTexture=0
+  VertexShader=
+  FragmentShader=
+  VertexShaderFog=
+  FragmentShaderFog=
+  VertexShader2D=
+  FragmentShader2D=
+  EmulateSound=1
+  Balance=0
+  EmulateDSB=1
+  SoundVolume=100
+  MusicVolume=100
+  ForceFeedback=0
+  New3DEngine=1
+  QuadRendering=1
+  XResolution=1024
+  YResolution=768
+  FullScreen=1
+  WideScreen=0
+  Stretch=0
+  VSync=1
+  Throttle=1
+  ShowFrameRate=0
+  Crosshairs=0
+  FlipStereo=0
+  InputSystem=dinput
+  DirectInputConstForceLeftMax=100
+  DirectInputConstForceRightMax=100
+  DirectInputSelfCenterMax=100
+  DirectInputFrictionMax=100
+  DirectInputVibrateMax=100
+  XInputConstForceThreshold=30
+  XInputConstForceMax=100
+  XInputVibrateMax=100
+  Outputs=none
+  EmulateNet=0
+  port_in=1970
+  port_out=1971
+  addr_out=127.0.0.1
+  InputStart1=KEY_1,JOY1_BUTTON10
+  InputStart2=KEY_2,JOY2_BUTTON10
+  InputCoin1=KEY_3,JOY1_BUTTON9
+  InputCoin2=KEY_4,JOY2_BUTTON9
+  InputServiceA=KEY_5
+  InputServiceB=KEY_7
+  InputTestA=KEY_6
+  InputTestB=KEY_8
+  InputJoyUp=KEY_UP,JOY1_UP
+  InputJoyDown=KEY_DOWN,JOY1_DOWN
+  InputJoyLeft=KEY_LEFT,JOY1_LEFT
+  InputJoyRight=KEY_RIGHT,JOY1_RIGHT
+  InputJoyUp2=JOY2_UP
+  InputJoyDown2=JOY2_DOWN
+  InputJoyLeft2=JOY2_LEFT
+  InputJoyRight2=JOY2_RIGHT
+  InputPunch=KEY_A,JOY1_BUTTON1
+  InputKick=KEY_S,JOY1_BUTTON2
+  InputGuard=KEY_D,JOY1_BUTTON3
+  InputEscape=KEY_F,JOY1_BUTTON4
+  InputPunch2=JOY2_BUTTON1
+  InputKick2=JOY2_BUTTON2
+  InputGuard2=JOY2_BUTTON3
+  InputEscape2=JOY2_BUTTON4
+  InputShift=KEY_A,JOY1_BUTTON1
+  InputBeat=KEY_S,JOY1_BUTTON2
+  InputCharge=KEY_D,JOY1_BUTTON3
+  InputJump=KEY_F,JOY1_BUTTON4
+  InputShortPass=KEY_A,JOY1_BUTTON1
+  InputLongPass=KEY_S,JOY1_BUTTON2
+  InputShoot=KEY_D,JOY1_BUTTON3
+  InputShortPass2=JOY2_BUTTON1
+  InputLongPass2=JOY2_BUTTON2
+  InputShoot2=JOY2_BUTTON3
+  InputSteeringLeft=KEY_LEFT
+  InputSteeringRight=KEY_RIGHT
+  InputSteering=JOY1_XAXIS
+  InputAccelerator=KEY_UP,JOY1_UP
+  InputBrake=KEY_DOWN,JOY1_DOWN
+  InputGearShiftUp=KEY_Y
+  InputGearShiftDown=KEY_H
+  InputGearShift1=KEY_Q,JOY1_BUTTON5
+  InputGearShift2=KEY_W,JOY1_BUTTON6
+  InputGearShift3=KEY_E,JOY1_BUTTON7
+  InputGearShift4=KEY_R,JOY1_BUTTON8
+  InputGearShiftN=KEY_T
+  InputVR1=KEY_A,JOY1_BUTTON1
+  InputVR2=KEY_S,JOY1_BUTTON2
+  InputVR3=KEY_D,JOY1_BUTTON3
+  InputVR4=KEY_F,JOY1_BUTTON4
+  InputViewChange=KEY_A,JOY1_BUTTON1
+  InputHandBrake=KEY_S,JOY1_BUTTON2
+  InputRearBrake=KEY_S,JOY1_BUTTON2
+  InputMusicSelect=KEY_D,JOY1_BUTTON3
+  InputTwinJoyTurnLeft=KEY_Q,JOY1_RXAXIS_NEG
+  InputTwinJoyTurnRight=KEY_W,JOY1_RXAXIS_POS
+  InputTwinJoyForward=KEY_UP,JOY1_YAXIS_NEG
+  InputTwinJoyReverse=KEY_DOWN,JOY1_YAXIS_POS
+  InputTwinJoyStrafeLeft=KEY_LEFT,JOY1_XAXIS_NEG
+  InputTwinJoyStrafeRight=KEY_RIGHT,JOY1_XAXIS_POS
+  InputTwinJoyJump=KEY_E,JOY1_BUTTON1
+  InputTwinJoyCrouch=KEY_R,JOY1_BUTTON2
+  InputTwinJoyLeft1=NONE
+  InputTwinJoyLeft2=NONE
+  InputTwinJoyRight1=NONE
+  InputTwinJoyRight2=NONE
+  InputTwinJoyUp1=NONE
+  InputTwinJoyUp2=NONE
+  InputTwinJoyDown1=NONE
+  InputTwinJoyDown2=NONE
+  InputTwinJoyShot1=KEY_A,JOY1_BUTTON5
+  InputTwinJoyShot2=KEY_S,JOY1_BUTTON6
+  InputTwinJoyTurbo1=KEY_Z,JOY1_BUTTON7
+  InputTwinJoyTurbo2=KEY_X,JOY1_BUTTON8
+  InputAnalogJoyLeft=KEY_LEFT
+  InputAnalogJoyRight=KEY_RIGHT
+  InputAnalogJoyUp=KEY_UP
+  InputAnalogJoyDown=KEY_DOWN
+  InputAnalogJoyX=JOY_XAXIS,MOUSE_XAXIS
+  InputAnalogJoyY=JOY_YAXIS,MOUSE_YAXIS
+  InputAnalogJoyTrigger=KEY_A,JOY_BUTTON1,MOUSE_LEFT_BUTTON
+  InputAnalogJoyEvent=KEY_S,JOY_BUTTON2,MOUSE_RIGHT_BUTTON
+  InputAnalogJoyTrigger2=KEY_D,JOY_BUTTON2
+  InputAnalogJoyEvent2=NONE
+  InputGunLeft=KEY_LEFT
+  InputGunRight=KEY_RIGHT
+  InputGunUp=KEY_UP
+  InputGunDown=KEY_DOWN
+  InputGunX=MOUSE_XAXIS,JOY1_XAXIS
+  InputGunY=MOUSE_YAXIS,JOY1_YAXIS
+  InputTrigger=KEY_A,JOY1_BUTTON1,MOUSE_LEFT_BUTTON
+  InputOffscreen=KEY_S,JOY1_BUTTON2,MOUSE_RIGHT_BUTTON
+  InputAutoTrigger=0
+  InputGunLeft2=NONE
+  InputGunRight2=NONE
+  InputGunUp2=NONE
+  InputGunDown2=NONE
+  InputGunX2=JOY2_XAXIS
+  InputGunY2=JOY2_YAXIS
+  InputTrigger2=JOY2_BUTTON1
+  InputOffscreen2=JOY2_BUTTON2
+  InputAutoTrigger2=0
+  InputAnalogGunLeft=KEY_LEFT
+  InputAnalogGunRight=KEY_RIGHT
+  InputAnalogGunUp=KEY_UP
+  InputAnalogGunDown=KEY_DOWN
+  InputAnalogGunX=MOUSE_XAXIS,JOY1_XAXIS
+  InputAnalogGunY=MOUSE_YAXIS,JOY1_YAXIS
+  InputAnalogTriggerLeft=KEY_A,JOY1_BUTTON1,MOUSE_LEFT_BUTTON
+  InputAnalogTriggerRight=KEY_S,JOY1_BUTTON2,MOUSE_RIGHT_BUTTON
+  InputAnalogGunLeft2=NONE
+  InputAnalogGunRight2=NONE
+  InputAnalogGunUp2=NONE
+  InputAnalogGunDown2=NONE
+  InputAnalogGunX2=NONE
+  InputAnalogGunY2=NONE
+  InputAnalogTriggerLeft2=NONE
+  InputAnalogTriggerRight2=NONE
+  InputSkiLeft=KEY_LEFT
+  InputSkiRight=KEY_RIGHT
+  InputSkiUp=KEY_UP
+  InputSkiDown=KEY_DOWN
+  InputSkiX=JOY1_XAXIS
+  InputSkiY=JOY1_YAXIS
+  InputSkiPollLeft=KEY_A,JOY1_BUTTON1
+  InputSkiPollRight=KEY_S,JOY1_BUTTON2
+  InputSkiSelect1=KEY_Q,JOY1_BUTTON3
+  InputSkiSelect2=KEY_W,JOY1_BUTTON4
+  InputSkiSelect3=KEY_E,JOY1_BUTTON5
+  InputMagicalLeverUp1=KEY_UP
+  InputMagicalLeverDown1=KEY_DOWN
+  InputMagicalLeverUp2=NONE
+  InputMagicalLeverDown2=NONE
+  InputMagicalLever1=JOY1_YAXIS
+  InputMagicalLever2=JOY2_YAXIS
+  InputMagicalPedal1=KEY_A,JOY1_BUTTON1
+  InputMagicalPedal2=KEY_S,JOY2_BUTTON1
+  InputFishingRodLeft=KEY_LEFT
+  InputFishingRodRight=KEY_RIGHT
+  InputFishingRodUp=KEY_UP
+  InputFishingRodDown=KEY_DOWN
+  InputFishingStickLeft=KEY_A
+  InputFishingStickRight=KEY_D
+  InputFishingStickUp=KEY_W
+  InputFishingStickDown=KEY_S
+  InputFishingRodX=JOY1_XAXIS
+  InputFishingRodY=JOY1_YAXIS
+  InputFishingStickX=JOY1_RXAXIS
+  InputFishingStickY=JOY1_RYAXIS
+  InputFishingReel=KEY_SPACE,JOY1_ZAXIS_POS
+  InputFishingCast=KEY_Z,JOY1_BUTTON1
+  InputFishingSelect=KEY_X,JOY1_BUTTON2
+
+OpenGL information:
+  Vendor                   : Intel
+  Renderer                 : Intel(R) UHD Graphics 620
+  Version                  : 4.5.0 - Build 25.20.100.6444
+  Shading Language Version : 4.50 - Build 25.20.100.6444
+  Maximum Vertex Array Size: 1048576 vertices
+  Maximum Texture Size     : 16384 texels
+  Maximum Vertex Attributes: 16
+  Maximum Vertex Uniforms  : 4096
+  Maximum Texture Img Units: 32
+
+Audio device information:
+    Frequency: 44100
+     Channels: 2
+Sample Format: 32784
+
+Program terminated normally.

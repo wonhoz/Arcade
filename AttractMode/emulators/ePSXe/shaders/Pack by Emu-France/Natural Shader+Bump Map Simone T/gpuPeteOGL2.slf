@@ -1,0 +1,28 @@
+uniform sampler2D 	OGL2Texture;
+
+#ifdef __GLSL_CG_DATA_TYPES
+#define vec4 half4
+#define vec3 half3
+#define vec2 half2
+#endif
+
+void main(){
+	vec4 		d;
+	vec3		c0,c1,c2,c3,c4,c5,c6,c7,c8;
+	vec2		k=vec2(0.5,0.0001);
+	
+	c4=texture2D(OGL2Texture,gl_TexCoord[0].xy).rgb;
+	c3=texture2D(OGL2Texture,gl_TexCoord[1].xy).rgb;
+	c5=texture2D(OGL2Texture,gl_TexCoord[1].zw).rgb;
+	c1=texture2D(OGL2Texture,gl_TexCoord[2].xy).rgb;
+	c7=texture2D(OGL2Texture,gl_TexCoord[2].zw).rgb;
+	c0=texture2D(OGL2Texture,gl_TexCoord[3].xy).rgb;
+	c8=texture2D(OGL2Texture,gl_TexCoord[3].zw).rgb;
+	c2=texture2D(OGL2Texture,gl_TexCoord[3].zy).rgb;
+	c6=texture2D(OGL2Texture,gl_TexCoord[3].xw).rgb;
+	
+	d=abs(vec4(k.xxx*mat3(c1-c7,c3-c5,c0-c8),dot(k.xxx,c2-c6)))+k.yyyy;
+	c5=(c1*d.y+c3*d.x)/(d.x+d.y);
+	c6=(c0*d.w+c2*d.z)/(d.z+d.w);
+	gl_FragColor.rgb=(c4+c6+(c5-c6)*step(d.x+d.y,d.z+d.w))*k.x;
+}

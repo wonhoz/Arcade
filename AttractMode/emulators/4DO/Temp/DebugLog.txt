@@ -1,0 +1,25 @@
+2016-06-18 오후 9:21:16 4DO Starting up
+2016-06-18 오후 9:23:16 4DO Shutting down
+2016-06-18 오후 9:24:24 4DO Starting up
+2016-06-18 오후 9:25:04 4DO Shutting down
+2019-03-27 오후 8:39:57 4DO Starting up
+2019-03-27 오후 8:45:40 GameSource - No cue file found. After taking a guess on the format based on file type and file size, the format used will be: MODE1_2048
+2019-03-27 오후 8:48:46 4DO Shutting down
+2019-03-27 오후 8:51:29 4DO Starting up
+2019-03-27 오후 8:52:50 4DO Shutting down
+2019-03-27 오후 11:23:28 4DO Starting up
+2019-03-27 오후 11:32:26 4DO Shutting down
+2019-03-28 오전 12:35:26 4DO Starting up
+2019-03-28 오전 12:37:14 4DO Shutting down
+2019-03-28 오후 6:07:26 4DO Starting up
+2019-03-28 오후 6:09:35 4DO Shutting down
+2019-03-28 오후 8:49:32 4DO Starting up
+2019-03-28 오후 8:50:15 4DO Shutting down
+2019-03-28 오후 9:11:32 4DO Starting up
+2019-03-28 오후 9:12:45 4DO Shutting down
+2019-03-28 오후 11:19:23 4DO Starting up
+2019-03-28 오후 11:21:18 4DO Shutting down
+2019-03-28 오후 11:21:47 4DO Starting up
+2019-03-29 오전 12:02:05 4DO Shutting down
+2019-03-31 오전 3:56:40 4DO Starting up
+2019-03-31 오전 4:03:49 4DO Shutting down

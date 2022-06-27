@@ -1,0 +1,27 @@
+#Name;Title;MAME;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
+gdarius;G-다라이어스;PSXmame;;1997;Taito;Shooting;;;;;;;;;;
+danceyes;댄싱 아이즈;PSXmame;;1996;Namco;Puzzle;;;;;;;;;;
+dunkmnia;덩크 매니아;PSXmame;;1995;Namco;Sports;;;;;;;;;;
+doapp;데드 오어 얼라이브 ++;PSXmame;;1998;Tecmo;VS Fighting;;;;;;;;;;
+jgakuen;사립 저스티스학원, 라이벌스쿨;PSXmame;;1997;Capcom;VS Fighting;;;;;;;;;;
+raystorm;레이 스톰;PSXmame;;1996;Taito;Shooting;;;;;;;;;;
+mfjump;몬스터 팜 점프;PSXmame;;2001;Tecmo;Action;;;;;;;;;;
+mrdrillr;미스터 드릴러;PSXmame;;1999;Namco;Puzzle;;;;;;;;;;
+brvblade;브레이브 블레이드;PSXmame;;2000;Raizing;VS Fighting;;;;;;;;;;
+bldyror2;블로디 로어 2, 동물철권;PSXmame;;1998;Raizing;VS Fighting;;;;;;;;;;
+psyforce;사이킥 포스;PSXmame;;1996;Namco;VS Fighting;;;;;;;;;;
+sncwgltd;소닉 윙즈 리미티드;PSXmame;;1996;Video system;Shooting;;;;;;;;;;
+souledge;소울 엣지;PSXmame;;1996;Namco;VS Fighting;;;;;;;;;;
+plsmaswd;스타 글래디에이터 2;PSXmame;;1998;Capcom;VS Fighting;;;;;;;;;;
+strider2;스트라이더 비룡 2;PSXmame;;1999;Capcom;Action;;;;;;;;;;
+sfex2p;스트리트 파이터 EX2 플러스;PSXmame;;1999;Capcom;VS Fighting;;;;;;;;;;
+ehrgeiz;에어 가이츠;PSXmame;;1997;Squaresoft;Sports;;;;;;;;;;
+xevi3dg;제비우스 3D;PSXmame;;1995;Namco;Shooting;;;;;;;;;;
+tekken3;철권 3;PSXmame;;1996;Namco;VS Fighting;;;;;;;;;;
+tektagt;철권 태그 토너먼트;PSXmame;;1999;Namco;VS Fighting;;;;;;;;;;
+techromnu;초강전기 키카이오;PSXmame;;1998;Capcom;VS Fighting;;;;;;;;;;
+ts2;투신전 2;PSXmame;;1995;Capcom;VS Fighting;;;;;;;;;;
+fgtlayer;파이팅 레이어;PSXmame;;1998;Namco;VS Fighting;;;;;;;;;;
+hyperath;하이퍼 애슬릿;PSXmame;;1996;Konami;Sports;;;;;;;;;;
+hvnsgate;헤븐즈 게이트;PSXmame;;1996;Atlus;VS Fighting;;;;;;;;;;
+

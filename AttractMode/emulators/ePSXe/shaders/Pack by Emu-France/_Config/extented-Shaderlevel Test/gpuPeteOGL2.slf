@@ -1,0 +1,8 @@
+// Shttp://ngemu.com/threads/links-and-guides-to-custom-shaders-for-petes-opengl2-plugin.76098/page-31#post-2424465
+
+uniform sampler2D OGL2Texture;
+
+void main()
+{
+ gl_FragColor = texture2DProj(OGL2Texture, gl_TexCoord[0]);
+}

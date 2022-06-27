@@ -1,0 +1,8 @@
+gametitle=[SCKA-200.61]
+comment=Patches by tobe
+
+//Infinite HP
+patch=1,EE,212E0CA0,word,42d80000
+patch=1,EE,212E0CA4,word,42d80000
+
+

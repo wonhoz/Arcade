@@ -1,0 +1,25 @@
+void main(void)
+{
+gl_Position = ftransform();
+vec4 InvSizeu2 = vec4(-0.0009765625, 0.0, 0.0009765625,-0.00390625);
+vec4 InvSizeu1 = vec4(-0.0009765625, 0.0, 0.0009765625,-0.001953125);
+vec4 InvSize   = vec4(-0.0009765625, 0.0, 0.0009765625, 0.0);
+vec4 InvSized1 = vec4(-0.0009765625, 0.0, 0.0009765625, 0.001953125);
+vec4 InvSized2 = vec4(-0.0009765625, 0.0, 0.0009765625, 0.00390625);
+vec4 InvSizel  = vec4(-0.001953125,-0.001953125, 0.0, 0.001953125);
+vec4 InvSizer  = vec4( 0.001953125,-0.001953125, 0.0, 0.001953125);
+
+//    A1 B1 C1
+// A0  A  B  C C4
+// D0  D  E  F F4
+// G0  G  H  I I4
+//    G5 H5 I5
+
+gl_TexCoord[0] = gl_MultiTexCoord0.xxxy+InvSizeu2;//A1 B1 C1 
+gl_TexCoord[1] = gl_MultiTexCoord0.xxxy+InvSizeu1;// A  B  C 
+gl_TexCoord[2] = gl_MultiTexCoord0.xxxy+InvSize;  // D  E  F
+gl_TexCoord[3] = gl_MultiTexCoord0.xxxy+InvSized1;// G  H  I
+gl_TexCoord[4] = gl_MultiTexCoord0.xxxy+InvSized2;//G5 H5 I5
+gl_TexCoord[5] = gl_MultiTexCoord0.xyyy+InvSizel;//A0 D0 G0 
+gl_TexCoord[6] = gl_MultiTexCoord0.xyyy+InvSizer;//C4 F4 I4 
+}
