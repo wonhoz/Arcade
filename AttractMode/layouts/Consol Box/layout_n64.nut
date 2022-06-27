@@ -5,7 +5,7 @@
 
 class UserConfig { 
 </ label="Enable CRT character", help="Enable CRT character", options="Yes,No", order=1 /> enable_crt="No";
-</ label="BG Artwork", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=2 /> 
+</ label="BG Artwork", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=2 /> 
    select_bgArt_n64="gray";
 </ label="Select Character", help="Select Character Image's Display Type", options="By Display,By Game,None", order=3 /> select_character="By Display";
 </ label="Select Character No.", help="[By Display] type only. Select Image Number.", options="01,02,03", order=4 /> select_character_no="01";
@@ -17,6 +17,7 @@ class UserConfig {
 </ label="Select Artwork Image", help="Selected Artwork Image is displayed at the right of consol game machine.", options="Cartridge_Disc,3D Box,None", order=10 /> enable_boximage="cartridge_disc";
 </ label="History.dat", help="History.dat location. Be sure to enable and config History.dat from the plugins menu.", order=11 />
 	dat_path=".\\history.dat";  
+</ label="게임정보 표시", help="Enable of Game Infomation", options="Yes,No", order=12 /> enable_info="No";
 }  
 
 // 변수지정 및 폰트 및 화면 해상도
@@ -33,9 +34,59 @@ fe.layout.preserve_aspect_ratio = true;
 dofile(fe.script_dir + "file_util.nut" );
 
 // 백그라운드 지정 및 스크롤 애니메이션 효과
-if ( my_config["select_bgArt_n64"] == "video" ){
-bgArt = fe.add_artwork("bg.mp4", 0, 0, flw, flh );
+if ( my_config["select_bgArt_n64"] == "video1" ){
+bgArt = fe.add_artwork("bg_01.mp4", 0, 0, flw, flh );
 }
+if ( my_config["select_bgArt_n64"] == "video2" ){
+bgArt = fe.add_artwork("bg_02.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "video3" ){
+bgArt = fe.add_artwork("bg_03.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "video4" ){
+bgArt = fe.add_artwork("bg_04.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "video5" ){
+bgArt = fe.add_artwork("bg_05.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "video6" ){
+bgArt = fe.add_artwork("bg_06.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "video7" ){
+bgArt = fe.add_artwork("bg_07.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "video8" ){
+bgArt = fe.add_artwork("bg_08.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "video9" ){
+bgArt = fe.add_artwork("bg_09.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "video10" ){
+bgArt = fe.add_artwork("bg_10.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "video11" ){
+bgArt = fe.add_artwork("bg_11.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "video12" ){
+bgArt = fe.add_artwork("bg_12.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "video13" ){
+bgArt = fe.add_artwork("bg_13.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "video14" ){
+bgArt = fe.add_artwork("bg_14.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "gif1" ){
+bgArt = fe.add_artwork("bg_01.gif", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "gif2" ){
+bgArt = fe.add_artwork("bg_02.gif", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_n64"] == "gif3" ){
+bgArt = fe.add_artwork("bg_03.gif", 0, 0, flw, flh );
+}
+
+
 bgArt = fe.add_image("bg_" + my_config["select_bgArt_n64"] + ".png", 0, 0, flw, flh );
 bgArt2 = fe.add_clone(bgArt);
 
@@ -204,13 +255,13 @@ listbox2.format_string = "[!gamename]";
 
 
 // 시계
-local clockbtext = fe.add_text( "TIME:", 970, 1004, 200, 46 );
+local clockbtext = fe.add_text( "시간:", 980, 1008, 200, 38 );
 clockbtext.set_rgb( 0, 0, 0 );
-clockbtext.font="Ticketbook W01 Bold";
+//clockbtext.font="Ticketbook W01 Bold";
 
-local clocktext = fe.add_text( "TIME:", 967, 1001, 200, 46 );
+local clocktext = fe.add_text( "시간:", 977, 1005, 200, 38 );
 clocktext.set_rgb( 211, 250, 255 );
-clocktext.font="Ticketbook W01 Bold";
+//clocktext.font="Ticketbook W01 Bold";
 
 local clockb = fe.add_text( "", 1140, 1009, 320, 46  );
 clockb.align = Align.Left;
@@ -230,14 +281,14 @@ function update_clock( ttime ){
   fe.add_ticks_callback( this, "update_clock" );
 
 // 즐겨찾기 필터
-local listtextb = fe.add_text( "[!filter] GAMES:", 1340, 1004, 450, 46 );
+local listtextb = fe.add_text( "[!filter] 게임:", 1340, 1008, 450, 38 );
 listtextb.set_rgb( 0, 0, 0 );
-listtextb.font="Ticketbook W01 Bold";
+//listtextb.font="Ticketbook W01 Bold";
 listtextb.align = Align.Left;
 
-local listtext = fe.add_text( "[!filter] GAMES:", 1337, 1001, 450, 46 );
+local listtext = fe.add_text( "[!filter] 게임:", 1337, 1005, 450, 38 );
 listtext.set_rgb( 211, 250, 255 );
-listtext.font="Ticketbook W01 Bold";
+//listtext.font="Ticketbook W01 Bold";
 listtext.align = Align.Left;
 
 // Change filter name to upper case
@@ -301,4 +352,46 @@ if ( my_config["enable_boximage"] == "3D Box" )
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
 	}
 	animation.add( PropertyAnimation( boximage2, move_boximage2 ) );
+}
+
+// 모니터 하단 게임 정보창 표시
+if ( my_config["enable_info"] == "Yes" )
+{
+	local infobox = fe.add_image("black.png",120, 640, 710, 40 );
+	infobox.alpha = 200;
+	local info_db1 = fe.add_text( "제작년도 :", 120, 650, 90, 20 );
+	local info_db2 = fe.add_text( "/ 제작사 :", 235, 650, 90, 20 );
+	local info_db3 = fe.add_text( "/ 장르 :", 450, 650, 70, 20 );
+	local info_db4 = fe.add_text( "/ 플레이어 :", 605, 650, 110, 20 );
+	local info_db5 = fe.add_text( "/ 용량 :", 705, 650, 70, 20 );
+	info_db1.align = Align.Left;
+	info_db2.align = Align.Left;
+	info_db3.align = Align.Left;
+	info_db4.align = Align.Left;
+	info_db5.align = Align.Left;
+	info_db1.alpha = 200;
+	info_db2.alpha = 200;
+	info_db3.alpha = 200;
+	info_db4.alpha = 200;
+	info_db5.alpha = 200;
+	local info_value1 = fe.add_text( "[Year]", 190, 650, 70, 18 );
+	local info_value2 = fe.add_text( "[Manufacturer]", 305, 650, 160, 18 );
+	local info_value3 = fe.add_text( "[Category]", 505, 650, 110, 18 );
+	local info_value4 = fe.add_text( "[Players]", 690, 650, 20, 18 );
+	local info_value5 = fe.add_text( "[Extra]", 762, 650, 70, 18 );
+	info_value1.set_rgb( 0, 255, 255 );
+	info_value2.set_rgb( 0, 255, 255 );
+	info_value3.set_rgb( 0, 255, 255 );
+	info_value4.set_rgb( 0, 255, 255 );
+	info_value5.set_rgb( 0, 255, 255 );
+	info_value1.align = Align.Left;
+	info_value2.align = Align.Left;
+	info_value3.align = Align.Left;
+	info_value4.align = Align.Left;
+	info_value5.align = Align.Left;
+	info_value1.alpha = 200;
+	info_value2.alpha = 200;
+	info_value3.alpha = 200;
+	info_value4.alpha = 200;
+	info_value5.alpha = 200;
 }

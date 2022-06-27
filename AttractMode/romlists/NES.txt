@@ -44,11 +44,13 @@ overhorz;오버 호라이즌;MAME nes;;1991;Hot.B;Shooting;1;;;;;;;;;2
 waiwai;와이와이 월드;MAME nes;Wai Wai World (1988,Konami,AT)(J)(T+Eng);;;Action;1;;;;;;;;;2
 Wai Wai World 2 - SOS!! Paseri Jou (1991,Konami,AT)(J)(T+Kor);와이와이 월드 2 - SOS!! 파세리 성 (한글판);NES;;;;Action;1;;;;;;;;;2
 yiear;이 얼 쿵후;MAME nes;Yie Ar Kung-Fu (V1.4) (J);1985;Konami;Action;2;;;;;;;;;2
+gyrodine;자이로딘;MAME nes;;1986;Namco;Shooting;1;;;;;;;;;
 janggun;장군의 아들;MAME nes;Janggun ui Adeul (General's Son)(K)[!];1992;Daou Infosys;Action;2;;;;;;;;;2
 koreaigo;장두진 바둑교실 입문편(한글판);MAME nes;;1993;DreamTech;Edu;1;;;;;;;;;
 Dai 2 Ji - Super Robot Taisen (K);제2차 슈퍼로봇대전 (한글판);NES;;;BANDAI;SRPG;1;;;;;;;;;2
 zeldau;젤다의 전설;MAME nes;Zelda no Densetsu 1 - The Hyrule Fantasy (1992,Nintendo,AR)(J);1994;Nintendo;RPG;1;;;;;;;;;2
 jetman;조인전대 제트맨;MAME nes;Choujin Sentai - Jetman (Japan);1991;Angel;Action;1;;;;;;;;;2
+macross;초시공요새 마크로스;MAME nes;;1985;Namco;Shooting;1;;;;;;;;;
 Chip to Dale no Daisakusen (19xx,Walt Disney,Capcom,AT)(K);칩과 데일의 대작전 (한글판);NES;;;;Action;1;;;;;;;;;2
 trackfl2;코나미 스포츠 인 서울  / 트랙 & 필드 2;MAME nes;Track & Field 2 (U);1988;Konami;Sports;1;;;;;;;;;2
 koko;코코 어드벤처 (한글판);MAME nes;;1993;Daou Infosys;Action;1;;;;;;;;;

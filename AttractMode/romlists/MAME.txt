@@ -52,7 +52,7 @@ gground;게인그라운드;MAME;0;1988;SEGA;Shooting;3;270;Joystick (8-way);good
 gametngk;게임파라다이스 / 게임천국;MAME;0;1995;Jaleco;Shooting;2;270;Joystick (8-way);imperfect;1;raster;0;0;0;5
 ket;게츠이: 인연지옥들;MAME;0;2002;Cave;Shooting;;;;;;;;0;0;4
 jzth;결전천황;MAME;0;2000;Unknown;Arcade;2;0;Joystick (8-way);good;1;raster;;0;0;2
-go2000;고스톱 2000;MAME;0;2000;SA;Board Game;1;0;Joystick (2-way);good;1;raster;0;0;0;6
+go2000;고스톱 2000 (한글판);MAME;0;2000;SA;Board Game;1;0;Joystick (2-way);good;1;raster;0;0;0;6
 gpilots;고스트 파일럿;MAME;0;1995;Visco;Shooting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;2
 goalx3;골! 골! 골!;MAME;0;1995;Visco;Sports;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;3
 goldstar;골드 스타 (빠칭코);MAME;0;199?;IGS;Casino adult;1;0;gambling;;;;;;;
@@ -97,6 +97,7 @@ neodrift;네오 드리프트 아웃;MAME;0;1996;Visco;Racing;1;0;Joystick (8-way
 neomrdo;네오 미스터 도!;MAME;0;1996;Visco;Puzzle;;;;;;;neogeo;;;
 neobombe;네오 봄버맨;MAME;0;1997;Hudson Soft;Puzzle;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
 turfmast;네오 터프 마스터즈;MAME;0;1996;Nazca;Sports;;;;;;;neogeo;;;
+neocup98kt;네오지오컵 '98 (한글판);EKMAME;neocup98;1998;SNK;Sports;2;270;Joystick (8-way),positional;good;1;raster;neogeo;0;0;3
 tdragon;뇌룡 - 썬더 드래곤;MAME;0;1991;NMK;Shooting;2;270;Joystick (8-way);good;1;raster;0;0;0;2
 tdragon2;뇌룡 2 - 썬더 드래곤 2;MAME;0;1993;NMK;Shooting;2;270;Joystick (8-way);good;1;raster;0;0;0;3
 nrallyx;뉴 방구차X;MAME;0;1981;Namco;Action;;;;;;;;;;
@@ -138,8 +139,8 @@ deadconx;데드 커넥션;MAME;0;1992;Taito;Shooting;;;;;;;;;;
 dmnfrnt;데몬 프런트;MAME;0;2002;IGS;Action;2;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;4
 demonwld;데몬스 월드;MAME;0;1990;Toaplan;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2
 dsmbl;데스 스마일스 메가 블랙 라벨;MAME;0;2008;Cave;Shooting;2;0;Joystick (8-way);good;1;raster;0;0;0;4
-dquizgo;데이트 퀴즈 GOGO;MAME;0;1998;SemiCom;Quiz;;;;;;;;0;0;4
-dquizgo2;데이트 퀴즈 GOGO EP2;MAME;0;2000;SemiCom;Quiz;0;0;0;;;;;;;
+dquizgo;데이트 퀴즈 GOGO (한글판);MAME;0;1998;SemiCom;Quiz;;;;;;;;0;0;4
+dquizgo2;데이트 퀴즈 GOGO EP2 (한글판);MAME;0;2000;SemiCom;Quiz;0;0;0;;;;;;;
 #decathlt;덱애슬리트;MAME;0;1995;SEGA;Sports;2;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;4
 dogyuun;도균;MAME;0;1992;Toaplan;Shooting;2;270;Joystick (8-way);good;1;raster;0;0;0;3
 ddonpach;도돈파치;MAME;0;1997;Cave;Shooting;2;270;Joystick (8-way);good;1;raster;0;0;0;3
@@ -243,9 +244,9 @@ baryon;바리온;MAME;0;1997;SemiCom;Shooting;;;;;;;;;;
 vasara2;바사라 2;MAME;0;2001;Visco;Shooting;2;270;Joystick (8-way);good;1;raster;0;0;0;3
 viostorm;바이올런트 스톰;MAME;0;1993;Konami;Arcade;4;0;Joystick (8-way);imperfect;1;raster;0;0;0;3
 batsugunsp;바츠군 - 스페셜 버전;MAME;batsugun;1993;Toaplan;Shooting;2;270;Joystick (8-way);good;1;raster;0;0;0;3
-renju;반짝반짝 오목게임 렌주귀족;MAME;0;1994;Visco;Board Game;2;;;;;;;;;
+renjuk;반짝반짝 오목게임 렌주귀족 (한글판);EKMAME;renju;1994;Visco;Board Game;2;;;;;;;;;
 valkyrie;발키리의 전설;MAME;0;1989;Namco;Action;1;90;Joystick (8-way);good;;;;;;
-batrider;배트라이더;MAME;0;1998;Raizing;Shooting;;;;;;;;0;0;4
+batriderk;배트라이더 (한글판);MAME;batrider;1998;Raizing;Shooting;;;;;;;;0;0;4
 batman;배트맨;MAME;0;1991;Atari;Action;1;0;Joystick (8-way);good;;;;;;
 batmanfr;배트맨 포에버: 더 아케이드 게임;MAME;0;1996;Acclaim;Arcade;2;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;4
 bgaregga;배틀 가레가;MAME;0;1996;Raizing;Shooting;2;0;Joystick (8-way);good;1;raster;0;0;0;2
@@ -269,7 +270,7 @@ mp_sor2;베어너클 II / 스트리트 오브 레이지 II;MAME;0;1993;SEGA;Arca
 bstars2;베이스볼 스타즈 2;MAME;0;1993;SNK;Sports;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;2
 vendetta;벤데타 / 크라임 파이터즈 2;MAME;0;1991;Konami;Arcade;4;0;Joystick (8-way),dial;good;1;raster;;0;0;3
 bnzabros;보난자브루스;MAME;0;1990;SEGA;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;3
-thuntk;보물을 찾아라 / 퍼즐&액션 산도알;MAME;0;1995;SEGA;Puzzle;2;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;4
+thuntk;보물을 찾아라 / 퍼즐&액션 산도알 (한글판);MAME;0;1995;SEGA;Puzzle;2;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;4
 bosco;보스코니안;MAME;0;1981;Namco;Shooting;;;;;;;;;;
 bombjack;봄 잭;MAME;0;1984;Tehkan;Action;2;90;Joystick (8-way);good;1;raster;0;0;0;1
 bjtwin;봄잭 트윈;MAME;0;1993;NMK;Action;2;270;Joystick (8-way);good;1;raster;0;0;0;2
@@ -277,7 +278,7 @@ boogwing;부기 윙즈;MAME;0;1992;data east;Shooting;2;0;Joystick (8-way);good;
 viewpoin;뷰포인트;MAME;0;1992;Sammy;Shooting;1;0;Joystick (8-way);good;1;raster;neogeo;0;0;2
 brvblade;브레이브 블레이드;PSXmame;0;2000;Raizing;VS Fighting;;;;;;;cpzn2;;;
 breakrev;브레이커즈 리벤지;MAME;0;1998;Visco;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
-blktiger;블랙 타이거;MAME;0;1987;Capcom;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2
+blkdrgonk;블랙 타이거 (한글판);EKMAME;blktiger;1987;Capcom;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2
 bmaster;블레이드 마스터;MAME;0;1991;IGS;Action;;;;;;;;;;
 blazeon;블레이즈 온;MAME;0;1992;Atlus;Shooting;2;0;Joystick (8-way);good;1;raster;0;0;0;2
 blazstar;블레이징 스타;MAME;0;1998;yumekobo;Shooting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
@@ -304,8 +305,8 @@ cybattlr;사이배틀러;MAME;0;1993;Jaleco;Shooting;2;90;Joystick (8-way);good;
 cyberlip;사이버 립;MAME;0;1990;SNK;Action;2;0;;good;1;;;;;
 cybots;사이버 보츠;MAME;0;1995;Capcom;VS Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;4
 psyforce;사이킥 포스;PSXmame;0;1996;Namco;VS Fighting;;;;;;;cpzn2;;;
-kovplus;삼국전기 1 플러스;MAME;0;1999;IGS;Arcade;4;0;joystick (8-way);;;;;;;
-kov2p;삼국전기 2 - 군웅쟁패 / 삼국전기 2플러스;MAME;0;2001;IGS;Arcade;4;0;joystick (8-way);;;;;;;
+kovplus;삼국전기 1 플러스 (한글판);MAME;0;1999;IGS;Arcade;4;0;joystick (8-way);;;;;;;
+kov2p;삼국전기 2 - 군웅쟁패 / 삼국전기 2플러스 (한글판);MAME;0;2001;IGS;Arcade;4;0;joystick (8-way);;;;;;;
 kov3;삼국전기 3;MAME;0;2011;IGS;Arcade;2;0;Joystick (8-way);good;;;;;;
 shangha3;상하이 Ⅲ;MAME;0;1993;Sunsoft;Puzzle;2;0;Joystick (8-way);good;1;raster;0;0;0;2
 shangtou;상하이 삼국패투의;MAME;0;2002;Sunsoft;Puzzle;0;0;0;;;;;;;
@@ -314,7 +315,7 @@ orleg2;서유석액전 2;MAME;0;2008;IGS;Arcade;2;;;;;;;;;
 circusc;서커스 찰리;MAME;0;1984;Konami;Action;2;90;Joystick (2-way);good;1;raster;0;0;0;1
 ssriders;선셋 라이더스;MAME;0;1991;Konami;Action;4;0;Joystick (8-way);imperfect;1;raster;0;0;0;2
 jchan;성룡 - 쿵후 마스터;MAME;0;1995;kaneko;VS Fighting;2;0;Joystick (8-way);imperfect;1;raster;0;0;0;4
-svg;성마세기 - 스펙트럴 Vs. 제너레이션;MAME;0;2005;IGS;VS Fighting;2;0;Joystick (8-way);good;1;raster;pgm;0;0;2
+svg;성마세기 - 스펙트럴 Vs. 제너레이션 (한글판);MAME;0;2005;IGS;VS Fighting;2;0;Joystick (8-way);good;1;raster;pgm;0;0;2
 goal92;세이부 축구 92;MAME;cupsoc;1992;Seibu;Sports;4;0;Joystick (8-way);imperfect;1;raster;cupsoc;0;0;3
 sexyparo;섹시 파로디우스;MAME;0;1996;Konami;Shooting;4;0;Joystick (8-way);imperfect;1;raster;konamigx;0;0;3
 mp_sonic;소닉 더 헤지혹;MAME;0;1993;SEGA;Action;2;0;Joystick (8-way);good;1;raster;megaplay;0;0;4
@@ -327,7 +328,7 @@ solomon;솔로몬의 열쇠;MAME;0;1986;Tecmo;Puzzle;2;0;Joystick (8-way);good;1
 solvalou;솔바로우;MAME;0;1991;Namco;Shooting;;;;;;;;;;
 shocktr2;쇼크 트루퍼스 2 - 세컨드 스쿼드;MAME;0;1998;Saurus;Shooting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
 altbeast;수왕기 / 얼터드 비스트;MAME;0;1988;SEGA;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;3
-searchp2;숨은그림찾기 플러스;MAME;0;1999;Yunsung;Puzzle;2;0;Joystick (8-way);good;1;raster;0;0;0;2
+searchp2;숨은그림찾기 플러스 (한글판);MAME;0;1999;Yunsung;Puzzle;2;0;Joystick (8-way);good;1;raster;0;0;0;2
 shdancer;쉐도우 댄서 - 영의무;MAME;0;1989;SEGA;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;3
 shadfrce;쉐도우 포스 - 변신닌자;MAME;0;1993;Technos Japan;Action;2;0;joystick (8-way);;;;;;;
 srdarwin;슈퍼 리얼 다윈;MAME;0;1987;Data east;Shooting;2;270;Joystick (8-way);good;1;raster;0;0;0;2
@@ -337,7 +338,7 @@ pc_smb2;슈퍼 마리오 브로스 2 (시간제 패미컴);MAME;0;1988;Nintendo;
 pc_smb3;슈퍼 마리오 브로스 3 (시간제 패미컴);MAME;0;1988;Nintendo;Action;2;0;Joystick (8-way);good;2;raster;playch10;0;0;2
 nss_smw;슈퍼 마리오 월드 (시간제 슈퍼패미컴);MAME;0;1991;Nintendo;Action;2;0;Joystick (8-way);preliminary;2;raster;nss;0;0;13
 sb2003;슈퍼 버블 2003;MAME;0;2003;Limenko;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2
-sbishik;슈퍼 비시바시 챔프;MAME;sbishi;1996;Konami;Puzzle;3;0;;good;1;;;;;
+sbishik;슈퍼 비시바시 챔프 (한글판);MAME;sbishi;1996;Konami;Puzzle;3;0;;good;1;;;;;
 ssideki4;슈퍼 사이드킥 4;MAME;0;1996;SNK;Sports;;;;;;;neogeo;;;
 ssf2;슈퍼 스트리트 파이터 II - 새로운 도전자;MAME;0;1993;Capcom;VS Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6
 ssf2t;슈퍼 스트리트 파이터 II 터보;MAME;0;1994;Capcom;VS Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6
@@ -366,13 +367,13 @@ sfex2p;스트리트 파이터 EX2 플러스;PSXmame;0;1999;Capcom;VS Fighting;2;
 kenseim;스트리트 파이터 II - 두더지 잡기 게임;MAME;0;1994;Capcom;Puzzle;2;;;;;;cps2;0;0;4
 sf2;스트리트 파이터 II - 월드 워리어;MAME;0;1991;Capcom;VS Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6
 sf2ce;스트리트 파이터 II' - 챔피언 에디션;MAME;0;1992;Capcom;VS Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6
-sf2hf;스트리트 파이터 II' - 하이퍼 파이팅;MAME;0;1992;Capcom;VS Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6
 sf2m5;스트리트 파이터 II' m5;MAME;0;1992;Capcom;VS Fighting;;;;;;;cps2;0;0;4
 sf2m6;스트리트 파이터 II' m6;MAME;0;1992;Capcom;VS Fighting;2;0;Joystick (8-way);good;;;cps2;;;
 sf2m7;스트리트 파이터 II' m7;MAME;0;1992;Capcom;VS Fighting;2;0;Joystick (8-way);good;;;cps2;;;
 sf2m9;스트리트 파이터 II' m9;MAME;0;1992;Capcom;VS Fighting;2;0;Joystick (8-way);good;;;cps2;;;
 sf2koryu;스트리트 파이터 II' 강룡;MAME;0;1992;Capcom;VS Fighting;;;;;;;cps2;;;
 sf2red;스트리트 파이터 II' 레드 웨이브;MAME;0;1992;Capcom;VS Fighting;;;;;;;cps2;0;0;4
+sf2hfj;스트리트 파이터 II' 터보;MAME;sf2hf;1992;Capcom;VS Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6
 sfiii2n;스트리트 파이터 III 세컨드 임팩트: 자이언트 어택;MAME;0;1997;Capcom;VS Fighting;2;;;;;;cps3;;;
 sfiii3n;스트리트 파이터 III 써드 스트라이크: 미래를 위한 싸움;MAME;0;1999;Capcom;VS Fighting;2;0;joystick (8-way);;;;cps3;;;
 sftm;스트리트 파이터 무비;MAME;0;1995;Capcom;VS Fighting;;;;;;;;;;
@@ -396,8 +397,8 @@ shinobi;시노비;MAME;0;1987;SEGA;Action;2;0;Joystick (8-way);good;1;raster;0;0
 secretag;시크릿 에이전트 / 슬라이 스파이;MAME;0;1989;Data East;Action;1;0;;;;;;;;
 shikigam;식신의 성;MAME;0;2001;Alpha;Shooting;0;0;0;;;;;;;
 matrim;신 호혈사일족 투혼;MAME;0;2002;Atlus;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
-theglad;신검의 풍운;MAME;0;2003;IGS;Arcade;4;;;;;;pgm;;;
-mikie;신입사원 석돌이;MAME;mikie;1984;Konami;Action;2;270;Joystick (4-way);good;1;raster;0;0;0;2
+theglad;신검의 풍운 (한글판);MAME;0;2003;IGS;Arcade;4;;;;;;pgm;;;
+mikiek;신입사원 석돌이 (한글판);MAME;mikie;1984;Konami;Action;2;270;Joystick (4-way);good;1;raster;0;0;0;2
 ragnagrd;신황권 / 라그나가드;MAME;0;1996;Saurus;VS Fighting;;;;;;;neogeo;0;0;4
 simpsons4pa;심슨 가족;MAME;0;1991;Konami;Arcade;4;0;joystick (8-way);;;;;;;
 simpbowl;심슨 볼링;MAME;0;2000;Konami;Sports;4;0;Joystick (8-way),TrackBall;imperfect;1;raster;konamigv;0;chd;3
@@ -472,13 +473,13 @@ loht;영웅 톤마의 전설;MAME;0;1989;Irem;Action;2;0;Joystick (8-way);good;1
 ordyne;오다인;MAME;0;1988;Namco;Shooting;;;;;;;;0;0;4
 duckhunt;오리 사냥;MAME;0;1985;Nintendo;Shooting;1;0;lightgun;good;1;raster;0;0;0;1
 osman;오스만 / 캐논 댄서;MAME;0;1996;Atlus;Action;1;0;Joystick (8-way);good;;;;;;
-officeye;오피스 여인천하;MAME;;2002;Danbi Soft;Puzzle;2;0;;good;1;;;;;
+officeye;오피스 여인천하 (한글판);MAME;0;2002;Danbi Soft;Puzzle;2;0;;good;1;;;;;
 moomesa;와일드 웨스트 카우보이즈 오브 무 메사;MAME;0;1992;Konami;Action;4;0;Joystick (8-way);imperfect;1;raster;0;0;0;2
 wildfang;와일드 팡 / 테크모 나이트;MAME;0;1989;Tecmo;Arcade;2;0;Joystick (8-way),dial;good;1;raster;;0;0;3
 wakuwak7;와쿠와쿠 7;MAME;0;1996;Sunsoft;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
 fightfev;왕중왕;MAME;0;1994;Viccom;VS Fighting;;;;;;;neogeo;;;
 shadowld;요괴도중기;MAME;0;1987;Namco;Action;1;0;Joystick (8-way),dial;good;1;raster;0;0;0;2
-aof;용호의 권;MAME;0;1992;SNK;VS Fighting;;;;;;;neogeo;;;
+aofkt;용호의 권 (한글판);EKMAME;aof;1992;SNK;VS Fighting;;;;;;;neogeo;;;
 aof2;용호의 권 2;MAME;0;1994;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
 aof3;용호의 권 3;MAME;0;1996;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
 umk3;울티메이트 모탈컴뱃 3;MAME;0;1994;Midway;VS Fighting;2;0;Joystick (8-way);good;1;raster;0;0;0;6
@@ -486,8 +487,8 @@ wndrmomo;원더 모모;MAME;0;1987;Namco;Action;1;;;;;;;;;
 wondl96;원더리그 '96;MAME;0;1996;SemiCom;Sports;2;;;;;;;;;
 wboy;원더보이;MAME;0;1986;SEGA;Action;2;0;Joystick (2-way);good;1;raster;0;0;0;2
 wb3;원더보이 III - 몬스터 레어;MAME;0;1988;SEGA;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;3
-wbmljb;원더보이 인 몬스터랜드;MAME;wbml;1987;SEGA;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2
-prehislek;원시도;MAME;prehisle;1988;SNK;Shooting;2;;;;;;;;;
+wbmljb;원더보이 인 몬스터랜드 (한글판);MAME;wbml;1987;SEGA;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2
+prehislek;원시도 (한글판);MAME;prehisle;1988;SNK;Shooting;2;;;;;;;;;
 preisle2;원시도 2;MAME;0;1999;SNK;Shooting;2;;;;;;neogeo;;;
 knights;원탁의 기사 / 나이츠 오브 더 라운드;MAME;0;1991;Capcom;Arcade;;;;;;;cps1;;;
 whp;월드 히어로즈 퍼펙트;MAME;0;1995;ADK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
@@ -495,8 +496,9 @@ lastblad;월화의 검사 / 라스트 블레이드;MAME;0;1997;SNK;VS Fighting;2
 lastbld2;월화의 검사 2 / 라스트 블레이드 2;MAME;0;1998;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
 willow;윌로우;MAME;0;1989;Capcom;Action;2;0;Joystick (8-way);good;1;raster;cps1;0;0;2
 lsasquad;육해공: 최전선;MAME;0;1986;Taito;Shooting;2;270;Joystick (8-way);imperfect;1;raster;0;0;0;2
-ginganin;은하임협전;MAME;0;1987;Jaleco;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2
+ginganins01;은하임협전 (한글판);EKMAME;ginganin;1987;Jaleco;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2
 victroad;이까리 2 / 빅토리로드;MAME;0;1986;SNK;Shooting;2;270;Joystick (8-way),positional;good;1;raster;0;0;0;2
+ikari3k;이까리 3 (한글판);MAME;ikari3;1989;SNK;Shooting;2;270;Joystick (8-way),positional;good;1;raster;0;0;0;2
 ikari;이까리 워리어;MAME;0;1986;SNK;Shooting;2;270;Joystick (8-way),positional;good;1;raster;0;0;0;2
 imgfight;이미지 파이터;MAME;0;1993;Irem;Shooting;2;0;Joystick (8-way);good;1;raster;0;0;0;2
 ibarablk;이바라: 블랙 라벨;MAME;0;2005;Cave;Shooting;2;270;Joystick (8-way);good;1;raster;0;0;0;4
@@ -504,6 +506,7 @@ eswat;이스와트;MAME;0;1989;SEGA;Action;;;;;;;;0;0;4
 yiear;이얼 쿵후;MAME;0;1985;Konami;VS Fighting;2;0;Joystick (8-way);good;1;raster;0;0;0;3
 ichirk;이치단트알;MAME;0;1994;SEGA;Puzzle;2;0;joystick (8-way);;;;;;;
 excitebk;익사이팅 바이크;MAME;0;1984;Nintendo;Sports;1;0;;good;1;;;;;
+gyrodine;자이로딘;MAME;0;1984;Taito;Shooting;1;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;2
 xsleena;자인드 슬리나;MAME;0;1986;Technos Japan;Action;1;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;2
 samuraia;전국 에이스 / 사무라이 에이스;MAME;0;1993;Psikyo;Shooting;2;270;Joystick (8-way);good;1;raster;0;0;0;3
 sengoku;전국전승;MAME;0;1991;SNK;Arcade;2;;;;;;;;;
@@ -570,9 +573,9 @@ cottonbm;코튼 - 부메랑;MAME;0;1998;Success;Shooting;4;0;Joystick (8-way);im
 cotton2;코튼 2;MAME;0;1997;Success;Shooting;2;;;;;;stvbios;;;
 sdodgeb;쿠니오의 열혈 투구전설 / 슈퍼 돗지볼;MAME;0;1996;Technos;Sports;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
 kungfum;쿵후 마스터 / 스파르탄 X;MAME;0;1984;Irem;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2
-sunaq;퀴즈 6000 아카데미;MAME;0;1994;선아;Quiz;2;0;0;good;1;raster;0;0;0;4
-quizdaisk;퀴즈 사립 탐정;MAME;quizdais;1996;SNK;Quiz;2;0;;good;1;;neogeo;;;4
-quizo;퀴즈 올림픽;MAME;0;1985;Seoul Coin Corp.;Quiz;;;;;;;;;;
+sunaq;퀴즈 6000 아카데미 (한글판);MAME;0;1994;선아;Quiz;2;0;0;good;1;raster;0;0;0;4
+quizdaisk;퀴즈 사립 탐정 (한글판);MAME;quizdais;1996;SNK;Quiz;2;0;;good;1;;neogeo;;;4
+quizo;퀴즈 올림픽 (한글판);MAME;0;1985;Seoul Coin Corp.;Quiz;;;;;;;;;;
 quizkofk;퀴즈 킹 오브 화이터즈;MAME;quizkof;1995;SNK;Quiz;2;0;;good;1;;neogeo;;;4
 crzcross;크레이지 크로스;MAME;0;1994;Konami;Puzzle;2;0;;good;1;;;;;
 cbuster;크루드 버스터;MAME;0;1990;data east;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;3
@@ -586,12 +589,12 @@ kof2001;킹 오브 파이터즈 2001;MAME;0;2001;SNK;VS Fighting;2;0;Joystick (8
 kof2002;킹 오브 파이터즈 2002;MAME;0;2002;SNK Playmore;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
 kof2003;킹 오브 파이터즈 2003;MAME;0;2003;SNK Playmore;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
 kf2k3upl;킹 오브 파이터즈 2004 울트라 Plus;MAME;0;2003;SNK Playmore;VS Fighting;2;0;joystick (8-way);;;;neogeo;;;
-kof94;킹 오브 파이터즈 '94;MAME;0;1994;SNK;VS Fighting;2;0;;good;1;;neogeo;;;4
-kof95;킹 오브 파이터즈 '95;MAME;0;1995;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
-kof96;킹 오브 파이터즈 '96;MAME;0;1996;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
-kof97;킹 오브 파이터즈 '97;MAME;0;1997;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
-kof98;킹 오브 파이터즈 '98 ;MAME;0;1998;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
-kof99;킹 오브 파이터즈 '99 ;MAME;0;1999;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
+kof94kt;킹 오브 파이터즈 '94 (한글판);EKMAME;kof94;1994;SNK;VS Fighting;2;0;;good;1;;neogeo;;;4
+kof95kt;킹 오브 파이터즈 '95 (한글판);EKMAME;kof95;1995;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
+kof96kt;킹 오브 파이터즈 '96 (한글판);EKMAME;kof96;1996;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
+kof97plskt;킹 오브 파이터즈 '97 플러스 (한글판);EKMAME;kof97;1997;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
+kof98hkt;킹 오브 파이터즈 '98 (한글판);EKMAME;kof98;1998;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
+kof99ndkt;킹 오브 파이터즈 '99 (한글판);EKMAME;kof99;1999;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
 daraku;타락천사;MAME;0;1998;Psikyo;VS Fighting;2;0;Joystick (8-way);good;1;raster;0;0;0;4
 truxton;타수진;MAME;0;1989;Toaplan;Shooting;2;270;Joystick (8-way);good;1;raster;0;0;0;3
 truxton2;타수진 2;MAME;0;1992;Toaplan;Shooting;2;270;Joystick (8-way);good;1;raster;0;0;0;3
@@ -600,7 +603,7 @@ tigerh;타이거 헬리;MAME;0;1985;Taito;Action;1;90;Joystick (8-way);good;;;;;
 timecris;타임 크라이시스;MAME;0;1995;Namco;Gun Shooting;2;;;;;;;;;
 timeplt;타임 파일럿;MAME;0;1982;Konami;Shooting;2;90;Joystick (8-way);good;1;raster;0;0;0;1
 feversos;탄총 피버론;MAME;0;1998;Cave;Shooting;2;270;Joystick (8-way);good;1;raster;0;0;0;3
-tantrkor;탄트알;MAME;tantr;1993;SEGA;Puzzle;2;0;Joystick (8-way);good;1;raster;0;0;0;1
+tantrkor;탄트알 (한글판);MAME;tantr;1993;SEGA;Puzzle;2;0;Joystick (8-way);good;1;raster;0;0;0;1
 pow;탈옥 P.O.W;MAME;0;1988;SNK;Arcade;2;;;;;;;;;
 tophuntr;탑헌터 - 로디 & 케시;MAME;0;1994;SNK;Action;2;270;Joystick (8-way);good;1;raster;neogeo;0;0;3
 tankbatt;탱크 바탈리안;MAME;0;1980;Namco;Shooting;2;90;Joystick (4-way);imperfect;1;raster;0;0;0;1
@@ -618,7 +621,7 @@ trackfld;트랙 앤 필드 / 올림픽;MAME;0;1983;Konami;Sports;4;0;0;good;1;ra
 trojan;트로잔;MAME;0;1986;Capcom;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2
 triothep;트리오 더 펀치 - 나를 잊지 마세요.;MAME;0;1989;Data east;Action;1;;;;;;;;;
 twinspri;트윙클 스프라이트;MAME;0;1996;ADK;Shooting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
-hidctch3;틀린그림찾기 3;MAME;0;2000;Eolith;Puzzle;2;;;;;;;;;
+hidctch3;틀린그림찾기 3 (한글판);MAME;0;2000;Eolith;Puzzle;2;;;;;;;;;
 parodius;파로디우스다!!;MAME;0;1990;Konami;Shooting;2;0;Joystick (8-way);good;1;raster;0;0;0;3
 pspikes;파워 스파이크;MAME;0;1991;Video system;Sports;2;0;Joystick (8-way);good;1;raster;;0;0;4
 pspikes2;파워 스파이크 II;MAME;0;1994;Video system;Sports;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
@@ -641,6 +644,7 @@ pbobble;퍼즐보블 1;MAME;0;1994;Taito;Puzzle;4;0;Joystick (8-way),dial;good;1
 pbobbl2n;퍼즐보블 2;MAME;0;1999;Taito;Puzzle;;;;;;;neogeo;;;
 pbobble3;퍼즐보블 3;MAME;0;1996;Taito;Puzzle;4;0;Joystick (8-way),dial;good;1;raster;0;0;0;4
 pbobble4;퍼즐보블 4;MAME;0;1997;Taito;Puzzle;4;0;Joystick (8-way),dial;good;1;raster;0;0;0;4
+funkyjet;펑키 제트;MAME;0;1992;Mitchell;Action;2;0;Joystick (8-way),dial;good;1;raster;;0;0;2
 flstory;페어리랜드 스토리;MAME;0;1985;Taito;Action;2;180;Joystick (2-way);imperfect;1;raster;0;0;0;2
 phelios;펠리오스;MAME;0;1989;Namco;Shooting;;90;Joystick (8-way);;;;;;;
 penbros;펭귄 브라더스;MAME;0;2000;서브지노;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2
@@ -651,7 +655,7 @@ ptblank2;포인트 블랭크 2;MAME;0;1999;Namco;Gun Shooting;;;;;;;;;;
 #ptblank3;포인트 블랭크 3;MAME;0;2000;Namco;Gun Shooting;;;;;;;;;;
 forgottn;포카튼 월드;MAME;0;1988;Capcom;Shooting;2;;;;;;;0;0;4
 pcktgal2;포켓걸 2;MAME;0;1989;data east;Sports adult;2;0;joystick (8-way);;;;;;;
-photoy2k;포토 Y2K;MAME;0;1999;IGS;Puzzle;4;;;;;;;;;
+photoy2k;포토 Y2K (한글판);MAME;0;1999;IGS;Puzzle;4;;;;;;;;;
 puchicar;푸치캐롯;MAME;0;1997;Taito;Puzzle;4;0;Joystick (8-way),dial;good;1;raster;0;0;0;4
 kizuna;풍운 슈퍼 태그배틀 / 키즈나 인카운터- 슈퍼 태그배틀 / 세비지 레인 2;MAME;0;1996;SNK;VS Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4
 progear;프로기어의 폭풍;MAME;0;2001;Capcom;Shooting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;3
@@ -663,7 +667,7 @@ pinkswts;핑크 스위츠 이바라 그 후;MAME;0;2006;Cave;Shooting;2;270;Joys
 #hotd;하우스 오브 데드;MAME;0;1997;SEGA;Gun Shooting;2;0;Joystick (8-way);preliminary;1;raster;0;0;0;4
 #hotd2;하우스 오브 데드 2;MAME;0;1999;SEGA;Gun Shooting;2;0;lightgun;preliminary;1;raster;hod2bios;0;0;2
 hyprduel;하이퍼 듀얼;MAME;0;1993;Technosoft;Shooting;2;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;4
-hyperbbck;하이퍼 비시바시;MAME;hyperbbc;1998;Konami;Puzzle;3;0;;good;1;;;;;
+hyperbbck;하이퍼 비시바시 (한글판);MAME;hyperbbc;1998;Konami;Puzzle;3;0;;good;1;;;;;
 hsf2;하이퍼 스트리트 파이터 2 기념판;MAME;0;2004;Capcom;VS Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6
 hyperspt;하이퍼 스포츠 / 하이퍼 올림픽 '84;MAME;0;1984;Konami;Sports;2;0;Joystick (8-way),dial;good;1;raster;0;0;0;2
 hyperath;하이퍼 애슬릿;PSXmame;0;1996;Konami;Sports;;;;;;;cpzn2;;;
@@ -678,4 +682,4 @@ plegends;호혈사일족 외전 - 최강전설 / 파워 인스팅트 레전드;M
 contra;혼두라;MAME;0;1987;Konami;Action;2;90;Joystick (8-way);good;1;raster;0;0;0;2
 hanagumi;화조 대전 컬럼스 - 사쿠라 대전;MAME;0;1997;SEGA;Puzzle;2;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;4
 hook;후크;MAME;0;1992;Irem;Arcade;4;0;Joystick (8-way);good;1;raster;0;0;0;2
-heuksun;흑선백사;MAME;0;199?;F2 System;Board Game;1;0;;good;1;;;;;
+heuksun;흑선백사 (한글판);MAME;0;199?;F2 System;Board Game;1;0;;good;1;;;;;

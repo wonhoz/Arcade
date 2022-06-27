@@ -218,7 +218,7 @@ fe.add_image("box_4x3.png", 81, 539, 959, 82 );
 
 // Game name text. We do this in the layout as the frontend doesn't chop up titles with a forward slash
  function gamename( index_offset ) {
-  local s = split( fe.game_info( Info.Title, index_offset ), "(/[" );
+  local s = split( fe.game_info( Info.Title, index_offset ), "[" );
  	if ( s.len() > 0 ) return s[0];
   return "";
 }
@@ -385,23 +385,23 @@ local listc = fe.add_text( "[Year]", 1411, 111, 100, 26 );
 listc.font="TmonMonsori";
 listc.align = Align.Right;
 
-local listdd = fe.add_text( "[Emulator]", 1636, 112, 350, 26 );
+local listdd = fe.add_text( "[System]", 1636, 112, 350, 26 );
 listdd.font="TmonMonsori";
 listdd.set_rgb( 0, 0, 0 );
 listdd.align = Align.Left;
-local listdd = fe.add_text( "[Emulator]", 1636, 114, 350, 26 );
+local listdd = fe.add_text( "[System]", 1636, 114, 350, 26 );
 listdd.font="TmonMonsori";
 listdd.set_rgb( 0, 0, 0 );
 listdd.align = Align.Left;
-local listdd = fe.add_text( "[Emulator]", 1634, 112, 350, 26 );
+local listdd = fe.add_text( "[System]", 1634, 112, 350, 26 );
 listdd.font="TmonMonsori";
 listdd.set_rgb( 0, 0, 0 );
 listdd.align = Align.Left;
-local listdd = fe.add_text( "[Emulator]", 1634, 114, 350, 26 );
+local listdd = fe.add_text( "[System]", 1634, 114, 350, 26 );
 listdd.font="TmonMonsori";
 listdd.set_rgb( 0, 0, 0 );
 listdd.align = Align.Left;
-local listd = fe.add_text( "[Emulator]", 1635, 113, 350, 26 );
+local listd = fe.add_text( "[System]", 1635, 113, 350, 26 );
 listd.font="TmonMonsori";
 listd.align = Align.Left;
 

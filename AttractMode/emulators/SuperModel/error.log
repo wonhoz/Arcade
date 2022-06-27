@@ -2,13 +2,10 @@ Supermodel v0.3a-WIP Error Log
 ------------------------------
 
 Started as:
-  argv[0] = emulators\SuperModel\Supermodel.exe
-  argv[1] = Roms\vf3.zip
-  argv[2] = -res=1024,768
-  argv[3] = -fullscreen
-  argv[4] = -quad-rendering
+  argv[0] = Supermodel.exe
+  argv[1] = .\ROMs\vf3.zip
 
-Opened Roms\vf3.zip.
+Opened .\ROMs\vf3.zip.
 vf3c:
   banked_crom: stride=zu, chunk size=zu, byte swap=8
     mpr-19196.4, crc32=0xf386b850, offset=0x00000000
@@ -59,7 +56,7 @@ Runtime configuration:
   InitStateFile=
   MultiThreaded=1
   GPUMultiThreaded=1
-  PowerPCFrequency=50
+  PowerPCFrequency=49
   MultiTexture=0
   VertexShader=
   FragmentShader=
@@ -72,20 +69,20 @@ Runtime configuration:
   EmulateDSB=1
   SoundVolume=100
   MusicVolume=100
-  ForceFeedback=0
+  ForceFeedback=1
   New3DEngine=1
   QuadRendering=1
-  XResolution=1024
-  YResolution=768
+  XResolution=1280
+  YResolution=720
   FullScreen=1
-  WideScreen=0
-  Stretch=0
-  VSync=1
-  Throttle=1
-  ShowFrameRate=0
+  WideScreen=1
+  Stretch=1
+  VSync=0
+  Throttle=0
+  ShowFrameRate=1
   Crosshairs=0
-  FlipStereo=0
-  InputSystem=dinput
+  FlipStereo=1
+  InputSystem=xinput
   DirectInputConstForceLeftMax=100
   DirectInputConstForceRightMax=100
   DirectInputSelfCenterMax=100
@@ -99,10 +96,10 @@ Runtime configuration:
   port_in=1970
   port_out=1971
   addr_out=127.0.0.1
-  InputStart1=KEY_1,JOY1_BUTTON10
-  InputStart2=KEY_2,JOY2_BUTTON10
-  InputCoin1=KEY_3,JOY1_BUTTON9
-  InputCoin2=KEY_4,JOY2_BUTTON9
+  InputStart1=KEY_1,JOY1_BUTTON8
+  InputStart2=KEY_2,JOY2_BUTTON8
+  InputCoin1=KEY_3,JOY1_BUTTON7
+  InputCoin2=KEY_4,JOY2_BUTTON7
   InputServiceA=KEY_5
   InputServiceB=KEY_7
   InputTestA=KEY_6

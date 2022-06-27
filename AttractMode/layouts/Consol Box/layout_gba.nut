@@ -5,7 +5,7 @@
 
 class UserConfig { 
 </ label="Enable CRT character", help="Enable CRT character", options="Yes,No", order=1 /> enable_crt="No";
-</ label="BG Artwork", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=2 /> 
+</ label="BG Artwork", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=2 /> 
    select_bgArt_gba="gray";
 </ label="Select Character", help="Select Character Image's Display Type", options="By Display,By Game,None", order=3 /> select_character="By Display";
 </ label="Select Character No.", help="[By Display] type only. Select Image Number.", options="01,02,03", order=4 /> select_character_no="01";
@@ -34,9 +34,59 @@ fe.layout.preserve_aspect_ratio = true;
 dofile(fe.script_dir + "file_util.nut" );
 
 // 백그라운드 지정 및 스크롤 애니메이션 효과
-if ( my_config["select_bgArt_gba"] == "video" ){
-bgArt = fe.add_artwork("bg.mp4", 0, 0, flw, flh );
+if ( my_config["select_bgArt_gba"] == "video1" ){
+bgArt = fe.add_artwork("bg_01.mp4", 0, 0, flw, flh );
 }
+if ( my_config["select_bgArt_gba"] == "video2" ){
+bgArt = fe.add_artwork("bg_02.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "video3" ){
+bgArt = fe.add_artwork("bg_03.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "video4" ){
+bgArt = fe.add_artwork("bg_04.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "video5" ){
+bgArt = fe.add_artwork("bg_05.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "video6" ){
+bgArt = fe.add_artwork("bg_06.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "video7" ){
+bgArt = fe.add_artwork("bg_07.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "video8" ){
+bgArt = fe.add_artwork("bg_08.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "video9" ){
+bgArt = fe.add_artwork("bg_09.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "video10" ){
+bgArt = fe.add_artwork("bg_10.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "video11" ){
+bgArt = fe.add_artwork("bg_11.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "video12" ){
+bgArt = fe.add_artwork("bg_12.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "video13" ){
+bgArt = fe.add_artwork("bg_13.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "video14" ){
+bgArt = fe.add_artwork("bg_14.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "gif1" ){
+bgArt = fe.add_artwork("bg_01.gif", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "gif2" ){
+bgArt = fe.add_artwork("bg_02.gif", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_gba"] == "gif3" ){
+bgArt = fe.add_artwork("bg_03.gif", 0, 0, flw, flh );
+}
+
+
 bgArt = fe.add_image("bg_" + my_config["select_bgArt_gba"] + ".png", 0, 0, flw, flh );
 bgArt2 = fe.add_clone(bgArt);
 
@@ -203,13 +253,13 @@ listbox2.format_string = "[!gamename]";
 
 
 // 시계
-local clockbtext = fe.add_text( "TIME:", 970, 1004, 200, 46 );
+local clockbtext = fe.add_text( "시간:", 980, 1008, 200, 38 );
 clockbtext.set_rgb( 0, 0, 0 );
-clockbtext.font="Ticketbook W01 Bold";
+//clockbtext.font="Ticketbook W01 Bold";
 
-local clocktext = fe.add_text( "TIME:", 967, 1001, 200, 46 );
+local clocktext = fe.add_text( "시간:", 977, 1005, 200, 38 );
 clocktext.set_rgb( 211, 250, 255 );
-clocktext.font="Ticketbook W01 Bold";
+//clocktext.font="Ticketbook W01 Bold";
 
 local clockb = fe.add_text( "", 1140, 1009, 320, 46  );
 clockb.align = Align.Left;
@@ -229,14 +279,14 @@ function update_clock( ttime ){
   fe.add_ticks_callback( this, "update_clock" );
 
 // 즐겨찾기 필터
-local listtextb = fe.add_text( "[!filter] GAMES:", 1340, 1004, 450, 46 );
+local listtextb = fe.add_text( "[!filter] 게임:", 1340, 1008, 450, 38 );
 listtextb.set_rgb( 0, 0, 0 );
-listtextb.font="Ticketbook W01 Bold";
+//listtextb.font="Ticketbook W01 Bold";
 listtextb.align = Align.Left;
 
-local listtext = fe.add_text( "[!filter] GAMES:", 1337, 1001, 450, 46 );
+local listtext = fe.add_text( "[!filter] 게임:", 1337, 1005, 450, 38 );
 listtext.set_rgb( 211, 250, 255 );
-listtext.font="Ticketbook W01 Bold";
+//listtext.font="Ticketbook W01 Bold";
 listtext.align = Align.Left;
 
 // Change filter name to upper case

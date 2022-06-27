@@ -42,23 +42,24 @@ sxyreac2;파칭코 섹시 리액션 2;MAME AD;0;1999;Sammy;Adult;;;;;;;;;;
 pkgnsh;파칭코 은구슬 승부;MAME AD;0;1998;Dynax;Adult;;;;;;;;;;
 fantsia2;판티지아 2;MAME AD;0;1997;Comad;Adult;;;;;;;;0;0;4
 funybubl;퍼니 버블;MAME AD;0;1999;Comad;Adult;;;;;;;;0;0;4
+pcktgalk;포켓 걸 (한글판);EKMAME;pcktgal;1987;Hack;Adult;1;0;Joystick (4-way);imperfect;1;raster;0;0;0;2
 hanamai;하나노마이;MAME AD;0;1988;Dynax;Adult;;;;;;;;;;
 hotpinbl;핫 핀볼;MAME AD;0;1995;Comad;Adult;;;;;;;;;;
 hexa;헥사;MAME AD;0;199?;D.R.Korea;Adult;1;0;Joystick (4-way);imperfect;1;raster;0;0;0;2
-mahjong;CD 마작 미소녀 중심파 (일본판);MAME pcecd_gecd;0;1993;Game Express;Adult Board Game;;;;;;;;;;
-pachislt;CD 빠찡코 미소녀 겜블러 (일본판);MAME pcecd_gecd;0;1994;Game Express;Adult Board Game;;;;;;;;;;
-pachinko;CD 빠찡코 미소녀 구마 네자매 (일본판);MAME pcecd_gecd;0;1995;Game Express;Adult Board Game;;;;;;;;;;
-cardangl;카드 엔젤스 (일본판);MAME pcecd;0;1994;Fujicom;Adult Board Game;;;;;;;;;;
-#Blonde Justice (USA);블론드 저스티스;3DO;;1994;Vivid Interactive;Adult;;;;;;;;;;
-#Coven, The (USA);더 코븐;3DO;;1994;Vivid Interactive;Adult;;;;;;;;;;
-#Immortal Desire (USA);임모탈 디자이어;3DO;;1994;Vivid Interactive;Adult;;;;;;;;;;
-#Love Bites (USA);러브 바이트;3DO;;1995;Vivid Interactive;Adult;;;;;;;;;;
+mahjong;CD 마작 미소녀 중심파;MAME pcecd_gecd;0;1993;Game Express;Adult Board Game;;;;;;;;;;
+pachislt;CD 빠찡코 미소녀 겜블러;MAME pcecd_gecd;0;1994;Game Express;Adult Board Game;;;;;;;;;;
+pachinko;CD 빠찡코 미소녀 구마 네자매;MAME pcecd_gecd;0;1995;Game Express;Adult Board Game;;;;;;;;;;
+cardangl;카드 엔젤스;MAME pcecd;0;1994;Fujicom;Adult Board Game;;;;;;;;;;
+Blonde Justice (USA);블론드 저스티스;3DO;;1994;Vivid Interactive;Adult;;;;;;;;;;
+Coven, The (USA);더 코븐;3DO;;1994;Vivid Interactive;Adult;;;;;;;;;;
+Immortal Desire (USA);임모탈 디자이어;3DO;;1994;Vivid Interactive;Adult;;;;;;;;;;
+Love Bites (USA);러브 바이트;3DO;;1995;Vivid Interactive;Adult;;;;;;;;;;
 Onee-san to Isshoo! Kise Kae Paradise (Japan);오네상과 함께! 탈부착 파라다이스;3DO;;;;Adult;;;;;;;;;;
 Onee-san to Isshoo! Shanken Paradise (Japan);오네상과 함께! 쟝껜 파라다이스;3DO;;;;Adult;;;;;;;;;;
 Twinkle Knights (Japan);트윙클 나이츠;3DO;;;;Adult;;;;;;;;;;
-#Virtual Cameraman Part 1 - Naomi Sawada & Anna Juri (Japan);버추얼 카메라맨 파트 1;3DO;;1995;Naxat Soft;Adult;;;;;;;;;;
+Virtual Cameraman Part 1 - Naomi Sawada & Anna Juri (Japan);버추얼 카메라맨 파트 1;3DO;;1995;Naxat Soft;Adult;;;;;;;;;;
 Virtual Cameraman Part 2 - Natsumi Kawai & Kimi Tachihara (Japan);버추얼 카메라맨 파트 2;3DO;;1995;Naxat Soft;Adult;;;;;;;;;;
-#Virtual Cameraman Part 3 - Yumika Sugimoto (Japan);버추얼 카메라맨 파트 3;3DO;Virtual Cameraman Part 1 - Naomi Sawada & Anna Juri (Japan);1995;Naxat Soft;Adult;;;;;;;;;;
-#Virtual Cameraman Part 4 - Shiori Fujitani (Japan);버추얼 카메라맨 파트 4;3DO;Virtual Cameraman Part 1 - Naomi Sawada & Anna Juri (Japan);1995;Naxat Soft;Adult;;;;;;;;;;
-#Virtual Cameraman Part 5 - Yuri Andou (Japan);버추얼 카메라맨 파트 5;3DO;Virtual Cameraman Part 1 - Naomi Sawada & Anna Juri (Japan);1995;Naxat Soft;Adult;;;;;;;;;;
-#Yakyuuken Special, The (Japan);야구권 스페셜;3DO;;1994;Societa Daikanyama;Adult;;;;;;;;;;
+Virtual Cameraman Part 3 - Yumika Sugimoto (Japan);버추얼 카메라맨 파트 3;3DO;Virtual Cameraman Part 1 - Naomi Sawada & Anna Juri (Japan);1995;Naxat Soft;Adult;;;;;;;;;;
+Virtual Cameraman Part 4 - Shiori Fujitani (Japan);버추얼 카메라맨 파트 4;3DO;Virtual Cameraman Part 1 - Naomi Sawada & Anna Juri (Japan);1995;Naxat Soft;Adult;;;;;;;;;;
+Virtual Cameraman Part 5 - Yuri Andou (Japan);버추얼 카메라맨 파트 5;3DO;Virtual Cameraman Part 1 - Naomi Sawada & Anna Juri (Japan);1995;Naxat Soft;Adult;;;;;;;;;;
+Yakyuuken Special, The (Japan);야구권 스페셜;3DO;;1994;Societa Daikanyama;Adult;;;;;;;;;;

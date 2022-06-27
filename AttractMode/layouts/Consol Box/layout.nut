@@ -4,56 +4,57 @@
 //
 
 class UserConfig { 
-</ label="Enable CRT effect", help="Enable CRT effect", options="Yes,No", order=1 /> enable_crt="No";
-</ label="Select Character", help="Select Character Image's Display Type", options="By Display,By Game,None", order=2 /> select_character="By Display";
-</ label="Select Character No.", help="[By Display] type only. Select Image Number.", options="01,02,03", order=2 /> select_character_no="01";
-</ label="Character Image Alpha (0~254)", help="Input Character Image Alpha value 0~254", options="", order=3 /> select_Alpha="254";
-</ label="Enable Flyer Image", help="Enable List Box's Backgound Image (Flyer)", options="Yes,No", order=4 /> enable_flyer="Yes";
-</ label="Flyer Image Alpha (0~254)", help="Input Flyer Image Alpha value 0~254", options="", order=5 /> select_Alpha2="120"; 
-</ label="Game Logo Animation", help="Animated game's marquee image.", options="Yes,No", order=6 /> enable_gamelogo="Yes";
-</ label="History.dat", help="History.dat location. Be sure to enable and config History.dat from the plugins menu.", order=8 />
+</ label="CRT 효과", help="Enable CRT effect", options="Yes,No", order=1 /> enable_crt="No";
+</ label="캐릭터 표시방식", help="Select Character Image's Display Type", options="By Display,By Game,None", order=2 /> select_character="By Display";
+</ label="캐릭터 번호 선택", help="[By Display] type only. Select Image Number.", options="01,02,03", order=2 /> select_character_no="01";
+</ label="캐릭터 이미지 투명도 (0~254)", help="Input Character Image Alpha value 0~254", options="", order=3 /> select_Alpha="254";
+</ label="표지 이미지", help="Enable List Box's Backgound Image (Flyer)", options="Yes,No", order=4 /> enable_flyer="Yes";
+</ label="표지 이미지 투명도 (0~254)", help="Input Flyer Image Alpha value 0~254", options="", order=5 /> select_Alpha2="120"; 
+</ label="게임 로고 애니메이션 효과", help="Animated game's marquee image.", options="Yes,No", order=6 /> enable_gamelogo="Yes";
+</ label="History.dat 위치 지정", help="History.dat location. Be sure to enable and config History.dat from the plugins menu.", order=8 />
 	dat_path=".\\history.dat";  
-</ label="BG Artwork (NEC PC-Engine)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=9 /> 
+</ label="배경 선택 (NEC PC-Engine)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=9 /> 
    select_bgArt_pce="pink";
-</ label="BG Artwork (NEC PC-Engine CD-ROM)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=10 /> 
+</ label="배경 선택 (NEC PC-Engine CD-ROM)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=10 /> 
    select_bgArt_pcecd="pink";
-</ label="BG Artwork (NEC PC-FX)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=11 /> 
+</ label="배경 선택 (NEC PC-FX)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=11 /> 
    select_bgArt_pcfx="pink";
-</ label="BG Artwork (Nintendo Famicom)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=12 /> 
+</ label="배경 선택 (Nintendo Famicom)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=12 /> 
    select_bgArt_nes="orange";
-</ label="BG Artwork (Nintendo Super Famicom)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=13 /> 
-   select_bgArt_snes="gray2"
-</ label="BG Artwork (Nintendo GameBoy Advance)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=14 /> 
+</ label="배경 선택 (Nintendo Super Famicom)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,sfc_1,sfc_2,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=13 /> 
+   select_bgArt_snes="gray"
+</ label="배경 선택 (Nintendo GameBoy Advance)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=14 /> 
    select_bgArt_gba="gray";  
-</ label="BG Artwork (Nintendo Nintendo 64)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=15 /> 
+</ label="배경 선택 (Nintendo Nintendo 64)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=15 /> 
    select_bgArt_n64="green2";
-</ label="BG Artwork (Nintendo GameCube & Wii)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=16 /> 
+</ label="배경 선택 (Nintendo GameCube & Wii)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=16 /> 
    select_bgArt_gc="green";
-</ label="BG Artwork (SEGA Master System)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=17 /> 
+</ label="배경 선택 (SEGA Master System)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=17 /> 
    select_bgArt_sms="red";
-</ label="BG Artwork (SEGA Mega Drive)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=18 /> 
+</ label="배경 선택 (SEGA Mega Drive)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,md_1,md_2,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=18 /> 
    select_bgArt_md="orange";
-</ label="BG Artwork (SEGA MEGA-CD)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=19 /> 
+</ label="배경 선택 (SEGA MEGA-CD)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,md_1,md_2,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=19 /> 
    select_bgArt_mcd="retro";
-</ label="BG Artwork (Neogeo CD)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=20 /> 
+</ label="배경 선택 (Neogeo CD)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=20 /> 
    select_bgArt_neocd="gray";
-</ label="BG Artwork (LG 3DO ALIVE)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=26 /> 
+</ label="배경 선택 (LG 3DO ALIVE)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=26 /> 
    select_bgArt_3do="orange";
-</ label="BG Artwork (SEGA Saturn)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=20 /> 
+</ label="배경 선택 (SEGA Saturn)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=20 /> 
    select_bgArt_ss="gray";
-</ label="BG Artwork (SEGA DreamCast)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=21 /> 
+</ label="배경 선택 (SEGA DreamCast)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=21 /> 
    select_bgArt_dc="pink";  
-</ label="BG Artwork (MSX)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=22 /> 
+</ label="배경 선택 (MSX)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=22 /> 
    select_bgArt_msx="blue2";
-</ label="BG Artwork (GP32)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=23 /> 
+</ label="배경 선택 (GP32)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=23 /> 
    select_bgArt_gp32="orange";
-</ label="BG Artwork (SONY Play Station)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=24 /> 
+</ label="배경 선택 (SONY Play Station)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=24 /> 
    select_bgArt_ps1="retro";
-</ label="BG Artwork (SONY Play Station 2)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=25 /> 
+</ label="배경 선택 (SONY Play Station 2)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=25 /> 
    select_bgArt_ps2="gray";
-</ label="BG Artwork (SONY Play Station Portable)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=26 /> 
+</ label="배경 선택 (SONY Play Station Portable)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,video1,video2,video3,video4,video5,video6,video7,video8,video9,video10,video11,video12,video13,video14,gif1,gif2,gif3", order=26 /> 
    select_bgArt_psp="gray";
-</ label="Select Artwork Image", help="Selected Artwork Image is displayed at the right of consol game machine.", options="Cartridge_Disc,3D Box,None", order=27 /> enable_boximage="cartridge_disc";
+</ label="추가 이미지", help="Selected Artwork Image is displayed at the right of consol game machine.", options="Cartridge_Disc,3D Box,None", order=27 /> enable_boximage="cartridge_disc";
+</ label="게임정보 표시", help="Enable of Game Infomation", options="Yes,No", order=28 /> enable_info="No";
 }  
 
 // 변수지정 및 폰트 및 화면 해상도
@@ -78,9 +79,58 @@ dofile(fe.script_dir + "file_util.nut" );
 
 
 // 백그라운드 지정 및 스크롤 애니메이션 효과
-if ( my_config["select_bgArt_pcecd"] == "video" ){
-bgArt = fe.add_artwork("bg.mp4", 0, 0, flw, flh );
+if ( my_config["select_bgArt_pcecd"] == "video1" ){
+bgArt = fe.add_artwork("bg_01.mp4", 0, 0, flw, flh );
 }
+if ( my_config["select_bgArt_pcecd"] == "video2" ){
+bgArt = fe.add_artwork("bg_02.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "video3" ){
+bgArt = fe.add_artwork("bg_03.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "video4" ){
+bgArt = fe.add_artwork("bg_04.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "video5" ){
+bgArt = fe.add_artwork("bg_05.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "video6" ){
+bgArt = fe.add_artwork("bg_06.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "video7" ){
+bgArt = fe.add_artwork("bg_07.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "video8" ){
+bgArt = fe.add_artwork("bg_08.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "video9" ){
+bgArt = fe.add_artwork("bg_09.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "video10" ){
+bgArt = fe.add_artwork("bg_10.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "video11" ){
+bgArt = fe.add_artwork("bg_11.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "video12" ){
+bgArt = fe.add_artwork("bg_12.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "video13" ){
+bgArt = fe.add_artwork("bg_13.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "video14" ){
+bgArt = fe.add_artwork("bg_14.mp4", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "gif1" ){
+bgArt = fe.add_artwork("bg_01.gif", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "gif2" ){
+bgArt = fe.add_artwork("bg_02.gif", 0, 0, flw, flh );
+}
+if ( my_config["select_bgArt_pcecd"] == "gif3" ){
+bgArt = fe.add_artwork("bg_03.gif", 0, 0, flw, flh );
+}
+
 bgArt = fe.add_image("bg_" + my_config["select_bgArt_pcecd"] + ".png", 0, 0, flw, flh );
 bgArt2 = fe.add_clone(bgArt);
 
@@ -248,13 +298,13 @@ listbox2.format_string = "[!gamename]";
 
 
 // 시계
-local clockbtext = fe.add_text( "TIME:", 970, 1004, 200, 46 );
+local clockbtext = fe.add_text( "시간:", 980, 1008, 200, 38 );
 clockbtext.set_rgb( 0, 0, 0 );
-clockbtext.font="Ticketbook W01 Bold";
+//clockbtext.font="Ticketbook W01 Bold";
 
-local clocktext = fe.add_text( "TIME:", 967, 1001, 200, 46 );
+local clocktext = fe.add_text( "시간:", 977, 1005, 200, 38 );
 clocktext.set_rgb( 211, 250, 255 );
-clocktext.font="Ticketbook W01 Bold";
+//clocktext.font="Ticketbook W01 Bold";
 
 local clockb = fe.add_text( "", 1140, 1009, 320, 46  );
 clockb.align = Align.Left;
@@ -274,14 +324,14 @@ function update_clock( ttime ){
   fe.add_ticks_callback( this, "update_clock" );
 
 // 즐겨찾기 필터
-local listtextb = fe.add_text( "[!filter] GAMES:", 1340, 1004, 450, 46 );
+local listtextb = fe.add_text( "[!filter] 게임:", 1340, 1008, 450, 38 );
 listtextb.set_rgb( 0, 0, 0 );
-listtextb.font="Ticketbook W01 Bold";
+//listtextb.font="Ticketbook W01 Bold";
 listtextb.align = Align.Left;
 
-local listtext = fe.add_text( "[!filter] GAMES:", 1337, 1001, 450, 46 );
+local listtext = fe.add_text( "[!filter] 게임:", 1337, 1005, 450, 38 );
 listtext.set_rgb( 211, 250, 255 );
-listtext.font="Ticketbook W01 Bold";
+//listtext.font="Ticketbook W01 Bold";
 listtext.align = Align.Left;
 
 // Change filter name to upper case
@@ -348,4 +398,46 @@ if ( my_config["enable_boximage"] == "3D Box" )
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
 	}
 	animation.add( PropertyAnimation( boximage2, move_boximage2 ) );
+}
+
+// 모니터 하단 게임 정보창 표시
+if ( my_config["enable_info"] == "Yes" )
+{
+	local infobox = fe.add_image("black.png",120, 640, 710, 40 );
+	infobox.alpha = 200;
+	local info_db1 = fe.add_text( "제작년도 :", 120, 650, 90, 20 );
+	local info_db2 = fe.add_text( "/ 제작사 :", 235, 650, 90, 20 );
+	local info_db3 = fe.add_text( "/ 장르 :", 450, 650, 70, 20 );
+	local info_db4 = fe.add_text( "/ 플레이어 :", 605, 650, 110, 20 );
+	local info_db5 = fe.add_text( "/ 용량 :", 705, 650, 70, 20 );
+	info_db1.align = Align.Left;
+	info_db2.align = Align.Left;
+	info_db3.align = Align.Left;
+	info_db4.align = Align.Left;
+	info_db5.align = Align.Left;
+	info_db1.alpha = 200;
+	info_db2.alpha = 200;
+	info_db3.alpha = 200;
+	info_db4.alpha = 200;
+	info_db5.alpha = 200;
+	local info_value1 = fe.add_text( "[Year]", 190, 650, 70, 18 );
+	local info_value2 = fe.add_text( "[Manufacturer]", 305, 650, 160, 18 );
+	local info_value3 = fe.add_text( "[Category]", 505, 650, 110, 18 );
+	local info_value4 = fe.add_text( "[Players]", 690, 650, 20, 18 );
+	local info_value5 = fe.add_text( "[Extra]", 762, 650, 70, 18 );
+	info_value1.set_rgb( 0, 255, 255 );
+	info_value2.set_rgb( 0, 255, 255 );
+	info_value3.set_rgb( 0, 255, 255 );
+	info_value4.set_rgb( 0, 255, 255 );
+	info_value5.set_rgb( 0, 255, 255 );
+	info_value1.align = Align.Left;
+	info_value2.align = Align.Left;
+	info_value3.align = Align.Left;
+	info_value4.align = Align.Left;
+	info_value5.align = Align.Left;
+	info_value1.alpha = 200;
+	info_value2.alpha = 200;
+	info_value3.alpha = 200;
+	info_value4.alpha = 200;
+	info_value5.alpha = 200;
 }

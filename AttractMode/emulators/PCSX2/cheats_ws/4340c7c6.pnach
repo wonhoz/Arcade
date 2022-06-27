@@ -1,7 +1,0 @@
-comment=KOR
-gametitle=God of War II
-//Infinite Magic
-patch=1,EE,202162CC,word,00000000
-//Infinite Rage of the Titans
-patch=1,EE,20336CC8,word,42C80000
-patch=1,EE,002D9B64,word,00000001

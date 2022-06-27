@@ -1,33 +1,183 @@
 Attract-Mode v2.4.1 (Windows, SFML 2.5 +SWF +7z) 
 avcodec 58.18.100 / avformat 58.12.100 / swscale 5.1.100 / avutil 56.14.100 / swresample 3.1.100
 
-Config: F:\AttractMode\attract.cfg
+Config: D:\-aa\AttractMode\attract.cfg
 
 *** Initializing display: 'MAME'
- - Loaded master romlist 'MAME' in 195 ms (671 entries kept, 0 discarded)
- - Constructed 27 filters in 16 ms (18117 comparisons)
+ - Loaded master romlist 'MAME' in 2 ms (675 entries kept, 0 discarded)
+ - Constructed 27 filters in 2 ms (18225 comparisons)
 1.77778	using settings[16x9][aspectDepend][res_x] : 1920
 	using settings[16x9][aspectDepend][res_y] : 1080
 	using settings[16x9][aspectDepend][maskFactor] : 1.9
 	using settings[16x9][aspectDepend][wheelNumElements] : 8
- - Loaded layout: F:\AttractMode\layouts/nevato-theme/ (layout_red.nut)
-Unrecognized "emulator" setting of "﻿#" in file: F:\AttractMode\emulators/MAME.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
- - Constructed 1 filters in 0 ms (30 comparisons)
-Error, file not found: F:\AttractMode\layouts/mega-display/ (scripts/fade.nut)
- - Loaded layout: F:\AttractMode\layouts/mega-display/ (layout.nut)
-Unrecognized "emulator" setting of "﻿#" in file: F:\AttractMode\emulators/playmode.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
-Unrecognized "emulator" setting of "﻿#" in file: F:\AttractMode\emulators/Model3.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
-Unrecognized "emulator" setting of "﻿#" in file: F:\AttractMode\emulators/Model2.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
-Unrecognized "emulator" setting of "﻿#" in file: F:\AttractMode\emulators/PSXmame.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
+ - Loaded layout: D:\-aa\AttractMode\layouts/nevato-theme/ (layout_red.nut)
+Unrecognized "emulator" setting of "﻿#" in file: D:\-aa\AttractMode\emulators/EKMAME.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
+Unrecognized "emulator" setting of "﻿#" in file: D:\-aa\AttractMode\emulators/MAME.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
+ - Constructed 1 filters in 0 ms (16 comparisons)
+Error, file not found: D:\-aa\AttractMode\layouts/mega-display/ (scripts/fade.nut)
+ - Loaded layout: D:\-aa\AttractMode\layouts/mega-display/ (layout.nut)
+Unrecognized "emulator" setting of "﻿#" in file: D:\-aa\AttractMode\emulators/playmode.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
+Unrecognized "emulator" setting of "﻿#" in file: D:\-aa\AttractMode\emulators/Model3.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
+Unrecognized "emulator" setting of "﻿#" in file: D:\-aa\AttractMode\emulators/Model2.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
+Unrecognized "emulator" setting of "﻿#" in file: D:\-aa\AttractMode\emulators/PSXmame.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
 
 AN ERROR HAS OCCURED [trying to set 'function']
 
 CALLSTACK
-*FUNCTION [update_clock()] F:\AttractMode\layouts/mega-display/scripts/clock.nut line [17]
+*FUNCTION [update_clock()] D:\-aa\AttractMode\layouts/mega-display/scripts/clock.nut line [17]
 
 LOCALS
 [clockb] INSTANCE
 [now] TABLE
-[ttime] 2053
+[ttime] 147
+[this] TABLE
+Script Error in tick function: update_clock - trying to set 'function'
+
+*** Initializing display: 'MAME'
+ - Loaded master romlist 'MAME' in 3 ms (675 entries kept, 0 discarded)
+ - Constructed 27 filters in 2 ms (18225 comparisons)
+1.77778	using settings[16x9][aspectDepend][res_x] : 1920
+	using settings[16x9][aspectDepend][res_y] : 1080
+	using settings[16x9][aspectDepend][maskFactor] : 1.9
+	using settings[16x9][aspectDepend][wheelNumElements] : 8
+ - Loaded layout: D:\-aa\AttractMode\layouts/nevato-theme/ (layout_red.nut)
+ - Working directory: emulators\mame
+*** Running: emulators\mame\EKMAME64 -skip_gameinfo -nowindow "emulators\mame\roms\Korean\neocup98kt.zip"
+ - Working directory: emulators\mame
+*** Running: emulators\mame\mame64 -skip_gameinfo -nowindow "emulators\mame\roms\arcade\turfmast.zip"
+ - Working directory: emulators\mame
+*** Running: emulators\mame\mame64 -skip_gameinfo -nowindow "emulators\mame\roms\arcade\turfmast.zip"
+ - Working directory: emulators\mame
+*** Running: emulators\mame\mame64 -skip_gameinfo -nowindow "emulators\mame\roms\arcade\neobombe.zip"
+ - Working directory: emulators\mame
+*** Running: emulators\mame\mame64 -skip_gameinfo -nowindow "emulators\mame\roms\arcade\neomrdo.zip"
+ - Working directory: emulators\mame
+*** Running: emulators\mame\mame64 -skip_gameinfo -nowindow "emulators\mame\roms\arcade\neodrift.7z"
+ - Working directory: emulators\mame
+*** Running: emulators\mame\mame64 -skip_gameinfo -nowindow "emulators\mame\roms\arcade\legendos.zip"
+ - Working directory: emulators\mame
+*** Running: emulators\mame\EKMAME64 -skip_gameinfo -nowindow "emulators\mame\roms\Korean\neocup98kt.zip"
+ - Constructed 1 filters in 0 ms (16 comparisons)
+Error, file not found: D:\-aa\AttractMode\layouts/mega-display/ (scripts/fade.nut)
+ - Loaded layout: D:\-aa\AttractMode\layouts/mega-display/ (layout.nut)
+
+AN ERROR HAS OCCURED [trying to set 'function']
+
+CALLSTACK
+*FUNCTION [update_clock()] D:\-aa\AttractMode\layouts/mega-display/scripts/clock.nut line [17]
+
+LOCALS
+[clockb] INSTANCE
+[now] TABLE
+[ttime] 131
+[this] TABLE
+Script Error in tick function: update_clock - trying to set 'function'
+Unrecognized "emulator" setting of "﻿#" in file: D:\-aa\AttractMode\emulators/MAME AD.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
+
+*** Initializing display: 'playmode'
+ - Loaded master romlist 'playmode' in 2 ms (780 entries kept, 0 discarded)
+ - Constructed 27 filters in 2 ms (21060 comparisons)
+1.77778	using settings[16x9][aspectDepend][res_x] : 1920
+	using settings[16x9][aspectDepend][res_y] : 1080
+	using settings[16x9][aspectDepend][maskFactor] : 1.9
+	using settings[16x9][aspectDepend][snap_skewX] : 62.5
+	using settings[16x9][aspectDepend][snap_skewY] : -12.9
+	using settings[16x9][aspectDepend][snap_pinchX] : 0
+	using settings[16x9][aspectDepend][snap_pinchY] : 40
+	using settings[16x9][aspectDepend][snap_rotation] : 1
+	using settings[16x9][aspectDepend][snap_skewX] : 62.5
+	using settings[16x9][aspectDepend][snap_skewY] : -12.9
+	using settings[16x9][aspectDepend][snap_pinchX] : 0
+	using settings[16x9][aspectDepend][snap_pinchY] : 40
+	using settings[16x9][aspectDepend][snap_rotation] : 1
+	using settings[16x9][aspectDepend][snap_skewX] : 62.5
+	using settings[16x9][aspectDepend][snap_skewY] : -12.9
+	using settings[16x9][aspectDepend][snap_pinchX] : 0
+	using settings[16x9][aspectDepend][snap_pinchY] : 40
+	using settings[16x9][aspectDepend][snap_rotation] : 1
+	settings[16x9][aspectDepend][marquee_skewX] does not exist
+		using default value: 17
+	settings[16x9][aspectDepend][marquee_skewY] does not exist
+		using default value: 0
+	settings[16x9][aspectDepend][marquee_pinchX] does not exist
+		using default value: -2
+	settings[16x9][aspectDepend][marquee_pinchY] does not exist
+		using default value: 7
+	settings[16x9][aspectDepend][marquee_rotation] does not exist
+		using default value: 6.2
+	settings[16x9][aspectDepend][marquee_skewX] does not exist
+		using default value: 17
+	settings[16x9][aspectDepend][marquee_skewY] does not exist
+		using default value: 0
+	settings[16x9][aspectDepend][marquee_pinchX] does not exist
+		using default value: -2
+	settings[16x9][aspectDepend][marquee_pinchY] does not exist
+		using default value: 7
+	settings[16x9][aspectDepend][marquee_rotation] does not exist
+		using default value: 6.2
+	using settings[16x9][aspectDepend][wheelNumElements] : 8
+ - Loaded layout: D:\-aa\AttractMode\layouts/nevato-theme/ (layout.nut)
+Unrecognized "emulator" setting of "﻿#" in file: D:\-aa\AttractMode\emulators/Taito Type X_Street Fighter IV.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
+ - Constructed 1 filters in 0 ms (16 comparisons)
+Error, file not found: D:\-aa\AttractMode\layouts/mega-display/ (scripts/fade.nut)
+ - Loaded layout: D:\-aa\AttractMode\layouts/mega-display/ (layout.nut)
+
+AN ERROR HAS OCCURED [trying to set 'function']
+
+CALLSTACK
+*FUNCTION [update_clock()] D:\-aa\AttractMode\layouts/mega-display/scripts/clock.nut line [17]
+
+LOCALS
+[clockb] INSTANCE
+[now] TABLE
+[ttime] 129
+[this] TABLE
+Script Error in tick function: update_clock - trying to set 'function'
+Unrecognized "emulator" setting of "﻿#" in file: D:\-aa\AttractMode\emulators/SEGA NAOMI.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
+Unrecognized "emulator" setting of "﻿#" in file: D:\-aa\AttractMode\emulators/NES.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
+Unrecognized "emulator" setting of "﻿#" in file: D:\-aa\AttractMode\emulators/SMS.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
+Unrecognized "emulator" setting of "﻿#" in file: D:\-aa\AttractMode\emulators/PC-Engine.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
+
+*** Initializing display: 'MSX'
+ - Loaded master romlist 'MSX' in 1 ms (271 entries kept, 0 discarded)
+ - Constructed 8 filters in 0 ms (2168 comparisons)
+ - Loaded layout: D:\-aa\AttractMode\layouts/Consol Box/ (layout_msx.nut)
+Unrecognized "emulator" setting of "﻿#" in file: D:\-aa\AttractMode\emulators/MAME cpg120-cart.cfg.  Valid settings are: executable, args, workdir, rompath, romext, system, info_source, import_extras, nb_mode_wait, exit_hotkey, artwork
+ - Constructed 1 filters in 0 ms (16 comparisons)
+Error, file not found: D:\-aa\AttractMode\layouts/mega-display/ (scripts/fade.nut)
+ - Loaded layout: D:\-aa\AttractMode\layouts/mega-display/ (layout.nut)
+
+AN ERROR HAS OCCURED [trying to set 'function']
+
+CALLSTACK
+*FUNCTION [update_clock()] D:\-aa\AttractMode\layouts/mega-display/scripts/clock.nut line [17]
+
+LOCALS
+[clockb] INSTANCE
+[now] TABLE
+[ttime] 113
+[this] TABLE
+Script Error in tick function: update_clock - trying to set 'function'
+
+*** Initializing display: 'MSX'
+ - Loaded master romlist 'MSX' in 1 ms (271 entries kept, 0 discarded)
+ - Constructed 8 filters in 0 ms (2168 comparisons)
+ - Loaded layout: D:\-aa\AttractMode\layouts/Consol Box/ (layout_msx.nut)
+Warning: could not locate rom.  Best guess: roms\Consol\MSX Cartridge\zanac2.7z
+ - Working directory: emulators\mame
+*** Running: emulators\mame\mame64 cpg120 -cart1 "zanac2" -cart2 "fmpac"
+ - Constructed 1 filters in 0 ms (16 comparisons)
+Error, file not found: D:\-aa\AttractMode\layouts/mega-display/ (scripts/fade.nut)
+ - Loaded layout: D:\-aa\AttractMode\layouts/mega-display/ (layout.nut)
+
+AN ERROR HAS OCCURED [trying to set 'function']
+
+CALLSTACK
+*FUNCTION [update_clock()] D:\-aa\AttractMode\layouts/mega-display/scripts/clock.nut line [17]
+
+LOCALS
+[clockb] INSTANCE
+[now] TABLE
+[ttime] 115
 [this] TABLE
 Script Error in tick function: update_clock - trying to set 'function'
