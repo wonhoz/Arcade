@@ -1,7 +1,7 @@
 [General]
 emulate = Wii U Pro Controller
 api = DirectInput
-controller = E3D67BB0-DCB0-11E9-8003-444553540000
+controller = 0A5DCFC0-F26D-11EC-8002-444553540000
 
 [Controller]
 rumble = 0
@@ -10,12 +10,12 @@ rightRange = 1
 leftDeadzone = 0.15
 rightDeadzone = 0.15
 buttonThreshold = 0.5
-1 = button_1
-2 = button_2
-3 = button_8
-4 = button_10
-5 = button_20
-6 = button_4
+1 = button_2
+2 = button_1
+3 = button_10
+4 = button_8
+5 = button_4
+6 = button_20
 9 = button_80
 10 = button_40
 12 = button_2000000000
