@@ -22,7 +22,6 @@
 // to code AM themes
 //
 // -------------------------------------------------------
-// Renovated by CSOne in 2018.11.08
 
 
 class UserConfig {
@@ -33,7 +32,7 @@ class UserConfig {
 </ label="동영상 음소거", help="방향키(위/아래)를 이용하여, 사운드를 끄려면 yes, 사운드를 켜려면 no를 선택하세요.", options="yes,no", order=2 /> mute_videoSnaps="no";
 </ label="모니터 표시항목", help="모니터에 미리보기 동영상을 재생하려면 video를, 스냅샷을 표시하려면 screenshot을 선택하세요.", options="video, screenshot", order=3 /> cabScreenType="video";
 </ label="모니터 스캔라인", help="화면 스캔라인의 강도를 선택하거나 스캔라인을 제거할 수 있습니다.", options="light,medium,dark,off", order=4 /> enable_scanlines="light";
-</ label="marquee 도안", help="사용자 제작도안을 사용하려면 그림파일명을 ''my-own-marquee.jpg'' 으로 하세요.", options="marquee,emulator-name,my-own", order=5 /> marquee_type="marquee"; 
+</ label="marquee 도안", help="사용자 제작도안을 사용하려면 그림파일명을 ''my-own-marquee.jpg'' 으로 하세요.", options="marquee,wheel,emulator-name,my-own", order=5 /> marquee_type="marquee"; 
 </ label="LCD 우측 표시항목", help="표시할 항목을 선택하세요.", options="filter, emulator, display-name, rom-filename, off,", order=6 /> lcdRight="filter"; 
 </ label="--------------------------", help=" ", options=" ", order=7 /> divider2="";
 //-----------------------------------------------------------------
@@ -89,6 +88,21 @@ local settings = {
         marquee_rotation = 6.2, 
 
         wheelNumElements = 10 }
+   },
+    "21x9": {
+      aspectDepend = { 
+        res_x = 1920,
+        res_y = 1080,
+
+        maskFactor = 1.9,
+
+        snap_skewX = 62.5, 
+        snap_skewY = -12.9, 
+        snap_pinchX = 0, 
+        snap_pinchY = 40.0, 
+        snap_rotation = 1.0, 
+
+        wheelNumElements = 8 }
    },
    "16x10": {
       aspectDepend = { 
@@ -158,6 +172,9 @@ print (aspect);
 local aspect_name = "";
 switch( aspect.tostring() )
 {
+    case "2.37037":
+        aspect_name = "21x9";
+        break;
     case "1.77865":  //for 1366x768 screen
     case "1.77778":  //for any other 16x9 resolution
         aspect_name = "16x9";
@@ -602,7 +619,6 @@ if ( my_config["select_character"] == "By Game" )
  OBJECTS.effect.trigger = Transition.EndNavigation;
  }
 
-
 // 에뮬 디스플레이 타이틀
 local displayName = fe.add_image ("Display/[DisplayName]",flw*0.567708, flh*0.02222, flw*0.390625, flh*0.1851852);
 
@@ -651,7 +667,7 @@ listbox2.format_string = "[!gamename]";
 // 문자 생략
 // Game name text. We do this in the layout as the frontend doesn't chop up titles with a forward slash
  function gamename( index_offset ) {
-  local s = split( fe.game_info( Info.Title, index_offset ), "([" );
+  local s = split( fe.game_info( Info.Title, index_offset ), "[" );
  	if ( s.len() > 0 ) return s[0];
   return "";
 }
@@ -760,6 +776,3 @@ local conveyor = Conveyor();
 conveyor.set_slots( wheel_entries );
 conveyor.transition_ms = 50;
 try { conveyor.transition_ms = my_config["transition_ms"].tointeger(); } catch ( e ) { }
-
-
-

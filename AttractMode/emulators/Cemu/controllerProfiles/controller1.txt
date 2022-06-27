@@ -1,0 +1,35 @@
+[General]
+emulate = Wii U Pro Controller
+api = Keyboard
+
+[Controller]
+rumble = 0
+leftRange = 1
+rightRange = 1
+leftDeadzone = 0.15
+rightDeadzone = 0.15
+buttonThreshold = 0.5
+1 = key_83
+2 = key_68
+3 = key_87
+4 = key_69
+5 = key_81
+6 = key_82
+7 = key_65
+8 = key_70
+9 = key_13
+10 = key_16
+12 = key_38
+13 = key_40
+14 = key_37
+15 = key_39
+16 = key_101
+17 = key_74
+18 = key_104
+19 = key_98
+20 = key_100
+21 = key_102
+22 = key_85
+23 = key_77
+24 = key_72
+25 = key_75

@@ -196,7 +196,7 @@ listbox2.format_string = "[!gamename]";
 
 // Game name text. We do this in the layout as the frontend doesn't chop up titles with a forward slash
  function gamename( index_offset ) {
-  local s = split( fe.game_info( Info.Title, index_offset ), "(/[" );
+  local s = split( fe.game_info( Info.Title, index_offset ), "/[" );
  	if ( s.len() > 0 ) return s[0];
   return "";
 }

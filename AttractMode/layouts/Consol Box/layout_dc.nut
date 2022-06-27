@@ -32,14 +32,6 @@ fe.layout.preserve_aspect_ratio = true;
 // Include the utilities to read the history.dat file
 dofile(fe.script_dir + "file_util.nut" );
 
-// 이미지 변형 변수값 지정
-// local snap_skewX = 62.5
-// local snap_skewY = -12.9
-// local snap_pinchX = 0
-// local snap_pinchY = 40.0
-// local snap_rotation = 1.0
-
-
 // 백그라운드 지정 및 스크롤 애니메이션 효과
 if ( my_config["select_bgArt_dc"] == "video" ){
 bgArt = fe.add_artwork("bg.mp4", 0, 0, flw, flh );
@@ -203,7 +195,7 @@ listbox2.format_string = "[!gamename]";
 
 // Game name text. We do this in the layout as the frontend doesn't chop up titles with a forward slash
  function gamename( index_offset ) {
-  local s = split( fe.game_info( Info.Title, index_offset ), "(/[" );
+  local s = split( fe.game_info( Info.Title, index_offset ), "/[" );
  	if ( s.len() > 0 ) return s[0];
   return "";
 }
@@ -310,4 +302,3 @@ if ( my_config["enable_boximage"] == "3D Box" )
 	}
 	animation.add( PropertyAnimation( boximage2, move_boximage2 ) );
 }
-

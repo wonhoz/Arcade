@@ -104,7 +104,7 @@ Exception Edit;예외 편집
 Executable;실행 파일
 Exit;확인 후 종료
 Exit Attract-Mode;프로그램 종료
-Exit Attract-Mode?;어트랙트 모드를 종료하시겠습니까?
+Exit Attract-Mode?;종료하시겠습니까?
 Exit Command;종료 명령어
 Exit Hotkey;종료 핫키
 Exit to Desktop;바탕화면으로 나가기
@@ -177,7 +177,7 @@ Previous Page;이전 페이지
 Random Game;랜덤 게임 선택
 Remove '$1' from Favourites?;'$1' 게임을 즐겨하는 목록에서 제거하겠습니까?
 Remove Input;입력 삭제
-Remove tag: '$1';Remove tag: '$1'
+Remove tag: '$1';'$1' 태그 제거
 Replay Last Game;마지막으로 한 게임 다시 실행
 Right;90도
 Rom Extension(s);롬 파일 확장자

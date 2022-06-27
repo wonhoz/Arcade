@@ -1,3 +1,0 @@
-#Name;NES GAMES;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
-MAME;아케이드 클래식;MAME;;;;;;;;;;;;;;
-Model2;모델 2;Model2;;;;;;;;;;;;;;

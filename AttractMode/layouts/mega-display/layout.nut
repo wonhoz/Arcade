@@ -3,12 +3,12 @@
 class UserConfig 
 { 
 </ label="User custom text",help="Enter text to display on the layout", order=1 /> uct="Change this text in the Layout Options";
- </ label="Select spinwheel art", help="The artwork to spin", options="marquee, wheel", order=3 /> orbit_art="wheel";
+</ label="휠아트 선택", help="휠 이미지를 선택하세요.", options="marquee, wheel", order=3 /> orbit_art="wheel";
    
 </ label="Select vertart instead of wheel", help="Select vertical or wheel art", options="Yes,No", order=4 /> enable_VertArt="no";
    
-</ label="Transition Time", help="Time in milliseconds for wheel spin.", order=10 /> transition_ms="25";
-</ label="Enble background Scanline", help="Show scanline effect", options="none,light,medium,dark", order=17 /> enable_scanline="none";
+</ label="휠 전환시간", help="Time in milliseconds for wheel spin.", order=10 /> transition_ms="25";
+</ label="스캔라인 효과", help="화면에 스캔라인을 표시합니다.", options="none,light,medium,dark", order=17 /> enable_scanline="none";
 }
 
 local flx = fe.layout.width;

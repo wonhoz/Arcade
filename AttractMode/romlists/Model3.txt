@@ -1,23 +1,20 @@
 #Name;SEGA Model 3;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
-lamachin;LA 머신건;Model3;;1998;SEGA;Gun Shooting;;;;;;;;;;
+lamachin;LA 머신건;Model3;;1998;SEGA;GunShooting;;;;;;;;;;
 dirtdvls;더티 데빌스;Model3;;1998;SEGA;Racing;;;;;;;;;;
 daytona2;데이토나 USA2;Model3;;1998;SEGA;Racing;;;;;;;;;;
 dayto2pe;데이토나 USA2 퍼펙트 에디션;Model3;;1998;SEGA;Racing;;;;;;;;;;
-lostwsga;로스트 월드;Model3;;1997;SEGA;Gun Shooting;;;;;;;;;;
+lostwsga;로스트 월드;Model3;;1997;SEGA;GunShooting;;;;;;;;;;
 lemans24;르망 24;Model3;;1997;SEGA;Racing;;;;;;;;;;
-magtruck;매지컬 트럭 어드벤처;Model3;;1998;SEGA;3D Action;;;;;;;;;;
+magtruck;매지컬 트럭 어드벤처;Model3;;1998;SEGA;Action;;;;;;;;;;
 vs2;버추어 스트라이커 2;Model3;;1997;SEGA;Sports;;;;;;;;;;
-vf3;버추어 파이터 3;Model3;;1996;SEGA;VS Fighting;;;;;;;;;;
-vf3tb;버추어 파이터 3 팀배틀;Model3;;1996;SEGA;VS Fighting;;;;;;;;;;
+vf3;버추어 파이터 3;Model3;;1996;SEGA;Fighting;;;;;;;;;;
+vf3tb;버추어 파이터 3 팀배틀;Model3;;1996;SEGA;Fighting;;;;;;;;;;
 srally2;세가 랠리 2;Model3;;1998;SEGA;Racing;;;;;;;;;;
 scud;스커드 레이스;Model3;;1996;SEGA;Racing;;;;;;;;;;
 scudp;스커드 레이스 플러스;Model3;;1997;SEGA;Racing;;;;;;;;;;
 swtrilgy;스타워즈 트릴리지 아케이드;Model3;;1998;SEGA;Shooting;;;;;;;;;;
 spikeofe;스파이크 아웃 파이널 에디션;Model3;;1998;SEGA;Sports;;;;;;;;;;
 oceanhun;오션 헌터;Model3;;1998;SEGA;Action;;;;;;;;;;
-von2;전뇌전기 버추얼온 2;Model3;;1998;SEGA;VS Fighting;;;;;;;;;;
-fvipers2;파이팅 바이퍼즈 2;Model3;;1998;SEGA;VS Fighting;;;;;;;;;;
+von2;전뇌전기 버추얼온 2;Model3;;1998;SEGA;Fighting;;;;;;;;;;
+fvipers2;파이팅 바이퍼즈 2;Model3;;1998;SEGA;Fighting;;;;;;;;;;
 harley;할리 데이비슨;Model3;;1997;SEGA;Racing;;;;;;;;;;
-
-
-

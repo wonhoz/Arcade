@@ -1,22 +1,17 @@
 #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
-God Of War Ghost of Sparta [K];갓 오브 워: 고스트 오브 스파르타. 한글판;PSP;0;;;Action;;;;;;;;;;
-Darius burst;다라이어스 버스트;PSP;0;;;Shooting;;;;;;;;;;
-Dragon Ball Z - Tenkaichi Tag Team (U);드래곤 볼 Z - 천하제일 태그팀;PSP;0;;;VS Fight;;;;;;;;;;
-SOULCALIBUR Broken Destiny;소울 칼리버: 브로큰 데스티니;PSP;0;;;VS Fight;;;;;;;;;;
-Super Robot Wars AP Kor v2.4 Vocal Edition;슈퍼 로봇대전 A 포터블. 한글판;PSP;0;;;SRPG;;;;;;;;;;
+SSX on Tour [K];SSX on Tour;PSP;0;;;Sports;;;;;;;;;;
+God Of War Ghost of Sparta [K];갓 오브 워: 고스트 오브 스파르타;PSP;0;;;Action;;;;;;;;;;
+God Of War Chains of Olympus [K];갓 오브 워: 체인 오브 올림푸스;PSP;0;;;Action;;;;;;;;;;
+#Darius burst;다라이어스 버스트;PSP;0;;;Shooting;;;;;;;;;;
+Dragon Ball Z - Tenkaichi Tag Team (U);드래곤 볼 Z - 천하제일 태그팀;PSP;0;;;Fighting;;;;;;;;;;
+SOULCALIBUR Broken Destiny;소울 칼리버: 브로큰 데스티니;PSP;0;;;Fighting;;;;;;;;;;
+#Super Robot Wars AP Kor v2.4 Vocal Edition;슈퍼 로봇대전 A 포터블;PSP;0;;;SRPG;;;;;;;;;;
+Assassins Creed Bloodlines;어쌔신 크리드: 블러드라인;PSP;0;;;Action;;;;;;;;;;
 Ikki Tousen - Eloquent Fist (J);일기당천 - 제갈공명;PSP;0;;;Arcade;;;;;;;;;;
 Ikki Tousen - Xross Impact (J);일기당천 - 크로스 임팩트;PSP;0;;;Arcade;;;;;;;;;;
-Shin Sangoku Musou 5 Special-[K];진삼국무쌍 5 스페셜. 한글판;PSP;0;;;Action;;;;;;;;;;
-TEKKEN 6 (K);철권 6. 한글판;PSP;0;;;VS Fight;;;;;;;;;;
+Shin Sangoku Musou 5 Special-[K];진삼국무쌍 5 스페셜;PSP;0;;;Action;;;;;;;;;;
+TEKKEN 5 (K);철권 5;PSP;0;;;Fighting;;;;;;;;;;
+TEKKEN 6 (K);철권 6;PSP;0;;;Fighting;;;;;;;;;;
 Ghosts n Goblins (U);초마계촌;PSP;0;;;Action;;;;;;;;;;
-Pangya Portable [K];팡야 포터블. 한글판;PSP;0;;;Sports;;;;;;;;;;
-
-
-
-
-
-
-
-
-
-
+Chongseong and Diamond [K];총성과 다이아몬드;PSP;0;;;Adventure;;;;;;;;;;
+Pangya Portable [K];팡야 포터블;PSP;0;;;Sports;;;;;;;;;;
