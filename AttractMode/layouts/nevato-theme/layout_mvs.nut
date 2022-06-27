@@ -151,8 +151,8 @@ local settings = {
    }
    "5x4": {
       aspectDepend = { 
-        res_x = 1500,
-        res_y = 1200,
+        res_x = 1280,
+        res_y = 1024,
 
         maskFactor = 1.6,
 
@@ -572,7 +572,7 @@ fe.add_image("box_blue.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.
 
 
 // 리스트 게임번호 그림자
-local listbox1b = fe.add_listbox( flw*0.541666667, flh*0.212963, flw*0.1796875, flh*0.6759259 );
+local listbox1b = fe.add_listbox( flw*0.541666667 - 15, flh*0.212963, flw*0.1796875, flh*0.6759259 );
 listbox1b.charsize = 40;
 listbox1b.set_sel_rgb( 208, 56, 0 );
 listbox1b.set_rgb( 0, 0, 0 );
@@ -582,7 +582,7 @@ listbox1b.font="texgyreheros-bold";
 listbox1b.format_string = "[ListEntry]";
 
 // 리스트 박스 게임번호
-local listbox1 = fe.add_listbox( flw*0.540104167, flh*0.2101852, flw*0.1796875, flh*0.6759259 );
+local listbox1 = fe.add_listbox( flw*0.540104167 - 15, flh*0.2101852, flw*0.1796875, flh*0.6759259 );
 listbox1.charsize = 40;
 listbox1.set_sel_rgb( 255 243, 20 );
 listbox1.set_rgb( 73, 223, 222 );
@@ -612,7 +612,7 @@ listbox2.format_string = "[!gamename]";
 // 문자 생략
 // Game name text. We do this in the layout as the frontend doesn't chop up titles with a forward slash
  function gamename( index_offset ) {
-  local s = split( fe.game_info( Info.Title, index_offset ), "[" );
+  local s = split( fe.game_info( Info.Title, index_offset ), "([" );
  	if ( s.len() > 0 ) return s[0];
   return "";
 }
@@ -626,12 +626,12 @@ local clocktext = fe.add_text( "TIME:", flw*0.5140625, flh*0.926851852, flw*0.10
 clocktext.set_rgb( 211, 250, 255 );
 clocktext.font="Ticketbook W01 Bold";
 
-local clockb = fe.add_text( "", flw*0.604166667, flh*0.934259259, flw*0.166666667, flh*0.042592593  );
+local clockb = fe.add_text( "", flw*0.604166667 - 30, flh*0.934259259, flw*0.166666667, flh*0.042592593  );
 clockb.align = Align.Left;
 clockb.font="texgyreheros-bold";
 clockb.set_rgb( 0, 0, 0 );
 
-local clock = fe.add_text( "", flw*0.602604167, flh*0.931481481, flw*0.166666667, flh*0.042592593  );
+local clock = fe.add_text( "", flw*0.602604167 - 30, flh*0.931481481, flw*0.166666667, flh*0.042592593  );
 clock.align = Align.Left;
 clock.font="texgyreheros-bold";
 clock.set_rgb( 73, 223, 222 );
