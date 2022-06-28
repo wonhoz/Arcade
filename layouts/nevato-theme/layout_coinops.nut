@@ -247,12 +247,12 @@ if ( my_config["mute_videoSnaps"] == "no")
 
 // default background image (if background art is not enabled) ------------- START
 
-if ( my_config["enable_static_bkg1"] == "none") 
+if ( my_config["enable_static_bkg2"] == "none") 
 {
  local bg = fe.add_image( "", 0, 0, flw, flh );
 }
 
-local bgArt = fe.add_image("bg_" + my_config["enable_static_bkg1"] + ".png", 0, 0, flw, flh );
+local bgArt = fe.add_image("bg_" + my_config["enable_static_bkg2"] + ".png", 0, 0, flw, flh );
 local bgArt2 = fe.add_clone(bgArt);
 
 animation.add( PropertyAnimation( bgArt, {when = Transition.StartLayout, property = "x", start = 0, end = -flw, time = 28000, loop=true}));
@@ -331,7 +331,7 @@ if ( my_config["enable_mask"] == "medium" )
 {
 local masking = fe.add_image( "background_mask.png", 0, 0, flx, fly );
 masking.preserve_aspect_ratio = false;
-masking.alpha = 250;           // here you can change mask opacity light=100, medium=150, dark (default)=255
+masking.alpha = 150;           // here you can change mask opacity light=100, medium=150, dark (default)=255
 local maskingMedium = fe.add_image( "background_mask_medium.png", 0, 0, flx, fly );
 maskingMedium.preserve_aspect_ratio = false;
 }
@@ -339,7 +339,7 @@ maskingMedium.preserve_aspect_ratio = false;
 
 if ( my_config["enable_mask"] == "dark" )
 {
-local masking = fe.add_image( "background_mask.png", 0, 0, flx,fly);   //for 4:3 fix 1.6*fly
+local masking = fe.add_image( "background_mask_scanline.png", 0, 0, flx,fly);   //for 4:3 fix 1.6*fly
 masking.preserve_aspect_ratio = false;
 masking.alpha = 255;           // here you can change mask opacity light=100, medium=150, dark (default)=255
 }
@@ -349,23 +349,23 @@ masking.alpha = 255;           // here you can change mask opacity light=100, me
 
 //static tv effect on cab screen snap change (of if no snap at all) ------------- START
 
-local tvStatic = fe.add_image( "static.jpg", blip*0.0984, blip*0.24, blip*0.405, blip*0.3536);
-tvStatic.skew_x = Setting("aspectDepend", "snap_skewX");
-tvStatic.skew_y = Setting("aspectDepend", "snap_skewY");
-tvStatic.pinch_x = Setting("aspectDepend", "snap_pinchX");
-tvStatic.pinch_y = Setting("aspectDepend", "snap_pinchY");
-tvStatic.rotation = Setting("aspectDepend", "snap_rotation");
+local tvStatic = fe.add_image( "static.jpg", blip*0.128, blip*0.302, blip*0.646, blip*0.480);
+//tvStatic.skew_x = Setting("aspectDepend", "snap_skewX");
+//tvStatic.skew_y = Setting("aspectDepend", "snap_skewY");
+//tvStatic.pinch_x = Setting("aspectDepend", "snap_pinchX");
+//tvStatic.pinch_y = Setting("aspectDepend", "snap_pinchY");
+//tvStatic.rotation = Setting("aspectDepend", "snap_rotation");
 
 
 
 //snap (video or screenshot) on cab screen ------------- START
 
-local cabScreen = fe.add_artwork ("snap", blip*0.0984, blip*0.24, blip*0.405, blip*0.3536);
-cabScreen.skew_x = Setting("aspectDepend", "snap_skewX");
-cabScreen.skew_y = Setting("aspectDepend", "snap_skewY");
-cabScreen.pinch_x = Setting("aspectDepend", "snap_pinchX");
-cabScreen.pinch_y = Setting("aspectDepend", "snap_pinchY");
-cabScreen.rotation = Setting("aspectDepend", "snap_rotation");
+local cabScreen = fe.add_artwork ("snap", blip*0.128, blip*0.302, blip*0.646, blip*0.480);
+//cabScreen.skew_x = Setting("aspectDepend", "snap_skewX");
+//cabScreen.skew_y = Setting("aspectDepend", "snap_skewY");
+//cabScreen.pinch_x = Setting("aspectDepend", "snap_pinchX");
+//cabScreen.pinch_y = Setting("aspectDepend", "snap_pinchY");
+//cabScreen.rotation = Setting("aspectDepend", "snap_rotation");
 cabScreen.trigger = Transition.EndNavigation;
 cabScreen.preserve_aspect_ratio = false;
 
@@ -382,36 +382,36 @@ cabScreen.video_flags=Vid.ImagesOnly;
 
 if ( my_config["enable_scanlines"] == "light" )
 {
-local scanlines = fe.add_image( "scanlines.png", blip*0.0984, blip*0.24, blip*0.405, blip*0.3536 );
-scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
-scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
-scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
-scanlines.pinch_y = Setting("aspectDepend", "snap_pinchY");
-scanlines.rotation = Setting("aspectDepend", "snap_rotation");
+local scanlines = fe.add_image( "scanlines.png", blip*0.128, blip*0.302, blip*0.646, blip*0.480 );
+//scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
+//scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
+//scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
+//scanlines.pinch_y = Setting("aspectDepend", "snap_pinchY");
+//scanlines.rotation = Setting("aspectDepend", "snap_rotation");
 scanlines.preserve_aspect_ratio = false;
 scanlines.alpha = 50;
 }
 
 if ( my_config["enable_scanlines"] == "medium" )
 {
-local scanlines = fe.add_image( "scanlines.png", blip*0.0984, blip*0.24, blip*0.405, blip*0.3536 );
-scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
-scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
-scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
-scanlines.pinch_y = Setting("aspectDepend", "snap_pinchY");
-scanlines.rotation = Setting("aspectDepend", "snap_rotation");
+local scanlines = fe.add_image( "scanlines.png", blip*0.128, blip*0.302, blip*0.646, blip*0.480 );
+//scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
+//scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
+//scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
+//scanlines.pinch_y = Setting("aspectDepend", "snap_pinchY");
+//scanlines.rotation = Setting("aspectDepend", "snap_rotation");
 scanlines.preserve_aspect_ratio = false;
 scanlines.alpha = 150;
 }
 
 if ( my_config["enable_scanlines"] == "dark" )
 {
-local scanlines = fe.add_image( "scanlines.png", blip*0.0984, blip*0.24, blip*0.405, blip*0.3536 );
-scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
-scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
-scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
-scanlines.pinch_y = Setting("aspectDepend", "snap_pinchY");
-scanlines.rotation = Setting("aspectDepend", "snap_rotation");
+local scanlines = fe.add_image( "scanlines.png", blip*0.128, blip*0.302, blip*0.646, blip*0.480 );
+//scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
+//scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
+//scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
+//scanlines.pinch_y = Setting("aspectDepend", "snap_pinchY");
+//scanlines.rotation = Setting("aspectDepend", "snap_rotation");
 scanlines.preserve_aspect_ratio = false;
 scanlines.alpha = 200;
 }
@@ -427,21 +427,22 @@ scanlines.alpha = 200;
 
 if ( my_config["marquee_type"] == "marquee" )
 {
-local marqueeBkg = fe.add_image("[marquee]", blip*0.1032, blip*0.0763, blip*0.3984, blip*0.1349 );
-marqueeBkg.skew_x = Setting("aspectDepend", "marquee_skewX");
-marqueeBkg.skew_y = Setting("aspectDepend", "marquee_skewY");
-marqueeBkg.pinch_x = Setting("aspectDepend", "marquee_pinchX");
-marqueeBkg.pinch_y = Setting("aspectDepend", "marquee_pinchY");
-marqueeBkg.rotation = Setting("aspectDepend", "marquee_rotation");
+local marqueeBkg0 = fe.add_image("static.jpg", blip*0.0639, blip*0.0037, blip*0.774, blip*0.206 );
+local marqueeBkg = fe.add_image("[marquee]", blip*0.0639, blip*0.0037, blip*0.774, blip*0.206 );
+//marqueeBkg.skew_x = Setting("aspectDepend", "marquee_skewX");
+//marqueeBkg.skew_y = Setting("aspectDepend", "marquee_skewY");
+//marqueeBkg.pinch_x = Setting("aspectDepend", "marquee_pinchX");
+//marqueeBkg.pinch_y = Setting("aspectDepend", "marquee_pinchY");
+//marqueeBkg.rotation = Setting("aspectDepend", "marquee_rotation");
 marqueeBkg.trigger = Transition.EndNavigation;
 marqueeBkg.preserve_aspect_ratio = false;
 
-local marquee = FadeArt("marquee", blip*0.1032, blip*0.0763, blip*0.3984, blip*0.1349 );
-marquee.skew_x = Setting("aspectDepend", "marquee_skewX");
-marquee.skew_y = Setting("aspectDepend", "marquee_skewY");
-marquee.pinch_x = Setting("aspectDepend", "marquee_pinchX");
-marquee.pinch_y = Setting("aspectDepend", "marquee_pinchY");
-marquee.rotation = Setting("aspectDepend", "marquee_rotation");
+local marquee = FadeArt("marquee", blip*0.0639, blip*0.0037, blip*0.774, blip*0.206 );
+//marquee.skew_x = Setting("aspectDepend", "marquee_skewX");
+//marquee.skew_y = Setting("aspectDepend", "marquee_skewY");
+//marquee.pinch_x = Setting("aspectDepend", "marquee_pinchX");
+//marquee.pinch_y = Setting("aspectDepend", "marquee_pinchY");
+//marquee.rotation = Setting("aspectDepend", "marquee_rotation");
 marquee.trigger = Transition.EndNavigation;
 marquee.preserve_aspect_ratio = false;
 }
@@ -456,11 +457,11 @@ if ( my_config["marquee_type"] == "emulator-name" )
 
 {
 local emuMarquee = fe.add_image("[Emulator]" + "-marquee.jpg", blip*0.1032, blip*0.0763, blip*0.3984, blip*0.1349 );
-emuMarquee.skew_x = Setting("aspectDepend", "marquee_skewX");
-emuMarquee.skew_y = Setting("aspectDepend", "marquee_skewY");
-emuMarquee.pinch_x = Setting("aspectDepend", "marquee_pinchX");
-emuMarquee.pinch_y = Setting("aspectDepend", "marquee_pinchY");
-emuMarquee.rotation = Setting("aspectDepend", "marquee_rotation");
+//emuMarquee.skew_x = Setting("aspectDepend", "marquee_skewX");
+//emuMarquee.skew_y = Setting("aspectDepend", "marquee_skewY");
+//emuMarquee.pinch_x = Setting("aspectDepend", "marquee_pinchX");
+//emuMarquee.pinch_y = Setting("aspectDepend", "marquee_pinchY");
+//emuMarquee.rotation = Setting("aspectDepend", "marquee_rotation");
 emuMarquee.trigger = Transition.EndNavigation;
 emuMarquee.preserve_aspect_ratio = false;
 }
@@ -472,76 +473,80 @@ emuMarquee.preserve_aspect_ratio = false;
 if ( my_config["marquee_type"] == "my-own" )
 {
 local myOwnMarquee = fe.add_image("my-own-marquee.jpg", blip*0.1032, blip*0.0763, blip*0.3984, blip*0.1349 );
-myOwnMarquee.skew_x = Setting("aspectDepend", "marquee_skewX");
-myOwnMarquee.skew_y = Setting("aspectDepend", "marquee_skewY");
-myOwnMarquee.pinch_x = Setting("aspectDepend", "marquee_pinchX");
-myOwnMarquee.pinch_y = Setting("aspectDepend", "marquee_pinchY");
-myOwnMarquee.rotation = Setting("aspectDepend", "marquee_rotation");
+//myOwnMarquee.skew_x = Setting("aspectDepend", "marquee_skewX");
+//myOwnMarquee.skew_y = Setting("aspectDepend", "marquee_skewY");
+//myOwnMarquee.pinch_x = Setting("aspectDepend", "marquee_pinchX");
+//myOwnMarquee.pinch_y = Setting("aspectDepend", "marquee_pinchY");
+//myOwnMarquee.rotation = Setting("aspectDepend", "marquee_rotation");
 myOwnMarquee.trigger = Transition.EndNavigation;
 myOwnMarquee.preserve_aspect_ratio = false;
 }
 
 
 //cabinet image -------------------------------------- START
-local cab = fe.add_image( "cab_body.png", 0, 0, blip*0.992, blip*1.008);
+local cab = fe.add_image( "cab_body_coinops.png", 0, 0, blip*1.7778, blip);
 cab.preserve_aspect_ratio = true;
 
 
 //LCD display text under cab screen ------------------------------------------------ START
 
-local lcdLeftText = fe.add_text( "PLAYED: " + "[PlayedCount]", blip*0.1536, blip*0.6108, blip*0.48, blip*0.04 );  // here you can change what is displayed on left side
-lcdLeftText.set_rgb( 59, 45, 3 );
-lcdLeftText.align = Align.Left;  
-lcdLeftText.rotation = -6.5;
-lcdLeftText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+local lcdLeftText1 = fe.add_text( "PLAYED: " + "[PlayedCount]", blip*0.528, blip*0.2378, blip*0.231, blip*0.04 );  // here you can change what is displayed on left side
+local lcdLeftText2 = fe.add_text( "YEAR: " + "[Year]", blip*0.1621, blip*0.2378, blip*0.231, blip*0.04 );
+lcdLeftText1.set_rgb( 170, 220, 240);
+lcdLeftText1.align = Align.Centre;  
+lcdLeftText2.set_rgb( 170, 220, 240);
+lcdLeftText2.align = Align.Centre;  
+// lcdLeftText.rotation = -6.5;
+lcdLeftText1.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+lcdLeftText2.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
 
 
 if ( my_config["lcdRight"] == "filter" )
 {
-local lcdRightText = fe.add_text( "[FilterName]", blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
-lcdRightText.set_rgb( 59, 45, 3 );
-lcdRightText.align = Align.Right;
-lcdRightText.rotation = -6.6;
+local lcdRightText = fe.add_text( "[FilterName]", blip*0.345, blip*0.2378, blip*0.231, blip*0.04 );
+lcdRightText.set_rgb( 170, 220, 240);
+lcdRightText.align = Align.Centre;
+// lcdRightText.rotation = -6.6;
 lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
 }
 
 
 if ( my_config["lcdRight"] == "rom-filename" )
 {
-local lcdRightText = fe.add_text( "[Name]", blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
-lcdRightText.set_rgb( 59, 45, 3 );
-lcdRightText.align = Align.Right;
-lcdRightText.rotation = -6.6;
+local lcdRightText = fe.add_text( "[Name]", blip*0.345, blip*0.2378, blip*0.231, blip*0.04 );
+lcdRightText.set_rgb( 170, 220, 240);
+lcdRightText.align = Align.Centre;
+// lcdRightText.rotation = -6.6;
 lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
 }
 
 
 if ( my_config["lcdRight"] == "display-name" )
 {
-local lcdRightText = fe.add_text( "[DisplayName]", blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
-lcdRightText.set_rgb( 59, 45, 3 );
-lcdRightText.align = Align.Right;
-lcdRightText.rotation = -6.6;
+local lcdRightText = fe.add_text( "[DisplayName]", blip*0.345, blip*0.2378, blip*0.231, blip*0.04 );
+lcdRightText.set_rgb( 170, 220, 240);
+lcdRightText.align = Align.Centre;
+// lcdRightText.rotation = -6.6;
 lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
 }
 
 
 if ( my_config["lcdRight"] == "emulator" )
 {
-local lcdRightText = fe.add_text( "[Emulator]", blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
-lcdRightText.set_rgb( 59, 45, 3 );
-lcdRightText.align = Align.Right;
-lcdRightText.rotation = -6.6;
+local lcdRightText = fe.add_text( "[Emulator]", blip*0.345, blip*0.2378, blip*0.231, blip*0.04 );
+lcdRightText.set_rgb( 170, 220, 240);
+lcdRightText.align = Align.Centre;
+// lcdRightText.rotation = -6.6;
 lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
 }
 
 
 if ( my_config["lcdRight"] == "off" )
 {
-local lcdRightText = fe.add_text( my_config["lcdRightText"], blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
-lcdRightText.set_rgb( 59, 45, 3 );
-lcdRightText.align = Align.Right;
-lcdRightText.rotation = -6.6;
+local lcdRightText = fe.add_text( my_config["lcdRightText"], blip*0.345, blip*0.2378, blip*0.231, blip*0.04 );
+lcdRightText.set_rgb( 170, 220, 240);
+lcdRightText.align = Align.Centre;
+// lcdRightText.rotation = -6.6;
 lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
 }
 
@@ -549,33 +554,33 @@ lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can b
 
 
 
-//게임 개발사 로고표시 ----------------------------------------------------------- START
+//Display Name ----------------------------------------------------------- START
 
-local dpLogo = fe.add_image( "Logos/[Manufacturer].png", flx*0.31, fly*0.16, flw*0.16, flh*0.12  );
-dpLogo.preserve_aspect_ratio = true;
+//local dpLogo = fe.add_image( "Logos/[Manufacturer].png", flx*0.31, fly*0.16, flw*0.16, flh*0.12  );
+//dpLogo.preserve_aspect_ratio = true;
 
-local move_dp = {
-       when = Transition.ToNewSelection, property = "alpha", start = 0, end = 255, time = 1500
- }
- animation.add( PropertyAnimation( dpLogo, move_dp ) );
+//local move_dp = {
+//       when = Transition.ToNewList, property = "alpha", start = 0, end = 255, time = 1500
+// }
+// animation.add( PropertyAnimation( dpLogo, move_dp ) );
 
-local titleText = fe.add_text( "[Title]", flx*0.31, fly*0.290, flw*0.6, flh*0.024  );
-titleText.align = Align.Left;
-titleText.set_rgb(255,255,255);
-titleText.font = "NanumBarunGothicBold";
+//local titleText = fe.add_text( "[Title]", flx*0.07313, fly*0.7991, flw*0.307, flh*0.024  );
+//titleText.align = Align.Centre;
+//titleText.set_rgb(170,220,240);
+//titleText.font = "NanumBarunGothicBold";
 
-local titleText = fe.add_text( "© [Year] [Manufacturer]", flx*0.31, fly*0.325, flw*0.6, flh*0.0235  );
-titleText.align = Align.Left;
-titleText.set_rgb(170,220,240);
-titleText.font = "NanumBarunGothicBold";
+//local titleText = fe.add_text( "© [Year] [Manufacturer]", flx*0.31, fly*0.325, flw*0.6, flh*0.0235  );
+//titleText.align = Align.Left;
+//titleText.set_rgb(170,220,240);
+//titleText.font = "NanumBarunGothicBold";
 
-local titleText = fe.add_text( "[Category]", flx*0.312, fly*0.360, flw*0.6, flh*0.0235  );
-titleText.align = Align.Left;
-titleText.set_rgb(170,220,240);
-titleText.font = "NanumBarunGothicBold";
+//local titleText = fe.add_text( "[Category]", flx*0.312, fly*0.360, flw*0.6, flh*0.0235  );
+//titleText.align = Align.Left;
+//titleText.set_rgb(170,220,240);
+//titleText.font = "NanumBarunGothicBold";
 
 
-//게임 개발사 로고표시 -------------------------------------------------------END 
+//Display Name -------------------------------------------------------END 
 
 
 
@@ -593,7 +598,6 @@ local wheel_r = [  30,  25,  20,  15,  10,   5,   0, -10, -15, -20, -25, -30, ];
 local num_arts = Setting("aspectDepend", "wheelNumElements");  // number of elements in wheel - depending on screen aspect ratio
 
 
-// 게임 목록박스 표시
 if ( my_config["spinwheelArt"] == "listbox" )
 {
 // 게임 리스트 배경
@@ -621,12 +625,11 @@ if ( my_config["select_character"] == "By Game" )
  OBJECTS.effect.trigger = Transition.EndNavigation;
  }
 
-
 // 에뮬 디스플레이 타이틀
 local displayName = fe.add_image ("Display/[DisplayName]",flw*0.56771, flh*0.02222, flw*0.3906, flh*0.1852);
 
 // 게임선택 박스
-fe.add_image("box.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
+fe.add_image("box_blue.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
 
 
 // 리스트 게임번호 그림자
@@ -781,8 +784,8 @@ conveyor.transition_ms = 50;
 try { conveyor.transition_ms = my_config["transition_ms"].tointeger(); } catch ( e ) { }
 
 
-
 // 즐겨찾기 아이콘 표시
+
 if ( my_config["spinwheelArt"] == "listbox" )
 {
 function getFavs(index_offset){
@@ -807,7 +810,7 @@ function getFavs(index_offset){
   if(fe.game_info( Info.Favourite, index_offset ) == "1") return "fav.png";
   else return "";
 }
-local romFav = fe.add_image(getFavs(0), flx*0.312, fly*0.40, flw*0.03125, flh*0.0555 );
+local romFav = fe.add_image(getFavs(0), flx*0.412, fly*0.2378, flw*0.03125, flh*0.0555 );
 
 fe.add_transition_callback( "update_my_list" );
 function update_my_list( ttype, var, ttime )
