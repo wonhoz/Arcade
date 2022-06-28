@@ -1,0 +1,162 @@
+﻿$name=socbrawl
+$version=2
+$default=002
+$main
+
+  [Soundtrack]
+
+#002 [SFX] NEO-GEO Logo
+#047 [BGM] Introduction~Title~Demo (Attract Mode)
+#127 [SFX] CREDIT
+#249 [Voice] SOCCER BRAWL
+#046 [BGM] How to Play
+#212 [Voice] SELECT GAME MODE <time="2.5">
+#044 [BGM] SELECT (GAME MODE, TEAM & FIELD)
+#222 [Voice] 1st GAME <time="3">
+#045 [BGM] Before the GAME
+#205 [SFX] Team Teleport <time="1">
+#192 [SFX] Teams Apparitions <time="4">
+#234 [Voice] KICK OFF <time="2">
+#195 [SFX] Whistle <time="1.5">
+#039 [BGM] 1st & 4th GAME
+#052 [BGM] WINNER
+#214 [Voice] 2nd GAME <time="3">
+#040 [BGM] 2nd & 5th GAME
+#043 [BGM] P.K. (Penalty Kick)
+#218 [Voice] 3rd GAME <time="3">
+#041 [BGM] 3rd & 6th GAME
+#217 [Voice] GOAL <time="2">
+#054 [BGM] Score Board
+#215 [Voice] FINAL GAME <time="3">
+#042 [BGM] FINAL GAME
+#053 [BGM] WINNER (alt)
+#048 [BGM] Ending
+#049 [BGM] GAME OVER
+#050 [BGM] BEST STRIKERS (Ranking)
+
+  [BGM]
+
+#039 [BGM] 1st & 4th GAME
+#040 [BGM] 2nd & 5th GAME
+#041 [BGM] 3rd & 6th GAME
+#042 [BGM] FINAL GAME
+#043 [BGM] P.K. (Penalty Kick)
+#044 [BGM] SELECT (GAME MODE, TEAM & FIELD)
+#045 [BGM] Before the GAME
+#046 [BGM] How to Play
+#047 [BGM] Introduction~Title~Demo (Attract Mode)
+#048 [BGM] Ending
+#049 [BGM] GAME OVER
+#050 [BGM] BEST STRIKERS (Ranking)
+#051 [BGM] Ending (alt, faster)
+#052 [BGM] WINNER
+#053 [BGM] WINNER (alt)
+#054 [BGM] Score Board
+#055 [BGM] Score Board (w/intro)
+
+  [Voice]
+
+#212 [Voice] SELECT GAME MODE
+#213 [Voice] SELECT YOUR TEAM
+#210 [Voice]
+#233 [Voice] VS
+#221 [Voice] USA
+#229 [Voice] GERMANY 
+#227 [Voice] ENGLAND
+#232 [Voice] SPAIN
+#224 [Voice] BRAZIL
+#228 [Voice] JAPAN
+#225 [Voice] ITALY 
+#230 [Voice] KOREA
+#223 [Voice] ARGENTINA
+#220 [Voice] USSR
+#222 [Voice] 1st GAME
+#214 [Voice] 2nd GAME
+#218 [Voice] 3rd GAME
+#219 [Voice] 4rd GAME
+#216 [Voice] 5th GAME
+#211 [Voice] 6th GAME
+#215 [Voice] FINAL GAME
+#234 [Voice] KICK OFF
+#217 [Voice] GOAL
+#226 [Voice] GOAL KICK
+#231 [Voice] CORNER KICK
+#235 [Voice] 
+#236 [Voice] POWER
+#237 [Voice] 
+#238 [Voice]
+#239 [Voice] ARM PUNCH
+#240 [Voice]
+#241 [Voice] WAVE
+#242 [Voice] FIREWALL
+#243 [Voice] WATER WAVE
+#244 [Voice] GUARDIAN
+#245 [Voice] BOOMER
+#246 [Voice] MIRAGE
+#247 [Voice] CROSS
+#248 [Voice] RAINBOW
+#249 [Voice] SOCCER BRAWL
+#250 [Voice] THROW IN
+#251 [Voice] SHOOT
+
+  [SFX]
+
+#095 [SFX] NEO-GEO Logo
+#096 [SFX] 
+#097 [SFX] 
+#098 [SFX] 
+#099 [SFX] 
+#100 [SFX]
+#101 [SFX]
+
+#127 [SFX] CREDIT
+
+#192 [SFX] Teams Apparitions
+#193 [SFX] 
+#194 [SFX] 
+#196 [SFX] 
+#197 [SFX] Sirens
+#198 [SFX] 
+#199 [SFX] 
+#200 [SFX]
+#201 [SFX]
+#202 [SFX]
+#203 [SFX]
+#204 [SFX]
+#205 [SFX] Team Teleport
+#206 [SFX]
+#207 [SFX]
+#208 [SFX]
+#209 [SFX]
+
+#252 [SFX]
+#253 [SFX]
+#254 [SFX]
+
+#128 [SFX] 
+#129 [SFX] 
+#130 [SFX] 
+#131 [SFX] 
+#132 [SFX] 
+#133 [SFX] 
+#134 [SFX] 
+#135 [SFX] 
+#136 [SFX] 
+#137 [SFX] 
+#138 [SFX] 
+#139 [SFX] 
+#140 [SFX] 
+#141 [SFX] 
+#142 [SFX] 
+#143 [SFX] 
+#144 [SFX] 
+#145 [SFX] 
+#146 [SFX] 
+#147 [SFX] 
+
+
+  [Composers]
+  Domitory Room102, Wolf.Gang Amadeus Yamada 
+
+// List contribution by Simon B., done in playing the game.
+$end
