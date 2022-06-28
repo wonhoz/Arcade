@@ -59,4 +59,4 @@ scanline.alpha = 255;
 }
 
 // 조작키 안내
-fe.add_image("key_" + my_config["select_Keyinfo"] + ".png", flw*0.30, flh*0.936, flh*0.7596, flh*0.07037 );
+fe.add_image("key_" + my_config["select_Keyinfo"] + ".png", flw*0.30, flh*0.936, flh*0.7296, flh*0.07037 );
