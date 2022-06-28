@@ -1,0 +1,67 @@
+[{
+    "desc":"Infinite Credits",
+    "script":{
+      "run":" maincpup:write_log_u8(0x0183d05,0x09) "
+    },
+    "space":{
+      "maincpup":{
+        "tag":":maincpu",
+        "type":"program"
+      }
+    }
+  },{
+    "desc":"Infinite Time (Speed Skiing)",
+    "script":{
+      "run":" maincpup:write_log_u16(0x60bc619,0x0000) "
+    },
+    "space":{
+      "maincpup":{
+        "tag":":maincpu",
+        "type":"program"
+      }
+    }
+  },{
+    "desc":"Always have max speed (Ski Jumping)",
+    "script":{
+      "run":" maincpup:write_log_u8(0x609d6d9,0xff) "
+    },
+    "space":{
+      "maincpup":{
+        "tag":":maincpu",
+        "type":"program"
+      }
+    }
+  },{
+    "desc":"Always have Furthest Jump (Ski Jumping)",
+    "script":{
+      "run":" maincpup:write_log_u8(0x60bc831,0xff) "
+    },
+    "space":{
+      "maincpup":{
+        "tag":":maincpu",
+        "type":"program"
+      }
+    }
+  },{
+    "desc":"Infinite Time (Short Track S.S.)",
+    "script":{
+      "run":" maincpup:write_log_u8(0x02098c9,0x00) "
+    },
+    "space":{
+      "maincpup":{
+        "tag":":maincpu",
+        "type":"program"
+      }
+    }
+  },{
+    "desc":"Always have Max Speed (Short Track S.S.)",
+    "script":{
+      "run":" maincpup:write_log_u8(0x020994a,0xff) "
+    },
+    "space":{
+      "maincpup":{
+        "tag":":maincpu",
+        "type":"program"
+      }
+    }
+  }]
