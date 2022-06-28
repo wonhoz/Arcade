@@ -29,6 +29,7 @@ class UserConfig {
 </ label="NEVATO theme", help=" ", options=" ", order=1 /> divider1="";
 </ label="--------------------------", help=" ", options=" ", order=1 /> divider1="";
 //-----------------------------------------------------------------
+</ label="글꼴 선택", help="화면에 표시되는 글자 폰트를 변경할 수 있습니다.", options="TmonMonsori,TT,Font,NanumGothicBold,User1,User2,User3", order=2 /> select_font1="Font";
 </ label="동영상 음소거", help="방향키(위/아래)를 이용하여, 사운드를 끄려면 yes, 사운드를 켜려면 no를 선택하세요.", options="yes,no", order=2 /> mute_videoSnaps="no";
 </ label="모니터 표시항목", help="모니터에 미리보기 동영상을 재생하려면 video를, 스냅샷을 표시하려면 screenshot을 선택하세요.", options="video, screenshot", order=3 /> cabScreenType="video";
 </ label="모니터 스캔라인", help="화면 스캔라인의 강도를 선택하거나 스캔라인을 제거할 수 있습니다.", options="light,medium,dark,off", order=4 /> enable_scanlines="light";
@@ -50,6 +51,7 @@ class UserConfig {
 </ label="게임 캐릭터 이미지 표시방식 지정", help="디스플레이 이름별로, 또는 게임 파일명별로 표시해줄 수 있습니다.", options="By Display,By Game,None", order=17 /> select_character="By Display";
 </ label="게임 캐릭터 이미지 선택", help="이 옵션은 게임 캐릭터 표시방식을 디스플레이 이름별(By Display)로 선택했을때만 동작합니다. 번호를 선택하세요.", options="01,02,03", order=18 /> select_character_no="01";
 </ label="게임 캐릭터 이미지 투명도 (0~254)", help="투명도를 지정해줄 수 있습니다. 0에 가까울수록 투명해집니다.", options="", order=19 /> select_Alpha3="254";
+</ label="조작키 안내", help="조작키 설명 이미지를 표시할 수 있습니다.", options="Arcade,XBOX360,PS Pad,Keyboard,off", order=20 /> select_Keyinfo="XBOX360";
 }  
 
 
@@ -58,7 +60,7 @@ local my_config = fe.get_config();
 fe.load_module( "fade" );
 fe.load_module( "animate" );
 fe.load_module( "pan-and-scan" );
-fe.layout.font="font";
+fe.layout.font=my_config["select_font1"];
 
 local blip = fe.layout.height;
 local flx = fe.layout.width;
@@ -281,7 +283,7 @@ if ( my_config["enable_bg_art"] == "flyer")
  bgart.set_randomize_on_transition(true);
  bgart.set_start_scale(1.1);
  local alpha_cfg = {
-     when = Transition.ToNewSelection, property = "alpha", start = 0, end = 200, time = 2000
+     when = Transition.ToNewSelection, property = "alpha", start = 0, end = 240, time = 1500
  }
  animation.add( PropertyAnimation( bgart, alpha_cfg ) );
 
@@ -572,23 +574,23 @@ fe.add_image("box_blue.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.
 
 
 // 리스트 게임번호 그림자
-local listbox1b = fe.add_listbox( flw*0.541666667, flh*0.212963, flw*0.1796875, flh*0.6759259 );
-listbox1b.charsize = 40;
+local listbox1b = fe.add_listbox( flw*0.541666667,flh*0.2064815, flw*0.1796875, flh*0.6759259 );
+listbox1b.charsize = 36;
 listbox1b.set_sel_rgb( 208, 56, 0 );
 listbox1b.set_rgb( 0, 0, 0 );
 listbox1b.selbg_alpha = 0;
 listbox1b.align = Align.Left;
-listbox1b.font="texgyreheros-bold";
+listbox1b.charsize=36;
 listbox1b.format_string = "[ListEntry]";
 
 // 리스트 박스 게임번호
-local listbox1 = fe.add_listbox( flw*0.540104167, flh*0.2101852, flw*0.1796875, flh*0.6759259 );
-listbox1.charsize = 40;
+local listbox1 = fe.add_listbox( flw*0.540104167, flh*0.2037037, flw*0.1796875, flh*0.6759259 );
+listbox1.charsize = 36;
 listbox1.set_sel_rgb( 255 243, 20 );
 listbox1.set_rgb( 73, 223, 222 );
 listbox1.selbg_alpha = 0;
 listbox1.align = Align.Left;
-listbox1.font="texgyreheros-bold";
+listbox1.charsize=36;
 listbox1.format_string = "[ListEntry]";
 
 // 리스트 박스 게임이름 그림자
@@ -612,7 +614,7 @@ listbox2.format_string = "[!gamename]";
 // 문자 생략
 // Game name text. We do this in the layout as the frontend doesn't chop up titles with a forward slash
  function gamename( index_offset ) {
-  local s = split( fe.game_info( Info.Title, index_offset ), "[" );
+  local s = split( fe.game_info( Info.Title, index_offset ), "[/" );
  	if ( s.len() > 0 ) return s[0];
   return "";
 }
@@ -620,20 +622,20 @@ listbox2.format_string = "[!gamename]";
 // 시계
 local clockbtext = fe.add_text( "TIME:", flw*0.515625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
 clockbtext.set_rgb( 0, 0, 0 );
-clockbtext.font="Ticketbook W01 Bold";
+clockbtext.charsize = 36;
 
 local clocktext = fe.add_text( "TIME:", flw*0.5140625, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
 clocktext.set_rgb( 211, 250, 255 );
-clocktext.font="Ticketbook W01 Bold";
+clocktext.charsize = 36;
 
-local clockb = fe.add_text( "", flw*0.604166667, flh*0.934259259, flw*0.166666667, flh*0.042592593  );
+local clockb = fe.add_text( "", flw*0.604166667, flh*0.92962963, flw*0.166666667, flh*0.042592593  );
 clockb.align = Align.Left;
-clockb.font="texgyreheros-bold";
+clockb.charsize = 36;
 clockb.set_rgb( 0, 0, 0 );
 
-local clock = fe.add_text( "", flw*0.602604167, flh*0.931481481, flw*0.166666667, flh*0.042592593  );
+local clock = fe.add_text( "", flw*0.602604167, flh*0.926851852, flw*0.166666667, flh*0.042592593  );
 clock.align = Align.Left;
-clock.font="texgyreheros-bold";
+clock.charsize = 36;
 clock.set_rgb( 73, 223, 222 );
 
 function update_clock( ttime ){
@@ -644,14 +646,14 @@ function update_clock( ttime ){
   fe.add_ticks_callback( this, "update_clock" );
 
 // 즐겨찾기 필터
-local listtextb = fe.add_text( "[!filter] GAMES:", flw*0.708333333, flh*0.92962963, flw*0.234375, flh*0.042592593 );
-listtextb.set_rgb( 0, 0, 0 );
-listtextb.font="Ticketbook W01 Bold";
+local listtextb = fe.add_text( "[!filter] 게임:", flw*0.708333333, flh*0.92962963, flw*0.234375, flh*0.042592593 );
+listtextb.set_rgb( 208, 56, 0 );
+listtextb.charsize = 36;
 listtextb.align = Align.Left;
 
-local listtext = fe.add_text( "[!filter] GAMES:", flw*0.706770833, flh*0.926851852, flw*0.234375, flh*0.042592593 );
-listtext.set_rgb( 211, 250, 255 );
-listtext.font="Ticketbook W01 Bold";
+local listtext = fe.add_text( "[!filter] 게임:", flw*0.706770833, flh*0.926851852, flw*0.234375, flh*0.042592593 );
+listtext.set_rgb( 255 243, 20 );
+listtext.charsize = 36;
 listtext.align = Align.Left;
 
 // Change filter name to upper case
@@ -659,19 +661,19 @@ listtext.align = Align.Left;
 	local text = fe.filters[fe.list.filter_index].name;
 
                 if (text == "Favourites")
-                text = "FAV"
+                text = "즐겨찾기"
 		
 		return text.toupper();
  }
 
-local listb = fe.add_text("[ListSize]", flw*0.901041667, flh*0.934259259, flw*0.104166667, flh*0.042592593 );
+local listb = fe.add_text("[ListSize]", flw*0.9140625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
 listb.set_rgb( 0, 0, 0 );
-listb.font="texgyreheros-bold";
+listb.charsize=36;
 listb.align = Align.Left;
 
-local list = fe.add_text( "[ListSize]", flw*0.899479167, flh*0.931481481, flw*0.104166667, flh*0.042592593 );
+local list = fe.add_text( "[ListSize]", flw*0.9125, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
 list.set_rgb( 73, 223, 222 );
-list.font="texgyreheros-bold";
+list.charsize=36;
 list.align = Align.Left;
 }
 
@@ -721,3 +723,54 @@ local conveyor = Conveyor();
 conveyor.set_slots( wheel_entries );
 conveyor.transition_ms = 50;
 try { conveyor.transition_ms = my_config["transition_ms"].tointeger(); } catch ( e ) { }
+
+
+// 즐겨찾기 아이콘 표시
+
+if ( my_config["spinwheelArt"] == "listbox" )
+{
+function getFavs(index_offset){
+  if(fe.game_info( Info.Favourite, index_offset ) == "1") return "fav.png";
+  else return "";
+}
+local romFav = fe.add_image(getFavs(0), flw*0.5, flh*0.5185, flw*0.03125, flh*0.0555 );
+
+fe.add_transition_callback( "update_my_list" );
+function update_my_list( ttype, var, ttime )
+{
+    if(ttype == Transition.ToNewSelection){
+        romFav.file_name = getFavs(var);
+    }
+    return false;
+}
+}
+
+if ( my_config["spinwheelArt"] != "listbox" )
+{
+function getFavs(index_offset){
+  if(fe.game_info( Info.Favourite, index_offset ) == "1") return "fav.png";
+  else return "";
+}
+local romFav = fe.add_image(getFavs(0), flx*0.385, fly*0.325, flw*0.03125, flh*0.0555 );
+
+fe.add_transition_callback( "update_my_list" );
+function update_my_list( ttype, var, ttime )
+{
+    if(ttype == Transition.ToNewSelection){
+        romFav.file_name = getFavs(var);
+    }
+    return false;
+}
+}
+
+fe.add_signal_handler( "updateFavs" );
+function updateFavs( signal_str )
+{
+    if(signal_str == "add_favourite"){
+        if(romFav.file_name != "") romFav.file_name = "";
+        else romFav.file_name = "fav.png";
+    }
+}
+
+// 조작키 안내
+fe.add_image("key_" + my_config["select_Keyinfo"] + ".png", flw*0.01823, flh*0.785, flw*0.4948, flh*0.07037 );
