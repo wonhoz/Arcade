@@ -1,0 +1,32 @@
+﻿#
+# CORE SCREEN OPTIONS
+#
+effect                    none
+
+#
+# OSD VIDEO OPTIONS
+#
+waitvsync                 0
+
+#
+# DIRECT3D POST-PROCESSING OPTIONS
+#
+hlsl_enable               1
+hlsl_snap_width           1920
+hlsl_snap_height          1080
+shadow_mask_alpha         0.05
+shadow_mask_texture       adapture.png
+shadow_mask_x_count       320
+shadow_mask_y_count       240
+shadow_mask_usize         0.093750
+shadow_mask_vsize         0.093750
+scanline_alpha            0.8
+scanline_size             1.1
+scanline_height           0.8
+scanline_bright_scale     1.4
+scanline_bright_offset    0.7
+
+#
+# FULL SCREEN OPTIONS
+#
+triplebuffer              0
