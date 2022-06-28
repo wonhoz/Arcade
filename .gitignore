@@ -35,3 +35,7 @@ emulators/Mame/title/
 emulators/Mame/video/
 emulators/Mame/wheel/
 emulators/PCSX2/memcards/Soul Calibur III (K).ps2
+emulators/Mame/.mamepgui/cache/gamelist.cache
+emulators/Mame/dats/history.dat
+emulators/Mame/dats/history.db
+emulators/Mame/history/history.db
