@@ -1,32 +1,28 @@
-emulators/SuperModel/ROMs/
-emulators/PCSX2/Game ISO/
-emulators/PPSSPP/Game ISO/
-emulators/Project64_v1.7/Roms/
-emulators/Project64/Roms/
-emulators/PSXmame/roms/
+emulators/Cemu/keys.txt
+emulators/Cemu/log.txt
+emulators/Cemu/mlc01/sys/title/0005001b/1005c000/content/
+emulators/Cemu/mlc01/usr/save/00050000/10110000/
 emulators/Cemu/Roms/
+emulators/Cemu/settings.bin
+emulators/Cemu/settings.xml
+emulators/Cemu/shaderCache/driver/nvidia/GLCache/c18b09d9c69329b41cdbbf3de627bc9f/5ab02615e80a3ab4/
+emulators/Cemu/shaderCache/transferable/
 emulators/Demul/Disc Image/
 emulators/Demul/Roms/
+emulators/Demul/scache/
 emulators/Dolphin/Game ISO/
 emulators/ePSXe/isos/
 emulators/M2/Roms/
-emulators/Mednafen/ISO/
-menu-art/
-emulators/Cemu/keys.txt
-emulators/Cemu/log.txt
-emulators/Cemu/settings.bin
-emulators/Cemu/settings.xml
-emulators/Cemu/mlc01/sys/title/0005001b/1005c000/content/
-emulators/Cemu/mlc01/usr/save/00050000/10110000/
-emulators/Cemu/shaderCache/driver/nvidia/GLCache/c18b09d9c69329b41cdbbf3de627bc9f/5ab02615e80a3ab4/
-emulators/Cemu/shaderCache/transferable/
-emulators/Demul/scache/
-emulators/Mame/EKMAME64.exe
-emulators/Mame/mame64.exe
-emulators/Mame/mame64.sym
+emulators/Mame/.mamepgui/cache/gamelist.cache
 emulators/Mame/artwork_/
+emulators/Mame/dats/history.dat
+emulators/Mame/dats/history.db
+emulators/Mame/EKMAME64.exe
 emulators/Mame/flyer/
 emulators/Mame/hash/
+emulators/Mame/history/history.db
+emulators/Mame/mame64.exe
+emulators/Mame/mame64.sym
 emulators/Mame/marquee/
 emulators/Mame/nvram/
 emulators/Mame/roms/
@@ -34,8 +30,12 @@ emulators/Mame/snap/
 emulators/Mame/title/
 emulators/Mame/video/
 emulators/Mame/wheel/
+emulators/Mednafen/ISO/
+emulators/PCSX2/Game ISO/
 emulators/PCSX2/memcards/Soul Calibur III (K).ps2
-emulators/Mame/.mamepgui/cache/gamelist.cache
-emulators/Mame/dats/history.dat
-emulators/Mame/dats/history.db
-emulators/Mame/history/history.db
+emulators/PPSSPP/Game ISO/
+emulators/Project64_v1.7/Roms/
+emulators/Project64/Roms/
+emulators/PSXmame/roms/
+emulators/SuperModel/ROMs/
+menu-art/
