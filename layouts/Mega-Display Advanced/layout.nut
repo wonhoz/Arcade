@@ -9,7 +9,7 @@ class UserConfig
    
 </ label="휠 전환시간", help="Time in milliseconds for wheel spin.", order=10 /> transition_ms="80";
 </ label="스캔라인 효과", help="화면에 스캔라인을 표시합니다.", options="none,light,medium,dark", order=17 /> enable_scanline="none";
-</ label="조작키 안내", help="조작키 설명 이미지를 표시할 수 있습니다.", options="XBOX360,PS Pad,Keyboard,off", order=20 /> select_Keyinfo="XBOX360";
+</ label="조작키 안내", help="조작키 설명 이미지를 표시할 수 있습니다.", options="Arcade,XBOX360,PS Pad,Keyboard,off", order=20 /> select_Keyinfo="Arcade";
 }
 
 local flx = fe.layout.width;
