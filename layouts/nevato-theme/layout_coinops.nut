@@ -51,7 +51,7 @@ class UserConfig {
 </ label="게임 캐릭터 이미지 표시방식 지정", help="디스플레이 이름별로, 또는 게임 파일명별로 표시해줄 수 있습니다.", options="By Display,By Game,None", order=17 /> select_character="By Display";
 </ label="게임 캐릭터 이미지 선택", help="이 옵션은 게임 캐릭터 표시방식을 디스플레이 이름별(By Display)로 선택했을때만 동작합니다. 번호를 선택하세요.", options="01,02,03", order=18 /> select_character_no="01";
 </ label="게임 캐릭터 이미지 투명도 (0~254)", help="투명도를 지정해줄 수 있습니다. 0에 가까울수록 투명해집니다.", options="", order=19 /> select_Alpha3="254";
-</ label="조작키 안내", help="조작키 설명 이미지를 표시할 수 있습니다.", options="Arcade,XBOX360,PS Pad,Keyboard,off", order=20 /> select_Keyinfo="Arcade";
+</ label="조작키 안내", help="조작키 설명 이미지를 표시할 수 있습니다.", options="Arcade,XBOX360,PS Pad,Keyboard,off", order=20 /> select_Keyinfo="XBOX360";
 }  
 
 
