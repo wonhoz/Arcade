@@ -269,7 +269,7 @@ animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, proper
 if ( my_config["enable_bg_art"] == "flyer") 
 {
 // local bgart = fe.add_artwork( "flyer", flw*0.2, 0, flw*0.6, flh);
- local bgart = PanAndScanArt( "flyer", flw*0.2, 0, flw*0.6, flh);
+ local bgart = PanAndScanArt( "flyer", flw*0.2 + 225, 0, flw*0.6, flh);
  bgart.preserve_aspect_ratio = true;
  local mask = fe.add_image( "mask_edges.png", 0 , 0, mask_factor*flh, flh );  //gradient to mask left and right edge of the flyer 1.6 for 4:3 and 16:10  1.9 for 16:9
  mask.preserve_aspect_ratio = false;
@@ -349,7 +349,7 @@ masking.alpha = 255;           // here you can change mask opacity light=100, me
 
 //static tv effect on cab screen snap change (of if no snap at all) ------------- START
 
-local tvStatic = fe.add_image( "static.jpg", blip*0.1389, blip*0.372, blip*0.524, blip*0.399);
+local tvStatic = fe.add_image( "static.jpg", blip*0.1389-28, blip*0.372, blip*0.524-104, blip*0.399);
 //tvStatic.skew_x = Setting("aspectDepend", "snap_skewX");
 //tvStatic.skew_y = Setting("aspectDepend", "snap_skewY");
 //tvStatic.pinch_x = Setting("aspectDepend", "snap_pinchX");
@@ -360,7 +360,7 @@ local tvStatic = fe.add_image( "static.jpg", blip*0.1389, blip*0.372, blip*0.524
 
 //snap (video or screenshot) on cab screen ------------- START
 
-local cabScreen = fe.add_artwork ("snap", blip*0.143, blip*0.377, blip*0.516, blip*0.389);
+local cabScreen = fe.add_artwork ("snap", blip*0.143-28, blip*0.377, blip*0.516-104, blip*0.389);
 //cabScreen.skew_x = Setting("aspectDepend", "snap_skewX");
 //cabScreen.skew_y = Setting("aspectDepend", "snap_skewY");
 //cabScreen.pinch_x = Setting("aspectDepend", "snap_pinchX");
@@ -382,7 +382,7 @@ cabScreen.video_flags=Vid.ImagesOnly;
 
 if ( my_config["enable_scanlines"] == "light" )
 {
-local scanlines = fe.add_image( "scanlines.png", blip*0.143, blip*0.377, blip*0.516, blip*0.389 );
+local scanlines = fe.add_image( "scanlines.png", blip*0.143-28, blip*0.377, blip*0.516-104, blip*0.389 );
 //scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
 //scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
 //scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
@@ -394,7 +394,7 @@ scanlines.alpha = 50;
 
 if ( my_config["enable_scanlines"] == "medium" )
 {
-local scanlines = fe.add_image( "scanlines.png", blip*0.143, blip*0.377, blip*0.516, blip*0.389 );
+local scanlines = fe.add_image( "scanlines.png", blip*0.143-28, blip*0.377, blip*0.516-104, blip*0.389 );
 //scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
 //scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
 //scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
@@ -406,7 +406,7 @@ scanlines.alpha = 150;
 
 if ( my_config["enable_scanlines"] == "dark" )
 {
-local scanlines = fe.add_image( "scanlines.png", blip*0.143, blip*0.377, blip*0.516, blip*0.389 );
+local scanlines = fe.add_image( "scanlines.png", blip*0.143-28, blip*0.377, blip*0.516-104, blip*0.389 );
 //scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
 //scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
 //scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
@@ -427,8 +427,8 @@ scanlines.alpha = 200;
 
 if ( my_config["marquee_type"] == "marquee" )
 {
-local marqueeBkg0 = fe.add_image("static.jpg", blip*0.0895, blip*0.061, blip*0.622, blip*0.173 );
-local marqueeBkg = fe.add_image("[marquee]", blip*0.0895, blip*0.061, blip*0.622, blip*0.173 );
+local marqueeBkg0 = fe.add_image("static.jpg", blip*0.0895-28, blip*0.061, blip*0.622-104, blip*0.173 );
+local marqueeBkg = fe.add_image("[marquee]", blip*0.0895-28, blip*0.061, blip*0.622-104, blip*0.173 );
 //marqueeBkg.skew_x = Setting("aspectDepend", "marquee_skewX");
 //marqueeBkg.skew_y = Setting("aspectDepend", "marquee_skewY");
 //marqueeBkg.pinch_x = Setting("aspectDepend", "marquee_pinchX");
@@ -437,7 +437,7 @@ local marqueeBkg = fe.add_image("[marquee]", blip*0.0895, blip*0.061, blip*0.622
 marqueeBkg.trigger = Transition.EndNavigation;
 marqueeBkg.preserve_aspect_ratio = false;
 
-local marquee = FadeArt("marquee", blip*0.0895, blip*0.061, blip*0.622, blip*0.173 );
+local marquee = FadeArt("marquee", blip*0.0895-28, blip*0.061, blip*0.622-104, blip*0.173 );
 //marquee.skew_x = Setting("aspectDepend", "marquee_skewX");
 //marquee.skew_y = Setting("aspectDepend", "marquee_skewY");
 //marquee.pinch_x = Setting("aspectDepend", "marquee_pinchX");
@@ -491,7 +491,7 @@ cab.preserve_aspect_ratio = true;
 //LCD display text under cab screen ------------------------------------------------ START
 
 //local lcdLeftText = fe.add_text( "PLAYED: " + "[PlayedCount]", blip*0.1521, blip*0.2778, blip*0.231, blip*0.04 );  // here you can change what is displayed on left side
-local lcdLeftText = fe.add_text( "YEAR: " + "[Year]", blip*0.1521, blip*0.2778, blip*0.231, blip*0.04 );
+local lcdLeftText = fe.add_text( "YEAR: " + "[Year]", blip*0.1521-57, blip*0.2778, blip*0.231, blip*0.04 );
 lcdLeftText.set_rgb( 170, 220, 240);
 lcdLeftText.align = Align.Centre;  
 // lcdLeftText.rotation = -6.5;
@@ -500,7 +500,7 @@ lcdLeftText.font="digital-7 (italic)";  // free font (for personal use) - can be
 
 if ( my_config["lcdRight"] == "filter" )
 {
-local lcdRightText = fe.add_text( "[FilterName]", blip*0.425, blip*0.2778, blip*0.231, blip*0.04 );
+local lcdRightText = fe.add_text( "[FilterName]", blip*0.425-106, blip*0.2778, blip*0.231, blip*0.04 );
 lcdRightText.set_rgb( 170, 220, 240);
 lcdRightText.align = Align.Centre;
 // lcdRightText.rotation = -6.6;
@@ -510,7 +510,7 @@ lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can b
 
 if ( my_config["lcdRight"] == "rom-filename" )
 {
-local lcdRightText = fe.add_text( "[Name]", blip*0.425, blip*0.2778, blip*0.231, blip*0.04 );
+local lcdRightText = fe.add_text( "[Name]", blip*0.425-106, blip*0.2778, blip*0.231, blip*0.04 );
 lcdRightText.set_rgb( 170, 220, 240);
 lcdRightText.align = Align.Centre;
 // lcdRightText.rotation = -6.6;
@@ -520,7 +520,7 @@ lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can b
 
 if ( my_config["lcdRight"] == "display-name" )
 {
-local lcdRightText = fe.add_text( "[DisplayName]", blip*0.425, blip*0.2778, blip*0.231, blip*0.04 );
+local lcdRightText = fe.add_text( "[DisplayName]", blip*0.425-106, blip*0.2778, blip*0.231, blip*0.04 );
 lcdRightText.set_rgb( 170, 220, 240);
 lcdRightText.align = Align.Centre;
 // lcdRightText.rotation = -6.6;
@@ -530,7 +530,7 @@ lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can b
 
 if ( my_config["lcdRight"] == "emulator" )
 {
-local lcdRightText = fe.add_text( "[Emulator]", blip*0.425, blip*0.2778, blip*0.231, blip*0.04 );
+local lcdRightText = fe.add_text( "[Emulator]", blip*0.425-106, blip*0.2778, blip*0.231, blip*0.04 );
 lcdRightText.set_rgb( 170, 220, 240);
 lcdRightText.align = Align.Centre;
 // lcdRightText.rotation = -6.6;
@@ -540,7 +540,7 @@ lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can b
 
 if ( my_config["lcdRight"] == "off" )
 {
-local lcdRightText = fe.add_text( my_config["lcdRightText"], blip*0.425, blip*0.2778, blip*0.231, blip*0.04 );
+local lcdRightText = fe.add_text( my_config["lcdRightText"], blip*0.425-106, blip*0.2778, blip*0.231, blip*0.04 );
 lcdRightText.set_rgb( 170, 220, 240);
 lcdRightText.align = Align.Centre;
 // lcdRightText.rotation = -6.6;
@@ -561,7 +561,7 @@ lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can b
 // }
 // animation.add( PropertyAnimation( dpLogo, move_dp ) );
 
-local titleText = fe.add_text( "[Title]", flx*0.07313, fly*0.7991, flw*0.307, flh*0.024  );
+local titleText = fe.add_text( "[Title]", flx*0.07313+62, fly*0.7991, flw*0.307, flh*0.024  );
 titleText.align = Align.Centre;
 titleText.set_rgb(170,220,240);
 titleText.font = "NanumBarunGothicBold";
@@ -605,7 +605,7 @@ listbg.alpha = 150;
 // 게임 캐릭터 이미지 표시 (기본 이미지 사이즈: 480x760)
 if ( my_config["select_character"] == "By Display" )
 {
-	local mascot = fe.add_image ("Display/[DisplayName]" + "_character_" + my_config["select_character_no"] +".png",1440, 200, 480, 760);
+	local mascot = fe.add_image ("Display/[DisplayName]" + "_character_" + my_config["select_character_no"] +".png",990, 200, 480, 760);
 	mascot.alpha = abs(("0"+my_config["select_Alpha3"]).tointeger()) % 255;;
 	mascot.preserve_aspect_ratio = true;
 }
@@ -677,11 +677,11 @@ listbox2.format_string = "[!gamename]";
 }
 
 // 시계
-local clockbtext = fe.add_text( "TIME:", flw*0.515625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
+local clockbtext = fe.add_text( "TIME:", flw*0.515625+4, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
 clockbtext.set_rgb( 0, 0, 0 );
 clockbtext.charsize = 36;
 
-local clocktext = fe.add_text( "TIME:", flw*0.5140625, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
+local clocktext = fe.add_text( "TIME:", flw*0.5140625+4, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
 clocktext.set_rgb( 211, 250, 255 );
 clocktext.charsize = 36;
 
