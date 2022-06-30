@@ -40,3 +40,5 @@ emulators/Project64/Roms/
 emulators/PSXmame/roms/
 emulators/SuperModel/ROMs/
 menu-art/
+last_run.log
+script.nv
