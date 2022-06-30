@@ -717,8 +717,53 @@ listtext.align = Align.Left;
  function filter(){
 	local text = fe.filters[fe.list.filter_index].name;
 
+                if (text == "All")
+                text = "모든"
+
                 if (text == "Favourites")
-                text = "즐겨찾기"
+                text = "즐겨찾는"
+				
+				if (text == "Fighting")
+                text = "격투"
+				
+				if (text == "GunShooting")
+                text = "건슈팅"
+				
+				if (text == "Racing")
+                text = "레이싱"
+				
+				if (text == "Rhythm")
+                text = "리듬"
+				
+				if (text == "Board")
+                text = "보드"
+				
+				if (text == "Shooting")
+                text = "슈팅"
+				
+				if (text == "Arcade")
+                text = "아케이드"
+				
+				if (text == "Action")
+                text = "액션"
+				
+				if (text == "Quiz")
+                text = "퀴즈"
+				
+				if (text == "Puzzle")
+                text = "퍼즐"
+				
+				if (text == "1980s")
+                text = "80년대"
+				
+				if (text == "1990s")
+                text = "90년대"
+				
+				if (text == "2000s")
+                text = "2000년대"
+				
+				if (text == "2010s")
+                text = "2010년대"
 		
 		return text.toupper();
  }
