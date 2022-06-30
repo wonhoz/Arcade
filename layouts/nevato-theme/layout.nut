@@ -269,7 +269,7 @@ animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, proper
 if ( my_config["enable_bg_art"] == "flyer") 
 {
 // local bgart = fe.add_artwork( "flyer", flw*0.2, 0, flw*0.6, flh);
- local bgart = PanAndScanArt( "flyer", flw*0.2, 0, flw*0.6, flh);
+ local bgart = PanAndScanArt( "flyer", flw*0.2 + 225, 0, flw*0.6, flh);
  bgart.preserve_aspect_ratio = true;
  local mask = fe.add_image( "mask_edges.png", 0 , 0, mask_factor*flh, flh );  //gradient to mask left and right edge of the flyer 1.6 for 4:3 and 16:10  1.9 for 16:9
  mask.preserve_aspect_ratio = false;
@@ -551,7 +551,7 @@ lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can b
 
 //게임 개발사 로고표시 ----------------------------------------------------------- START
 
-local dpLogo = fe.add_image( "Logos/[Manufacturer].png", flx*0.31, fly*0.16, flw*0.16, flh*0.12  );
+local dpLogo = fe.add_image( "Logos/[Manufacturer].png", flx*0.31-440, fly*0.16+615, flw*0.16, flh*0.12  );
 dpLogo.preserve_aspect_ratio = true;
 
 local move_dp = {
@@ -559,17 +559,17 @@ local move_dp = {
  }
  animation.add( PropertyAnimation( dpLogo, move_dp ) );
 
-local titleText = fe.add_text( "[Title]", flx*0.31, fly*0.290, flw*0.6, flh*0.024  );
+local titleText = fe.add_text( "[Title]", flx*0.31-440, fly*0.290+615, flw*0.6, flh*0.024  );
 titleText.align = Align.Left;
 titleText.set_rgb(255,255,255);
 titleText.font = "NanumBarunGothicBold";
 
-local titleText = fe.add_text( "© [Year] [Manufacturer]", flx*0.31, fly*0.325, flw*0.6, flh*0.0235  );
+local titleText = fe.add_text( "© [Year] [Manufacturer]", flx*0.31-440, fly*0.325+615, flw*0.6, flh*0.0235  );
 titleText.align = Align.Left;
 titleText.set_rgb(170,220,240);
 titleText.font = "NanumBarunGothicBold";
 
-local titleText = fe.add_text( "[Category]", flx*0.312, fly*0.360, flw*0.6, flh*0.0235  );
+local titleText = fe.add_text( "[Category]", flx*0.312-440, fly*0.360+615, flw*0.6, flh*0.0235  );
 titleText.align = Align.Left;
 titleText.set_rgb(170,220,240);
 titleText.font = "NanumBarunGothicBold";
@@ -603,7 +603,7 @@ listbg.alpha = 150;
 // 게임 캐릭터 이미지 표시 (기본 이미지 사이즈: 480x760)
 if ( my_config["select_character"] == "By Display" )
 {
-	local mascot = fe.add_image ("Display/[DisplayName]" + "_character_" + my_config["select_character_no"] +".png",1440, 200, 480, 760);
+	local mascot = fe.add_image ("Display/[DisplayName]" + "_character_" + my_config["select_character_no"] +".png",990, 200, 480, 760);
 	mascot.alpha = abs(("0"+my_config["select_Alpha3"]).tointeger()) % 255;;
 	mascot.preserve_aspect_ratio = true;
 }
@@ -676,11 +676,11 @@ listbox2.format_string = "[!gamename]";
 }
 
 // 시계
-local clockbtext = fe.add_text( "TIME:", flw*0.515625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
+local clockbtext = fe.add_text( "TIME:", flw*0.515625+4, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
 clockbtext.set_rgb( 0, 0, 0 );
 clockbtext.charsize = 36;
 
-local clocktext = fe.add_text( "TIME:", flw*0.5140625, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
+local clocktext = fe.add_text( "TIME:", flw*0.5140625+4, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
 clocktext.set_rgb( 211, 250, 255 );
 clocktext.charsize = 36;
 
