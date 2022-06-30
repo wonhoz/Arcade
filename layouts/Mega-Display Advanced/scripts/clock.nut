@@ -19,7 +19,7 @@ function update_clock( ttime ){
   fe.add_ticks_callback( this, "update_clock" );
 //******clock END*******************************************
 
-local clock = fe.add_image( "images/clock.png", flx*0.895, fly*0.956, flw*0.025, flh*0.035);
+local clock = fe.add_image( "images/clock.png", flx*0.890, fly*0.956, flw*0.025, flh*0.035);
 local am = fe.add_image( "am.png", flx*0.513, fly*0.855, flw*0.040, flh*0.030);
 am.alpha = 100;
 //******************************************
