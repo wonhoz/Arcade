@@ -1,0 +1,144 @@
+/*
+Vivid Bloom + Dots by KrossX
+******************************
+
+Similar to the Overlay shader, it applies a sort of common Photoshop effect 
+of duplicating the background layer, blurring it and setting it on top but with 
+the vivid blending mode instead. It also uses a more expensive blur.
+
+The vivid blending however, has been very reduced in its darken step since it 
+was too strong to begin with.
+
+The shader level controls the strength of the effect. And, there are some 
+more options near the top of the fragment file.
+
+v1.1 - Added the luma checks, to avoid ugly dark borders.
+
+v1.0 - Reworked the shader a bit, added some option macros, removed all the f's
+	   and also added this description.
+*/
+
+uniform sampler2D OGL2Texture;
+uniform vec4 OGL2InvSize;
+uniform vec4 OGL2Param;
+
+//Blurring iterations, the higher, the slower it will be.
+#define blur 4
+
+//Controls the... spreading of the blur.
+#define OFFSET (0.5)
+
+//Comment the line below to disable the dots
+//#define DOTTY
+
+#ifdef DOTTY
+	//The higher, the stronger the dots and the overall darkness will be.
+	#define DOTTY_MIX (0.2)
+#endif
+
+float Burn(float base, float blend)
+{
+	float result = 0.0;
+	
+	if(blend > 0.0)
+		result = 1.0 - (1.0 - base) / blend;
+		
+	return result;
+}
+
+float Dodge(float base, float blend)
+{
+	float result = 1.0;
+	
+	if(blend < 1.0)
+		result = base / (1.0 - blend);
+		
+	return result;
+}
+
+
+float Vivid(float base, float blend)
+{	
+	float result = 0.0;
+	
+	if( base < 0.5 ) 
+	{
+		result = base * 0.9 + 0.1 * Burn(base, blend * 2.0); // Burn(base, blend*2);
+	}
+	else
+		result = Dodge(base, 2.0 * (blend - 0.5));
+		
+	return result;
+}
+
+#ifdef DOTTY
+vec3 dotty(vec3 color)
+{
+	float rest = fract(gl_FragCoord.x*0.25);	
+	
+	if (rest < 0.25)
+	{    		
+		color.g = 0.0;
+		color.b = 0.0;
+	}
+	else if (rest > 0.50 && rest < 0.75)
+	{    
+		color.r = 0.0;
+		color.g = 0.0;	
+	}
+	else if (rest < 0.75)
+	{    
+		color.r = 0.0;		
+		color.b = 0.0;
+	}
+	else	
+		color *= 0.5;	
+
+	rest = fract(gl_FragCoord.y*0.5);		
+	if(rest > 0.5) color *= 0.5;
+
+	return color;
+}
+#endif
+
+void main (void)
+{       					
+	float off = max(OGL2InvSize.x, OGL2InvSize.y) * 2.0;
+	vec2 offset_x = vec2(off, 0.0);	
+	vec2 offset_y = vec2(0.0, off);
+	
+	vec3 blurry;
+	vec3 colorful = texture2D(OGL2Texture, gl_TexCoord[0].xy).rgb;
+	
+	float divisor = 0.0;
+	float full_div = 0.0;
+	
+	for(int i=-blur; i<=blur; i++)
+	for(int j=-blur; j<=blur; j++)
+	{
+		divisor = abs(i) + abs(j) + 1.0;
+		full_div += 1.0 / divisor;		
+		blurry += texture2D(OGL2Texture, gl_TexCoord[0].xy + OFFSET * offset_x*i + OFFSET * offset_y*j).rgb / divisor;
+	}
+				
+	blurry /= full_div;	
+	
+	float luma = 0.299 * colorful.r + 0.114 * colorful.b + 0.587 * colorful.g;
+	luma -= 0.299 * blurry.r + 0.114 * blurry.b + 0.587 * blurry.g;
+	
+	if(luma > 0) blurry = colorful;
+	
+	vec3 result;
+	
+	result.r = Vivid(colorful.r, blurry.r);
+	result.g = Vivid(colorful.g, blurry.g);
+	result.b = Vivid(colorful.b, blurry.b);
+	
+#ifdef DOTTY	
+	colorful = mix(colorful, dotty(colorful), DOTTY_MIX);
+	result = mix(result, dotty(result), DOTTY_MIX);
+#endif
+	
+	float param = (OGL2Param.z + 1) * 0.20;		
+	gl_FragColor.rgb = mix(colorful, result, param);
+}

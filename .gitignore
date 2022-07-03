@@ -1,3 +1,27 @@
+_develop/emulators/ePSXe/isos/
+_develop/emulators/Mame/.mamepgui/cache/gamelist.cache
+_develop/emulators/Mame/artwork/
+_develop/emulators/Mame/artwork_/
+_develop/emulators/Mame/dats/history.dat
+_develop/emulators/Mame/dats/history.db
+_develop/emulators/Mame/EKMAME64.exe
+_develop/emulators/Mame/flyer/
+_develop/emulators/Mame/hash/
+_develop/emulators/Mame/history/history.db
+_develop/emulators/Mame/mame64.exe
+_develop/emulators/Mame/mame64.sym
+_develop/emulators/Mame/marquee/
+_develop/emulators/Mame/nvram/
+_develop/emulators/Mame/roms/
+_develop/emulators/Mame/snap/
+_develop/emulators/Mame/title/
+_develop/emulators/Mame/video/
+_develop/emulators/Mame/wheel/
+_develop/emulators/PCSX2/Game ISO/
+_develop/emulators/PCSX2/memcards/Soul Calibur III (K).ps2
+_develop/emulators/PPSSPP/Game ISO/
+_develop/emulators/PSXMAME/roms/
+_develop/menu-art/
 emulators/Cemu/keys.txt
 emulators/Cemu/log.txt
 emulators/Cemu/mlc01/sys/title/0005001b/1005c000/content/
@@ -37,7 +61,7 @@ emulators/PCSX2/memcards/Soul Calibur III (K).ps2
 emulators/PPSSPP/Game ISO/
 emulators/Project64_v1.7/Roms/
 emulators/Project64/Roms/
-emulators/PSXmame/roms/
+emulators/PSXMAME/roms/
 emulators/SuperModel/ROMs/
 menu-art/
 last_run.log

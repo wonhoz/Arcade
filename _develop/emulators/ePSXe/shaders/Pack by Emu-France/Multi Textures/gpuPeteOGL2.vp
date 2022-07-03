@@ -1,0 +1,5 @@
+!!ARBvp1.0
+OPTION ARB_position_invariant;
+MOV result.texcoord[ 0 ],vertex.texcoord[ 0 ];
+MOV result.texcoord[ 1 ],vertex.texcoord[ 1 ];
+END

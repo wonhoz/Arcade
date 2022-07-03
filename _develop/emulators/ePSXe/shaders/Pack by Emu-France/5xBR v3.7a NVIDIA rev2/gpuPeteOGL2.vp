@@ -1,0 +1,16 @@
+!!ARBvp1.0
+OPTION ARB_position_invariant;
+PARAM c[9] = { state.matrix.mvp.row[0..3],
+		{ -0.0009765625, 0, 0.0009765625, -0.00390625 },
+		{ -0.0009765625, 0, 0.0009765625, -0.001953125 },
+		{ -0.0009765625, 0, 0.0009765625, 0.001953125 },
+		{ -0.0009765625, 0, 0.0009765625, 0.00390625 },
+		{ -0.001953125, 0, 0.001953125 } };
+ADD   result.texcoord[0], c[4], vertex.texcoord[0].xxxy;
+ADD   result.texcoord[1], c[5], vertex.texcoord[0].xxxy;
+ADD   result.texcoord[2], c[4].xyzy, vertex.texcoord[0].xxxy;
+ADD   result.texcoord[3], c[6], vertex.texcoord[0].xxxy;
+ADD   result.texcoord[4], c[7], vertex.texcoord[0].xxxy;
+ADD   result.texcoord[5], c[8].xxyz, vertex.texcoord[0].xyyy;
+ADD   result.texcoord[6], c[8].zxyz, vertex.texcoord[0].xyyy;
+END

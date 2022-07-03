@@ -1,0 +1,50 @@
+// multitexture GLslang fragment shader by Pete Bernert - some fake glass cracks
+//
+// Important to know, if you want to use custom textures in your OGL2 shaders as 
+// well:
+//
+// 1. place the textures in TGA format in the same folder as your vertex/fragment
+//    shader files. You can use all kind of TGA formats (compressed, uncompressed,
+//    with or without alpha channel).
+// 2. the name of the TGA files will tell the plugin, in which texture units (1-7)
+//    you want to use them, and if linear filtering should be activated:
+//    "gpuPeteOGL2_t1l.tga" : texture unit 1 with filtering (-> "t1l")
+//    "gpuPeteOGL2_t2n.tga" : texture unit 2 without filtering (-> "t2n")
+// 3. there has to be just one "t1?" file (so a "t1l" and "t1n" file in the same
+//    folder makes no sense), and the numbering has to be ascending (a "t3?" file
+//    will be ignored if no "t2?" file exists, for example).
+// 4. make sure to pass the gl_MultiTexCoordx in the vertex shader (if you need this
+//    coords), and put "OGL2TMU?" sampler2D uniforms in the fragment shader. 
+//
+// That's all :)
+
+
+uniform vec4 OGL2Param;
+uniform vec4 OGL2Size;
+uniform sampler2D OGL2Texture;
+uniform sampler2D OGL2TMU1;
+uniform sampler2D OGL2TMU2;
+
+void main()
+{
+ // get the crack textures... I could have used just one texture by using a tga 
+ // with alpha channel, but hey... that's a demo how to use mutiple textures, eh? :)
+
+ vec4 tmu1=texture2DProj(OGL2TMU1, gl_TexCoord[1]);
+ vec4 tmu2=texture2DProj(OGL2TMU2, gl_TexCoord[2]);
+
+ // the bigger the shader level, the bigger the texture fetch distance (5,10,15,20)
+ float fscale=(OGL2Param.z+1.0)*5.0;
+
+ // scale the crack texel fetch distance
+ tmu1 *= vec4(fscale/OGL2Size.s,fscale/OGL2Size.t,0.0,0.0);
+
+ // crack darkening is done with TMU2, adjust this factor to make it stronger/weaker
+ tmu2 *= 0.25;
+
+ // fetch the original tmu0 texel, adjusted by the crack fetch distance
+ vec4 tmu0=texture2DProj(OGL2Texture, gl_TexCoord[0] + tmu1);
+
+ // last but not least: result is darkened by tmu2
+ gl_FragColor = tmu0-tmu2;
+}

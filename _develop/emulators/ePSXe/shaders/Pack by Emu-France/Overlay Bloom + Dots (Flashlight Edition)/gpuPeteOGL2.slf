@@ -1,0 +1,104 @@
+/*
+Overlay Bloom + Dots (Flashlight Edition) by KrossX
+***************************************************
+
+It applies a sort of common Photoshop effect of duplicating the background
+layer, blurring it and setting it on top with the overlay blending mode.
+
+The shader level controls the strength of the effect. And, there are some 
+more options near the top of the fragment file.
+
+Flashlight Edition 
+		Added the black circle thingy texture as requested by lillium02.
+
+v1.0 - Reworked the shader a bit, added some option macros, removed all the f's
+	   and also added this description.	  
+*/
+
+uniform sampler2D OGL2TMU1;
+uniform sampler2D OGL2Texture;
+uniform vec4 OGL2Param;
+
+varying vec2 offset[8];
+
+// Controls the... spread of the blurryness.
+#define OFFSET (0.5)
+
+//Comment the line below to disable the dots
+//#define DOTTY
+
+#ifdef DOTTY
+	//The higher, the stronger the dots and the overall darkness will be.
+	#define DOTTY_MIX (0.2)
+#endif
+
+float overlay(float base, float blend)
+{
+	float result = 0.0;
+	
+	if( base < 0.5 ) 
+		result = 2.0 * base * blend;
+	else   
+		result = 1.0 - (1.0 - 2.0*(base-0.5)) * (1.0-blend);
+		
+	return result;
+}
+
+#ifdef DOTTY
+vec3 dotty(vec3 color)
+{
+	float rest = fract(gl_FragCoord.x*0.25);	
+	
+	if (rest < 0.25)
+	{    		
+		color.g = 0.0;
+		color.b = 0.0;
+	}
+	else if (rest > 0.50 && rest < 0.75)
+	{    
+		color.r = 0.0;
+		color.g = 0.0;	
+	}
+	else if (rest < 0.75)
+	{    
+		color.r = 0.0;		
+		color.b = 0.0;
+	}
+	else	
+		color *= 0.5;	
+
+	rest = fract(gl_FragCoord.y*0.5);		
+	if(rest > 0.5) color *= 0.5;
+
+	return color;
+}
+#endif
+
+void main (void)
+{       		
+	vec3 colorful = texture2D(OGL2Texture, gl_TexCoord[0].xy).rgb;			
+	vec3 blurry = colorful;
+	
+	for(int i=0; i<8; i++)		
+		blurry += 0.6 * texture2D(OGL2Texture, gl_TexCoord[0].xy + OFFSET * offset[i]).rgb;	
+	for(int i=0; i<8; i++)		
+		blurry += 0.3 * texture2D(OGL2Texture, gl_TexCoord[0].xy + OFFSET * 2 * offset[i]).rgb;		
+				
+	blurry /= 8.2;
+	
+	vec3 result = vec3(	overlay(colorful.r, blurry.r), 
+						overlay(colorful.g, blurry.g), 
+						overlay(colorful.b, blurry.b));
+				
+#ifdef DOTTY	
+	colorful = mix(colorful, dotty(colorful), DOTTY_MIX);
+	result = mix(result, dotty(result), DOTTY_MIX);
+#endif
+
+	vec3 blackthingy = texture2D(OGL2TMU1, gl_TexCoord[1].xy).rgb;
+	
+	float param = (OGL2Param.z + 1.0) * 0.20;			
+	gl_FragColor.rgb = mix(colorful, result, param) * blackthingy;	
+}
+
+

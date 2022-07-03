@@ -1,0 +1,61 @@
+/*
+ * 4xMSaL AA Shader v1.0
+ * 
+ * Copyright (C) 2011 guest(r) - guest.r@gmail.com
+ *
+ */
+
+uniform sampler2D OGL2Texture;
+uniform vec4 OGL2InvSize;
+
+void main()
+{
+    vec2 dx = vec2(OGL2InvSize.x,0.0)*0.5;
+    vec2 dy = vec2(0.0,OGL2InvSize.y)*0.5;
+    vec3 dt = vec3(1.0,1.0,1.0);
+
+    vec3 c00, c02, c20, c22, u, d, r, l;
+    float m1, m2;
+
+    c00 = texture2D(OGL2Texture, gl_TexCoord[1].xy-dy-dx).xyz; 
+    c20 = texture2D(OGL2Texture, gl_TexCoord[2].xy-dy-dx).xyz; 
+    c02 = texture2D(OGL2Texture, gl_TexCoord[4].xy-dy-dx).xyz; 
+    c22 = texture2D(OGL2Texture, gl_TexCoord[3].xy-dy-dx).xyz; 
+
+    m1 = dot(abs(c00-c22),dt)+0.001;
+    m2 = dot(abs(c02-c20),dt)+0.001;
+
+    u = .5*(m2*(c00+c22)+m1*(c02+c20))/(m1+m2);
+
+    c00 = texture2D(OGL2Texture, gl_TexCoord[1].xy+dy-dx).xyz; 
+    c20 = texture2D(OGL2Texture, gl_TexCoord[2].xy+dy-dx).xyz; 
+    c02 = texture2D(OGL2Texture, gl_TexCoord[4].xy+dy-dx).xyz; 
+    c22 = texture2D(OGL2Texture, gl_TexCoord[3].xy+dy-dx).xyz; 
+    
+    m1 = dot(abs(c00-c22),dt)+0.001;
+    m2 = dot(abs(c02-c20),dt)+0.001;
+
+    d = .5*(m2*(c00+c22)+m1*(c02+c20))/(m1+m2);
+
+    c00 = texture2D(OGL2Texture, gl_TexCoord[1].xy+dy+dx).xyz; 
+    c20 = texture2D(OGL2Texture, gl_TexCoord[2].xy+dy+dx).xyz; 
+    c02 = texture2D(OGL2Texture, gl_TexCoord[4].xy+dy+dx).xyz; 
+    c22 = texture2D(OGL2Texture, gl_TexCoord[3].xy+dy+dx).xyz; 
+
+    m1 = dot(abs(c00-c22),dt)+0.001;
+    m2 = dot(abs(c02-c20),dt)+0.001;
+
+    l = .5*(m2*(c00+c22)+m1*(c02+c20))/(m1+m2);
+
+    c00 = texture2D(OGL2Texture, gl_TexCoord[1].xy-dy+dx).xyz; 
+    c20 = texture2D(OGL2Texture, gl_TexCoord[2].xy-dy+dx).xyz; 
+    c02 = texture2D(OGL2Texture, gl_TexCoord[4].xy-dy+dx).xyz; 
+    c22 = texture2D(OGL2Texture, gl_TexCoord[3].xy-dy+dx).xyz; 
+
+    m1 = dot(abs(c00-c22),dt)+0.001;
+    m2 = dot(abs(c02-c20),dt)+0.001;
+
+    r = .5*(m2*(c00+c22)+m1*(c02+c20))/(m1+m2);
+
+    gl_FragColor.xyz = 0.25*(u+d+r+l);
+}

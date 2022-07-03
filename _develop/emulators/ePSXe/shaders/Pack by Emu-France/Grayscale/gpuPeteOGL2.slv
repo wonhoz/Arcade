@@ -1,0 +1,11 @@
+/* License: GNU-GPL
+ */
+
+varying vec2 textureCoords;
+
+void main()
+{
+	gl_ClipVertex = gl_ModelViewMatrix * gl_Vertex;
+	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+	textureCoords = gl_MultiTexCoord0.xy;
+}

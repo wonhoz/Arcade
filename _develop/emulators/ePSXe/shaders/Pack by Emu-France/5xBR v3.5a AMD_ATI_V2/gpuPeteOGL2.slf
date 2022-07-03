@@ -1,0 +1,169 @@
+/*
+   Hyllian's 5xBR v3.5a Shader
+   
+   Copyright (C) 2011 Hyllian/Jararaca - sergiogdb@gmail.com
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License
+   as published by the Free Software Foundation; either version 2
+   of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+*/
+
+#version 120
+uniform sampler2D tex0;
+uniform vec4 OGL2Param;
+uniform vec4 OGL2Size;
+uniform vec4 OGL2InvSize;
+
+const float coef = 2.0;
+
+bvec4 AND(bvec4 a, bvec4 b)
+{
+	return bvec4(a.x == true && b.x == true, a.y == true && b.y == true, a.z == true && b.z == true, a.w == true && b.w == true);
+}
+
+bvec4 OR(bvec4 a, bvec4 b)
+{
+	return bvec4(a.x == true || b.x == true, a.y == true || b.y == true, a.z == true || b.z == true, a.w == true || b.w == true);
+}
+
+float ColourLength(vec3 e1)
+{
+float rmean = e1.r*0.5;
+float r = e1.r;
+float g = e1.g;
+float b = e1.b;
+return sqrt((2.0+rmean)*r*r+4.0*g*g+(3.0-rmean)*b*b);
+}
+
+vec4 RGBtoHSV(vec3 e1, vec3 e2, vec3 e3, vec3 e4)
+{
+float a= ColourLength(e1);
+float b= ColourLength(e2);
+float c= ColourLength(e3);
+float d= ColourLength(e4);
+
+return vec4(a, b, c, d);
+}
+
+vec4 df(vec4 A, vec4 B)
+{
+return vec4(abs(A-B));
+}
+
+vec4 weighted_distance(vec4 a, vec4 b, vec4 c, vec4 d, vec4 e, vec4 f, vec4 g, vec4 h)
+{
+return (df(a,b) + df(a,c) + df(d,e) + df(d,f) + 4.0*df(g,h));
+}
+
+void main (void)
+{
+bvec4 edr, edr_left, edr_up, px; // px = pixel, edr = edge detection rule
+bvec4 interp_restriction_lv1, interp_restriction_lv2_left, interp_restriction_lv2_up;
+bvec4 nc; // new_color
+bvec4 fx, fx_left, fx_up; // inequations of straight lines.
+
+vec2 position = gl_TexCoord[0].xy*OGL2Size.xy;
+vec2 fp = fract(position);
+     position = floor(position)*OGL2InvSize.xy+0.5*OGL2InvSize.xy;
+
+vec2 dx1 = vec2(OGL2InvSize.x,0.0);
+vec2 dy1 = vec2(0.0,OGL2InvSize.y);
+vec2 dx2 = 2.0*dx1;
+vec2 dy2 = 2.0*dy1;
+
+//    A1 B1 C1
+//
+// A0  A  B  C C4
+//
+// D0  D  E  F F4
+//
+// G0  G  H  I I4
+//    
+//    G5 H5 I5
+
+vec3 A  = texture2D(tex0, position -dx1 -dy1).rgb;
+vec3 B  = texture2D(tex0, position      -dy1).rgb;
+vec3 C  = texture2D(tex0, position +dx1 -dy1).rgb;
+
+vec3 D  = texture2D(tex0, position -dx1     ).rgb;
+vec3 E  = texture2D(tex0, position          ).rgb;
+vec3 F  = texture2D(tex0, position +dx1     ).rgb;
+
+vec3 G  = texture2D(tex0, position -dx1 +dy1).rgb;
+vec3 H  = texture2D(tex0, position      +dy1).rgb;
+vec3 I  = texture2D(tex0, position +dx1 +dy1).rgb;
+
+vec3 A1 = texture2D(tex0, position -dx1 -dy2).rgb;
+vec3 B1 = texture2D(tex0, position      -dy2).rgb;
+vec3 C1 = texture2D(tex0, position +dx1 -dy2).rgb;
+
+vec3 A0 = texture2D(tex0, position -dx2 -dy1).rgb;
+vec3 C4 = texture2D(tex0, position +dx2 -dy1).rgb;
+
+vec3 D0 = texture2D(tex0, position -dx2     ).rgb;
+vec3 F4 = texture2D(tex0, position +dx2     ).rgb;
+
+vec3 G0 = texture2D(tex0, position -dx2 +dy1).rgb;
+vec3 I4 = texture2D(tex0, position +dx2 +dy1).rgb;
+
+vec3 G5 = texture2D(tex0, position -dx1 +dy2).rgb;
+vec3 H5 = texture2D(tex0, position      +dy2).rgb;
+vec3 I5 = texture2D(tex0, position +dx1 +dy2).rgb;
+
+vec4 b = RGBtoHSV(B, D, H, F);
+vec4 c = RGBtoHSV(C, A, G, I);
+vec4 d = RGBtoHSV(D, H, F, B);
+vec4 e = RGBtoHSV(E, E, E, E);
+vec4 f = RGBtoHSV(F, B, D, H);
+vec4 g = RGBtoHSV(G, I, C, A);
+vec4 h = RGBtoHSV(H, F, B, D);
+vec4 i = RGBtoHSV(I, C, A, G);
+
+vec4 i4 = RGBtoHSV(I4, C1, A0, G5);
+vec4 i5 = RGBtoHSV(I5, C4, A1, G0);
+vec4 h5 = RGBtoHSV(H5, F4, B1, D0);
+vec4 f4 = RGBtoHSV(F4, B1, D0, H5);
+
+vec4 Ao = vec4( 1.0,-1.0,-1.0, 1.0);
+vec4 Bo = vec4( 1.0, 1.0,-1.0,-1.0);
+vec4 Co = vec4( 1.5, 0.5,-0.5, 0.5);
+vec4 Ax = vec4( 1.0,-1.0,-1.0, 1.0);
+vec4 Bx = vec4( 0.5, 2.0,-0.5,-2.0);
+vec4 Cx = vec4( 1.0, 1.0,-0.5, 0.0);
+vec4 Ay = vec4( 1.0,-1.0,-1.0, 1.0);
+vec4 By = vec4( 2.0, 0.5,-2.0,-0.5);
+vec4 Cy = vec4( 2.0, 0.0,-1.0, 0.5);
+
+// These inequations define the line below which interpolation occurs.
+
+fx      = greaterThan(Ao*fp.y+Bo*fp.x, Co);
+fx_left = greaterThan(Ax*fp.y+Bx*fp.x, Cx);
+fx_up   = greaterThan(Ay*fp.y+By*fp.x, Cy);
+
+interp_restriction_lv1      = AND(notEqual(e,f), notEqual(e,h));
+interp_restriction_lv2_left = AND(notEqual(e,g), notEqual(d,g));
+interp_restriction_lv2_up   = AND(notEqual(e,c), notEqual(b,c));
+
+edr      = AND(lessThan(weighted_distance( e, c, g, i, h5, f4, h, f), weighted_distance( h, d, i5, f, i4, b, e, i)), interp_restriction_lv1);
+edr_left = AND(lessThanEqual((coef*df(f,g)), df(h,c)), interp_restriction_lv2_left);
+edr_up   = AND(greaterThanEqual(df(f,g), (coef*df(h,c))), interp_restriction_lv2_up);
+
+nc = AND(edr, (OR(OR(fx, AND(edr_left,fx_left)), AND(edr_up, fx_up))));
+
+px = lessThanEqual(df(e,f), df(e,h));
+
+vec3 res = nc.x ? px.x ? F : H : nc.y ? px.y ? B : F : nc.z ? px.z ? D : B : nc.w ? px.w ? H : D : E;
+
+gl_FragColor.rgb = res;
+}

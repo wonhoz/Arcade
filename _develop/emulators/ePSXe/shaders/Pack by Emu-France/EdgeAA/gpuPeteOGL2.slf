@@ -1,0 +1,47 @@
+//  EdgeAA (c) 2011 SimoneT
+
+uniform vec4 OGL2Param;
+uniform vec4 OGL2Size;
+uniform vec4 OGL2InvSize;
+uniform sampler2D tex0;
+
+float CLength(vec4 c)
+{
+float rmean = c.x*0.5;
+c*= c;
+return sqrt((2.0+rmean)*c.x+4.0*c.y+(3.0-rmean)*c.z)/3.0;
+}
+
+void main (void)
+{     
+vec4 c0 = texture2D(tex0, gl_TexCoord[0].xy); 
+vec4 c9 = c0;
+vec4 c1 = texture2D(tex0, gl_TexCoord[0].xy + OGL2InvSize.xy * vec2( 0.0, 1.0));
+c9 += c1;
+vec4 c2 = texture2D(tex0, gl_TexCoord[0].xy + OGL2InvSize.xy * vec2(-1.0, 1.0));
+vec4 c3 = texture2D(tex0, gl_TexCoord[0].xy + OGL2InvSize.xy * vec2(-1.0, 0.0));
+c9 += c3;
+vec4 c4 = texture2D(tex0, gl_TexCoord[0].xy + OGL2InvSize.xy * vec2(-1.0,-1.0));
+vec4 c5 = texture2D(tex0, gl_TexCoord[0].xy + OGL2InvSize.xy * vec2( 0.0,-1.0));
+c9 += c5;
+vec4 c6 = texture2D(tex0, gl_TexCoord[0].xy + OGL2InvSize.xy * vec2( 1.0,-1.0));
+vec4 c7 = texture2D(tex0, gl_TexCoord[0].xy + OGL2InvSize.xy * vec2( 1.0, 0.0));
+c9 += c7;
+vec4 c8 = texture2D(tex0, gl_TexCoord[0].xy + OGL2InvSize.xy * vec2( 1.0, 1.0));
+c9 += texture2D(tex0, gl_TexCoord[0].xy + OGL2InvSize.xy * vec2(-2.0, 0.0));
+c9 += texture2D(tex0, gl_TexCoord[0].xy + OGL2InvSize.xy * vec2( 2.0, 0.0));
+c9 += texture2D(tex0, gl_TexCoord[0].xy + OGL2InvSize.xy * vec2( 0.0,-2.0));
+c9 += texture2D(tex0, gl_TexCoord[0].xy + OGL2InvSize.xy * vec2( 0.0, 2.0));
+c9 /= 9.0;
+
+vec4 a0 = c8 - c4;
+vec4 a1 = abs(2.0 * c7 - 2.0 * c3 + c6 - c2 - a0);
+     a0 = abs(2.0 * c1 - 2.0 * c5 - c6 + c2 + a0);
+
+float level = clamp(CLength(a0)+CLength(a1),0.0,1.0);
+
+level = pow(level,4.0-OGL2Param.z);
+
+gl_FragColor = c0 * (1.0 - level) + c9 * level;
+}
+
