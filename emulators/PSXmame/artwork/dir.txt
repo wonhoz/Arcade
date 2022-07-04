@@ -1,1 +1,0 @@
-Place artwork and visual effects *.png files here.
