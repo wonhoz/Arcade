@@ -1,40 +1,40 @@
 #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
-#gdarius;G-다라이어스;pSxMAME;0;1997;Taito;Shooting;;;;;;;cpzn2;;;
-danceyes;댄싱 아이즈;pSxMAME;0;1996;Namco;Puzzle;;;;;;;cpzn2;;;
-dunkmnia;덩크 매니아;pSxMAME;0;1995;Namco;Sports;;;;;;;cpzn2;;;
-doapp;데드 오어 얼라이브 ++;pSxMAME;0;1998;Tecmo;Fighting;;;;;;;cpzn2;;;
-tondemo;돈데모 크라이시스;pSxMAME;;1999;Tecmo;Action;;;;;;;;;;
-rvschool;라이벌 스쿨;pSxMAME;0;1997;Capcom;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cpzn2;0;0;6
-jgakuen;라이벌 스쿨 - 사립 저스티스 학원 (일본판);pSxMAME;;1997;Capcom;Fighting;;;;;;;;;;
-raystorm;레이 스톰;pSxMAME;0;1996;Taito;Shooting;4;0;Joystick (8-way);imperfect;1;raster;taitofx1;0;0;3
-mgcldtex;매지컬 데이트 EX;pSxMAME;;1997;Taito;Simulation;;;;;;;;;;
-#mfjump;몬스터 팜 점프;pSxMAME;0;2001;Tecmo;Action;;;;;;;cpzn2;;;
-mrdrillr;미스터 드릴러;pSxMAME;0;1999;Namco;Puzzle;1;0;Joystick (4-way);good;;;cpzn2;;;
-#brvblade;브레이브 블레이드;pSxMAME;0;2000;Raizing;Fighting;;;;;;;cpzn2;;;
-beastrzr;블러디 로어 / 동물철권;pSxMAME;;1997;Raizing;Fighting;;;;;;;;;;
-bldyror2;블러디 로어 2 / 동물철권 2;pSxMAME;0;1998;Raizing;Fighting;2;0;Joystick (8-way);imperfect;1;raster;psarc95;0;0;6
-psyforce;사이킥 포스;pSxMAME;0;1996;Taito;Fighting;;;;;;;cpzn2;;;
-psyfrcex;사이킥 포스 EX;pSxMAME;;1995;Taito;Fighting;;;;;;;;;;
-#sncwgltd;소닉 윙즈 리미티드;pSxMAME;0;1996;Video system;Shooting;;;;;;;cpzn2;;;
-souledge;소울 엣지;pSxMAME;0;1996;Namco;Fighting;;;;;;;cpzn2;;;
-starglad;스타 글래디에이터;pSxMAME;;1996;Capcom;Fighting;;;;;;;;;;
-plsmaswd;스타 글래디에이터 2;pSxMAME;0;1998;Capcom;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cpzn2;0;0;6
-strider2;스트라이더 비룡 2;pSxMAME;0;1999;Capcom;Action;4;0;Joystick (8-way);preliminary;1;raster;cpzn2;0;0;3
-sfex;스트리트 파이터 EX;pSxMAME;;1996;Capcom;Fighting;;;;;;;;;;
-sfexp;스트리트 파이터 EX 플러스;pSxMAME;;1997;Capcom;Fighting;;;;;;;;;;
-sfex2;스트리트 파이터 EX2;pSxMAME;;1998;Capcom;Fighting;;;;;;;;;;
-sfex2p;스트리트 파이터 EX2 플러스;pSxMAME;0;1999;Capcom;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cpzn2;0;0;6
-#pbball96;실황 파워풀 프로야구 '96;pSxMAME;0;1996;Konami;Sports;;;;;;;cpzn2;;;
-ehrgeiz;에어 가이츠;pSxMAME;0;1997;Squaresoft;Sports;;;;;;;cpzn2;;;
-#xevi3dg;제비우스 3D/G;pSxMAME;0;1995;Namco;Shooting;;;;;;;cpzn2;;;
-tekken;철권;pSxMAME;0;1994;Namco;Fighting;2;;;;;;;;;
-tekken2;철권 2;pSxMAME;0;1995;Namco;Fighting;2;;;;;;;;;
-tekken3;철권 3;pSxMAME;0;1996;Namco;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cpzn2;0;0;6
-tektagt;철권 태그 토너먼트;pSxMAME;0;1999;Namco;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cpzn2;0;0;6
-techromnu;초강전기 키카이오 / 테크로 맨서;pSxMAME;techromn;1998;Capcom;Fighting;;;;;;;cpzn2;;;
-cbaj;쿨 보더스 아케이드 잼;pSxMAME;;1998;UEP Systems;Sports;4;0;joystick (8-way),joystick (8-way),joystick (8-way),joystick (8-way);imperfect;1;raster;coh1002m;;;3
-ts2;투신전 2;pSxMAME;0;1995;Capcom;Fighting;;;;;;;cpzn2;;;
-fgtlayer;파이팅 레이어;pSxMAME;0;1998;Namco;Fighting;;;;;;;cpzn2;;;
-primglex;프라임 골 EX;pSxMAME;;1996;Namco;Sports;;;;;;;;;;
-hyperath;하이퍼 애슬릿;pSxMAME;0;1996;Konami;Sports;;;;;;;cpzn2;;;
-hvnsgate;헤븐즈 게이트;pSxMAME;0;1996;Atlus;Fighting;2;;;;;;cpzn2;;;
+#gdarius;G-다라이어스;PSXMAME;0;1997;Taito;Shooting;;;;;;;cpzn2;;;
+danceyes;댄싱 아이즈;PSXMAME;0;1996;Namco;Puzzle;;;;;;;cpzn2;;;
+dunkmnia;덩크 매니아;PSXMAME;0;1995;Namco;Sports;;;;;;;cpzn2;;;
+doapp;데드 오어 얼라이브 ++;PSXMAME;0;1998;Tecmo;Fighting;;;;;;;cpzn2;;;
+tondemo;돈데모 크라이시스;PSXMAME;;1999;Tecmo;Action;;;;;;;;;;
+rvschool;라이벌 스쿨;PSXMAME;0;1997;Capcom;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cpzn2;0;0;6
+jgakuen;라이벌 스쿨 - 사립 저스티스 학원 (일본판);PSXMAME;;1997;Capcom;Fighting;;;;;;;;;;
+raystorm;레이 스톰;PSXMAME;0;1996;Taito;Shooting;4;0;Joystick (8-way);imperfect;1;raster;taitofx1;0;0;3
+mgcldtex;매지컬 데이트 EX;PSXMAME;;1997;Taito;Simulation;;;;;;;;;;
+#mfjump;몬스터 팜 점프;PSXMAME;0;2001;Tecmo;Action;;;;;;;cpzn2;;;
+mrdrillr;미스터 드릴러;PSXMAME;0;1999;Namco;Puzzle;1;0;Joystick (4-way);good;;;cpzn2;;;
+#brvblade;브레이브 블레이드;PSXMAME;0;2000;Raizing;Fighting;;;;;;;cpzn2;;;
+beastrzr;블러디 로어 / 동물철권;PSXMAME;;1997;Raizing;Fighting;;;;;;;;;;
+bldyror2;블러디 로어 2 / 동물철권 2;PSXMAME;0;1998;Raizing;Fighting;2;0;Joystick (8-way);imperfect;1;raster;psarc95;0;0;6
+psyforce;사이킥 포스;PSXMAME;0;1996;Taito;Fighting;;;;;;;cpzn2;;;
+psyfrcex;사이킥 포스 EX;PSXMAME;;1995;Taito;Fighting;;;;;;;;;;
+#sncwgltd;소닉 윙즈 리미티드;PSXMAME;0;1996;Video system;Shooting;;;;;;;cpzn2;;;
+souledge;소울 엣지;PSXMAME;0;1996;Namco;Fighting;;;;;;;cpzn2;;;
+starglad;스타 글래디에이터;PSXMAME;;1996;Capcom;Fighting;;;;;;;;;;
+plsmaswd;스타 글래디에이터 2;PSXMAME;0;1998;Capcom;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cpzn2;0;0;6
+strider2;스트라이더 비룡 2;PSXMAME;0;1999;Capcom;Action;4;0;Joystick (8-way);preliminary;1;raster;cpzn2;0;0;3
+sfex;스트리트 파이터 EX;PSXMAME;;1996;Capcom;Fighting;;;;;;;;;;
+sfexp;스트리트 파이터 EX 플러스;PSXMAME;;1997;Capcom;Fighting;;;;;;;;;;
+sfex2;스트리트 파이터 EX2;PSXMAME;;1998;Capcom;Fighting;;;;;;;;;;
+sfex2p;스트리트 파이터 EX2 플러스;PSXMAME;0;1999;Capcom;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cpzn2;0;0;6
+#pbball96;실황 파워풀 프로야구 '96;PSXMAME;0;1996;Konami;Sports;;;;;;;cpzn2;;;
+ehrgeiz;에어 가이츠;PSXMAME;0;1997;Squaresoft;Sports;;;;;;;cpzn2;;;
+#xevi3dg;제비우스 3D/G;PSXMAME;0;1995;Namco;Shooting;;;;;;;cpzn2;;;
+tekken;철권;PSXMAME;0;1994;Namco;Fighting;2;;;;;;;;;
+tekken2;철권 2;PSXMAME;0;1995;Namco;Fighting;2;;;;;;;;;
+tekken3;철권 3;PSXMAME;0;1996;Namco;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cpzn2;0;0;6
+tektagt;철권 태그 토너먼트;PSXMAME;0;1999;Namco;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cpzn2;0;0;6
+techromnu;초강전기 키카이오 / 테크로 맨서;PSXMAME;techromn;1998;Capcom;Fighting;;;;;;;cpzn2;;;
+cbaj;쿨 보더스 아케이드 잼;PSXMAME;;1998;UEP Systems;Sports;4;0;joystick (8-way),joystick (8-way),joystick (8-way),joystick (8-way);imperfect;1;raster;coh1002m;;;3
+ts2;투신전 2;PSXMAME;0;1995;Capcom;Fighting;;;;;;;cpzn2;;;
+fgtlayer;파이팅 레이어;PSXMAME;0;1998;Namco;Fighting;;;;;;;cpzn2;;;
+primglex;프라임 골 EX;PSXMAME;;1996;Namco;Sports;;;;;;;;;;
+hyperath;하이퍼 애슬릿;PSXMAME;0;1996;Konami;Sports;;;;;;;cpzn2;;;
+hvnsgate;헤븐즈 게이트;PSXMAME;0;1996;Atlus;Fighting;2;;;;;;cpzn2;;;
