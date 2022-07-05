@@ -2,12 +2,12 @@
 
 class UserConfig 
 { 
-//</ label="User custom text",help="Enter text to display on the layout", order=1 /> uct="Change this text in the Layout Options";
-</ label="휠아트 선택", help="휠 이미지를 선택하세요.", options="marquee, wheel", order=3 /> orbit_art="wheel";
+//</ label="사용자 지정 텍스트",help="레이아웃에 표시 할 텍스트를 입력하세요.", order=1 /> uct="Change this text in the Layout Options";
+</ label="스핀 휠 아트 선택", help="휠 이미지를 선택하세요.", options="marquee, wheel", order=3 /> orbit_art="wheel";
    
-</ label="Select vertart instead of wheel", help="Select vertical or wheel art", options="Yes,No", order=4 /> enable_VertArt="no";
+</ label="휠 대신 vertart 선택", help="Select vertical or wheel art", options="Yes,No", order=4 /> enable_VertArt="no";
    
-</ label="휠 전환시간", help="Time in milliseconds for wheel spin.", order=10 /> transition_ms="80";
+</ label="휠 전환 시간", help="Time in milliseconds for wheel spin.", order=10 /> transition_ms="80";
 </ label="스캔라인 효과", help="화면에 스캔라인을 표시합니다.", options="none,light,medium,dark", order=17 /> enable_scanline="none";
 </ label="조작키 안내", help="조작키 설명 이미지를 표시할 수 있습니다.", options="XBOX360,PS Pad,Keyboard,off", order=20 /> select_Keyinfo="XBOX360";
 }
