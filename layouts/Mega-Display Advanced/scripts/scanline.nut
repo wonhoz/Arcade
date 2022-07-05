@@ -1,7 +1,7 @@
 
 
 class UserConfig {
-</ label="Enble background Scanline", help="Show scanline effect", options="none,light,medium,dark", order=17 /> enable_scanline="none";
+</ label="Enable background Scanline", help="Show scanline effect", options="none,light,medium,dark", order=17 /> enable_scanline="none";
 </ label="조작키 안내", help="조작키 설명 이미지를 표시할 수 있습니다.", options="XBOX360,PS Pad,Keyboard,off", order=20 /> select_Keyinfo="XBOX360";
 
 }
