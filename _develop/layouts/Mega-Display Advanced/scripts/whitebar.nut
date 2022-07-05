@@ -4,7 +4,8 @@ local flw = fe.layout.width;
 local flh = fe.layout.height;
 
 
-local whitebottom = fe.add_image("images/white.png", flx*0.000, fly*0.960, flw*0.900, flh*0.007 );
+//local whitebottom = fe.add_image("images/white.png", flx*0.000, fly*0.960, flw*0.900, flh*0.007 );
+local whitebottom = fe.add_image("images/white.png", flx*0.000, fly*0.935, flw*1.200, flh*0.007 );
 whitebottom.alpha = 50;
 
 

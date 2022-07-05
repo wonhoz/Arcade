@@ -14,8 +14,8 @@ local pacmon = {
 	property = "alpha", 
 	start = 255, 
 	end = 0, 
-	time = 800,
-	delay = 200,	 		
+	time = 2000,
+	delay = 500,	 		
  }
 
 animation.add( PropertyAnimation( OBJECTS.pac, pacmon ) );

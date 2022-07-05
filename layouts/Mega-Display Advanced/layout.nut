@@ -3,7 +3,7 @@
 class UserConfig 
 { 
 //</ label="User custom text",help="Enter text to display on the layout", order=1 /> uct="Change this text in the Layout Options";
-</ label="휠아트 선택", help="휭 이미지를 선택하세요.", options="marquee, wheel", order=3 /> orbit_art="wheel";
+</ label="휠아트 선택", help="휠 이미지를 선택하세요.", options="marquee, wheel", order=3 /> orbit_art="wheel";
    
 </ label="Select vertart instead of wheel", help="Select vertical or wheel art", options="Yes,No", order=4 /> enable_VertArt="no";
    
@@ -34,9 +34,6 @@ fe.do_nut("scripts/whitebar.nut");
 fe.do_nut("scripts/fade.nut");
 fe.do_nut("scripts/sidebar.nut");
 fe.do_nut("scripts/wheel2.nut");
-
-
-
 
 
 
