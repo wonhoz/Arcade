@@ -1,12 +1,12 @@
 //
-// Attract-Mode Front-End - "Consol Box" layout
+// Attract-Mode Front-End - "Console Box" layout
 // Made by CSOne 2018.11.06
 //
 
 class UserConfig { 
 </ label="Enable CRT character", help="Enable CRT character", options="Yes,No", order=1 /> enable_crt="No";
 </ label="BG Artwork", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=2 /> 
-   select_bgArt_wiiu="gray";
+   select_bgArt_pc="gray";
 </ label="Select Character", help="Select Character Image's Display Type", options="By Display,By Game,None", order=3 /> select_character="By Display";
 </ label="Select Character No.", help="[By Display] type only. Select Image Number.", options="01,02,03", order=4 /> select_character_no="01";
 </ label="Character Image Alpha (0~254)", help="Input Character Image Alpha value 0~254", options="", order=5 /> select_Alpha="254";
@@ -14,11 +14,11 @@ class UserConfig {
 </ label="Flyer Image Alpha (0~254)", help="Input Flyer Image Alpha value 0~254", options="", order=7 /> select_Alpha2="120"; 
 </ label="Game Logo Animation", help="Animated game's marquee image.", options="Yes,No", order=8 /> enable_gamelogo="Yes";
 </ label="Effect Animation", help="Animated game's Character Image.", options="Yes,No", order=9 /> enable_effect="Yes";
-</ label="Select Artwork Image", help="Selected Artwork Image is displayed at the right of consol game machine.", options="Cartridge_Disc,3D Box,None", order=10 /> enable_boximage="cartridge_disc";
+</ label="Select Artwork Image", help="Selected Artwork Image is displayed at the right of console game machine.", options="Cartridge_Disc,3D Box,None", order=10 /> enable_boximage="cartridge_disc";
 </ label="History.dat", help="History.dat location. Be sure to enable and config History.dat from the plugins menu.", order=11 />
 	dat_path=".\\history.dat";  
 }  
-
+ 
 
 // 변수지정 및 폰트 및 화면 해상도
 local my_config = fe.get_config();
@@ -34,10 +34,10 @@ fe.layout.preserve_aspect_ratio = true;
 dofile(fe.script_dir + "file_util.nut" );
 
 // 백그라운드 지정 및 스크롤 애니메이션 효과
-if ( my_config["select_bgArt_wiiu"] == "video" ){
+if ( my_config["select_bgArt_pc"] == "video" ){
 bgArt = fe.add_artwork("bg.mp4", 0, 0, flw, flh );
 }
-bgArt = fe.add_image("bg_" + my_config["select_bgArt_wiiu"] + ".png", 0, 0, flw, flh );
+bgArt = fe.add_image("bg_" + my_config["select_bgArt_pc"] + ".png", 0, 0, flw, flh );
 bgArt2 = fe.add_clone(bgArt);
 
 fe.load_module("animate");
@@ -50,7 +50,7 @@ local blackbg = fe.add_artwork(  "black.png", 0.061*flw, 0.132*flh, 0.375*flw, 0
 
 // 모니터와 콘솔기기
 fe.add_image(  "monitor.png", 0.027*flw, 0.068*flh, 0.442*flw, 0.752*flh );
-fe.add_image(  "consol_wiiu.png", 0.164*flw, 0.734*flh, 0.276*flw, 0.218*flh );
+fe.add_image(  "console_pc.png", 0.078*flw, 0.757*flh, 0.336*flw, 0.238*flh );
 
 // 동영상
 local snap = fe.add_artwork(  "snap", 0.064*flw, 0.14*flh, 0.368*flw, 0.49*flh );
@@ -203,7 +203,6 @@ listbox2.format_string = "[!gamename]";
 
 
 
-
 // 시계
 local clockbtext = fe.add_text(  "TIME:", 0.505*flw, 0.93*flh, 0.104*flw, 0.043*flh );
 clockbtext.set_rgb( 0, 0, 0 );
@@ -267,7 +266,6 @@ if ( my_config["enable_crt"] == "Yes" )
  fe.add_image( "scanline.png", 0, 0, flw, flh);
 }
 
-
 // 게임 캐릭터 이미지 표시 (권장 이미지 사이즈: 480x760)
 if ( my_config["select_character"] == "By Game" )
 {
@@ -285,10 +283,11 @@ if ( my_config["select_character"] == "By Game" )
  OBJECTS.effect.trigger = Transition.EndNavigation;
 }
 
+
 // 2D 또는 3D 박스 이미지 표시
 if ( my_config["enable_boximage"] == "Cartridge_Disc" )
 {
-	local boximage = fe.add_artwork( "cartridge_disc", 0.331*flw, 0.704*flh, 0.208*flw, 0.274*flh );
+	local boximage = fe.add_artwork( "cartridge_disc", 0.341*flw, 0.676*flh, 0.208*flw, 0.306*flh );
 	boximage.preserve_aspect_ratio = true;
 	local move_boximage = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
@@ -297,7 +296,7 @@ if ( my_config["enable_boximage"] == "Cartridge_Disc" )
 }
 if ( my_config["enable_boximage"] == "3D Box" )
 {
-	local boximage2 = fe.add_artwork( "3dbox", 0.331*flw, 0.704*flh, 0.208*flw, 0.274*flh );
+	local boximage2 = fe.add_artwork( "3dbox", 0.341*flw, 0.676*flh, 0.208*flw, 0.306*flh );
 	boximage2.preserve_aspect_ratio = true;
 	local move_boximage2 = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
