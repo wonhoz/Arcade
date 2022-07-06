@@ -45,20 +45,20 @@ animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, proper
 animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
 
 // 동영상 뒷배경
-// local blackbg = fe.add_artwork(  "black.png", 0.061*flw, 0.132*flh, 0.375*flw, 0.502*flh );
+// local blackbg = fe.add_image( "black.png", 0.061*flw, 0.132*flh, 0.375*flw, 0.502*flh );
 
 // 모니터와 콘솔기기
-fe.add_image(  "monitor_psp.png", 0.005*flw, 0.103*flh, 0.51*flw, 0.398*flh );
-fe.add_image(  "console_psp.png", 0.019*flw, 0.572*flh, 0.481*flw, 0.38*flh );
+fe.add_image( "monitor_psp.png", 0.005*flw, 0.103*flh, 0.51*flw, 0.398*flh );
+fe.add_image( "console_psp.png", 0.019*flw, 0.572*flh, 0.481*flw, 0.38*flh );
 
 // 동영상
-local snap = fe.add_artwork(  "snap", 0.115*flw, 0.139*flh, 0.292*flw, 0.296*flh );
+local snap = fe.add_artwork( "snap", 0.115*flw, 0.139*flh, 0.292*flw, 0.296*flh );
 //snap.preserve_aspect_ratio = true;
 snap.trigger = Transition.EndNavigation;
-// fe.add_image(  "scanline.png", 0.115*flw, 0.139*flh, 0.292*flw, 0.296*flh );
+// fe.add_image( "scanline.png", 0.115*flw, 0.139*flh, 0.292*flw, 0.296*flh );
 
 // 게임 리스트 배경
-local listbg = fe.add_artwork( "list_bg.png", 0.521*flw, 0.019*flh, 0.453*flw, 0.969*flh );
+local listbg = fe.add_image( "list_bg.png", 0.521*flw, 0.019*flh, 0.453*flw, 0.969*flh );
 listbg.alpha = 150;
 
 // 리스트 박스 백그라운드 이미지 선택
@@ -80,7 +80,7 @@ if ( my_config["select_character"] == "By Display" )
 //flyer.trigger = Transition.EndNavigation;
 
 // 게임 휠 이미지
-//local bluebg2 = fe.add_artwork( "bg_marquee_1.png", 0.233*flw, 0.317*flh, 0.182*flw, 0.069*flh );
+//local bluebg2 = fe.add_image( "bg_marquee_1.png", 0.233*flw, 0.317*flh, 0.182*flw, 0.069*flh );
 
 // Class to assign the history.dat information
 // to a text object called ".currom"
@@ -126,7 +126,7 @@ if ( my_config["select_character"] == "By Display" )
 
 //Game Marquee Animation
 ::OBJECTS <- {
- marquee = fe.add_artwork(  "marquee", 0.172*flw, 0.017*flh, 0.188*flw, 0.111*flh ),
+ marquee = fe.add_artwork( "marquee", 0.172*flw, 0.017*flh, 0.188*flw, 0.111*flh ),
 }
 
 
