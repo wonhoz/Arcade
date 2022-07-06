@@ -1,59 +1,22 @@
 //
-// Attract-Mode Front-End - "Consol Box" layout
+// Attract-Mode Front-End - "Console Box" layout
 // Made by CSOne 2018.11.06
 //
 
 class UserConfig { 
-</ label="Enable CRT effect", help="Enable CRT effect", options="Yes,No", order=1 /> enable_crt="No";
-</ label="Select Character", help="Select Character Image's Display Type", options="By Display,By Game,None", order=2 /> select_character="By Display";
-</ label="Select Character No.", help="[By Display] type only. Select Image Number.", options="01,02,03", order=2 /> select_character_no="01";
-</ label="Character Image Alpha (0~254)", help="Input Character Image Alpha value 0~254", options="", order=3 /> select_Alpha="254";
-</ label="Enable Flyer Image", help="Enable List Box's Backgound Image (Flyer)", options="Yes,No", order=4 /> enable_flyer="Yes";
-</ label="Flyer Image Alpha (0~254)", help="Input Flyer Image Alpha value 0~254", options="", order=5 /> select_Alpha2="120"; 
-</ label="Game Logo Animation", help="Animated game's marquee image.", options="Yes,No", order=6 /> enable_gamelogo="Yes";
-</ label="History.dat", help="History.dat location. Be sure to enable and config History.dat from the plugins menu.", order=8 />
+</ label="Enable CRT character", help="Enable CRT character", options="Yes,No", order=1 /> enable_crt="No";
+</ label="BG Artwork", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=2 /> 
+   select_bgArt_gc="gray";
+</ label="Select Character", help="Select Character Image's Display Type", options="By Display,By Game,None", order=3 /> select_character="By Display";
+</ label="Select Character No.", help="[By Display] type only. Select Image Number.", options="01,02,03", order=4 /> select_character_no="01";
+</ label="Character Image Alpha (0~254)", help="Input Character Image Alpha value 0~254", options="", order=5 /> select_Alpha="254";
+</ label="Enable Flyer Image", help="Enable List Box's Backgound Image (Flyer)", options="Yes,No", order=6 /> enable_flyer="Yes";
+</ label="Flyer Image Alpha (0~254)", help="Input Flyer Image Alpha value 0~254", options="", order=7 /> select_Alpha2="120"; 
+</ label="Game Logo Animation", help="Animated game's marquee image.", options="Yes,No", order=8 /> enable_gamelogo="Yes";
+</ label="Effect Animation", help="Animated game's Character Image.", options="Yes,No", order=9 /> enable_effect="Yes";
+</ label="Select Artwork Image", help="Selected Artwork Image is displayed at the right of console game machine.", options="Cartridge_Disc,3D Box,None", order=10 /> enable_boximage="cartridge_disc";
+</ label="History.dat", help="History.dat location. Be sure to enable and config History.dat from the plugins menu.", order=11 />
 	dat_path=".\\history.dat";  
-</ label="BG Artwork (NEC PC-Engine)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=9 /> 
-   select_bgArt_pce="pink";
-</ label="BG Artwork (NEC PC-Engine CD-ROM)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=10 /> 
-   select_bgArt_pcecd="pink";
-</ label="BG Artwork (NEC PC-FX)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=11 /> 
-   select_bgArt_pcfx="pink";
-</ label="BG Artwork (Nintendo Famicom)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=12 /> 
-   select_bgArt_nes="orange";
-</ label="BG Artwork (Nintendo Super Famicom)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=13 /> 
-   select_bgArt_snes="gray2"
-</ label="BG Artwork (Nintendo GameBoy Advance)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=14 /> 
-   select_bgArt_gba="gray";  
-</ label="BG Artwork (Nintendo Nintendo 64)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=15 /> 
-   select_bgArt_n64="green2";
-</ label="BG Artwork (Nintendo GameCube & Wii)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=16 /> 
-   select_bgArt_gc="green";
-</ label="BG Artwork (SEGA Master System)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=17 /> 
-   select_bgArt_sms="red";
-</ label="BG Artwork (SEGA Mega Drive)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=18 /> 
-   select_bgArt_md="orange";
-</ label="BG Artwork (SEGA MEGA-CD)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=19 /> 
-   select_bgArt_mcd="retro";
-</ label="BG Artwork (Neogeo CD)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=20 /> 
-   select_bgArt_neocd="gray";
-</ label="BG Artwork (LG 3DO ALIVE)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=26 /> 
-   select_bgArt_3do="orange";
-</ label="BG Artwork (SEGA Saturn)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=20 /> 
-   select_bgArt_ss="gray";
-</ label="BG Artwork (SEGA DreamCast)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=21 /> 
-   select_bgArt_dc="pink";  
-</ label="BG Artwork (MSX)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=22 /> 
-   select_bgArt_msx="blue2";
-</ label="BG Artwork (GP32)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=23 /> 
-   select_bgArt_gp32="orange";
-</ label="BG Artwork (SONY Play Station)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=24 /> 
-   select_bgArt_ps1="retro";
-</ label="BG Artwork (SONY Play Station 2)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=25 /> 
-   select_bgArt_ps2="gray";
-</ label="BG Artwork (SONY Play Station Portable)", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=26 /> 
-   select_bgArt_psp="gray";
-</ label="Select Artwork Image", help="Selected Artwork Image is displayed at the right of consol game machine.", options="Cartridge_Disc,3D Box,None", order=27 /> enable_boximage="cartridge_disc";
 }  
 
 // 변수지정 및 폰트 및 화면 해상도
@@ -69,19 +32,11 @@ fe.layout.preserve_aspect_ratio = true;
 // Include the utilities to read the history.dat file
 dofile(fe.script_dir + "file_util.nut" );
 
-// 이미지 변형 변수값 지정
-// local snap_skewX = 62.5
-// local snap_skewY = -12.9
-// local snap_pinchX = 0
-// local snap_pinchY = 40.0
-// local snap_rotation = 1.0
-
-
 // 백그라운드 지정 및 스크롤 애니메이션 효과
-if ( my_config["select_bgArt_pcecd"] == "video" ){
+if ( my_config["select_bgArt_gc"] == "video" ){
 bgArt = fe.add_artwork("bg.mp4", 0, 0, flw, flh );
 }
-bgArt = fe.add_image("bg_" + my_config["select_bgArt_pcecd"] + ".png", 0, 0, flw, flh );
+bgArt = fe.add_image("bg_" + my_config["select_bgArt_gc"] + ".png", 0, 0, flw, flh );
 bgArt2 = fe.add_clone(bgArt);
 
 fe.load_module("animate");
@@ -94,13 +49,13 @@ local blackbg = fe.add_artwork(  "black.png", 0.061*flw, 0.132*flh, 0.375*flw, 0
 
 // 모니터와 콘솔기기
 fe.add_image(  "monitor.png", 0.027*flw, 0.068*flh, 0.442*flw, 0.752*flh );
-fe.add_image(  "consol_pcecd.png", 0.036*flw, 0.764*flh, 0.341*flw, 0.22*flh );
+fe.add_image(  "console_gc.png", 0.089*flw, 0.663*flh, 0.399*flw, 0.327*flh );
 
 // 동영상
 local snap = fe.add_artwork(  "snap", 0.064*flw, 0.14*flh, 0.368*flw, 0.49*flh );
 //snap.preserve_aspect_ratio = true;
 snap.trigger = Transition.EndNavigation;
-fe.add_image(  "scanline.png", 0.064*flw, 0.14*flh, 0.369*flw, 0.49*flh );
+// fe.add_image(  "scanline.png", 0.064*flw, 0.14*flh, 0.369*flw, 0.49*flh );
 
 // 게임 리스트 배경
 local listbg = fe.add_artwork( "list_bg.png", 0.521*flw, 0.019*flh, 0.453*flw, 0.969*flh );
@@ -117,12 +72,12 @@ if ( my_config["enable_flyer"] == "Yes" )
 // 게임 캐릭터 이미지 표시 (권장 이미지 사이즈: 480x760)
 if ( my_config["select_character"] == "By Display" )
 {
-	local mascot = fe.add_image ("systems/[DisplayName]" + "_character_" + my_config["select_character_no"] +".png",1370, 200 );
+	local mascot = fe.add_image ( "systems/[DisplayName]" + "_character_" + my_config["select_character_no"] +".png", 0.75*flw, 0.185*flh, 0.25*flw, 0.704*flh );
 	mascot.alpha = abs(("0"+my_config["select_Alpha"]).tointeger()) % 255;;
 	mascot.preserve_aspect_ratio = true;
 }
 //flyer.preserve_aspect_ratio = true;
-
+//flyer.trigger = Transition.EndNavigation;
 
 // 게임 휠 이미지
 //local bluebg2 = fe.add_artwork( "bg_marquee_1.png", 0.233*flw, 0.317*flh, 0.182*flw, 0.069*flh );
@@ -197,7 +152,7 @@ OBJECTS.marquee.trigger = Transition.EndNavigation;
 local displayName = fe.add_image ( "systems/[DisplayName]", 0.63*flw, 0.022*flh, 0.234*flw, 0.185*flh );
 
 // 게임선택 박스
-fe.add_image( "box_purple.png", 0.524*flw, 0.507*flh, 0.446*flw, 0.074*flh );
+fe.add_image( "box.png", 0.524*flw, 0.507*flh, 0.446*flw, 0.074*flh );
 
 // 리스트 게임번호 그림자
 local listbox1b = fe.add_listbox( 0.531*flw, 0.213*flh, 0.18*flw, 0.676*flh );
@@ -246,7 +201,6 @@ listbox2.format_string = "[!gamename]";
 }
 
 
-
 // 시계
 local clockbtext = fe.add_text(  "TIME:", 0.505*flw, 0.93*flh, 0.104*flw, 0.043*flh );
 clockbtext.set_rgb( 0, 0, 0 );
@@ -289,7 +243,7 @@ listtext.align = Align.Left;
 	local text = fe.filters[fe.list.filter_index].name;
 
                 if (text == "Favourites")
-                text = "즐겨잦기"
+                text = "FAV"
 		
 		return text.toupper();
  }
@@ -309,7 +263,6 @@ if ( my_config["enable_crt"] == "Yes" )
 {
  fe.add_image( "scanline.png", 0, 0, flw, flh);
 }
-
 
 // 게임 캐릭터 이미지 표시 (권장 이미지 사이즈: 480x760)
 if ( my_config["select_character"] == "By Game" )
@@ -332,17 +285,16 @@ if ( my_config["select_character"] == "By Game" )
 // 2D 또는 3D 박스 이미지 표시
 if ( my_config["enable_boximage"] == "Cartridge_Disc" )
 {
-	local boximage = fe.add_artwork( "cartridge_disc", 0.365*flw, 0.731*flh, 0.141*flw, 0.25*flh );
+	local boximage = fe.add_artwork( "cartridge_disc", 0.331*flw, 0.704*flh, 0.208*flw, 0.274*flh );
 	boximage.preserve_aspect_ratio = true;
 	local move_boximage = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
 	}
 	animation.add( PropertyAnimation( boximage, move_boximage ) );
 }
-
 if ( my_config["enable_boximage"] == "3D Box" )
 {
-	local boximage2 = fe.add_artwork( "3dbox", 0.365*flw, 0.731*flh, 0.141*flw, 0.25*flh );
+	local boximage2 = fe.add_artwork( "3dbox", 0.331*flw, 0.704*flh, 0.208*flw, 0.274*flh );
 	boximage2.preserve_aspect_ratio = true;
 	local move_boximage2 = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800

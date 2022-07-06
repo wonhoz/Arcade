@@ -1,5 +1,5 @@
 //
-// Attract-Mode Front-End - "Consol Box" layout
+// Attract-Mode Front-End - "Console Box" layout
 // Made by CSOne 2018.11.06
 //
 
@@ -14,7 +14,7 @@ class UserConfig {
 </ label="Flyer Image Alpha (0~254)", help="Input Flyer Image Alpha value 0~254", options="", order=7 /> select_Alpha2="120"; 
 </ label="Game Logo Animation", help="Animated game's marquee image.", options="Yes,No", order=8 /> enable_gamelogo="Yes";
 </ label="Effect Animation", help="Animated game's Character Image.", options="Yes,No", order=9 /> enable_effect="Yes";
-</ label="Select Artwork Image", help="Selected Artwork Image is displayed at the right of consol game machine.", options="Cartridge_Disc,3D Box,None", order=10 /> enable_boximage="cartridge_disc";
+</ label="Select Artwork Image", help="Selected Artwork Image is displayed at the right of console game machine.", options="Cartridge_Disc,3D Box,None", order=10 /> enable_boximage="cartridge_disc";
 </ label="History.dat", help="History.dat location. Be sure to enable and config History.dat from the plugins menu.", order=11 />
 	dat_path=".\\history.dat";  
 }  
@@ -50,7 +50,7 @@ local blackbg = fe.add_artwork(  "black.png", 0.061*flw, 0.132*flh, 0.375*flw, 0
 
 // 모니터와 콘솔기기
 fe.add_image(  "monitor.png", 0.027*flw, 0.068*flh, 0.442*flw, 0.752*flh );
-fe.add_image(  "consol_n64.png", 0.073*flw, 0.741*flh, 0.271*flw, 0.258*flh );
+fe.add_image(  "console_n64.png", 0.073*flw, 0.741*flh, 0.271*flw, 0.258*flh );
 
 // 동영상
 local snap = fe.add_artwork(  "snap", 0.064*flw, 0.14*flh, 0.368*flw, 0.49*flh );

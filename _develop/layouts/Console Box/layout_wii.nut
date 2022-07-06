@@ -1,12 +1,12 @@
 //
-// Attract-Mode Front-End - "Consol Box" layout
+// Attract-Mode Front-End - "Console Box" layout
 // Made by CSOne 2018.11.06
 //
 
 class UserConfig { 
 </ label="Enable CRT character", help="Enable CRT character", options="Yes,No", order=1 /> enable_crt="No";
 </ label="BG Artwork", help="Select Background Artwork", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,video", order=2 /> 
-   select_bgArt_gc="gray";
+   select_bgArt_wii="gray";
 </ label="Select Character", help="Select Character Image's Display Type", options="By Display,By Game,None", order=3 /> select_character="By Display";
 </ label="Select Character No.", help="[By Display] type only. Select Image Number.", options="01,02,03", order=4 /> select_character_no="01";
 </ label="Character Image Alpha (0~254)", help="Input Character Image Alpha value 0~254", options="", order=5 /> select_Alpha="254";
@@ -14,7 +14,7 @@ class UserConfig {
 </ label="Flyer Image Alpha (0~254)", help="Input Flyer Image Alpha value 0~254", options="", order=7 /> select_Alpha2="120"; 
 </ label="Game Logo Animation", help="Animated game's marquee image.", options="Yes,No", order=8 /> enable_gamelogo="Yes";
 </ label="Effect Animation", help="Animated game's Character Image.", options="Yes,No", order=9 /> enable_effect="Yes";
-</ label="Select Artwork Image", help="Selected Artwork Image is displayed at the right of consol game machine.", options="Cartridge_Disc,3D Box,None", order=10 /> enable_boximage="cartridge_disc";
+</ label="Select Artwork Image", help="Selected Artwork Image is displayed at the right of console game machine.", options="Cartridge_Disc,3D Box,None", order=10 /> enable_boximage="cartridge_disc";
 </ label="History.dat", help="History.dat location. Be sure to enable and config History.dat from the plugins menu.", order=11 />
 	dat_path=".\\history.dat";  
 }  
@@ -33,10 +33,10 @@ fe.layout.preserve_aspect_ratio = true;
 dofile(fe.script_dir + "file_util.nut" );
 
 // 백그라운드 지정 및 스크롤 애니메이션 효과
-if ( my_config["select_bgArt_gc"] == "video" ){
+if ( my_config["select_bgArt_wii"] == "video" ){
 bgArt = fe.add_artwork("bg.mp4", 0, 0, flw, flh );
 }
-bgArt = fe.add_image("bg_" + my_config["select_bgArt_gc"] + ".png", 0, 0, flw, flh );
+bgArt = fe.add_image("bg_" + my_config["select_bgArt_wii"] + ".png", 0, 0, flw, flh );
 bgArt2 = fe.add_clone(bgArt);
 
 fe.load_module("animate");
@@ -49,7 +49,7 @@ local blackbg = fe.add_artwork(  "black.png", 0.061*flw, 0.132*flh, 0.375*flw, 0
 
 // 모니터와 콘솔기기
 fe.add_image(  "monitor.png", 0.027*flw, 0.068*flh, 0.442*flw, 0.752*flh );
-fe.add_image(  "consol_gc.png", 0.089*flw, 0.663*flh, 0.399*flw, 0.327*flh );
+fe.add_image(  "console_wii.png", 0.089*flw, 0.663*flh, 0.399*flw, 0.327*flh );
 
 // 동영상
 local snap = fe.add_artwork(  "snap", 0.064*flw, 0.14*flh, 0.368*flw, 0.49*flh );
