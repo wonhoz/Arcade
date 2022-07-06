@@ -25,8 +25,8 @@ local my_config = fe.get_config();
 local bgArt;
 local bgArt2;
 fe.layout.font="font";
-fe.layout.width=1920;
-fe.layout.height=1080;
+
+
 local flw = fe.layout.width;
 local flh = fe.layout.height;
 fe.layout.preserve_aspect_ratio = true;
@@ -134,11 +134,11 @@ if ( my_config["select_character"] == "By Display" )
 if ( my_config["enable_gamelogo"] == "Yes" )
 {
  local move_marquee1 = {
-    when = Transition.ToNewSelection ,property = "y", start = 0, end = 30, time = 100
+    when = Transition.ToNewSelection ,property = "y", start = 0, end = 0.028*flh, time = 100
  }
 
  local move_marquee2 = {
-    when = Transition.ToNewSelection ,property = "y", start = 30, end = 20, delay = 100, time = 300
+    when = Transition.ToNewSelection ,property = "y", start = 0.028*flh, end = 0.019*flh, delay = 100, time = 300
  }
 
  animation.add( PropertyAnimation( OBJECTS.marquee, move_marquee1 ) );
@@ -264,7 +264,7 @@ list.align = Align.Left;
 
 if ( my_config["enable_crt"] == "Yes" )
 {
- fe.add_image( "scanline.png", 0, 0, 1920, 1080);
+ fe.add_image( "scanline.png", 0, 0, flw, flh);
 }
 
 
@@ -272,10 +272,10 @@ if ( my_config["enable_crt"] == "Yes" )
 if ( my_config["select_character"] == "By Game" )
 {
 ::OBJECTS <- {
- effect = fe.add_artwork( "character", 1490, 200 ),
+ effect = fe.add_artwork( "character", 0.776*flw, 0.185*flh ),
 }
  local move_effect1 = {
-    when = Transition.ToNewSelection ,property = "x", start = 1920, end = 1490, time = 300
+    when = Transition.ToNewSelection ,property = "x", start = flw, end = 0.776*flw, time = 300
  }
   local move_effect2 = {
  	when = Transition.ToNewSelection, property = "alpha", start = 80, end = 255, time = 700
