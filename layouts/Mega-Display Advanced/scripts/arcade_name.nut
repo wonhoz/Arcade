@@ -1,6 +1,6 @@
 //class UserConfig 
 //{ 
-//</ label="User custom text",help="Enter text to display on the layout", order=1 /> uct="Change this text in the Layout Options";
+//</ label="사용자 지정 텍스트",help="레이아웃에 표시 할 텍스트를 입력하세요.", order=1 /> uct="Change this text in the Layout Options";
 //}
 local flx = fe.layout.width;
 local fly = fe.layout.height;

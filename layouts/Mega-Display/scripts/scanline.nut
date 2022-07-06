@@ -1,7 +1,7 @@
 
 
 class UserConfig {
- </ label="Enble background Scanline", help="Show scanline effect", options="none,light,medium,dark", order=17 /> enable_scanline="none";
+ </ label="Enable background Scanline", help="Show scanline effect", options="none,light,medium,dark", order=17 /> enable_scanline="none";
 }
 
 local flx = fe.layout.width;
