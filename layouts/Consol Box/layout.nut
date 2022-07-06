@@ -90,26 +90,26 @@ animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, proper
 animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
 
 // 동영상 뒷배경
-local blackbg = fe.add_artwork( "black.png", 117, 143, 720, 542 );
+local blackbg = fe.add_artwork(  "black.png", 0.061*flw, 0.132*flh, 0.375*flw, 0.502*flh );
 
 // 모니터와 콘솔기기
-fe.add_image( "monitor.png", 52, 73, 849, 812);
-fe.add_image( "consol_pcecd.png", 70, 825, 654, 238);
+fe.add_image(  "monitor.png", 0.027*flw, 0.068*flh, 0.442*flw, 0.752*flh );
+fe.add_image(  "consol_pcecd.png", 0.036*flw, 0.764*flh, 0.341*flw, 0.22*flh );
 
 // 동영상
-local snap = fe.add_artwork( "snap", 123, 151, 707, 529 );
+local snap = fe.add_artwork(  "snap", 0.064*flw, 0.14*flh, 0.368*flw, 0.49*flh );
 //snap.preserve_aspect_ratio = true;
 snap.trigger = Transition.EndNavigation;
-fe.add_image( "scanline.png", 123, 151, 708, 529);
+fe.add_image(  "scanline.png", 0.064*flw, 0.14*flh, 0.369*flw, 0.49*flh );
 
 // 게임 리스트 배경
-local listbg = fe.add_artwork("list_bg.png",1000, 20, 870, 1046 );
+local listbg = fe.add_artwork( "list_bg.png", 0.521*flw, 0.019*flh, 0.453*flw, 0.969*flh );
 listbg.alpha = 150;
 
 // 리스트 박스 백그라운드 이미지 선택
 if ( my_config["enable_flyer"] == "Yes" )
 {
-	local flyer = fe.add_artwork("flyer",1008, 222, 854, 738 );
+	local flyer = fe.add_artwork( "flyer", 0.525*flw, 0.206*flh, 0.445*flw, 0.683*flh );
 	flyer.alpha = abs(("0"+my_config["select_Alpha2"]).tointeger()) % 255;;
 	flyer.trigger = Transition.EndNavigation;
 }
@@ -125,7 +125,7 @@ if ( my_config["select_character"] == "By Display" )
 
 
 // 게임 휠 이미지
-//local bluebg2 = fe.add_artwork("bg_marquee_1.png",448, 342, 350, 75 );
+//local bluebg2 = fe.add_artwork( "bg_marquee_1.png", 0.233*flw, 0.317*flh, 0.182*flw, 0.069*flh );
 
 // Class to assign the history.dat information
 // to a text object called ".currom"
@@ -171,7 +171,7 @@ if ( my_config["select_character"] == "By Display" )
 
 //Game Marquee Animation
 ::OBJECTS <- {
- marquee = fe.add_artwork( "marquee", 295, 20, 360, 120 ),
+ marquee = fe.add_artwork(  "marquee", 0.154*flw, 0.019*flh, 0.188*flw, 0.111*flh ),
 }
 
 
@@ -194,13 +194,13 @@ OBJECTS.marquee.trigger = Transition.EndNavigation;
 
 
 // 에뮬 디스플레이 타이틀
-local displayName = fe.add_image ("systems/[DisplayName]",1210, 24, 450, 200);
+local displayName = fe.add_image ( "systems/[DisplayName]", 0.63*flw, 0.022*flh, 0.234*flw, 0.185*flh );
 
 // 게임선택 박스
-fe.add_image("box_purple.png", 1007, 548, 856, 80 );
+fe.add_image( "box_purple.png", 0.524*flw, 0.507*flh, 0.446*flw, 0.074*flh );
 
 // 리스트 게임번호 그림자
-local listbox1b = fe.add_listbox( 1020, 230, 345, 730 );
+local listbox1b = fe.add_listbox( 0.531*flw, 0.213*flh, 0.18*flw, 0.676*flh );
 listbox1b.charsize = 40;
 listbox1b.set_sel_rgb( 208, 56, 0 );
 listbox1b.set_rgb( 0, 0, 0 );
@@ -210,7 +210,7 @@ listbox1b.font="texgyreheros-bold";
 listbox1b.format_string = "[ListEntry]";
 
 // 리스트 박스 게임번호
-local listbox1 = fe.add_listbox( 1017, 227, 345, 730 );
+local listbox1 = fe.add_listbox( 0.53*flw, 0.21*flh, 0.18*flw, 0.676*flh );
 listbox1.charsize = 40;
 listbox1.set_sel_rgb( 255 243, 20 );
 listbox1.set_rgb( 73, 223, 222 );
@@ -220,7 +220,7 @@ listbox1.font="texgyreheros-bold";
 listbox1.format_string = "[ListEntry]";
 
 // 리스트 박스 게임이름 그림자
-local listbox2b = fe.add_listbox( 1120, 223, 720, 730 );
+local listbox2b = fe.add_listbox( 0.583*flw, 0.206*flh, 0.375*flw, 0.676*flh );
 listbox2b.charsize = 36;
 listbox2b.set_sel_rgb( 208, 56, 0 );
 listbox2b.set_rgb( 0, 0, 0 );
@@ -229,7 +229,7 @@ listbox2b.align = Align.Left;
 listbox2b.format_string = "[!gamename]";
 
 // 리스트 박스 게임이름
-local listbox2 = fe.add_listbox( 1117, 220, 720, 730 );
+local listbox2 = fe.add_listbox( 0.582*flw, 0.204*flh, 0.375*flw, 0.676*flh );
 listbox2.charsize = 36;
 listbox2.set_sel_rgb( 255 243, 20 );
 listbox2.set_rgb( 240, 240, 240 );
@@ -248,20 +248,20 @@ listbox2.format_string = "[!gamename]";
 
 
 // 시계
-local clockbtext = fe.add_text( "TIME:", 970, 1004, 200, 46 );
+local clockbtext = fe.add_text(  "TIME:", 0.505*flw, 0.93*flh, 0.104*flw, 0.043*flh );
 clockbtext.set_rgb( 0, 0, 0 );
 clockbtext.font="Ticketbook W01 Bold";
 
-local clocktext = fe.add_text( "TIME:", 967, 1001, 200, 46 );
+local clocktext = fe.add_text(  "TIME:", 0.504*flw, 0.927*flh, 0.104*flw, 0.043*flh );
 clocktext.set_rgb( 211, 250, 255 );
 clocktext.font="Ticketbook W01 Bold";
 
-local clockb = fe.add_text( "", 1140, 1009, 320, 46  );
+local clockb = fe.add_text(  "", 0.594*flw, 0.934*flh, 0.167*flw, 0.043*flh );
 clockb.align = Align.Left;
 clockb.font="texgyreheros-bold";
 clockb.set_rgb( 0, 0, 0 );
 
-local clock = fe.add_text( "", 1137, 1006, 320, 46  );
+local clock = fe.add_text(  "", 0.592*flw, 0.931*flh, 0.167*flw, 0.043*flh );
 clock.align = Align.Left;
 clock.font="texgyreheros-bold";
 clock.set_rgb( 73, 223, 222 );
@@ -274,12 +274,12 @@ function update_clock( ttime ){
   fe.add_ticks_callback( this, "update_clock" );
 
 // 즐겨찾기 필터
-local listtextb = fe.add_text( "[!filter] GAMES:", 1340, 1004, 450, 46 );
+local listtextb = fe.add_text(  "[!filter] GAMES:", 0.698*flw, 0.93*flh, 0.234*flw, 0.043*flh );
 listtextb.set_rgb( 0, 0, 0 );
 listtextb.font="Ticketbook W01 Bold";
 listtextb.align = Align.Left;
 
-local listtext = fe.add_text( "[!filter] GAMES:", 1337, 1001, 450, 46 );
+local listtext = fe.add_text(  "[!filter] GAMES:", 0.696*flw, 0.927*flh, 0.234*flw, 0.043*flh );
 listtext.set_rgb( 211, 250, 255 );
 listtext.font="Ticketbook W01 Bold";
 listtext.align = Align.Left;
@@ -294,12 +294,12 @@ listtext.align = Align.Left;
 		return text.toupper();
  }
 
-local listb = fe.add_text("[ListSize]", 1710, 1009, 200, 46 );
+local listb = fe.add_text( "[ListSize]", 0.891*flw, 0.934*flh, 0.104*flw, 0.043*flh );
 listb.set_rgb( 0, 0, 0 );
 listb.font="texgyreheros-bold";
 listb.align = Align.Left;
 
-local list = fe.add_text( "[ListSize]", 1707, 1006, 200, 46 );
+local list = fe.add_text(  "[ListSize]", 0.889*flw, 0.931*flh, 0.104*flw, 0.043*flh );
 list.set_rgb( 73, 223, 222 );
 list.font="texgyreheros-bold";
 list.align = Align.Left;
@@ -332,7 +332,7 @@ if ( my_config["select_character"] == "By Game" )
 // 2D 또는 3D 박스 이미지 표시
 if ( my_config["enable_boximage"] == "Cartridge_Disc" )
 {
-	local boximage = fe.add_artwork("cartridge_disc",700, 790, 270, 270 );
+	local boximage = fe.add_artwork( "cartridge_disc", 0.365*flw, 0.731*flh, 0.141*flw, 0.25*flh );
 	boximage.preserve_aspect_ratio = true;
 	local move_boximage = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
@@ -342,7 +342,7 @@ if ( my_config["enable_boximage"] == "Cartridge_Disc" )
 
 if ( my_config["enable_boximage"] == "3D Box" )
 {
-	local boximage2 = fe.add_artwork("3dbox",700, 790, 270, 270 );
+	local boximage2 = fe.add_artwork( "3dbox", 0.365*flw, 0.731*flh, 0.141*flw, 0.25*flh );
 	boximage2.preserve_aspect_ratio = true;
 	local move_boximage2 = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
