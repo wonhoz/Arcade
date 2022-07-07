@@ -25,38 +25,52 @@
 // -------------------------------------------------------
 
 
-class UserConfig {
-
-</ label="NEVATO theme", help=" ", options=" ", order=1 /> divider1="";
-</ label="- - -", help=" ", options=" ", order=1 /> divider1="";
+class UserConfig
+{
+</ label="NEVATO 테마", help=" ", options=" ", order=1 /> divider1="";
+</ label="--------------------------", help=" ", options=" ", order=1 /> divider1="";
 //-----------------------------------------------------------------
-</ label="mute videos snaps sound", help="yes = sound disabled, no = sound enabled", options="yes,no", order=2 /> mute_videoSnaps="no";
+</ label="글꼴 선택", help="화면에 표시되는 글꼴을 변경할 수 있습니다.", options="Font,TmonMonsori,NanumGothicBold,TT", order=2 /> select_font="Font";
 
-</ label="- - -", help=" ", options=" ", order=3 /> divider2="";
+</ label="--------------------------", help=" ", options=" ", order=3 /> divider2="";
 //-----------------------------------------------------------------
-</ label="cab screen", help="video = video snap, screenshot = game screenshot", options="video, screenshot", order=4 /> cabScreenType="video";
-</ label="scanlines on screen", help="show scanlines effect on cab screen.", options="light,medium,dark,off", order=5 /> enable_scanlines="light";
+</ label="동영상 음소거", help="소리를 끄려면 yes, 그렇지 않으면 no 를 선택하세요.", options="yes,no", order=4 /> mute_videoSnaps="no";
 
-</ label="- - -", help=" ", options=" ", order=6 /> divider3="";
+</ label="--------------------------", help=" ", options=" ", order=5 /> divider3="";
 //-----------------------------------------------------------------
-</ label="marquee artwork", help="marquee type, replace ''my-own-marquee.jpg'' file with your own", options="marquee,emulator-name,my-own", order=7 /> marquee_type="marquee"; 
+</ label="모니터 표시항목", help="동영상은 video, 스크린샷은 screenshot 을 선택하세요.", options="video, screenshot", order=6 /> cabScreenType="video";
+</ label="모니터 스캔라인", help="모니터 스캔라인 효과를 조절할 수 있습니다.", options="light,medium,dark,off", order=7 /> enable_scanlines="light";
+
+</ label="--------------------------", help=" ", options=" ", order=8 /> divider4="";
+//-----------------------------------------------------------------
+</ label="마키 아트웍", help="마퀴 타입을 선택하세요. 커스텀 마키 파일명: ''my-own-marquee.jpg''", options="marquee,emulator-name,my-own", order=9 /> marquee_type="marquee"; 
  
-</ label="- - -", help=" ", options=" ", order=9 /> divider4="";
+</ label="--------------------------", help=" ", options=" ", order=10 /> divider5="";
 //-----------------------------------------------------------------
-</ label="LCD right side", help="what's on right side of LCD", options="filter, emulator, display-name, rom-filename, off,", order=10 /> lcdRight="filter"; 
+</ label="LCD 우측 표시항목", help="표시할 항목을 선택하세요.", options="filter, emulator, display-name, rom-filename, off,", order=11 /> lcdRight="filter"; 
 
-</ label="- - -", help=" ", options=" ", order=11 /> divider5="";
+</ label="--------------------------", help=" ", options=" ", order=12 /> divider6="";
 //-----------------------------------------------------------------
-</ label="spinwheel artwork", help="marquee or wheel", options="marquee,wheel", order=12 /> spinwheelArt="wheel";
-</ label="speenwheel transition time", help="Time in milliseconds for wheel spin.", order=13 /> transition_ms="80";
+</ label="스핀휠 아트웍", help="marquee, wheel, listbox 중에 선택하세요.", options="marquee,wheel,listbox", order=13 /> spinwheelArt="wheel";
+</ label="스핀휠 전환시간", help="시간 단위는 ms 입니다.", order=14 /> transition_ms="80";
    
-</ label="- - -", help=" ", options=" ", order=14 /> divider6="";
+</ label="--------------------------", help=" ", options=" ", order=15 /> divider7="";
 //-----------------------------------------------------------------
-</ label="background art", help="Display the flyer/fanart/snap(screenshot)/video in background.", options="flyer,fanart,snap,video,none", order=15 /> enable_bg_art="fanart";
-</ label="background ststic image", help="background image if there is no background art", options="blue,black,none", order=16 /> enable_static_bkg="black";
-</ label="background mask", help="make background medium or dark", options="dark,medium", order=17 /> enable_mask="dark";
+</ label="배경 아트",   help="플라이어, 팬아트, 스크린샷, 비디오 중에서 배경에 표시할 항목을 선택하세요.", options="flyer,fanart,snap,video,none", order=16 /> enable_bg_art="flyer";
+</ label="배경 이미지", help="배경 이미지를 선택하세요.", options="black,gray,white,red,orange,yellow,green,blue,purple,pink,none", order=17 /> enable_static_bkg="black";
+</ label="배경 마스크", help="medium 또는 dark 로 배경 마스크를 선택하세요.", options="dark,medium", order=18 /> enable_mask="dark";
 
-</ label="- - -", help=" ", options=" ", order=18 /> divider7="";
+</ label="--------------------------", help=" ", options=" ", order=19 /> divider8="";
+//-----------------------------------------------------------------
+</ label="캐릭터 표시방식", help="디스플레이 이름별 (By Display), 또는 게임 파일별 (By Game) 중에서 표시방식을 선택하세요.", options="By Display,By Game,None", order=20 /> select_character="By Display";
+</ label="캐릭터 번호", help="캐릭터 표시방식이 디스플레이 이름별 (By Display) 인 경우에만 동작합니다. 캐릭터 번호를 선택하세요.", options="01,02,03", order=21 /> select_character_no="01";
+</ label="캐릭터 투명도", help="0 (투명) 에서 254 (불투명) 사이의 값을 입력하세요.", options="", order=22 /> select_Alpha3="254";
+
+</ label="--------------------------", help=" ", options=" ", order=23 /> divider9="";
+//-----------------------------------------------------------------
+</ label="조작키 안내", help="조작키 안내를 선택하세요.", options="Arcade,XBOX360,PS Pad,Keyboard,off", order=24 /> select_Keyinfo="XBOX360";
+
+</ label="--------------------------", help=" ", options=" ", order=25 /> divider10="";
 //-----------------------------------------------------------------
 }  
 
