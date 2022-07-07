@@ -51,7 +51,7 @@ class UserConfig
 
 </ label="--------------------------", help=" ", options=" ", order=12 /> divider6="";
 //-----------------------------------------------------------------
-</ label="스핀휠 아트웍", help="marquee, wheel, listbox 중에 선택하세요.", options="marquee,wheel,listbox", order=13 /> spinwheelArt="wheel";
+</ label="스핀휠 아트웍", help="marquee, wheel, listbox 중에 선택하세요.", options="marquee,wheel,listbox", order=13 /> spinwheelArt="listbox";
 </ label="스핀휠 전환시간", help="시간 단위는 ms 입니다.", order=14 /> transition_ms="80";
    
 </ label="--------------------------", help=" ", options=" ", order=15 /> divider7="";
@@ -64,7 +64,7 @@ class UserConfig
 //-----------------------------------------------------------------
 </ label="캐릭터 표시방식", help="디스플레이 이름별 (By Display), 또는 게임 파일별 (By Game) 중에서 표시방식을 선택하세요.", options="By Display,By Game,None", order=20 /> select_character="By Display";
 </ label="캐릭터 번호", help="캐릭터 표시방식이 디스플레이 이름별 (By Display) 인 경우에만 동작합니다. 캐릭터 번호를 선택하세요.", options="01,02,03", order=21 /> select_character_no="01";
-</ label="캐릭터 투명도", help="0 (투명) 에서 254 (불투명) 사이의 값을 입력하세요.", options="", order=22 /> select_Alpha3="254";
+</ label="캐릭터 투명도", help="0 (투명) 에서 254 (불투명) 사이의 값을 입력하세요.", options="", order=22 /> select_Alpha="254";
 
 </ label="--------------------------", help=" ", options=" ", order=23 /> divider9="";
 //-----------------------------------------------------------------
@@ -657,6 +657,193 @@ local wheel_r = [  30,  25,  20,  15,  10,   5,   0, -10, -15, -20, -25, -30, ];
 local num_arts = Setting("aspectDepend", "wheelNumElements");  // number of elements in wheel - depending on screen aspect ratio
 
 
+// 게임 목록박스 표시
+if ( my_config["spinwheelArt"] == "listbox" )
+{
+// 게임 리스트 배경
+local listbg = fe.add_image("list_bg_34.png",flw*0.53125, flh*0.0185185, flw*0.453125, flh*0.96852 );
+listbg.alpha = 150;
+
+// 게임 캐릭터 이미지 표시 (권장 이미지 사이즈: 480x760)
+if ( my_config["select_character"] == "By Display" )
+{
+	local mascot = fe.add_image ("Display/[DisplayName]" + "_character_" + my_config["select_character_no"] +".png",1440, 200, 480, 760);
+	mascot.alpha = abs(("0"+my_config["select_Alpha"]).tointeger()) % 255;;
+	mascot.preserve_aspect_ratio = true;
+}
+
+if ( my_config["select_character"] == "By Game" )
+{
+::OBJECTS <- {
+ effect = fe.add_artwork( "character", 1440, 200, 480, 760 ),
+}
+
+local move_effect1 = {
+when = Transition.ToNewSelection, property = "alpha", start = 80, end = 255, time = 700
+}
+animation.add( PropertyAnimation( OBJECTS.effect, move_effect1 ) );
+OBJECTS.effect.trigger = Transition.EndNavigation;
+}
+
+// 에뮬 디스플레이 타이틀
+local displayName = fe.add_image ("Display/[DisplayName]",flw*0.56771, flh*0.02222, flw*0.3906, flh*0.1852);
+
+// 게임선택 박스
+fe.add_image("box.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
+
+// 리스트 게임번호 그림자
+local listbox1b = fe.add_listbox( flw*0.541666667,flh*0.2064815, flw*0.1796875, flh*0.6759259 );
+listbox1b.charsize = 36;
+listbox1b.set_sel_rgb( 208, 56, 0 );
+listbox1b.set_rgb( 0, 0, 0 );
+listbox1b.selbg_alpha = 0;
+listbox1b.align = Align.Left;
+listbox1b.charsize=36;
+listbox1b.format_string = "[ListEntry]";
+
+// 리스트 박스 게임번호
+local listbox1 = fe.add_listbox( flw*0.540104167, flh*0.2037037, flw*0.1796875, flh*0.6759259 );
+listbox1.charsize = 36;
+listbox1.set_sel_rgb( 255 243, 20 );
+listbox1.set_rgb( 73, 223, 222 );
+listbox1.selbg_alpha = 0;
+listbox1.align = Align.Left;
+listbox1.charsize=36;
+listbox1.format_string = "[ListEntry]";
+
+// 리스트 박스 게임이름 그림자
+local listbox2b = fe.add_listbox( flw*0.59375, flh*0.2064815, flw*0.39, flh*0.6759259 );
+listbox2b.charsize = 36;
+listbox2b.set_sel_rgb( 208, 56, 0 );
+listbox2b.set_rgb( 0, 0, 0 );
+listbox2b.selbg_alpha = 0;
+listbox2b.align = Align.Left;
+listbox2b.format_string = "[!gamename]";
+
+// 리스트 박스 게임이름
+local listbox2 = fe.add_listbox( flw*0.5921875, flh*0.2037037, flw*0.39, flh*0.6759259 );
+listbox2.charsize = 36;
+listbox2.set_sel_rgb( 255 243, 20 );
+listbox2.set_rgb( 240, 240, 240 );
+listbox2.selbg_alpha = 0;
+listbox2.align = Align.Left;
+listbox2.format_string = "[!gamename]";
+
+// 문자 생략
+// Game name text. We do this in the layout as the frontend doesn't chop up titles with a forward slash
+ function gamename( index_offset ) {
+  local s = split( fe.game_info( Info.Title, index_offset ), "[/" );
+ 	if ( s.len() > 0 ) return s[0];
+  return "";
+}
+
+
+
+// 시계
+local clockbtext = fe.add_text( "현재시각:", flw*0.515625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
+clockbtext.set_rgb( 0, 0, 0 );
+clockbtext.charsize = 36;
+
+local clocktext = fe.add_text( "현재시각:", flw*0.5140625, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
+clocktext.set_rgb( 211, 250, 255 );
+clocktext.charsize = 36;
+
+local clockb = fe.add_text( "", flw*0.604166667, flh*0.92962963, flw*0.166666667, flh*0.042592593  );
+clockb.align = Align.Left;
+clockb.charsize = 36;
+clockb.set_rgb( 0, 0, 0 );
+
+local clock = fe.add_text( "", flw*0.602604167, flh*0.926851852, flw*0.166666667, flh*0.042592593  );
+clock.align = Align.Left;
+clock.charsize = 36;
+clock.set_rgb( 73, 223, 222 );
+
+function update_clock( ttime ){
+  local now = date();
+  clockb.msg = format("%02d", now.hour) + ":" + format("%02d", now.min );
+  clock.msg  = format("%02d", now.hour) + ":" + format("%02d", now.min );
+}
+
+fe.add_ticks_callback( this, "update_clock" );
+
+
+
+// 즐겨찾기 필터
+local listtextb = fe.add_text( "[!filter] 게임:", flw*0.708333333, flh*0.92962963, flw*0.234375, flh*0.042592593 );
+listtextb.set_rgb( 208, 56, 0 );
+listtextb.charsize = 36;
+listtextb.align = Align.Left;
+
+local listtext = fe.add_text( "[!filter] 게임:", flw*0.706770833, flh*0.926851852, flw*0.234375, flh*0.042592593 );
+listtext.set_rgb( 255 243, 20 );
+listtext.charsize = 36;
+listtext.align = Align.Left;
+
+// Change filter name to upper case
+function filter(){
+local text = fe.filters[fe.list.filter_index].name;
+
+              if (text == "All")
+              text = "모든"
+
+              if (text == "Favourites")
+              text = "즐겨찾는"
+      
+      if (text == "Fighting")
+              text = "격투"
+      
+      if (text == "GunShooting")
+              text = "건슈팅"
+      
+      if (text == "Racing")
+              text = "레이싱"
+      
+      if (text == "Rhythm")
+              text = "리듬"
+      
+      if (text == "Board")
+              text = "보드"
+      
+      if (text == "Shooting")
+              text = "슈팅"
+      
+      if (text == "Arcade")
+              text = "아케이드"
+      
+      if (text == "Action")
+              text = "액션"
+      
+      if (text == "Quiz")
+              text = "퀴즈"
+      
+      if (text == "Puzzle")
+              text = "퍼즐"
+      
+      if (text == "1980s")
+              text = "80년대"
+      
+      if (text == "1990s")
+              text = "90년대"
+      
+      if (text == "2000s")
+              text = "2000년대"
+      
+      if (text == "2010s")
+              text = "2010년대"
+  
+  return text.toupper();
+}
+
+local listb = fe.add_text("[ListSize]", flw*0.9140625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
+listb.set_rgb( 0, 0, 0 );
+listb.charsize=36;
+listb.align = Align.Left;
+
+local list = fe.add_text( "[ListSize]", flw*0.9125, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
+list.set_rgb( 73, 223, 222 );
+list.charsize=36;
+list.align = Align.Left;
+}
 
 
 class WheelEntry extends ConveyorSlot

@@ -121,6 +121,7 @@ listbox2.selbg_alpha = 0;
 listbox2.align = Align.Left;
 listbox2.format_string = "[!gamename]";
 
+// 문자 생략
 // Game name text. We do this in the layout as the frontend doesn't chop up titles with a forward slash
 function gamename( index_offset )
 {
