@@ -55,8 +55,8 @@ class UserConfig
     
     </ label="--------------------------", help=" ", options=" ", order=15 /> divider7="";
     //-----------------------------------------------------------------
-    </ label="배경 아트",   help="플라이어, 팬아트, 스크린샷, 비디오 중에서 배경에 표시할 항목을 선택하세요.", options="flyer,fanart,snap,video,none", order=16 /> enable_bg_art="flyer";
-    </ label="배경 이미지", help="배경 이미지를 선택하세요.", options="black,gray,red,orange,green,cyan,blue,purple,violet,none", order=17 /> enable_static_bkg="blue";
+    </ label="배경 아트", help="플라이어, 팬아트, 스크린샷, 비디오 중에서 배경에 표시할 항목을 선택하세요.", options="flyer,fanart,snap,video,none", order=16 /> enable_bg_art="flyer";
+    </ label="배경 영상", help="배경 영상을 선택하세요.", options="black,gray,red,orange,green,cyan,blue,purple,violet,dot,drop,dust,square,none", order=17 /> select_bkg="blue";
     </ label="배경 마스크", help="medium 또는 dark 로 배경 마스크를 선택하세요.", options="dark,medium", order=18 /> enable_mask="dark";
 
     </ label="--------------------------", help=" ", options=" ", order=19 /> divider8="";
