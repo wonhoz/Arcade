@@ -55,19 +55,19 @@ class UserConfig
     
     </ label="--------------------------", help=" ", options=" ", order=15 /> divider7="";
     //-----------------------------------------------------------------
-    </ label="배경 아트", help="플라이어, 팬아트, 스크린샷, 비디오 중에서 배경에 표시할 항목을 선택하세요.", options="flyer,fanart,snap,video,none", order=16 /> enable_bg_art="flyer";
-    </ label="배경 영상", help="배경 영상을 선택하세요.", options="black,gray,red,orange,green,cyan,blue,purple,violet,dot,drop,dust,square,none", order=17 /> select_bkg="blue";
-    </ label="배경 마스크", help="medium 또는 dark 로 배경 마스크를 선택하세요.", options="dark,medium", order=18 /> enable_mask="dark";
+    </ label="배경 아트", help="플라이어, 팬아트, 스크린샷, 비디오 중에서 배경에 표시할 항목을 선택하세요.", options="flyer,fanart,snap,video,none", order=16 /> bg_art="flyer";
+    </ label="배경 영상", help="배경 영상을 선택하세요.", options="black,gray,red,orange,green,cyan,blue,purple,violet,dot,drop,dust,square,none", order=17 /> bg_media="blue";
+    </ label="배경 마스크", help="medium 또는 dark 로 배경 마스크를 선택하세요.", options="dark,medium", order=18 /> bg_mask="dark";
 
     </ label="--------------------------", help=" ", options=" ", order=19 /> divider8="";
     //-----------------------------------------------------------------
     </ label="선택 박스 색상", help="선택 박스의 테두리 색상을 선택하세요.", options="blue,green,pink", order=20 /> select_box_color="green";
     </ label="캐릭터 표시방식", help="디스플레이 이름별 (By Display), 또는 게임 파일별 (By Game) 중에서 표시방식을 선택하세요.", options="By Display,By Game,None", order=21 /> select_character="By Display";
-    </ label="캐릭터 투명도", help="0 (투명) 에서 254 (불투명) 사이의 값을 입력하세요.", options="", order=22 /> select_Alpha="254";
+    </ label="캐릭터 투명도", help="0 (투명) 에서 254 (불투명) 사이의 값을 입력하세요.", options="", order=22 /> character_alpha="254";
 
     </ label="--------------------------", help=" ", options=" ", order=23 /> divider9="";
     //-----------------------------------------------------------------
-    </ label="조작 방법 안내", help="조작 방법을 선택하세요.", options="Arcade,XBOX360,PS Pad,Keyboard,off", order=24 /> select_Keyinfo="XBOX360";
+    </ label="조작 방법 안내", help="조작 방법을 선택하세요.", options="Arcade,XBOX360,PS Pad,Keyboard,off", order=24 /> select_keyinfo="XBOX360";
 
     </ label="--------------------------", help=" ", options=" ", order=25 /> divider10="";
     //-----------------------------------------------------------------
