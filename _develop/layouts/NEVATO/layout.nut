@@ -843,7 +843,61 @@ local list = fe.add_text( "[ListSize]", flw*0.9125, flh*0.926851852, flw*0.10416
 list.set_rgb( 73, 223, 222 );
 list.charsize=36;
 list.align = Align.Left;
+
+
+
+// 즐겨찾기 아이콘 표시
+function getFavs(index_offset){
+  if(fe.game_info( Info.Favourite, index_offset ) == "1") return "fav.png";
+  else return "";
 }
+
+local romFav = fe.add_image(getFavs(0), flw*0.5, flh*0.5185, flw*0.03125, flh*0.0555 );
+
+fe.add_transition_callback( "update_my_list" );
+
+function update_my_list( ttype, var, ttime )
+{
+    if(ttype == Transition.ToNewSelection){
+        romFav.file_name = getFavs(var);
+    }
+    return false;
+}
+}
+
+
+// 즐겨찾기 아이콘 표시
+if ( my_config["spinwheelArt"] != "listbox" )
+{
+function getFavs(index_offset){
+  if(fe.game_info( Info.Favourite, index_offset ) == "1") return "fav.png";
+  else return "";
+}
+local romFav = fe.add_image(getFavs(0), flx*0.312, fly*0.40, flw*0.03125, flh*0.0555 );
+
+fe.add_transition_callback( "update_my_list" );
+function update_my_list( ttype, var, ttime )
+{
+    if(ttype == Transition.ToNewSelection){
+        romFav.file_name = getFavs(var);
+    }
+    return false;
+}
+}
+
+
+fe.add_signal_handler( "updateFavs" );
+function updateFavs( signal_str )
+{
+    if(signal_str == "add_favourite"){
+        if(romFav.file_name != "") romFav.file_name = "";
+        else romFav.file_name = "fav.png";
+    }
+}
+
+
+// 조작키 안내
+fe.add_image("key_" + my_config["select_Keyinfo"] + ".png", flw*0.01823, flh*0.9167, flw*0.4948, flh*0.07037 );
 
 
 class WheelEntry extends ConveyorSlot
