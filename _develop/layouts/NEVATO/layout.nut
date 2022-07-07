@@ -57,7 +57,7 @@ class UserConfig
 </ label="--------------------------", help=" ", options=" ", order=15 /> divider7="";
 //-----------------------------------------------------------------
 </ label="배경 아트",   help="플라이어, 팬아트, 스크린샷, 비디오 중에서 배경에 표시할 항목을 선택하세요.", options="flyer,fanart,snap,video,none", order=16 /> enable_bg_art="flyer";
-</ label="배경 이미지", help="배경 이미지를 선택하세요.", options="black,gray,white,red,orange,yellow,green,blue,purple,pink,none", order=17 /> enable_static_bkg="black";
+</ label="배경 이미지", help="배경 이미지를 선택하세요.", options="black,gray,red,orange,green,cyan,blue,purple,violet,none", order=17 /> enable_static_bkg="blue";
 </ label="배경 마스크", help="medium 또는 dark 로 배경 마스크를 선택하세요.", options="dark,medium", order=18 /> enable_mask="dark";
 
 </ label="--------------------------", help=" ", options=" ", order=19 /> divider8="";
@@ -77,8 +77,11 @@ class UserConfig
 
 local my_config = fe.get_config();
 
+fe.layout.font=my_config["select_font"];
+
 
 fe.load_module( "fade" );
+fe.load_module( "animate" );
 
 local blip = fe.layout.height;
 local flx = fe.layout.width;
@@ -270,18 +273,25 @@ if ( my_config["mute_videoSnaps"] == "no")
 
 // default background image (if background art is not enabled) ------------- START
 
-if ( my_config["enable_static_bkg"] == "blue") 
-{
- local bg = fe.add_image( "background_blue.png", 0, 0, flw, flh );
-}
-if ( my_config["enable_static_bkg"] == "black")
-{
- local bg = fe.add_image( "background_black.png", 0, 0, flw, flh );
-}
+// if ( my_config["enable_static_bkg"] == "blue") 
+// {
+//  local bg = fe.add_image( "background_blue.png", 0, 0, flw, flh );
+// }
+// if ( my_config["enable_static_bkg"] == "black")
+// {
+//  local bg = fe.add_image( "background_black.png", 0, 0, flw, flh );
+// }
 if ( my_config["enable_static_bkg"] == "none") 
 {
  local bg = fe.add_image( "", 0, 0, flw, flh );
 }
+
+local bgArt1 = fe.add_image("background_" + my_config["enable_static_bkg"] + ".png", 0, 0, flw, flh );
+local bgArt2 = fe.add_clone(bgArt1);
+
+animation.add( PropertyAnimation( bgArt1, {when = Transition.StartLayout, property = "x", start =   0, end = -flw, time = 28000, loop=true}));
+animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, property = "x", start = flw, end =    0, time = 28000, loop=true}));			
+// animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
 
 // default background image (if background art is not enabled) ------------- END
 
