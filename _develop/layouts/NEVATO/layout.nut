@@ -1,7 +1,6 @@
 // -------------------------------------------------------
 //
 // "NEVATO" theme for Attract-Mode Front-End
-// version 1.0
 // 
 // graphic design and coding = www.ClanLogoDesign.com
 // cabinet design and photo = www.tenDESIGN.pro
@@ -25,64 +24,43 @@
 // -------------------------------------------------------
 
 
-class UserConfig
-{
-</ label="NEVATO 테마", help=" ", options=" ", order=1 /> divider1="";
+class UserConfig {
+
+</ label="NEVATO theme", help=" ", options=" ", order=1 /> divider1="";
 </ label="--------------------------", help=" ", options=" ", order=1 /> divider1="";
 //-----------------------------------------------------------------
-</ label="글꼴 선택", help="화면에 표시되는 글꼴을 변경할 수 있습니다.", options="Font,TmonMonsori,NanumGothicBold,TT", order=2 /> select_font="Font";
-
-</ label="--------------------------", help=" ", options=" ", order=3 /> divider2="";
+</ label="글꼴 선택", help="화면에 표시되는 글자 폰트를 변경할 수 있습니다.", options="TmonMonsori,TT,Font,NanumGothicBold,User1,User2,User3", order=2 /> select_font1="Font";
+</ label="동영상 음소거", help="방향키(위/아래)를 이용하여, 사운드를 끄려면 yes, 사운드를 켜려면 no를 선택하세요.", options="yes,no", order=2 /> mute_videoSnaps="no";
+</ label="모니터 표시항목", help="모니터에 미리보기 동영상을 재생하려면 video를, 스냅샷을 표시하려면 screenshot을 선택하세요.", options="video, screenshot", order=3 /> cabScreenType="video";
+</ label="모니터 스캔라인", help="화면 스캔라인의 강도를 선택하거나 스캔라인을 제거할 수 있습니다.", options="light,medium,dark,off", order=4 /> enable_scanlines="light";
+</ label="marquee 도안", help="사용자 제작도안을 사용하려면 그림파일명을 ''my-own-marquee.jpg'' 으로 하세요.", options="marquee,wheel,emulator-name,my-own", order=5 /> marquee_type="marquee"; 
+</ label="LCD 우측 표시항목", help="표시할 항목을 선택하세요.", options="filter, emulator, display-name, rom-filename, off,", order=6 /> lcdRight="filter"; 
+</ label="--------------------------", help=" ", options=" ", order=7 /> divider2="";
 //-----------------------------------------------------------------
-</ label="동영상 음소거", help="소리를 끄려면 yes, 그렇지 않으면 no 를 선택하세요.", options="yes,no", order=4 /> mute_videoSnaps="no";
-
-</ label="--------------------------", help=" ", options=" ", order=5 /> divider3="";
+</ label="게임목록 표시방식", help="회전식 휠메뉴는 marquee 또는 wheel 선택, 목록 상자는 listbox를 선택하세요.", options="marquee,wheel,listbox", order=8 /> spinwheelArt="listbox";
+</ label="회전식 휠메뉴의 전환시간", help="전환시간 단위는 밀리세컨드(1/1000초)입니다.", order=9 /> transition_ms="80";
+</ label="--------------------------", help=" ", options=" ", order=10 /> divider3="";
 //-----------------------------------------------------------------
-</ label="모니터 표시항목", help="동영상은 video, 스크린샷은 screenshot 을 선택하세요.", options="video, screenshot", order=6 /> cabScreenType="video";
-</ label="모니터 스캔라인", help="모니터 스캔라인 효과를 조절할 수 있습니다.", options="light,medium,dark,off", order=7 /> enable_scanlines="light";
-
-</ label="--------------------------", help=" ", options=" ", order=8 /> divider4="";
+</ label="배경화면 색상 (레이아웃1)", help="레이아웃1의 배경화면 색상을 선택합니다.", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,none", order=11 /> enable_static_bkg1="gray";
+</ label="배경화면 색상 (레이아웃2)", help="레이아웃2의 배경화면 색상을 선택합니다.", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,none", order=12 /> enable_static_bkg2="blue";
+</ label="배경화면 색상 (레이아웃3)", help="레이아웃3의 배경화면 색상을 선택합니다.", options="blue,blue2,gray,gray2,green,green2,orange,red,pink,purple,purple2,retro,user1,user2,user3,none", order=13 /> enable_static_bkg3="red";
+</ label="배경화면 마스크", help="medium 과 dark 중에 선택하거나, 끌 수 있습니다.", options="dark,medium,none", order=14 /> enable_mask="dark";
+</ label="배경화면 추가 도안", help="배경화면에 추가로 표시할 항목을 선택합니다. (플라이어/팬아트/스냅샷/동영상/표시안함)", options="flyer,fanart,snap,video,none", order=15 /> enable_bg_art="flyer";
+</ label="--------------------------", help=" ", options=" ", order=16 /> divider4="";
 //-----------------------------------------------------------------
-</ label="마키 아트웍", help="마퀴 타입을 선택하세요. 커스텀 마키 파일명: ''my-own-marquee.jpg''", options="marquee,emulator-name,my-own", order=9 /> marquee_type="marquee"; 
- 
-</ label="--------------------------", help=" ", options=" ", order=10 /> divider5="";
-//-----------------------------------------------------------------
-</ label="LCD 우측 표시항목", help="표시할 항목을 선택하세요.", options="filter, emulator, display-name, rom-filename, off,", order=11 /> lcdRight="filter"; 
-
-</ label="--------------------------", help=" ", options=" ", order=12 /> divider6="";
-//-----------------------------------------------------------------
-</ label="스핀휠 아트웍", help="marquee, wheel, listbox 중에 선택하세요.", options="marquee,wheel,listbox", order=13 /> spinwheelArt="listbox";
-</ label="스핀휠 전환시간", help="시간 단위는 ms 입니다.", order=14 /> transition_ms="80";
-   
-</ label="--------------------------", help=" ", options=" ", order=15 /> divider7="";
-//-----------------------------------------------------------------
-</ label="배경 아트",   help="플라이어, 팬아트, 스크린샷, 비디오 중에서 배경에 표시할 항목을 선택하세요.", options="flyer,fanart,snap,video,none", order=16 /> enable_bg_art="flyer";
-</ label="배경 이미지", help="배경 이미지를 선택하세요.", options="black,gray,red,orange,green,cyan,blue,purple,violet,none", order=17 /> enable_static_bkg="blue";
-</ label="배경 마스크", help="medium 또는 dark 로 배경 마스크를 선택하세요.", options="dark,medium", order=18 /> enable_mask="dark";
-
-</ label="--------------------------", help=" ", options=" ", order=19 /> divider8="";
-//-----------------------------------------------------------------
-</ label="캐릭터 표시방식", help="디스플레이 이름별 (By Display), 또는 게임 파일별 (By Game) 중에서 표시방식을 선택하세요.", options="By Display,By Game,None", order=20 /> select_character="By Display";
-</ label="캐릭터 번호", help="캐릭터 표시방식이 디스플레이 이름별 (By Display) 인 경우에만 동작합니다. 캐릭터 번호를 선택하세요.", options="01,02,03", order=21 /> select_character_no="01";
-</ label="캐릭터 투명도", help="0 (투명) 에서 254 (불투명) 사이의 값을 입력하세요.", options="", order=22 /> select_Alpha="254";
-
-</ label="--------------------------", help=" ", options=" ", order=23 /> divider9="";
-//-----------------------------------------------------------------
-</ label="조작키 안내", help="조작키 안내를 선택하세요.", options="Arcade,XBOX360,PS Pad,Keyboard,off", order=24 /> select_Keyinfo="XBOX360";
-
-</ label="--------------------------", help=" ", options=" ", order=25 /> divider10="";
-//-----------------------------------------------------------------
+</ label="게임 캐릭터 이미지 표시방식 지정", help="디스플레이 이름별로, 또는 게임 파일명별로 표시해줄 수 있습니다.", options="By Display,By Game,None", order=17 /> select_character="By Display";
+</ label="게임 캐릭터 이미지 선택", help="이 옵션은 게임 캐릭터 표시방식을 디스플레이 이름별(By Display)로 선택했을때만 동작합니다. 번호를 선택하세요.", options="01,02,03", order=18 /> select_character_no="01";
+</ label="게임 캐릭터 이미지 투명도 (0~254)", help="투명도를 지정해줄 수 있습니다. 0에 가까울수록 투명해집니다.", options="", order=19 /> select_Alpha3="254";
+</ label="조작키 안내", help="조작키 설명 이미지를 표시할 수 있습니다.", options="Arcade,XBOX360,PS Pad,Keyboard,off", order=20 /> select_Keyinfo="XBOX360";
 }  
 
 
 local my_config = fe.get_config();
 
-fe.layout.font=my_config["select_font"];
-
-
 fe.load_module( "fade" );
 fe.load_module( "animate" );
 fe.load_module( "pan-and-scan" );
+fe.layout.font=my_config["select_font1"];
 
 local blip = fe.layout.height;
 local flx = fe.layout.width;
@@ -90,18 +68,10 @@ local fly = fe.layout.height;
 local flw = fe.layout.width;
 local flh = fe.layout.height;
 
-
 //fe.layout.width = 1920;
 //fe.layout.height = 1080;
 
-
-
-
-
-
 //coordinates table for different screen aspects -------------------------- START
-
-
 
 local settings = {
    "default": {
@@ -121,6 +91,21 @@ local settings = {
 
         wheelNumElements = 10 }
    },
+    "21x9": {
+      aspectDepend = { 
+        res_x = 1920,
+        res_y = 1080,
+
+        maskFactor = 1.9,
+
+        snap_skewX = 62.5, 
+        snap_skewY = -12.9, 
+        snap_pinchX = 0, 
+        snap_pinchY = 40.0, 
+        snap_rotation = 1.0, 
+
+        wheelNumElements = 8 }
+   },
    "16x10": {
       aspectDepend = { 
         res_x = 1920,
@@ -138,8 +123,8 @@ local settings = {
    },
     "16x9": {
       aspectDepend = { 
-        res_x = 2133,
-        res_y = 1200,
+        res_x = 1920,
+        res_y = 1080,
 
         maskFactor = 1.9,
 
@@ -184,13 +169,14 @@ local settings = {
 }
 
 
-
-
 local aspect = fe.layout.width / fe.layout.height.tofloat();
 print (aspect);
 local aspect_name = "";
 switch( aspect.tostring() )
 {
+    case "2.37037":
+        aspect_name = "21x9";
+        break;
     case "1.77865":  //for 1366x768 screen
     case "1.77778":  //for any other 16x9 resolution
         aspect_name = "16x9";
@@ -228,8 +214,6 @@ function Setting( id, name )
 }
 
 
-
-
 fe.layout.width = Setting("aspectDepend", "res_x");
 fe.layout.height = Setting("aspectDepend", "res_y");
 
@@ -247,12 +231,6 @@ local mask_factor = Setting("aspectDepend", "maskFactor");
 
 
 
-
-
-
-
-
-
 // mute audio variable - definable via user config ------------------------ START
 
 if ( my_config["mute_videoSnaps"] == "yes") 
@@ -267,38 +245,22 @@ if ( my_config["mute_videoSnaps"] == "no")
 // mute audio variable - definable via user config ------------------------ END
 
 
-
-
-
-
-
 // default background image (if background art is not enabled) ------------- START
 
-// if ( my_config["enable_static_bkg"] == "blue") 
-// {
-//  local bg = fe.add_image( "background_blue.png", 0, 0, flw, flh );
-// }
-// if ( my_config["enable_static_bkg"] == "black")
-// {
-//  local bg = fe.add_image( "background_black.png", 0, 0, flw, flh );
-// }
-if ( my_config["enable_static_bkg"] == "none") 
+if ( my_config["enable_static_bkg1"] == "none") 
 {
  local bg = fe.add_image( "", 0, 0, flw, flh );
 }
 
-local bgArt1 = fe.add_image("background_" + my_config["enable_static_bkg"] + ".png", 0, 0, flw, flh );
-local bgArt2 = fe.add_clone(bgArt1);
+local bgArt = fe.add_image("bg_" + my_config["enable_static_bkg1"] + ".png", 0, 0, flw, flh );
+local bgArt2 = fe.add_clone(bgArt);
 
-animation.add( PropertyAnimation( bgArt1, {when = Transition.StartLayout, property = "x", start =   0, end = -flw, time = 28000, loop=true}));
-animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, property = "x", start = flw, end =    0, time = 28000, loop=true}));			
-// animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
+animation.add( PropertyAnimation( bgArt, {when = Transition.StartLayout, property = "x", start = 0, end = -flw, time = 28000, loop=true}));
+animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, property = "x", start = flw, end = 0, time = 28000, loop=true}));			
+animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
+
 
 // default background image (if background art is not enabled) ------------- END
-
-
-
-
 
 
 
@@ -306,7 +268,7 @@ animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, proper
 
 if ( my_config["enable_bg_art"] == "flyer") 
 {
-//  local bgart = fe.add_artwork( "flyer", flw*0.2, flw*0, flw*0.6, 0);
+// local bgart = fe.add_artwork( "flyer", flw*0.2, 0, flw*0.6, flh);
  local bgart = PanAndScanArt( "flyer", flw*0.2, 0, flw*0.6, flh);
  bgart.preserve_aspect_ratio = true;
  local mask = fe.add_image( "mask_edges.png", 0 , 0, mask_factor*flh, flh );  //gradient to mask left and right edge of the flyer 1.6 for 4:3 and 16:10  1.9 for 16:9
@@ -324,9 +286,8 @@ if ( my_config["enable_bg_art"] == "flyer")
      when = Transition.ToNewSelection, property = "alpha", start = 0, end = 240, time = 1500
  }
  animation.add( PropertyAnimation( bgart, alpha_cfg ) );
+
 }
-
-
 
 if ( my_config["enable_bg_art"] == "fanart") 
 {
@@ -337,15 +298,12 @@ if ( my_config["enable_bg_art"] == "fanart")
  //mask.alpha = 255;
 }
 
-
-
 if ( my_config["enable_bg_art"] == "snap") 
 {
  local bgart = fe.add_artwork( "snap", flx-flh*1.34, 0, flh*1.34, 0);
  bgart.preserve_aspect_ratio = true;
  bgart.video_flags=Vid.ImagesOnly;
 }
-
 
 
 if ( my_config["enable_bg_art"] == "video") 
@@ -356,10 +314,8 @@ if ( my_config["enable_bg_art"] == "video")
 }
 
 
+
 // background art --------------------------------------------------------- END
-
-
-
 
 
 
@@ -375,7 +331,7 @@ if ( my_config["enable_mask"] == "medium" )
 {
 local masking = fe.add_image( "background_mask.png", 0, 0, flx, fly );
 masking.preserve_aspect_ratio = false;
-masking.alpha = 150;           // here you can change mask opacity light=100, medium=150, dark (default)=255
+masking.alpha = 250;           // here you can change mask opacity light=100, medium=150, dark (default)=255
 local maskingMedium = fe.add_image( "background_mask_medium.png", 0, 0, flx, fly );
 maskingMedium.preserve_aspect_ratio = false;
 }
@@ -391,11 +347,6 @@ masking.alpha = 255;           // here you can change mask opacity light=100, me
 //masking background (adding scanlines and vignette) -------------------- END
 
 
-
-
-
-
-
 //static tv effect on cab screen snap change (of if no snap at all) ------------- START
 
 local tvStatic = fe.add_image( "static.jpg", blip*0.0984, blip*0.24, blip*0.405, blip*0.3536);
@@ -404,8 +355,6 @@ tvStatic.skew_y = Setting("aspectDepend", "snap_skewY");
 tvStatic.pinch_x = Setting("aspectDepend", "snap_pinchX");
 tvStatic.pinch_y = Setting("aspectDepend", "snap_pinchY");
 tvStatic.rotation = Setting("aspectDepend", "snap_rotation");
-
-
 
 
 
@@ -426,8 +375,6 @@ if ( my_config["cabScreenType"] == "screenshot" )
 {
 cabScreen.video_flags=Vid.ImagesOnly;
 }
-
-
 
 
 
@@ -535,18 +482,9 @@ myOwnMarquee.preserve_aspect_ratio = false;
 }
 
 
-
-
-
-
 //cabinet image -------------------------------------- START
 local cab = fe.add_image( "cab_body.png", 0, 0, blip*0.992, blip*1.008);
 cab.preserve_aspect_ratio = true;
-
-
-
-
-
 
 
 //LCD display text under cab screen ------------------------------------------------ START
@@ -556,7 +494,6 @@ lcdLeftText.set_rgb( 59, 45, 3 );
 lcdLeftText.align = Align.Left;  
 lcdLeftText.rotation = -6.5;
 lcdLeftText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
-
 
 
 if ( my_config["lcdRight"] == "filter" )
@@ -610,7 +547,6 @@ lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can b
 
 //LCD display text --------------------------------------------------------- END
 
- 
 
 
 //게임 개발사 로고표시 ----------------------------------------------------------- START
@@ -638,13 +574,13 @@ titleText.align = Align.Left;
 titleText.set_rgb(170,220,240);
 titleText.font = "NanumBarunGothicBold";
 
-//게임 개발사 로고표시 -------------------------------------------------------END
+
+//게임 개발사 로고표시 -------------------------------------------------------END 
 
 
 
 
 // SpinWheel -------------------------- START - this part is slightly modified code from omegaman's ROBOSPIN theme
-
  
 fe.load_module( "conveyor" );
 local wheel_x = [ flx*0.87, flx*0.79, flx*0.765, flx*0.745, flx*0.73, flx*0.72, flx*0.67, flx*0.72, flx*0.73, flx*0.745, flx*0.765, flx*0.79, ]; 
@@ -661,14 +597,14 @@ local num_arts = Setting("aspectDepend", "wheelNumElements");  // number of elem
 if ( my_config["spinwheelArt"] == "listbox" )
 {
 // 게임 리스트 배경
-local listbg = fe.add_image("list_bg_34.png",flw*0.53125, flh*0.0185185, flw*0.453125, flh*0.96852 );
+local listbg = fe.add_artwork("list_bg.png",flw*0.53125, flh*0.0185185, flw*0.453125, flh*0.96852 );
 listbg.alpha = 150;
 
-// 게임 캐릭터 이미지 표시 (권장 이미지 사이즈: 480x760)
+// 게임 캐릭터 이미지 표시 (기본 이미지 사이즈: 480x760)
 if ( my_config["select_character"] == "By Display" )
 {
 	local mascot = fe.add_image ("Display/[DisplayName]" + "_character_" + my_config["select_character_no"] +".png",1440, 200, 480, 760);
-	mascot.alpha = abs(("0"+my_config["select_Alpha"]).tointeger()) % 255;;
+	mascot.alpha = abs(("0"+my_config["select_Alpha3"]).tointeger()) % 255;;
 	mascot.preserve_aspect_ratio = true;
 }
 
@@ -678,18 +614,20 @@ if ( my_config["select_character"] == "By Game" )
  effect = fe.add_artwork( "character", 1440, 200, 480, 760 ),
 }
 
-local move_effect1 = {
-when = Transition.ToNewSelection, property = "alpha", start = 80, end = 255, time = 700
-}
-animation.add( PropertyAnimation( OBJECTS.effect, move_effect1 ) );
-OBJECTS.effect.trigger = Transition.EndNavigation;
-}
+  local move_effect1 = {
+ 	when = Transition.ToNewSelection, property = "alpha", start = 80, end = 255, time = 700
+ }
+ animation.add( PropertyAnimation( OBJECTS.effect, move_effect1 ) );
+ OBJECTS.effect.trigger = Transition.EndNavigation;
+ }
+
 
 // 에뮬 디스플레이 타이틀
 local displayName = fe.add_image ("Display/[DisplayName]",flw*0.56771, flh*0.02222, flw*0.3906, flh*0.1852);
 
 // 게임선택 박스
 fe.add_image("box.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
+
 
 // 리스트 게임번호 그림자
 local listbox1b = fe.add_listbox( flw*0.541666667,flh*0.2064815, flw*0.1796875, flh*0.6759259 );
@@ -737,14 +675,12 @@ listbox2.format_string = "[!gamename]";
   return "";
 }
 
-
-
 // 시계
-local clockbtext = fe.add_text( "현재시각:", flw*0.515625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
+local clockbtext = fe.add_text( "TIME:", flw*0.515625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
 clockbtext.set_rgb( 0, 0, 0 );
 clockbtext.charsize = 36;
 
-local clocktext = fe.add_text( "현재시각:", flw*0.5140625, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
+local clocktext = fe.add_text( "TIME:", flw*0.5140625, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
 clocktext.set_rgb( 211, 250, 255 );
 clocktext.charsize = 36;
 
@@ -761,12 +697,9 @@ clock.set_rgb( 73, 223, 222 );
 function update_clock( ttime ){
   local now = date();
   clockb.msg = format("%02d", now.hour) + ":" + format("%02d", now.min );
-  clock.msg  = format("%02d", now.hour) + ":" + format("%02d", now.min );
+  clock.msg = format("%02d", now.hour) + ":" + format("%02d", now.min );
 }
-
-fe.add_ticks_callback( this, "update_clock" );
-
-
+  fe.add_ticks_callback( this, "update_clock" );
 
 // 즐겨찾기 필터
 local listtextb = fe.add_text( "[!filter] 게임:", flw*0.708333333, flh*0.92962963, flw*0.234375, flh*0.042592593 );
@@ -780,59 +713,59 @@ listtext.charsize = 36;
 listtext.align = Align.Left;
 
 // Change filter name to upper case
-function filter(){
-local text = fe.filters[fe.list.filter_index].name;
+ function filter(){
+	local text = fe.filters[fe.list.filter_index].name;
 
-              if (text == "All")
-              text = "모든"
+                if (text == "All")
+                text = "모든"
 
-              if (text == "Favourites")
-              text = "즐겨찾는"
-      
-      if (text == "Fighting")
-              text = "격투"
-      
-      if (text == "GunShooting")
-              text = "건슈팅"
-      
-      if (text == "Racing")
-              text = "레이싱"
-      
-      if (text == "Rhythm")
-              text = "리듬"
-      
-      if (text == "Board")
-              text = "보드"
-      
-      if (text == "Shooting")
-              text = "슈팅"
-      
-      if (text == "Arcade")
-              text = "아케이드"
-      
-      if (text == "Action")
-              text = "액션"
-      
-      if (text == "Quiz")
-              text = "퀴즈"
-      
-      if (text == "Puzzle")
-              text = "퍼즐"
-      
-      if (text == "1980s")
-              text = "80년대"
-      
-      if (text == "1990s")
-              text = "90년대"
-      
-      if (text == "2000s")
-              text = "2000년대"
-      
-      if (text == "2010s")
-              text = "2010년대"
-  
-  return text.toupper();
-}
+                if (text == "Favourites")
+                text = "즐겨찾는"
+				
+				if (text == "Fighting")
+                text = "격투"
+				
+				if (text == "GunShooting")
+                text = "건슈팅"
+				
+				if (text == "Racing")
+                text = "레이싱"
+				
+				if (text == "Rhythm")
+                text = "리듬"
+				
+				if (text == "Board")
+                text = "보드"
+				
+				if (text == "Shooting")
+                text = "슈팅"
+				
+				if (text == "Arcade")
+                text = "아케이드"
+				
+				if (text == "Action")
+                text = "액션"
+				
+				if (text == "Quiz")
+                text = "퀴즈"
+				
+				if (text == "Puzzle")
+                text = "퍼즐"
+				
+				if (text == "1980s")
+                text = "80년대"
+				
+				if (text == "1990s")
+                text = "90년대"
+				
+				if (text == "2000s")
+                text = "2000년대"
+				
+				if (text == "2010s")
+                text = "2010년대"
+		
+		return text.toupper();
+ }
 
 local listb = fe.add_text("[ListSize]", flw*0.9140625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
 listb.set_rgb( 0, 0, 0 );
@@ -843,61 +776,7 @@ local list = fe.add_text( "[ListSize]", flw*0.9125, flh*0.926851852, flw*0.10416
 list.set_rgb( 73, 223, 222 );
 list.charsize=36;
 list.align = Align.Left;
-
-
-
-// 즐겨찾기 아이콘 표시
-function getFavs(index_offset){
-  if(fe.game_info( Info.Favourite, index_offset ) == "1") return "fav.png";
-  else return "";
 }
-
-local romFav = fe.add_image(getFavs(0), flw*0.5, flh*0.5185, flw*0.03125, flh*0.0555 );
-
-fe.add_transition_callback( "update_my_list" );
-
-function update_my_list( ttype, var, ttime )
-{
-    if(ttype == Transition.ToNewSelection){
-        romFav.file_name = getFavs(var);
-    }
-    return false;
-}
-}
-
-
-// 즐겨찾기 아이콘 표시
-if ( my_config["spinwheelArt"] != "listbox" )
-{
-function getFavs(index_offset){
-  if(fe.game_info( Info.Favourite, index_offset ) == "1") return "fav.png";
-  else return "";
-}
-local romFav = fe.add_image(getFavs(0), flx*0.312, fly*0.40, flw*0.03125, flh*0.0555 );
-
-fe.add_transition_callback( "update_my_list" );
-function update_my_list( ttype, var, ttime )
-{
-    if(ttype == Transition.ToNewSelection){
-        romFav.file_name = getFavs(var);
-    }
-    return false;
-}
-}
-
-
-fe.add_signal_handler( "updateFavs" );
-function updateFavs( signal_str )
-{
-    if(signal_str == "add_favourite"){
-        if(romFav.file_name != "") romFav.file_name = "";
-        else romFav.file_name = "fav.png";
-    }
-}
-
-
-// 조작키 안내
-fe.add_image("key_" + my_config["select_Keyinfo"] + ".png", flw*0.01823, flh*0.9167, flw*0.4948, flh*0.07037 );
 
 
 class WheelEntry extends ConveyorSlot
@@ -945,3 +824,54 @@ local conveyor = Conveyor();
 conveyor.set_slots( wheel_entries );
 conveyor.transition_ms = 50;
 try { conveyor.transition_ms = my_config["transition_ms"].tointeger(); } catch ( e ) { }
+
+
+
+// 즐겨찾기 아이콘 표시
+if ( my_config["spinwheelArt"] == "listbox" )
+{
+function getFavs(index_offset){
+  if(fe.game_info( Info.Favourite, index_offset ) == "1") return "fav.png";
+  else return "";
+}
+local romFav = fe.add_image(getFavs(0), flw*0.5, flh*0.5185, flw*0.03125, flh*0.0555 );
+
+fe.add_transition_callback( "update_my_list" );
+function update_my_list( ttype, var, ttime )
+{
+    if(ttype == Transition.ToNewSelection){
+        romFav.file_name = getFavs(var);
+    }
+    return false;
+}
+}
+
+if ( my_config["spinwheelArt"] != "listbox" )
+{
+function getFavs(index_offset){
+  if(fe.game_info( Info.Favourite, index_offset ) == "1") return "fav.png";
+  else return "";
+}
+local romFav = fe.add_image(getFavs(0), flx*0.312, fly*0.40, flw*0.03125, flh*0.0555 );
+
+fe.add_transition_callback( "update_my_list" );
+function update_my_list( ttype, var, ttime )
+{
+    if(ttype == Transition.ToNewSelection){
+        romFav.file_name = getFavs(var);
+    }
+    return false;
+}
+}
+
+fe.add_signal_handler( "updateFavs" );
+function updateFavs( signal_str )
+{
+    if(signal_str == "add_favourite"){
+        if(romFav.file_name != "") romFav.file_name = "";
+        else romFav.file_name = "fav.png";
+    }
+}
+
+// 조작키 안내
+fe.add_image("key_" + my_config["select_Keyinfo"] + ".png", flw*0.01823, flh*0.9167, flw*0.4948, flh*0.07037 );
