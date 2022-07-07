@@ -82,6 +82,7 @@ fe.layout.font=my_config["select_font"];
 
 fe.load_module( "fade" );
 fe.load_module( "animate" );
+fe.load_module( "pan-and-scan" );
 
 local blip = fe.layout.height;
 local flx = fe.layout.width;
@@ -305,10 +306,24 @@ animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, proper
 
 if ( my_config["enable_bg_art"] == "flyer") 
 {
- local bgart = fe.add_artwork( "flyer", flw*0.2, flw*0, flw*0.6, 0);
+//  local bgart = fe.add_artwork( "flyer", flw*0.2, flw*0, flw*0.6, 0);
+ local bgart = PanAndScanArt( "flyer", flw*0.2, 0, flw*0.6, flh);
  bgart.preserve_aspect_ratio = true;
  local mask = fe.add_image( "mask_edges.png", 0 , 0, mask_factor*flh, flh );  //gradient to mask left and right edge of the flyer 1.6 for 4:3 and 16:10  1.9 for 16:9
  mask.preserve_aspect_ratio = false;
+
+ bgart.trigger = Transition.EndNavigation;
+ bgart.set_fit_or_fill("fill");
+ bgart.set_anchor(::Anchor.Center);
+ bgart.set_zoom(4.5, 0.00008);
+ bgart.set_animate(::AnimateType.Bounce, 0.50, 0.50);
+
+ bgart.set_randomize_on_transition(true);
+ bgart.set_start_scale(1.1);
+ local alpha_cfg = {
+     when = Transition.ToNewSelection, property = "alpha", start = 0, end = 240, time = 1500
+ }
+ animation.add( PropertyAnimation( bgart, alpha_cfg ) );
 }
 
 
@@ -465,7 +480,7 @@ scanlines.alpha = 200;
 
 if ( my_config["marquee_type"] == "marquee" )
 {
-local marqueeBkg = fe.add_image("black.png", blip*0.1032, blip*0.0763, blip*0.3984, blip*0.1349 );
+local marqueeBkg = fe.add_image("[marquee]", blip*0.1032, blip*0.0763, blip*0.3984, blip*0.1349 );
 marqueeBkg.skew_x = Setting("aspectDepend", "marquee_skewX");
 marqueeBkg.skew_y = Setting("aspectDepend", "marquee_skewY");
 marqueeBkg.pinch_x = Setting("aspectDepend", "marquee_pinchX");
@@ -536,7 +551,7 @@ cab.preserve_aspect_ratio = true;
 
 //LCD display text under cab screen ------------------------------------------------ START
 
-local lcdLeftText = fe.add_text( "PLAYED: " + "[PlayedCount]", blip*0.1536, blip*0.6208, blip*0.48, blip*0.04 );  // here you can change what is displayed on left side
+local lcdLeftText = fe.add_text( "PLAYED: " + "[PlayedCount]", blip*0.1536, blip*0.6108, blip*0.48, blip*0.04 );  // here you can change what is displayed on left side
 lcdLeftText.set_rgb( 59, 45, 3 );
 lcdLeftText.align = Align.Left;  
 lcdLeftText.rotation = -6.5;
@@ -546,7 +561,7 @@ lcdLeftText.font="digital-7 (italic)";  // free font (for personal use) - can be
 
 if ( my_config["lcdRight"] == "filter" )
 {
-local lcdRightText = fe.add_text( "[FilterName]", blip*0.1584, blip*0.6208, blip*0.4, blip*0.04 );
+local lcdRightText = fe.add_text( "[FilterName]", blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
 lcdRightText.set_rgb( 59, 45, 3 );
 lcdRightText.align = Align.Right;
 lcdRightText.rotation = -6.6;
@@ -556,7 +571,7 @@ lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can b
 
 if ( my_config["lcdRight"] == "rom-filename" )
 {
-local lcdRightText = fe.add_text( "[Name]", blip*0.1584, blip*0.6208, blip*0.4, blip*0.04 );
+local lcdRightText = fe.add_text( "[Name]", blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
 lcdRightText.set_rgb( 59, 45, 3 );
 lcdRightText.align = Align.Right;
 lcdRightText.rotation = -6.6;
@@ -566,7 +581,7 @@ lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can b
 
 if ( my_config["lcdRight"] == "display-name" )
 {
-local lcdRightText = fe.add_text( "[DisplayName]", blip*0.1584, blip*0.6208, blip*0.4, blip*0.04 );
+local lcdRightText = fe.add_text( "[DisplayName]", blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
 lcdRightText.set_rgb( 59, 45, 3 );
 lcdRightText.align = Align.Right;
 lcdRightText.rotation = -6.6;
@@ -576,7 +591,7 @@ lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can b
 
 if ( my_config["lcdRight"] == "emulator" )
 {
-local lcdRightText = fe.add_text( "[Emulator]", blip*0.1584, blip*0.6208, blip*0.4, blip*0.04 );
+local lcdRightText = fe.add_text( "[Emulator]", blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
 lcdRightText.set_rgb( 59, 45, 3 );
 lcdRightText.align = Align.Right;
 lcdRightText.rotation = -6.6;
@@ -586,7 +601,7 @@ lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can b
 
 if ( my_config["lcdRight"] == "off" )
 {
-local lcdRightText = fe.add_text( my_config["lcdRightText"], blip*0.1584, blip*0.6208, blip*0.4, blip*0.04 );
+local lcdRightText = fe.add_text( my_config["lcdRightText"], blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
 lcdRightText.set_rgb( 59, 45, 3 );
 lcdRightText.align = Align.Right;
 lcdRightText.rotation = -6.6;
@@ -598,7 +613,32 @@ lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can b
  
 
 
+//게임 개발사 로고표시 ----------------------------------------------------------- START
 
+local dpLogo = fe.add_image( "Logos/[Manufacturer].png", flx*0.31, fly*0.16, flw*0.16, flh*0.12  );
+dpLogo.preserve_aspect_ratio = true;
+
+local move_dp = {
+       when = Transition.ToNewSelection, property = "alpha", start = 0, end = 255, time = 1500
+ }
+ animation.add( PropertyAnimation( dpLogo, move_dp ) );
+
+local titleText = fe.add_text( "[Title]", flx*0.31, fly*0.290, flw*0.6, flh*0.024  );
+titleText.align = Align.Left;
+titleText.set_rgb(255,255,255);
+titleText.font = "NanumBarunGothicBold";
+
+local titleText = fe.add_text( "© [Year] [Manufacturer]", flx*0.31, fly*0.325, flw*0.6, flh*0.0235  );
+titleText.align = Align.Left;
+titleText.set_rgb(170,220,240);
+titleText.font = "NanumBarunGothicBold";
+
+local titleText = fe.add_text( "[Category]", flx*0.312, fly*0.360, flw*0.6, flh*0.0235  );
+titleText.align = Align.Left;
+titleText.set_rgb(170,220,240);
+titleText.font = "NanumBarunGothicBold";
+
+//게임 개발사 로고표시 -------------------------------------------------------END
 
 
 
