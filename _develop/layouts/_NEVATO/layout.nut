@@ -50,7 +50,7 @@ class UserConfig
 
     </ label="--------------------------", help=" ", options=" ", order=12 /> divider6="";
     //-----------------------------------------------------------------
-    </ label="스핀휠 아트웍", help="marquee, wheel, listbox 중에 선택하세요.", options="marquee,wheel,listbox", order=13 /> spinwheelArt="listbox";
+    </ label="스핀휠 아트웍", help="marquee, wheel, listbox 중에 선택하세요.", options="marquee,wheel,list box", order=13 /> spinwheelArt="list box";
     </ label="스핀휠 전환시간", help="시간 단위는 ms 입니다.", order=14 /> transition_ms="80";
     
     </ label="--------------------------", help=" ", options=" ", order=15 /> divider7="";
@@ -739,7 +739,7 @@ titleText.font = "NanumBarunGothicBold";
 
 // 게임 리스트 박스 표시 ------------------------------------------------ START
 
-if ( my_config["spinwheelArt"] == "listbox" )
+if ( my_config["spinwheelArt"] == "list box" )
 {
     // 게임 리스트 배경
     local listbg = fe.add_image("listbox/listbox_34.png",flw*0.53125, flh*0.0185185, flw*0.453125, flh*0.96852 );
