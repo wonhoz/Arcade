@@ -824,6 +824,127 @@ if ( my_config["spinwheelArt"] == "list box" )
         if ( s.len() > 0 ) return s[0];
         return "";
     }
+
+
+    // 시계
+    local clockbtext = fe.add_text( "현재시각:", flw*0.515625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
+    clockbtext.set_rgb( 0, 0, 0 );
+    clockbtext.charsize = 36;
+
+    local clocktext = fe.add_text( "현재시각:", flw*0.5140625, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
+    clocktext.set_rgb( 211, 250, 255 );
+    clocktext.charsize = 36;
+
+    local clockb = fe.add_text( "", flw*0.604166667, flh*0.92962963, flw*0.166666667, flh*0.042592593  );
+    clockb.align = Align.Left;
+    clockb.charsize = 36;
+    clockb.set_rgb( 0, 0, 0 );
+
+    local clock = fe.add_text( "", flw*0.602604167, flh*0.926851852, flw*0.166666667, flh*0.042592593  );
+    clock.align = Align.Left;
+    clock.charsize = 36;
+    clock.set_rgb( 73, 223, 222 );
+
+    function update_clock( ttime )
+    {
+        local now = date();
+        clockb.msg = format("%02d", now.hour) + ":" + format("%02d", now.min );
+        clock.msg  = format("%02d", now.hour) + ":" + format("%02d", now.min );
+    }
+
+    fe.add_ticks_callback( this, "update_clock" );
+
+
+    // 즐겨찾기 필터
+    local listtextb = fe.add_text( "[!filter] 게임:", flw*0.708333333, flh*0.92962963, flw*0.234375, flh*0.042592593 );
+    listtextb.set_rgb( 208, 56, 0 );
+    listtextb.charsize = 36;
+    listtextb.align = Align.Left;
+
+    local listtext = fe.add_text( "[!filter] 게임:", flw*0.706770833, flh*0.926851852, flw*0.234375, flh*0.042592593 );
+    listtext.set_rgb( 255 243, 20 );
+    listtext.charsize = 36;
+    listtext.align = Align.Left;
+
+    // Change filter name to upper case
+    function filter()
+    {
+        local text = fe.filters[fe.list.filter_index].name;
+
+        switch( text )
+        {
+            case "All"        : text = "모든"     break;
+            case "Favourites" : text = "즐겨찾는" break;
+            case "Fighting"   : text = "격투"     break;
+            case "GunShooting": text = "건슈팅"   break;
+            case "Racing"     : text = "레이싱"   break;
+            case "Rhythm"     : text = "리듬"     break;
+            case "Board"      : text = "보드"     break;
+            case "Shooting"   : text = "슈팅"     break;
+            case "Arcade"     : text = "아케이드" break;
+            case "Action"     : text = "액션"     break;
+            case "Quiz"       : text = "퀴즈"     break;
+            case "Puzzle"     : text = "퍼즐"     break;
+            case "1980s"      : text = "80년대"   break;
+            case "1990s"      : text = "90년대"   break;
+            case "2000s"      : text = "2000년대" break;
+            case "2010s"      : text = "2010년대" break;
+        }
+    
+        return text.toupper();
+    }
+
+    local listb = fe.add_text("[ListSize]", flw*0.9140625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
+    listb.set_rgb( 0, 0, 0 );
+    listb.charsize=36;
+    listb.align = Align.Left;
+
+    local list = fe.add_text( "[ListSize]", flw*0.9125, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
+    list.set_rgb( 73, 223, 222 );
+    list.charsize=36;
+    list.align = Align.Left;
 }
 
 // 게임 리스트 박스 표시 --------------------------------------------------------- END
+
+
+
+
+
+
+// 즐겨찾기 아이콘 표시 ------------------------------------------------ START
+
+local romFav;
+
+if ( my_config["spinwheelArt"] == "list box" )
+{
+    romFav = fe.add_image(getFavs(0), flw*0.5, flh*0.5185, flw*0.03125, flh*0.0555 );
+}
+else
+{
+    romFav = fe.add_image(getFavs(0), flx*0.312, fly*0.40, flw*0.03125, flh*0.0555 );
+}
+
+function getFavs(index_offset)
+{
+    if(fe.game_info( Info.Favourite, index_offset ) == "1") return "fav.png";
+    else return "";
+}
+
+fe.add_transition_callback( "update_my_list" );
+function update_my_list( ttype, var, ttime )
+{
+    if(ttype == Transition.ToNewSelection)
+    {
+        romFav.file_name = getFavs(var);
+    }
+    return false;
+}
+
+// 즐겨찾기 아이콘 표시 --------------------------------------------------------- END
+
+
+
+
+// 조작키 안내
+fe.add_image("key/" + my_config["select_keyinfo"] + ".png", flw*0.01823, flh*0.9167, flw*0.4948, flh*0.07037 );
