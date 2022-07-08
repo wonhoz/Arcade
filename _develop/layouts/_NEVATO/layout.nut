@@ -314,3 +314,319 @@ switch( my_config["bg_media"] )
         break;
 }
 
+// default background image (if background art is not enabled) ------------- END
+
+
+
+
+
+
+
+// background art --------------------------------------------------------- START
+
+if ( my_config["bg_art"] == "flyer") 
+{
+    //  local bgart = fe.add_artwork( "flyer", flw*0.2, flw*0, flw*0.6, 0);
+    local bgart = PanAndScanArt( "flyer", flw*0.2, 0, flw*0.6, flh);
+    bgart.preserve_aspect_ratio = true;
+    local mask = fe.add_image( "mask_edges.png", 0 , 0, mask_factor*flh, flh );  //gradient to mask left and right edge of the flyer 1.6 for 4:3 and 16:10  1.9 for 16:9
+    mask.preserve_aspect_ratio = false;
+
+    bgart.trigger = Transition.EndNavigation;
+    bgart.set_fit_or_fill("fill");
+    bgart.set_anchor(::Anchor.Center);
+    bgart.set_zoom(4.5, 0.00008);
+    bgart.set_animate(::AnimateType.Bounce, 0.50, 0.50);
+
+    bgart.set_randomize_on_transition(true);
+    bgart.set_start_scale(1.1);
+    local alpha_cfg = {
+        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 240, time = 1500
+    }
+    animation.add( PropertyAnimation( bgart, alpha_cfg ) );
+}
+
+
+
+if ( my_config["bg_art"] == "fanart") 
+{
+    local bgart = FadeArt( "fanart", 0, 0, 0, flh);
+    bgart.preserve_aspect_ratio = true;
+    local mask = fe.add_image( "mask_edges.png", 0 , 0, mask_factor*flh, flh );  //gradient to mask left and right edge of the flyer
+    mask.preserve_aspect_ratio = false;
+    //mask.alpha = 255;
+}
+
+
+
+if ( my_config["bg_art"] == "snap") 
+{
+    local bgart = fe.add_artwork( "snap", flx-flh*1.34, 0, flh*1.34, 0);
+    bgart.preserve_aspect_ratio = true;
+    bgart.video_flags=Vid.ImagesOnly;
+}
+
+
+
+if ( my_config["bg_art"] == "video") 
+{
+    local bgart = fe.add_artwork( "snap", flx-flh*1.34, 0, flh*1.34, 0);
+    bgart.preserve_aspect_ratio = true;
+    bgart.video_flags = videoSound;
+}
+
+
+// background art --------------------------------------------------------- END
+
+
+
+
+
+
+//masking background (adding scanlines and vignette) -------------------- START
+
+if ( my_config["bg_mask"] == "none" )
+{
+    local masking = fe.add_image( "", 0, 0, flw, 0 );
+}
+
+
+if ( my_config["bg_mask"] == "medium" )
+{
+    local masking = fe.add_image( "background_mask.png", 0, 0, flx, fly );
+    masking.preserve_aspect_ratio = false;
+    masking.alpha = 150;           // here you can change mask opacity light=100, medium=150, dark (default)=255
+    local maskingMedium = fe.add_image( "background_mask_medium.png", 0, 0, flx, fly );
+    maskingMedium.preserve_aspect_ratio = false;
+}
+
+
+if ( my_config["bg_mask"] == "dark" )
+{
+    local masking = fe.add_image( "background_mask.png", 0, 0, flx,fly);   //for 4:3 fix 1.6*fly
+    masking.preserve_aspect_ratio = false;
+    masking.alpha = 255;           // here you can change mask opacity light=100, medium=150, dark (default)=255
+}
+
+//masking background (adding scanlines and vignette) -------------------- END
+
+
+
+
+
+
+
+//static tv effect on cab screen snap change (of if no snap at all) ------------- START
+
+local tvStatic = fe.add_image( "static.jpg", blip*0.0984, blip*0.24, blip*0.405, blip*0.3536);
+tvStatic.skew_x = Setting("aspectDepend", "snap_skewX");
+tvStatic.skew_y = Setting("aspectDepend", "snap_skewY");
+tvStatic.pinch_x = Setting("aspectDepend", "snap_pinchX");
+tvStatic.pinch_y = Setting("aspectDepend", "snap_pinchY");
+tvStatic.rotation = Setting("aspectDepend", "snap_rotation");
+
+
+
+
+
+//snap (video or screenshot) on cab screen ------------- START
+
+local cabScreen = fe.add_artwork ("snap", blip*0.0984, blip*0.24, blip*0.405, blip*0.3536);
+cabScreen.skew_x = Setting("aspectDepend", "snap_skewX");
+cabScreen.skew_y = Setting("aspectDepend", "snap_skewY");
+cabScreen.pinch_x = Setting("aspectDepend", "snap_pinchX");
+cabScreen.pinch_y = Setting("aspectDepend", "snap_pinchY");
+cabScreen.rotation = Setting("aspectDepend", "snap_rotation");
+cabScreen.trigger = Transition.EndNavigation;
+cabScreen.preserve_aspect_ratio = false;
+
+cabScreen.video_flags = videoSound;
+
+if ( my_config["cabScreenType"] == "screenshot" )
+{
+    cabScreen.video_flags=Vid.ImagesOnly;
+}
+
+
+
+
+
+//scanlines over cab screen --------------------------- START
+
+if ( my_config["enable_scanlines"] == "light" )
+{
+    local scanlines = fe.add_image( "scanlines.png", blip*0.0984, blip*0.24, blip*0.405, blip*0.3536 );
+    scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
+    scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
+    scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
+    scanlines.pinch_y = Setting("aspectDepend", "snap_pinchY");
+    scanlines.rotation = Setting("aspectDepend", "snap_rotation");
+    scanlines.preserve_aspect_ratio = false;
+    scanlines.alpha = 50;
+}
+
+if ( my_config["enable_scanlines"] == "medium" )
+{
+    local scanlines = fe.add_image( "scanlines.png", blip*0.0984, blip*0.24, blip*0.405, blip*0.3536 );
+    scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
+    scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
+    scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
+    scanlines.pinch_y = Setting("aspectDepend", "snap_pinchY");
+    scanlines.rotation = Setting("aspectDepend", "snap_rotation");
+    scanlines.preserve_aspect_ratio = false;
+    scanlines.alpha = 150;
+}
+
+if ( my_config["enable_scanlines"] == "dark" )
+{
+    local scanlines = fe.add_image( "scanlines.png", blip*0.0984, blip*0.24, blip*0.405, blip*0.3536 );
+    scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
+    scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
+    scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
+    scanlines.pinch_y = Setting("aspectDepend", "snap_pinchY");
+    scanlines.rotation = Setting("aspectDepend", "snap_rotation");
+    scanlines.preserve_aspect_ratio = false;
+    scanlines.alpha = 200;
+}
+
+//scanlines over cab screen --------------------------- END
+
+
+
+
+
+
+//marquee  ------------------------------------------ START
+
+if ( my_config["marquee_type"] == "marquee" )
+{
+    local marqueeBkg = fe.add_image("[marquee]", blip*0.1032, blip*0.0763, blip*0.3984, blip*0.1349 );
+    marqueeBkg.skew_x = Setting("aspectDepend", "marquee_skewX");
+    marqueeBkg.skew_y = Setting("aspectDepend", "marquee_skewY");
+    marqueeBkg.pinch_x = Setting("aspectDepend", "marquee_pinchX");
+    marqueeBkg.pinch_y = Setting("aspectDepend", "marquee_pinchY");
+    marqueeBkg.rotation = Setting("aspectDepend", "marquee_rotation");
+    marqueeBkg.trigger = Transition.EndNavigation;
+    marqueeBkg.preserve_aspect_ratio = false;
+
+    local marquee = FadeArt("marquee", blip*0.1032, blip*0.0763, blip*0.3984, blip*0.1349 );
+    marquee.skew_x = Setting("aspectDepend", "marquee_skewX");
+    marquee.skew_y = Setting("aspectDepend", "marquee_skewY");
+    marquee.pinch_x = Setting("aspectDepend", "marquee_pinchX");
+    marquee.pinch_y = Setting("aspectDepend", "marquee_pinchY");
+    marquee.rotation = Setting("aspectDepend", "marquee_rotation");
+    marquee.trigger = Transition.EndNavigation;
+    marquee.preserve_aspect_ratio = false;
+}
+
+//marquee  ------------------------------------------ END
+
+
+
+//marquee (with emulator name)   ---------------------- START
+
+if ( my_config["marquee_type"] == "emulator-name" )
+
+{
+    local emuMarquee = fe.add_image("[Emulator]" + "-marquee.jpg", blip*0.1032, blip*0.0763, blip*0.3984, blip*0.1349 );
+    emuMarquee.skew_x = Setting("aspectDepend", "marquee_skewX");
+    emuMarquee.skew_y = Setting("aspectDepend", "marquee_skewY");
+    emuMarquee.pinch_x = Setting("aspectDepend", "marquee_pinchX");
+    emuMarquee.pinch_y = Setting("aspectDepend", "marquee_pinchY");
+    emuMarquee.rotation = Setting("aspectDepend", "marquee_rotation");
+    emuMarquee.trigger = Transition.EndNavigation;
+    emuMarquee.preserve_aspect_ratio = false;
+}
+
+
+
+//marquee (my own image) ----------------------------- START
+
+if ( my_config["marquee_type"] == "my-own" )
+{
+    local myOwnMarquee = fe.add_image("my-own-marquee.jpg", blip*0.1032, blip*0.0763, blip*0.3984, blip*0.1349 );
+    myOwnMarquee.skew_x = Setting("aspectDepend", "marquee_skewX");
+    myOwnMarquee.skew_y = Setting("aspectDepend", "marquee_skewY");
+    myOwnMarquee.pinch_x = Setting("aspectDepend", "marquee_pinchX");
+    myOwnMarquee.pinch_y = Setting("aspectDepend", "marquee_pinchY");
+    myOwnMarquee.rotation = Setting("aspectDepend", "marquee_rotation");
+    myOwnMarquee.trigger = Transition.EndNavigation;
+    myOwnMarquee.preserve_aspect_ratio = false;
+}
+
+
+
+
+
+
+//cabinet image -------------------------------------- START
+local cab = fe.add_image( "cabinet/vewlix.png", 0, 0, blip*0.992, blip*1.008);
+cab.preserve_aspect_ratio = true;
+
+
+
+
+
+
+
+//LCD display text under cab screen ------------------------------------------------ START
+
+local lcdLeftText = fe.add_text( "PLAYED: " + "[PlayedCount]", blip*0.1536, blip*0.6108, blip*0.48, blip*0.04 );  // here you can change what is displayed on left side
+lcdLeftText.set_rgb( 59, 45, 3 );
+lcdLeftText.align = Align.Left;  
+lcdLeftText.rotation = -6.5;
+lcdLeftText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+
+
+
+if ( my_config["lcdRight"] == "filter" )
+{
+    local lcdRightText = fe.add_text( "[FilterName]", blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
+    lcdRightText.set_rgb( 59, 45, 3 );
+    lcdRightText.align = Align.Right;
+    lcdRightText.rotation = -6.6;
+    lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+}
+
+
+if ( my_config["lcdRight"] == "rom-filename" )
+{
+    local lcdRightText = fe.add_text( "[Name]", blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
+    lcdRightText.set_rgb( 59, 45, 3 );
+    lcdRightText.align = Align.Right;
+    lcdRightText.rotation = -6.6;
+    lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+}
+
+
+if ( my_config["lcdRight"] == "display-name" )
+{
+    local lcdRightText = fe.add_text( "[DisplayName]", blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
+    lcdRightText.set_rgb( 59, 45, 3 );
+    lcdRightText.align = Align.Right;
+    lcdRightText.rotation = -6.6;
+    lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+}
+
+
+if ( my_config["lcdRight"] == "emulator" )
+{
+    local lcdRightText = fe.add_text( "[Emulator]", blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
+    lcdRightText.set_rgb( 59, 45, 3 );
+    lcdRightText.align = Align.Right;
+    lcdRightText.rotation = -6.6;
+    lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+}
+
+
+if ( my_config["lcdRight"] == "off" )
+{
+    local lcdRightText = fe.add_text( my_config["lcdRightText"], blip*0.1584, blip*0.6108, blip*0.4, blip*0.04 );
+    lcdRightText.set_rgb( 59, 45, 3 );
+    lcdRightText.align = Align.Right;
+    lcdRightText.rotation = -6.6;
+    lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+}
+
+//LCD display text --------------------------------------------------------- END
+
