@@ -630,3 +630,150 @@ if ( my_config["lcdRight"] == "off" )
 
 //LCD display text --------------------------------------------------------- END
 
+ 
+
+
+
+
+
+
+
+// SpinWheel -------------------------- START - this part is slightly modified code from omegaman's ROBOSPIN theme
+
+ 
+fe.load_module( "conveyor" );
+local wheel_x = [ flx*0.87, flx*0.79, flx*0.765, flx*0.745, flx*0.73, flx*0.72, flx*0.67, flx*0.72, flx*0.73, flx*0.745, flx*0.765, flx*0.79, ]; 
+local wheel_y = [ -fly*0.22, -fly*0.105, fly*0.0, fly*0.105, fly*0.215, fly*0.325, fly*0.436, fly*0.61, fly*0.72 fly*0.83, fly*0.935, fly*0.99, ];
+local wheel_w = [ flw*0.18, flw*0.18, flw*0.18, flw*0.18, flw*0.18, flw*0.18, flw*0.28, flw*0.18, flw*0.18, flw*0.18, flw*0.18, flw*0.18, ];
+local wheel_a = [  80,  80,  80,  80,  80,  80, 255,  80,  80,  80,  80,  80, ];
+local wheel_h = [  flw*0.07,  flw*0.07,  flw*0.07,  flw*0.08,  flw*0.08,  flw*0.08, flw*0.11,  flw*0.07,  flw*0.07,  flw*0.07,  flw*0.07,  flw*0.07, ];
+//local wheel_r = [  31,  26,  21,  16,  11,   6,   0, -11, -16, -21, -26, -31, ];
+local wheel_r = [  30,  25,  20,  15,  10,   5,   0, -10, -15, -20, -25, -30, ];
+local num_arts = Setting("aspectDepend", "wheelNumElements");  // number of elements in wheel - depending on screen aspect ratio
+
+
+
+
+class WheelEntry extends ConveyorSlot
+{
+	constructor()
+	{
+		base.constructor( ::fe.add_artwork( my_config["spinwheelArt"] ) );
+        preserve_aspect_ratio = true;
+        video_flags=Vid.ImagesOnly; // added just in case if you have video marquees - like I do :)
+	}
+
+	function on_progress( progress, var )
+	{
+		local p = progress / 0.1;
+		local slot = p.tointeger();
+		p -= slot;
+		
+		slot++;
+
+		if ( slot < 0 ) slot=0;
+		if ( slot >=10 ) slot=10;
+
+		m_obj.x = wheel_x[slot] + p * ( wheel_x[slot+1] - wheel_x[slot] );
+		m_obj.y = wheel_y[slot] + p * ( wheel_y[slot+1] - wheel_y[slot] );
+		m_obj.width = wheel_w[slot] + p * ( wheel_w[slot+1] - wheel_w[slot] );
+		m_obj.height = wheel_h[slot] + p * ( wheel_h[slot+1] - wheel_h[slot] );
+		m_obj.rotation = wheel_r[slot] + p * ( wheel_r[slot+1] - wheel_r[slot] );
+		m_obj.alpha = wheel_a[slot] + p * ( wheel_a[slot+1] - wheel_a[slot] );
+	}
+};
+
+local wheel_entries = [];
+for ( local i=0; i<num_arts/2; i++ )
+	wheel_entries.push( WheelEntry() );
+
+local remaining = num_arts - wheel_entries.len();
+
+// we do it this way so that the last wheelentry created is the middle one showing the current
+// selection (putting it at the top of the draw order)
+
+for ( local i=0; i<remaining; i++ )
+	wheel_entries.insert( num_arts/2, WheelEntry() );
+
+local conveyor = Conveyor();
+conveyor.set_slots( wheel_entries );
+conveyor.transition_ms = 50;
+try { conveyor.transition_ms = my_config["transition_ms"].tointeger(); } catch ( e ) { }
+
+
+
+
+
+
+// 게임 개발사 로고 표시 ----------------------------------------------------------- START
+
+local dpLogo = fe.add_image( "logo/[Manufacturer].png", flx*0.31, fly*0.16, flw*0.16, flh*0.12  );
+dpLogo.preserve_aspect_ratio = true;
+
+local move_dp = {
+    when = Transition.ToNewSelection, property = "alpha", start = 0, end = 255, time = 1500
+}
+animation.add( PropertyAnimation( dpLogo, move_dp ) );
+
+local titleText = fe.add_text( "[Title]", flx*0.31, fly*0.290, flw*0.6, flh*0.024  );
+titleText.align = Align.Left;
+titleText.set_rgb(255,255,255);
+titleText.font = "NanumBarunGothicBold";
+
+local titleText = fe.add_text( "© [Year] [Manufacturer]", flx*0.31, fly*0.325, flw*0.6, flh*0.0235  );
+titleText.align = Align.Left;
+titleText.set_rgb(170,220,240);
+titleText.font = "NanumBarunGothicBold";
+
+local titleText = fe.add_text( "[Category]", flx*0.312, fly*0.360, flw*0.6, flh*0.0235  );
+titleText.align = Align.Left;
+titleText.set_rgb(170,220,240);
+titleText.font = "NanumBarunGothicBold";
+
+// 게임 개발사 로고 표시 -------------------------------------------------------END
+
+
+
+
+
+
+// 게임 리스트 박스 표시 ------------------------------------------------ START
+
+if ( my_config["spinwheelArt"] == "listbox" )
+{
+    // 게임 리스트 배경
+    local listbg = fe.add_image("listbox/listbox_34.png",flw*0.53125, flh*0.0185185, flw*0.453125, flh*0.96852 );
+    listbg.alpha = 150;
+
+
+    // 게임 캐릭터 이미지 표시 (권장 이미지 사이즈: 480x760)
+    if ( my_config["select_character"] == "By Display" )
+    {
+        local mascot = fe.add_image ("character/[DisplayName]" + ".png", 0.75*flw, 0.15625*flh, 480, 760);
+        mascot.alpha = abs(("0" + my_config["character_alpha"]).tointeger()) % 255;;
+        mascot.preserve_aspect_ratio = true;
+    }
+
+    if ( my_config["select_character"] == "By Game" )
+    {
+        ::OBJECTS <- {
+        effect = fe.add_artwork( "character", 0.75*flw, 0.15625*flh, 480, 760 ),
+        }
+
+        local move_effect1 = {
+            when = Transition.ToNewSelection, property = "alpha", start = 80, end = 255, time = 700
+        }
+        
+        animation.add( PropertyAnimation( OBJECTS.effect, move_effect1 ) );
+        OBJECTS.effect.trigger = Transition.EndNavigation;
+    }
+
+
+    // 에뮬 디스플레이 타이틀
+    local displayName = fe.add_image ("wheel/[DisplayName]",flw*0.56771, flh*0.02222, flw*0.3906, flh*0.1852);
+
+    // 게임선택 박스
+    fe.add_image("listbox/box_green.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
+}
+
+// 게임 리스트 박스 표시 --------------------------------------------------------- END
