@@ -56,3 +56,16 @@ class UserConfig
 
 local my_config = fe.get_config();
 
+fe.layout.font=my_config["select_font"];
+
+
+fe.load_module( "fade" );
+fe.load_module( "animate" );
+fe.load_module( "pan-and-scan" );
+
+local blip = fe.layout.height;
+local flx = fe.layout.width;
+local fly = fe.layout.height;
+local flw = fe.layout.width;
+local flh = fe.layout.height;
+

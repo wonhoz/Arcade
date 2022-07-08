@@ -76,3 +76,196 @@ class UserConfig
 
 local my_config = fe.get_config();
 
+fe.layout.font=my_config["select_font"];
+
+
+fe.load_module( "fade" );
+fe.load_module( "animate" );
+fe.load_module( "pan-and-scan" );
+
+local blip = fe.layout.height;
+local flx = fe.layout.width;
+local fly = fe.layout.height;
+local flw = fe.layout.width;
+local flh = fe.layout.height;
+
+
+
+
+
+
+//coordinates table for different screen aspects -------------------------- START
+
+
+
+local settings = {
+    "default": {
+        aspectDepend = {
+            snap_skewX = 42.0, 
+            snap_skewY = -8.0, 
+
+            snap_pinchX = 0, 
+            snap_pinchY = 29.0, 
+            snap_rotation = 0.9, 
+
+            marquee_skewX = 17, 
+            marquee_skewY = 0, 
+            marquee_pinchX = -2, 
+            marquee_pinchY = 7, 
+            marquee_rotation = 6.2, 
+
+            wheelNumElements = 10
+        }
+    },
+    "16x10": {
+        aspectDepend = {
+            res_x = 1920,
+            res_y = 1200,
+
+            maskFactor = 1.9,
+
+            snap_skewX = 62.5, 
+            snap_skewY = -12.9, 
+            snap_pinchX = 0, 
+            snap_pinchY = 40.0, 
+            snap_rotation = 1.0, 
+
+            wheelNumElements = 10
+        }
+    },
+    "16x9": {
+        aspectDepend = {
+            res_x = 2133,
+            res_y = 1200,
+
+            maskFactor = 1.9,
+
+            snap_skewX = 62.5, 
+            snap_skewY = -12.9, 
+            snap_pinchX = 0, 
+            snap_pinchY = 40.0, 
+            snap_rotation = 1.0, 
+
+            wheelNumElements = 8
+        }
+    },
+    "4x3": {
+        aspectDepend = {
+            res_x = 1600,
+            res_y = 1200,
+
+            maskFactor = 1.6,
+
+            snap_skewX = 62.5, 
+            snap_skewY = -12.9, 
+            snap_pinchX = 0, 
+            snap_pinchY = 40.0, 
+            snap_rotation = 1.0, 
+
+            wheelNumElements = 10
+        }
+    },
+    "5x4": {
+        aspectDepend = {
+            res_x = 1500,
+            res_y = 1200,
+
+            maskFactor = 1.6,
+
+            snap_skewX = 62.5, 
+            snap_skewY = -12.9, 
+            snap_pinchX = 0, 
+            snap_pinchY = 40.0, 
+            snap_rotation = 1.0, 
+
+            wheelNumElements = 10
+        }
+    }
+}
+
+
+
+
+local aspect = fe.layout.width / fe.layout.height.tofloat();
+print (aspect);
+local aspect_name = "";
+switch( aspect.tostring() )
+{
+    case "1.77865":  //for 1366x768 screen
+    case "1.77778":  //for any other 16x9 resolution
+        aspect_name = "16x9";
+        break;
+    case "1.6":
+        aspect_name = "16x10";
+        break;
+    case "1.33333":
+        aspect_name = "4x3";
+        break;
+    case "1.25":
+        aspect_name = "5x4";
+        break;
+    case "0.75":
+        aspect_name = "3x4";
+        break;
+}
+
+
+function Setting( id, name )
+{
+    if ( aspect_name in settings && id in settings[aspect_name] && name in settings[aspect_name][id] )
+    {
+        ::print("\tusing settings[" + aspect_name + "][" + id + "][" + name + "] : " + settings[aspect_name][id][name] + "\n" );
+        return settings[aspect_name][id][name];
+    }
+    else if ( aspect_name in settings == false )
+    {
+        ::print("\tsettings[" + aspect_name + "] does not exist\n");
+    }
+    else if ( name in settings[aspect_name][id] == false )
+    {
+        ::print("\tsettings[" + aspect_name + "][" + id + "][" + name + "] does not exist\n");
+    }
+
+    ::print("\t\tusing default value: " + settings["default"][id][name] + "\n" );
+    return settings["default"][id][name];
+}
+
+
+
+
+fe.layout.width = Setting("aspectDepend", "res_x");
+fe.layout.height = Setting("aspectDepend", "res_y");
+
+local blip = fe.layout.height;
+
+local flx = fe.layout.width;
+local fly = fe.layout.height;
+local flw = fe.layout.width;
+local flh = fe.layout.height;
+
+local mask_factor = Setting("aspectDepend", "maskFactor");
+
+
+//coordinates table for different screen aspects -------------------------- END
+
+
+
+
+
+
+
+
+
+// mute audio variable - definable via user config ------------------------ START
+
+if ( my_config["mute_videoSnaps"] == "yes") 
+{
+    ::videoSound <- Vid.NoAudio;
+}
+if ( my_config["mute_videoSnaps"] == "no") 
+{
+    ::videoSound <- Vid.Default;
+}
+
+// mute audio variable - definable via user config ------------------------ END
+
