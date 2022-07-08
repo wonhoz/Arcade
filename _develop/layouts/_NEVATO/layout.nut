@@ -742,14 +742,14 @@ titleText.font = "NanumBarunGothicBold";
 if ( my_config["spinwheelArt"] == "list box" )
 {
     // 게임 리스트 배경
-    local listbg = fe.add_image("listbox/listbox_34.png",flw*0.53125, flh*0.0185185, flw*0.453125, flh*0.96852 );
+    local listbg = fe.add_image("listbox/listbox_34.png", flw*0.53125, flh*0.0185185, flw*0.453125, flh*0.96852 );
     listbg.alpha = 150;
 
 
     // 게임 캐릭터 이미지 표시 (권장 이미지 사이즈: 480x760)
     if ( my_config["select_character"] == "By Display" )
     {
-        local mascot = fe.add_image ("character/[DisplayName]" + ".png", 0.75*flw, 0.15625*flh, 480, 760);
+        local mascot = fe.add_image ("character/[DisplayName].png", 0.75*flw, 0.15625*flh, 480, 760);
         mascot.alpha = abs(("0" + my_config["character_alpha"]).tointeger()) % 255;;
         mascot.preserve_aspect_ratio = true;
     }
@@ -770,7 +770,7 @@ if ( my_config["spinwheelArt"] == "list box" )
 
 
     // 에뮬 디스플레이 타이틀
-    local displayName = fe.add_image ("wheel/[DisplayName]",flw*0.56771, flh*0.02222, flw*0.3906, flh*0.1852);
+    local displayName = fe.add_image ("wheel/[DisplayName]", flw*0.56771, flh*0.02222, flw*0.3906, flh*0.1852 );
 
     // 게임선택 박스
     fe.add_image("listbox/box_green.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
