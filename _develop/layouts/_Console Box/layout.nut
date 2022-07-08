@@ -36,20 +36,20 @@ class UserConfig
     
     </ label="--------------------------", help=" ", options=" ", order=11 /> divider5="";
     //-----------------------------------------------------------------
-    </ label="전단 영상", help="전단 영상을 리스트 박스 배경으로 사용할 수 있습니다.", options="Yes,No", order=12 /> enable_flyer="Yes";
+    </ label="전단 영상", help="전단 영상을 리스트 박스 배경으로 사용할 수 있습니다.", options="Yes,No", order=12 /> enable_flyer="No";
     </ label="전단 영상 투명도", help="0 (투명) 에서 254 (불투명) 사이의 값을 입력하세요.", options="", order=13 /> flyer_alpha="120";
 
     </ label="--------------------------", help=" ", options=" ", order=14 /> divider6="";
     //-----------------------------------------------------------------
     </ label="게임 로고 애니메이션", help="게임의 마키 영상을 애니메이션에 사용할 수 있습니다.", options="Yes,No", order=15 /> enable_gamelogo="Yes";
-    </ label="아트웍 영상 선택", help="선택된 아트웍 영상이 콘솔 시스템 오른쪽에 표시됩니다.", options="Cartridge_Disc,3D Box,None", order=16 /> boximagetype="cartridge_disc";
-    </ label="히스토리 파일 위치", help="히스토리 파일의 위치를 입력하세요.", order=17 /> history_path=".\\history.dat";
+    </ label="아트웍 영상 선택", help="선택된 아트웍 영상이 콘솔 시스템 오른쪽에 표시됩니다.", options="Cartridge Disc,3D Box,None", order=16 /> boximage_type="Cartridge Disc";
+    // </ label="히스토리 파일 위치", help="히스토리 파일의 위치를 입력하세요.", order=17 /> history_path=".\\history.dat";
 
-    </ label="--------------------------", help=" ", options=" ", order=18 /> divider7="";
+    </ label="--------------------------", help=" ", options=" ", order=17 /> divider7="";
     //-----------------------------------------------------------------
-    </ label="조작 방법 안내", help="조작 방법을 선택하세요.", options="Arcade,XBOX360,PS Pad,Keyboard,off", order=19 /> select_keyinfo="XBOX360";
+    </ label="조작 방법 안내", help="조작 방법을 선택하세요.", options="Arcade,XBOX360,PS Pad,Keyboard,off", order=18 /> select_keyinfo="XBOX360";
 
-    </ label="--------------------------", help=" ", options=" ", order=20 /> divider8="";
+    </ label="--------------------------", help=" ", options=" ", order=19 /> divider8="";
     //-----------------------------------------------------------------
 }
 
@@ -187,6 +187,28 @@ if ( my_config["select_character"] == "By Game" )
     
     animation.add( PropertyAnimation( OBJECTS.effect, move_effect1 ) );
     OBJECTS.effect.trigger = Transition.EndNavigation;
+}
+
+
+// 2D 또는 3D 박스 이미지 표시
+if ( my_config["boximage_type"] == "Cartridge Disc" )
+{
+	local boximage = fe.add_artwork( "cartridge_disc", 0.365*flw, 0.731*flh, 0.141*flw, 0.25*flh );
+	boximage.preserve_aspect_ratio = true;
+	local move_boximage = {
+       when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
+	}
+	animation.add( PropertyAnimation( boximage, move_boximage ) );
+}
+
+if ( my_config["boximage_type"] == "3D Box" )
+{
+	local boximage2 = fe.add_artwork( "3dbox", 0.365*flw, 0.731*flh, 0.141*flw, 0.25*flh );
+	boximage2.preserve_aspect_ratio = true;
+	local move_boximage2 = {
+       when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
+	}
+	animation.add( PropertyAnimation( boximage2, move_boximage2 ) );
 }
 
 
