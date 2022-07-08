@@ -269,3 +269,48 @@ if ( my_config["mute_videoSnaps"] == "no")
 
 // mute audio variable - definable via user config ------------------------ END
 
+
+
+
+
+
+
+// default background image (if background art is not enabled) ------------- START
+
+// if ( my_config["enable_static_bkg"] == "blue") 
+// {
+//     local bg = fe.add_image( "background_blue.png", 0, 0, flw, flh );
+// }
+// if ( my_config["enable_static_bkg"] == "black")
+// {
+//     local bg = fe.add_image( "background_black.png", 0, 0, flw, flh );
+// }
+switch( my_config["bg_media"] )
+{
+    case "black":
+    case "gray":
+    case "red":
+    case "orange":
+    case "green":
+    case "cyan":
+    case "blue":
+    case "purple":
+    case "violet":
+        local bgArt1 = fe.add_image("background/" + my_config["bg_media"] + ".png", 0, 0, flw, flh );
+        local bgArt2 = fe.add_clone(bgArt1);
+
+        animation.add( PropertyAnimation( bgArt1, {when = Transition.StartLayout, property = "x", start =   0, end = -flw, time = 28000, loop=true}));
+        animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, property = "x", start = flw, end =    0, time = 28000, loop=true}));			
+        // animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
+        break;
+    case "dot":
+    case "drop":
+    case "dust":
+    case "square":
+        local bg = fe.add_image( "background/" + my_config["bg_media"] + ".mp4", 0, 0, flw, flh );
+        break;
+    default:
+        local bg = fe.add_image( "", 0, 0, flw, flh );
+        break;
+}
+
