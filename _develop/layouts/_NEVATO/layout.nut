@@ -873,22 +873,22 @@ if ( my_config["spinwheelArt"] == "list box" )
 
         switch( text )
         {
-            case "All"        : text = "모든"     break;
-            case "Favourites" : text = "즐겨찾는" break;
-            case "Fighting"   : text = "격투"     break;
-            case "GunShooting": text = "건슈팅"   break;
-            case "Racing"     : text = "레이싱"   break;
-            case "Rhythm"     : text = "리듬"     break;
-            case "Board"      : text = "보드"     break;
-            case "Shooting"   : text = "슈팅"     break;
-            case "Arcade"     : text = "아케이드" break;
-            case "Action"     : text = "액션"     break;
-            case "Quiz"       : text = "퀴즈"     break;
-            case "Puzzle"     : text = "퍼즐"     break;
-            case "1980s"      : text = "80년대"   break;
-            case "1990s"      : text = "90년대"   break;
-            case "2000s"      : text = "2000년대" break;
-            case "2010s"      : text = "2010년대" break;
+            case "All"        : text = "모든";     break;
+            case "Favourites" : text = "즐겨찾는"; break;
+            case "Fighting"   : text = "격투";     break;
+            case "GunShooting": text = "건슈팅";   break;
+            case "Racing"     : text = "레이싱";   break;
+            case "Rhythm"     : text = "리듬";     break;
+            case "Board"      : text = "보드";     break;
+            case "Shooting"   : text = "슈팅";     break;
+            case "Arcade"     : text = "아케이드"; break;
+            case "Action"     : text = "액션";     break;
+            case "Quiz"       : text = "퀴즈";     break;
+            case "Puzzle"     : text = "퍼즐";     break;
+            case "1980s"      : text = "80년대";   break;
+            case "1990s"      : text = "90년대";   break;
+            case "2000s"      : text = "2000년대"; break;
+            case "2010s"      : text = "2010년대"; break;
         }
     
         return text.toupper();
@@ -916,19 +916,19 @@ if ( my_config["spinwheelArt"] == "list box" )
 
 local romFav;
 
+function getFavs(index_offset)
+{
+    if (fe.game_info( Info.Favourite, index_offset ) == "1") return "fav.png";
+    else return "";
+}
+
 if ( my_config["spinwheelArt"] == "list box" )
 {
-    romFav = fe.add_image(getFavs(0), flw*0.5, flh*0.5185, flw*0.03125, flh*0.0555 );
+    romFav = fe.add_image( getFavs(0), flw*0.5, flh*0.5185, flw*0.03125, flh*0.0555 );
 }
 else
 {
-    romFav = fe.add_image(getFavs(0), flx*0.312, fly*0.40, flw*0.03125, flh*0.0555 );
-}
-
-function getFavs(index_offset)
-{
-    if(fe.game_info( Info.Favourite, index_offset ) == "1") return "fav.png";
-    else return "";
+    romFav = fe.add_image( getFavs(0), flx*0.312, fly*0.40, flw*0.03125, flh*0.0555 );
 }
 
 fe.add_transition_callback( "update_my_list" );
@@ -939,6 +939,15 @@ function update_my_list( ttype, var, ttime )
         romFav.file_name = getFavs(var);
     }
     return false;
+}
+
+fe.add_signal_handler( "updateFavs" );
+function updateFavs( signal_str )
+{
+    if(signal_str == "add_favourite"){
+        if(romFav.file_name != "") romFav.file_name = "";
+        else romFav.file_name = "fav.png";
+    }
 }
 
 // 즐겨찾기 아이콘 표시 --------------------------------------------------------- END
