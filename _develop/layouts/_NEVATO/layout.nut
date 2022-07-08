@@ -774,6 +774,56 @@ if ( my_config["spinwheelArt"] == "listbox" )
 
     // 게임선택 박스
     fe.add_image("listbox/box_green.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
+
+
+    // 리스트 게임번호 그림자
+    local listbox1b = fe.add_listbox( flw*0.541666667,flh*0.2064815, flw*0.1796875, flh*0.6759259 );
+    listbox1b.charsize = 36;
+    listbox1b.set_sel_rgb( 208, 56, 0 );
+    listbox1b.set_rgb( 0, 0, 0 );
+    listbox1b.selbg_alpha = 0;
+    listbox1b.align = Align.Left;
+    listbox1b.charsize=36;
+    listbox1b.format_string = "[ListEntry]";
+
+    // 리스트 박스 게임번호
+    local listbox1 = fe.add_listbox( flw*0.540104167, flh*0.2037037, flw*0.1796875, flh*0.6759259 );
+    listbox1.charsize = 36;
+    listbox1.set_sel_rgb( 255 243, 20 );
+    listbox1.set_rgb( 73, 223, 222 );
+    listbox1.selbg_alpha = 0;
+    listbox1.align = Align.Left;
+    listbox1.charsize=36;
+    listbox1.format_string = "[ListEntry]";
+
+
+    // 리스트 박스 게임이름 그림자
+    local listbox2b = fe.add_listbox( flw*0.59375, flh*0.2064815, flw*0.39, flh*0.6759259 );
+    listbox2b.charsize = 36;
+    listbox2b.set_sel_rgb( 208, 56, 0 );
+    listbox2b.set_rgb( 0, 0, 0 );
+    listbox2b.selbg_alpha = 0;
+    listbox2b.align = Align.Left;
+    listbox2b.format_string = "[!gamename]";
+
+    // 리스트 박스 게임이름
+    local listbox2 = fe.add_listbox( flw*0.5921875, flh*0.2037037, flw*0.39, flh*0.6759259 );
+    listbox2.charsize = 36;
+    listbox2.set_sel_rgb( 255 243, 20 );
+    listbox2.set_rgb( 240, 240, 240 );
+    listbox2.selbg_alpha = 0;
+    listbox2.align = Align.Left;
+    listbox2.format_string = "[!gamename]";
+
+
+    // 문자 생략
+    // Game name text. We do this in the layout as the frontend doesn't chop up titles with a forward slash
+    function gamename( index_offset )
+    {
+        local s = split( fe.game_info( Info.Title, index_offset ), "[/" );
+        if ( s.len() > 0 ) return s[0];
+        return "";
+    }
 }
 
 // 게임 리스트 박스 표시 --------------------------------------------------------- END
