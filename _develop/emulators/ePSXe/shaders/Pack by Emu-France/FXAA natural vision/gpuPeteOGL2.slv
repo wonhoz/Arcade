@@ -1,9 +1,0 @@
-uniform vec4 OGL2Param;
-uniform vec4 OGL2Size;
-uniform vec4 OGL2InvSize;
-
-void main()
-{
- gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
- gl_TexCoord[0] = gl_MultiTexCoord0;
-}

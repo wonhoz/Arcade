@@ -1,1 +1,0 @@
-Some of these are still being worked on.  Great for games like windwaker and mario sunshine.  Also check the cell shader in DolphinFX.
