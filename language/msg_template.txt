@@ -29,6 +29,7 @@ Back;Back
 Blank Game;Blank Game
 Buttons;Buttons
 Category;Category
+Clear Hotkey?;Clear Hotkey?
 CloneOf;CloneOf
 Collection/Rom List;Collection/Rom List
 Command;Command
@@ -107,6 +108,7 @@ Exit Attract-Mode;Exit Attract-Mode
 Exit Attract-Mode?;Exit Attract-Mode?
 Exit Command;Exit Command
 Exit Hotkey;Exit Hotkey
+Exit Message;Exit Message
 Exit to Desktop;Exit to Desktop
 Extra;Extra
 Favourite;Favourite
@@ -127,6 +129,7 @@ Generate Collection/Rom List;Generate Collection/Rom List
 Generating Rom List: $1%;Generating Rom List: $1%
 Global Filter;Global Filter
 Hide Brackets in Game Title;Hide Brackets in Game Title
+Image Cache Size;Image Cache Size
 Info Source/Scraper;Info Source/Scraper
 Insert Command Shortcut;Insert Command Shortcut
 Insert Display Shortcut;Insert Display Shortcut
@@ -164,12 +167,16 @@ Non-Blocking Mode Wait;Non-Blocking Mode Wait
 OR;OR
 Overview;Overview
 Overwrite existing '$1' list?;Overwrite existing '$1' list?
+Pause Hotkey;Pause Hotkey
 Play Sound;Play Sound
 PlayedCount;PlayedCount
 PlayedTime;PlayedTime
 Players;Players
+Please Wait;Please Wait
 Plug-ins;Plug-ins
+Power Saving;Power Saving
 Press Input;Press Input
+Press Hotkey;Press Hotkey
 Previous Display;Previous Display
 Previous Favourite;Previous Favourite
 Previous Filter;Previous Filter
@@ -314,14 +321,15 @@ _help_displays_menu_exit;Configure whether an Exit option should be provided in 
 _help_displays_menu_layout;The layout to use for the 'Displays Menu'. Set to 'Default' to use the frontend's built-in menu
 _help_displays_menu_prompt;The 'Displays Menu' prompt (i.e. "Select System")
 _help_emu_add;Add a new emulator
-_help_emu_args;The command line arguments for this emulator.  The following get substituted appropriately: [name], [romext], [rompath], [emulator], [romfilename], [system], [systemn], [workdir], [nothing]
+_help_emu_args;The command line arguments for this emulator.  The following get substituted appropriately: [name], [romext], [rompath], [emulator], [romfilename], [system], [systemn], [workdir], [nothing], as well as any valid 'magic tokens' (see layout documentation)
 _help_emu_delete;Delete the entry for this emulator
 _help_emu_executable;The full path and name of the emulator executable. Possible variables: $HOME = User's home dir, $PROGDIR = Attract-Mode program dir. Windows OS additionally has %SYSTEMROOT% and %PROGRAMFILES% matching system environment variables.
 _help_emu_exit_hotkey;Set a global hotkey to exit the emulator.  Attract-Mode will terminate the emulator process if this hotkey gets pressed
 _help_emu_gen_romlist;Generate a romlist by searching the configured rom path for roms with the configured extension, incorporating XML and additional import file information into the generated list (if available)
-_help_emu_import_extras;Path to any additional files that need to be read when generating a romlist for this emulator.  Supported files are: catver.ini (for game categories), nplayers.ini (for number of players) and mame.xml.  Multiple file paths can be entered if separated by a semicolon
+_help_emu_import_extras;Path to any additional files that need to be read when generating a romlist for this emulator.  Supported files are: catver.ini (categories), nplayers.ini (number of players), series.ini (series), language.ini (language) and mame.xml.  Multiple file paths can be entered if separated by a semicolon
 _help_emu_info_source;Use "listxml" for mame -listxml output, "listsoftware" for mame/mess -listsoftware output, "thegamesdb.net" to scrape data from thegamesdb.net, "steam" to read from a steam installation, or "scummvm" if the emulator is scummvm.  "listsoftware" and "thegamesdb.net" also require that a System Identifier recognized by those sources be configured
 _help_emu_nb_mode_wait;If this is non-zero, the emulator will be run in 'non-blocking mode'.  The frontend will wait up to this number of seconds to lose focus to the emulator's window, and will wake up again when focus returns to the frontend's window.  This is necessary for launching programs like Steam correctly.  Should be 0 unless you know you need it
+_help_emu_pause_hotkey;Set a global hotkey to pause the emulator.  When pressed, Attract-Mode will pause the emulator process and return to the frontend. The emulator process can be resumed by selecting the same game again in the frontend.
 _help_emu_romext;The rom extension(s) for this emulator (i.e. .zip).  Multiple extensions can be entered if separated by a semicolon.  Specify "<DIR>" as an entry if games are stored in separate subdirectories
 _help_emu_rompath;The path to the roms for this emulator.  Multiple paths can be entered if separated by a semicolon.
 _help_emu_scrape_artwork;Scrape missing artwork images for this emulator from the net
@@ -331,6 +339,7 @@ _help_emu_system;The system identifier(s) for this emulator.  Multiple values ca
 _help_emu_workdir;The working directory for this emulator.  This is the directory that the frontend runs the emulator from.  Also, any relative rom paths, artwork paths, or additional import file paths are treated as being relative to this directory
 _help_emulators;Configure emulator settings
 _help_exit_command;Command to execute when exiting the frontend [i.e. "sudo shutdown"]
+_help_exit_message;Alternate message to exit the frontend [i.e. "Shut Down System"]
 _help_filter_add_exception;Add an exception to this filter.  If a game matches an exception (and wasn't filtered out by an earlier rule) it will be listed in the filter
 _help_filter_add_rule;Add a rule to this filter.  A game must match all filter rules (or a single exception) to be listed in a filter
 _help_filter_delete;Delete this filter
@@ -349,6 +358,7 @@ _help_game_overview;Edit game overview
 _help_generator_opt;Set whether this emulator is to be included in the generated romlist
 _help_generator_build;Generate romlist with the selected emulator(s)
 _help_hide_brackets;Hide text in brackets when showing game titles
+_help_image_cache_mbytes;Configure the maximum size of Attract-Mode's internal image cache (in megabytes)
 _help_input_action;
 _help_input_add;Add a new input mapping for this control
 _help_input_default_action;Set the default behaviour for this control
@@ -390,6 +400,7 @@ _help_video_decoder;Configure the decoder to use for video playback (if multiple
 _help_volume;Valid volume settings are from 0 (mute) to 100
 _help_window_mode;Set whether Attract-Mode fills the screen or runs in a window
 _help_hide_console;Hide console on startup. Note that this only works if starting Attract-Mode from a Windows GUI. If started from an existing console window (e.g. a batch file) then the process will always "attach" to the existing console and output to it.
+_help_power_saving;Helps to save power by only redrawing the screen when it's neccessary. May cause animation stuttering on some layouts, or freezing on Linux.
 _sort_regexp;^(Vs\. The |The |Vs\. )
 
 # The next line is needed at the end of the template file

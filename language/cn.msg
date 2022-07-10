@@ -275,6 +275,7 @@ Edit Shortcut;Edit Shortcut
 Enter Romlist Name;Enter Romlist Name
 Enter new tag name;Enter new tag name
 Exit Message;Exit Message
+Image Cache Size;Image Cache Size
 Insert Command Shortcut;Insert Command Shortcut
 Insert Display Shortcut;Insert Display Shortcut
 Insert Game Entry;Insert Game Entry
@@ -286,6 +287,7 @@ Non-Blocking Mode Wait;Non-Blocking Mode Wait
 Overview;Overview
 Pause Hotkey;Pause Hotkey
 Please Wait;Please Wait
+Power Saving;Power Saving
 Press Hotkey;Press Hotkey
 Remove tag: '$1';Remove tag: '$1'
 Select template to use for emulator settings;Select template to use for emulator settings
@@ -367,7 +369,7 @@ _help_emu_delete;Delete the entry for this emulator
 _help_emu_executable;The full path and name of the emulator executable. Possible variables: $HOME = User's home dir, $PROGDIR = Attract-Mode program dir. Windows OS additionally has %SYSTEMROOT% and %PROGRAMFILES% matching system environment variables.
 _help_emu_exit_hotkey;Set a global hotkey to exit the emulator.  Attract-Mode will terminate the emulator process if this hotkey gets pressed
 _help_emu_gen_romlist;Generate a romlist by searching the configured rom path for roms with the configured extension, incorporating XML and additional import file information into the generated list (if available)
-_help_emu_import_extras;Path to any additional files that need to be read when generating a romlist for this emulator.  Supported files are: catver.ini (for game categories), nplayers.ini (for number of players) and mame.xml.  Multiple file paths can be entered if separated by a semicolon
+_help_emu_import_extras;Path to any additional files that need to be read when generating a romlist for this emulator.  Supported files are: catver.ini (categories), nplayers.ini (number of players), series.ini (series), language.ini (language) and mame.xml.  Multiple file paths can be entered if separated by a semicolon
 _help_emu_info_source;Use "listxml" for mame -listxml output, "listsoftware" for mame/mess -listsoftware output, "thegamesdb.net" to scrape data from thegamesdb.net, "steam" to read from a steam installation, or "scummvm" if the emulator is scummvm.  "listsoftware" and "thegamesdb.net" also require that a System Identifier recognized by those sources be configured
 _help_emu_nb_mode_wait;If this is non-zero, the emulator will be run in 'non-blocking mode'.  The frontend will wait up to this number of seconds to lose focus to the emulator's window, and will wake up again when focus returns to the frontend's window.  This is necessary for launching programs like Steam correctly.  Should be 0 unless you know you need it
 _help_emu_pause_hotkey;Set a global hotkey to pause the emulator.  When pressed, Attract-Mode will pause the emulator process and return to the frontend. The emulator process can be resumed by selecting the same game again in the frontend.
@@ -400,6 +402,7 @@ _help_generator_build;Generate romlist with the selected emulator(s)
 _help_generator_opt;Set whether this emulator is to be included in the generated romlist
 _help_hide_brackets;Hide text in brackets when showing game titles
 _help_hide_console;Hide console on startup. Note that this only works if starting Attract-Mode from a Windows GUI. If started from an existing console window (e.g. a batch file) then the process will always "attach" to the existing console and output to it.
+_help_image_cache_mbytes;Configure the maximum size of Attract-Mode's internal image cache (in megabytes)
 _help_input_action;
 _help_input_add;Add a new input mapping for this control
 _help_input_default_action;Set the default behaviour for this control
@@ -416,6 +419,7 @@ _help_plugin_command;The executable associated with this plug-in
 _help_plugin_enabled;Set whether this plug-in is enabled
 _help_plugin_sel;Configure plug-in
 _help_plugins;Configure available plug-ins
+_help_power_saving;Helps to save power by only redrawing the screen when it's neccessary. May cause animation stuttering on some layouts, or freezing on Linux.
 _help_rule_comp;Comparison type for the filter
 _help_rule_delete;Delete this filter rule
 _help_rule_target;The game information attribute that you wish to filter based on
