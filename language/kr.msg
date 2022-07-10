@@ -25,7 +25,7 @@ Ambient Volume;배경 음악 음량
 Artwork Label;아트워크 라벨
 Artwork Name;이트워크 이름
 Artwork Path;아트워크 경로
-Back;뒤로
+Back;뒤로 가기
 Blank Game;빈 게임
 Buttons;버튼
 Category;장르(Category)
@@ -52,7 +52,7 @@ Confirm Exit;종료 확인
 Confirm Favourites;즐겨하는 게임 확인 창 표시
 Control;입력 장치(Control)
 Controls;입력
-Create new tag;새 태그 생성
+Create new tag;새 태그 설정
 Custom Arguments;사용자 정의 매개변수
 Custom Executable;사용자 정의 실행 파일
 Custom1;사용자 정의 1
@@ -97,8 +97,8 @@ Enabled;활성화 여부
 Enter Display Name;새 목록의 이름을 입력하여 주십시오
 Enter Emulator Name;에뮬레이터의 이름을 입력하여 주십시오
 Enter Filter Name;필터 이름을 입력하여 주십시오
-Enter Romlist Name;롬목록 이름을 입력하여 주십시오
-Enter new tag name;새 태그 이름을 입력하여 주십시오
+Enter Romlist Name;새 롬 목록 이름을 입력하십시오
+Enter new tag name;새 태그 이름을 입력하십시오
 Exception;예외 규칙
 Exception Edit;예외 편집
 Executable;실행 파일
@@ -210,7 +210,7 @@ Startup Mode;시작 모드
 Startup Sound;프로그램 시작 소리 파일
 Status;에뮬레이션 수준(Status)
 System Identifier;시스템 식별자
-Tags;태그
+Tags;태그 정보
 Target;규칙의 대상
 The name for this filter;본 필터의 이름
 This will overwrite an existing mapping ($1).  Proceed?;기존 입력 ($1)을 덮어써도 되겠습니까?
@@ -418,14 +418,18 @@ _help_scrape_mamedb;MAME snap과 marquee를 mamedb.com에서 가져올 지 여�
 Attract-Mode detected emulator(s) that can be imported automatically.  Import them now?;Attract-Mode detected emulator(s) that can be imported automatically.  Import them now?
 Clear Hotkey?;Clear Hotkey?
 Exit Message;Exit Message
+Image Cache Size;Image Cache Size
 Layout File;Layout File
 Non-Blocking Mode Wait;Non-Blocking Mode Wait
 Pause Hotkey;Pause Hotkey
 Please Wait;Please Wait
+Power Saving;Power Saving
 Press Hotkey;Press Hotkey
 Select template to use for emulator settings;Select template to use for emulator settings
 _help_emu_pause_hotkey;Set a global hotkey to pause the emulator.  When pressed, Attract-Mode will pause the emulator process and return to the frontend. The emulator process can be resumed by selecting the same game again in the frontend.
 _help_exit_message;Alternate message to exit the frontend [i.e. "Shut Down System"]
+_help_image_cache_mbytes;Configure the maximum size of Attract-Mode's internal image cache (in megabytes)
 _help_input_action;
 _help_joystick_map;Map the frontend's joystick slots to specifically named joystick/gamepad devices attached to your computer (You can use this to force the frontend to always use 'Microsoft X-Box 360 pad' as Joystick 0, for example.)
 _help_layout_file;Some layouts provide multiple layout*.nut files.  Select which layout file to use
+_help_power_saving;Helps to save power by only redrawing the screen when it's neccessary. May cause animation stuttering on some layouts, or freezing on Linux.
