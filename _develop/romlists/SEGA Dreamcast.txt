@@ -1,1 +1,7 @@
 #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons;Series;Language;Region;Rating
+#GigaWing 2 (Japan);기가 윙 2 (일본판);SEGA Dreamcast;0;2001;CAPCOM;Shooting;2;;;;;;;;일본어;;;;;
+Bangai-O (USA);반가이오 (미국판);SEGA Dreamcast;0;2000;Treasure;Shooting;2;;;;;;;;영어;;;;;
+Sword of the Berserk - Gut's Rage (Japan);베르세르크 - 천년제국의 매편 상실화의 장 (일본판);SEGA Dreamcast;0;1999;YUKE'S;Arcade;1;;;;;;;;일본어;;;;;
+#Psyvariar 2 - The Will to Fabricate v1.001 (2004)(Success)(NTSC)(JP)(en)[!];사이바리마 2 - 더 윌 투 패브리케이트 (일본판);SEGA Dreamcast;psyvar2;2004;SUCCESS;Shooting;2;;;;;;;;일본어;;;;;
+#Elemental Gimmick Gear (K);엘레멘탈 기믹 기어;SEGA Dreamcast;0;1999;Hudson;RPG;1;;;;;;;;한국어;;;;;
+Jet Grind Radio (USA);젯 셋 라디오 (미국판);SEGA Dreamcast;0;2000;SEGA;Action;1;;;;;;;;영어;;;;;
