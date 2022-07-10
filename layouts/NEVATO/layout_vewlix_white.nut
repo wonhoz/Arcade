@@ -392,7 +392,7 @@ if ( my_config["bg_mask"] == "dark" )
 
 
 //cabinet image -------------------------------------- START
-local cab = fe.add_image( "cabinet/vewlix_white.png", 0, 0, blip*0.955, blip*0.992);
+local cab = fe.add_image( "cabinet/vewlix_white.png", 0, 0, blip*0.674, blip*0.992);
 cab.preserve_aspect_ratio = true;
 
 
@@ -416,7 +416,7 @@ cab.preserve_aspect_ratio = true;
 
 //snap (video or screenshot) on cab screen ------------- START
 
-local cabScreen = fe.add_artwork ("snap", blip*0.17963, blip*0.32685, blip*0.59352, blip*0.30648);
+local cabScreen = fe.add_artwork ("snap", blip*0.12598, blip*0.32813, blip*0.41797, blip*0.30664);
 // cabScreen.skew_x = Setting("aspectDepend", "snap_skewX");
 // cabScreen.skew_y = Setting("aspectDepend", "snap_skewY");
 // cabScreen.pinch_x = Setting("aspectDepend", "snap_pinchX");
@@ -440,7 +440,7 @@ if ( my_config["cabScreenType"] == "screenshot" )
 
 if ( my_config["enable_scanlines"] == "light" )
 {
-    local scanlines = fe.add_image( "scanlines.png", blip*0.17963, blip*0.32685, blip*0.59352, blip*0.30648 );
+    local scanlines = fe.add_image( "scanlines.png", blip*0.12598, blip*0.32813, blip*0.41797, blip*0.30664 );
     // scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
     // scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
     // scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
@@ -452,7 +452,7 @@ if ( my_config["enable_scanlines"] == "light" )
 
 if ( my_config["enable_scanlines"] == "medium" )
 {
-    local scanlines = fe.add_image( "scanlines.png", blip*0.17963, blip*0.32685, blip*0.59352, blip*0.30648 );
+    local scanlines = fe.add_image( "scanlines.png", blip*0.12598, blip*0.32813, blip*0.41797, blip*0.30664 );
     // scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
     // scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
     // scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
@@ -464,7 +464,7 @@ if ( my_config["enable_scanlines"] == "medium" )
 
 if ( my_config["enable_scanlines"] == "dark" )
 {
-    local scanlines = fe.add_image( "scanlines.png", blip*0.17963, blip*0.32685, blip*0.59352, blip*0.30648 );
+    local scanlines = fe.add_image( "scanlines.png", blip*0.12598, blip*0.32813, blip*0.41797, blip*0.30664 );
     // scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
     // scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
     // scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
@@ -485,8 +485,8 @@ if ( my_config["enable_scanlines"] == "dark" )
 
 if ( my_config["marquee_type"] == "marquee" )
 {
-    //local marqueesta = fe.add_image("static.jpg", blip*0.18796, blip*0.05648, blip*0.57685, blip*0.10000 );
-    local marqueeBkg = fe.add_image("[marquee]", blip*0.18796, blip*0.05648, blip*0.57685, blip*0.10000 );
+    //local marqueesta = fe.add_image("static.jpg", blip*0.12988, blip*0.05371, blip*0.40918, blip*0.10254 );
+    local marqueeBkg = fe.add_image("[marquee]", blip*0.12988, blip*0.05371, blip*0.40918, blip*0.10254 );
     // marqueeBkg.skew_x = Setting("aspectDepend", "marquee_skewX");
     // marqueeBkg.skew_y = Setting("aspectDepend", "marquee_skewY");
     // marqueeBkg.pinch_x = Setting("aspectDepend", "marquee_pinchX");
@@ -495,7 +495,7 @@ if ( my_config["marquee_type"] == "marquee" )
     marqueeBkg.trigger = Transition.EndNavigation;
     marqueeBkg.preserve_aspect_ratio = false;
 
-    local marquee = FadeArt("marquee", blip*0.18796, blip*0.05648, blip*0.57685, blip*0.10000 );
+    local marquee = FadeArt("marquee", blip*0.12988, blip*0.05371, blip*0.40918, blip*0.10254 );
     // marquee.skew_x = Setting("aspectDepend", "marquee_skewX");
     // marquee.skew_y = Setting("aspectDepend", "marquee_skewY");
     // marquee.pinch_x = Setting("aspectDepend", "marquee_pinchX");
@@ -557,8 +557,8 @@ if ( my_config["marquee_type"] == "my-own" )
 
 //LCD display text under cab screen ------------------------------------------------ START
 
-// local lcdLeftText = fe.add_text( "PLAYED: " + "[PlayedCount]", blip*0.2021, blip*0.2728, blip*0.231, blip*0.04 );  // here you can change what is displayed on left side
-local lcdLeftText = fe.add_text( "YEAR: " + "[Year]", blip*0.2021, blip*0.2728, blip*0.231, blip*0.04 );
+// local lcdLeftText = fe.add_text( "PLAYED: " + "[PlayedCount]", blip*0.1021, blip*0.2728, blip*0.231, blip*0.04 );  // here you can change what is displayed on left side
+local lcdLeftText = fe.add_text( "YEAR: " + "[Year]", blip*0.1021, blip*0.2728, blip*0.231, blip*0.04 );
 lcdLeftText.set_rgb( 170, 220, 240);
 lcdLeftText.align = Align.Centre;  
 // lcdLeftText.rotation = -6.5;
@@ -568,7 +568,7 @@ lcdLeftText.font="digital-7 (italic)";  // free font (for personal use) - can be
 
 if ( my_config["lcdRight"] == "filter" )
 {
-    local lcdRightText = fe.add_text( "[FilterName]", blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
+    local lcdRightText = fe.add_text( "[FilterName]", blip*0.375, blip*0.2728, blip*0.231, blip*0.04 );
     lcdRightText.set_rgb( 170, 220, 240);
     lcdRightText.align = Align.Centre;
     // lcdRightText.rotation = -6.6;
@@ -578,7 +578,7 @@ if ( my_config["lcdRight"] == "filter" )
 
 if ( my_config["lcdRight"] == "rom-filename" )
 {
-    local lcdRightText = fe.add_text( "[Name]", blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
+    local lcdRightText = fe.add_text( "[Name]", blip*0.375, blip*0.2728, blip*0.231, blip*0.04 );
     lcdRightText.set_rgb( 170, 220, 240);
     lcdRightText.align = Align.Centre;
     // lcdRightText.rotation = -6.6;
@@ -588,7 +588,7 @@ if ( my_config["lcdRight"] == "rom-filename" )
 
 if ( my_config["lcdRight"] == "display-name" )
 {
-    local lcdRightText = fe.add_text( "[DisplayName]", blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
+    local lcdRightText = fe.add_text( "[DisplayName]", blip*0.375, blip*0.2728, blip*0.231, blip*0.04 );
     lcdRightText.set_rgb( 170, 220, 240);
     lcdRightText.align = Align.Centre;
     // lcdRightText.rotation = -6.6;
@@ -598,7 +598,7 @@ if ( my_config["lcdRight"] == "display-name" )
 
 if ( my_config["lcdRight"] == "emulator" )
 {
-    local lcdRightText = fe.add_text( "[Emulator]", blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
+    local lcdRightText = fe.add_text( "[Emulator]", blip*0.375, blip*0.2728, blip*0.231, blip*0.04 );
     lcdRightText.set_rgb( 170, 220, 240);
     lcdRightText.align = Align.Centre;
     // lcdRightText.rotation = -6.6;
@@ -608,7 +608,7 @@ if ( my_config["lcdRight"] == "emulator" )
 
 if ( my_config["lcdRight"] == "off" )
 {
-    local lcdRightText = fe.add_text( my_config["lcdRightText"], blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
+    local lcdRightText = fe.add_text( my_config["lcdRightText"], blip*0.375, blip*0.2728, blip*0.231, blip*0.04 );
     lcdRightText.set_rgb( 170, 220, 240);
     lcdRightText.align = Align.Centre;
     // lcdRightText.rotation = -6.6;
