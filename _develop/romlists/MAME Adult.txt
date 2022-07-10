@@ -56,10 +56,10 @@ pcktgalk;포켓걸 (한글판);MAME Adult;pcktgal;1987;Data East;Adult;1;0;Joyst
 pcktgal2;포켓걸 2;MAME Adult;0;1989;Data East;Adult;2;0;joystick (8-way);;;;;;;;;;;
 hanamai;하나노마이;MAME Adult;0;1988;Dynax;Adult;;;;;;;;;;;;;;
 hotpinbl;핫 핀볼;MAME Adult;0;1995;Comad;Adult;;;;;;;;;;;;;;
-#mahjong;CD 마작 미소녀 중심파;MAME PC-Engine CD (GECD);0;1993;Game Express;Adult Board Game;;;;;;;;;;;;;;
-#pachislt;CD 빠찡코 미소녀 겜블러;MAME PC-Engine CD (GECD);0;1994;Game Express;Adult Board Game;;;;;;;;;;;;;;
-#pachinko;CD 빠찡코 미소녀 구마 네자매;MAME PC-Engine CD (GECD);0;1995;Game Express;Adult Board Game;;;;;;;;;;;;;;
-#cardangl;카드 엔젤스;MAME PC-Engine CD;0;1994;Fujicom;Adult Board Game;;;;;;;;;;;;;;
+#mahjong;CD 마작 미소녀 중심파;NEC PC-Engine CD GECD;0;1993;Game Express;Adult Board Game;;;;;;;;;;;;;;
+#pachislt;CD 빠찡코 미소녀 겜블러;NEC PC-Engine CD GECD;0;1994;Game Express;Adult Board Game;;;;;;;;;;;;;;
+#pachinko;CD 빠찡코 미소녀 구마 네자매;NEC PC-Engine CD GECD;0;1995;Game Express;Adult Board Game;;;;;;;;;;;;;;
+#cardangl;카드 엔젤스;NEC PC-Engine CD SCDSYS;0;1994;Fujicom;Adult Board Game;;;;;;;;;;;;;;
 #Blonde Justice (USA);블론드 저스티스;3DO;;1994;Vivid Interactive;Adult;;;;;;;;;;;;;;
 #Coven, The (USA);더 코븐;3DO;;1994;Vivid Interactive;Adult;;;;;;;;;;;;;;
 #Immortal Desire (USA);임모탈 디자이어;3DO;;1994;Vivid Interactive;Adult;;;;;;;;;;;;;;

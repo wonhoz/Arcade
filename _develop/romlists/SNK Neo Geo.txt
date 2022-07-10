@@ -68,7 +68,7 @@ fatfursp;아랑전설 스페셜;MAME;0;1993;SNK;Fighting;2;;;;;;neogeo;0;0;4;;;;
 #androdun;안드로 듀노스;MAME;0;1992;Visco;Shooting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;2;;;;
 #sonicwi2;에어로 파이터즈 2;MAME;0;1994;Video system;Shooting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 #sonicwi3;에어로 파이터즈 3;MAME;0;1995;Video system;Shooting;;;;;;;neogeo;;;;;;;
-eightman;에이트맨;MAME vert;0;1991;ADK;Action;2;270;Joystick (8-way);good;1;raster;neogeo;0;0;3;;;;
+eightman;에이트맨;MAME Vertical;0;1991;ADK;Action;2;270;Joystick (8-way);good;1;raster;neogeo;0;0;3;;;;
 wakuwak7;와쿠와쿠 7;MAME;0;1996;Sunsoft;Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 fightfev;왕중왕;MAME;0;1994;Viccom;Fighting;;;;;;;neogeo;;;;;;;
 aof;용호의 권;MAME;0;1992;SNK;Fighting;;;;;;;neogeo;;;;;;;
@@ -116,7 +116,7 @@ kof2001;킹 오브 파이터즈 2001;MAME;0;2001;SNK;Fighting;2;0;Joystick (8-wa
 kof2002;킹 오브 파이터즈 2002;MAME;0;2002;SNK Playmore;Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 kof2003;킹 오브 파이터즈 2003;MAME;0;2003;SNK Playmore;Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 kf2k3upl;킹 오브 파이터즈 2004 울트라 Plus;MAME;0;2003;SNK Playmore;Fighting;2;0;joystick (8-way);;;;neogeo;;;;;;;
-tophuntr;탑헌터 - 로디 & 케시;MAME vert;0;1994;SNK;Action;2;270;Joystick (8-way);good;1;raster;neogeo;0;0;3;;;;
+tophuntr;탑헌터 - 로디 & 케시;MAME Vertical;0;1994;SNK;Action;2;270;Joystick (8-way);good;1;raster;neogeo;0;0;3;;;;
 #twinspri;트윙클 스프라이트;MAME;0;1996;ADK;Shooting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 pspikes;파워 스파이크;MAME;0;1991;Video System;Sports;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 pspikesk;파워 스파이크 (한국판);EKMAME;pspikes;1991;Video System;Sports;2;0;joystick (8-way);good;1;raster;neogeo;;;3;;;;

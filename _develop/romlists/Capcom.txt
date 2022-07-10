@@ -2,7 +2,7 @@
 #1941;1941: 카운터 어택;MAME;0;1990;Capcom;Shooting;;;;;;;cps1;;;;;;;
 #1944;1944: 루프 마스터;MAME;0;2000;Capcom;Shooting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;2;;;;
 #19xx;19XX: 운명과의 전쟁;MAME;0;1996;Capcom;Shooting;;;;;;;cps2;;;;;;;
-#dimahoo;그레이트 마법 대작전;MAME vert;0;2000;Raizing;Shooting;2;270;joystick (8-way);;;;cps2;;;;;;;
+#dimahoo;그레이트 마법 대작전;MAME Vertical;0;2000;Raizing;Shooting;2;270;joystick (8-way);;;;cps2;;;;;;;
 #gigawing;기가 윙;MAME;0;1999;Capcom;Shooting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;2;;;;
 nwarr;나이트 워리어즈: 다크스토커즈의 복수;MAME;;1995;Capcom;Fighting;2;0;joystick (8-way);good;1;raster;cps2;;;6;;;;
 dstlk;다크 스토커즈;MAME;0;1994;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6;;;;
@@ -59,7 +59,7 @@ xmvsf;엑스맨 VS 스트리트 파이터;MAME;0;1996;Capcom;Fighting;2;0;Joysti
 xmcota;엑스맨: 칠드런 오브 더 아톰;MAME;0;1995;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6;;;;
 knights;원탁의 기사 / 나이츠 오브 더 라운드;MAME;0;1991;Capcom;Arcade;;;;;;;cps1;;;;;;;
 willow;윌로우;MAME;0;1989;Capcom;Action;2;0;Joystick (8-way);good;1;raster;cps1;0;0;2;;;;
-#mercs;전장의 이리 II / 머크스;MAME vert;0;1990;Capcom;Shooting;3;270;Joystick (8-way);good;1;raster;cps1;0;0;2;;;;
+#mercs;전장의 이리 II / 머크스;MAME Vertical;0;1990;Capcom;Shooting;3;270;Joystick (8-way);good;1;raster;cps1;0;0;2;;;;
 jojo;조조의 기묘한 모험;MAME;;1998;Capcom;Fighting;2;0;joystick (8-way);imperfect;1;raster;cps3;;chd;4;;;;
 jojoban;조조의 기묘한 모험: 미래로의 유산;MAME;jojoba;1999;Capcom;Fighting;;;;;;;cps3;;;;;;;
 dynwarj;천지를 먹다 / 다이너스티 워즈;MAME;dynwar;1989;Capcom;Action;2;0;Joystick (8-way),dial;good;1;raster;cps1;0;0;3;;;;
