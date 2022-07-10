@@ -95,26 +95,26 @@ animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, proper
 
 
 // 모니터 동영상 배경
-local blackbg = fe.add_image("black.png", 0.061*flw, 0.132*flh, 0.375*flw, 0.502*flh );
+local blackbg = fe.add_image("black.png", 0.061*flw, 0.132*flh, 0.401*flw, 0.502*flh );
 
 
 // 모니터와 콘솔기기
-fe.add_image("monitor/monitor.png",      0.027*flw, 0.068*flh, 0.442*flw, 0.752*flh );
+fe.add_image("monitor/monitor.png",      0.027*flw, 0.083*flh, 0.472*flw, 0.602*flh );
 fe.add_image("system/[DisplayName].png", 0.094*flw, 0.769*flh, 0.28*flw, 0.22*flh );
 
 
 // 동영상
-local snap = fe.add_artwork("snap", 0.064*flw, 0.14*flh, 0.368*flw, 0.49*flh );
+local snap = fe.add_artwork("snap", 0.067*flw, 0.14*flh, 0.393*flw, 0.393*flh );
 //snap.preserve_aspect_ratio = true;
 snap.trigger = Transition.EndNavigation;
-fe.add_image("scanline.png", 0.064*flw, 0.14*flh, 0.369*flw, 0.49*flh );
+fe.add_image("scanline.png", 0.067*flw, 0.14*flh, 0.394*flw, 0.393*flh );
 
 
 
 
 //Game Marquee Animation
 ::OBJECTS <- {
-    marquee = fe.add_artwork( "marquee", 0.154*flw, 0.019*flh, 0.188*flw, 0.111*flh ),
+    marquee = fe.add_artwork( "marquee", 0.164*flw, 0.019*flh, 0.188*flw, 0.111*flh ),
 }
 
 if ( my_config["enable_gamelogo"] == "Yes" )
