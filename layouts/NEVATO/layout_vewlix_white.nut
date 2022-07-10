@@ -736,7 +736,7 @@ if ( my_config["spinwheelArt"] == "list box" )
     // 게임 캐릭터 이미지 표시 (권장 이미지 사이즈: 480x760)
     if ( my_config["select_character"] == "By Display" )
     {
-        local mascot = fe.add_image ("character/[DisplayName].png", 0.75*flw, 0.15625*flh, 480, 760);
+        local mascot = fe.add_image ("character/[DisplayName].png", 0.65*flw, 0.20625*flh, 480, 760);
         mascot.alpha = abs(("0" + my_config["character_alpha"]).tointeger()) % 255;;
         mascot.preserve_aspect_ratio = true;
     }
@@ -744,7 +744,7 @@ if ( my_config["spinwheelArt"] == "list box" )
     if ( my_config["select_character"] == "By Game" )
     {
         ::OBJECTS <- {
-        effect = fe.add_artwork( "character", 0.75*flw, 0.15625*flh, 480, 760 ),
+        effect = fe.add_artwork( "character", 0.65*flw, 0.20625*flh, 480, 760 ),
         }
 
         local move_effect1 = {
@@ -814,20 +814,20 @@ if ( my_config["spinwheelArt"] == "list box" )
 
 
     // 시계
-    local clockbtext = fe.add_text( "현재시각:", flw*0.5259375, flh*0.92962963, flw*0.124166667, flh*0.042592593 );
+    local clockbtext = fe.add_text( "현재시각:", flw*0.528515625, flh*0.92962963, flw*0.124166667, flh*0.042592593 );
     clockbtext.set_rgb( 0, 0, 0 );
     clockbtext.charsize = 36;
 
-    local clocktext = fe.add_text( "현재시각:", flw*0.52434375, flh*0.926851852, flw*0.124166667, flh*0.042592593 );
+    local clocktext = fe.add_text( "현재시각:", flw*0.5269140625, flh*0.926851852, flw*0.124166667, flh*0.042592593 );
     clocktext.set_rgb( 211, 250, 255 );
     clocktext.charsize = 36;
 
-    local clockb = fe.add_text( "", flw*0.6253125003, flh*0.92962963, flw*0.166666667, flh*0.042592593  );
+    local clockb = fe.add_text( "", flw*0.6283333337, flh*0.92962963, flw*0.166666667, flh*0.042592593  );
     clockb.align = Align.Left;
     clockb.charsize = 36;
     clockb.set_rgb( 0, 0, 0 );
 
-    local clock = fe.add_text( "", flw*0.6236953128, flh*0.926851852, flw*0.166666667, flh*0.042592593  );
+    local clock = fe.add_text( "", flw*0.6267083337, flh*0.926851852, flw*0.166666667, flh*0.042592593  );
     clock.align = Align.Left;
     clock.charsize = 36;
     clock.set_rgb( 73, 223, 222 );
