@@ -67,7 +67,7 @@ class UserConfig
 
     </ label="--------------------------", help=" ", options=" ", order=23 /> divider9="";
     //-----------------------------------------------------------------
-    </ label="조작 방법 안내", help="조작 방법을 선택하세요.", options="Arcade,XBOX360,PS Pad,Keyboard,off", order=24 /> select_keyinfo="XBOX360";
+    </ label="조작 방법 안내", help="조작 방법을 선택하세요.", options="Arcade,XBOX360,PS Pad,Keyboard,off", order=24 /> select_keyinfo="Arcade";
 
     </ label="--------------------------", help=" ", options=" ", order=25 /> divider10="";
     //-----------------------------------------------------------------
@@ -707,7 +707,7 @@ try { conveyor.transition_ms = my_config["transition_ms"].tointeger(); } catch (
 
 // 게임 개발사 로고 표시 ----------------------------------------------------------- START
 
-local dpLogo = fe.add_image( "logo/[Manufacturer].png", flx*0.31, fly*0.16, flw*0.16, flh*0.12  );
+local dpLogo = fe.add_image( "logo/[Manufacturer].png", flx*0.01953, fly*0.6725, flw*0.16, flh*0.12  );
 dpLogo.preserve_aspect_ratio = true;
 
 local move_dp = {
@@ -715,17 +715,17 @@ local move_dp = {
 }
 animation.add( PropertyAnimation( dpLogo, move_dp ) );
 
-local titleText = fe.add_text( "[Title]", flx*0.31, fly*0.290, flw*0.6, flh*0.024  );
+local titleText = fe.add_text( "[Title]", flx*0.01953, fly*0.8025, flw*0.6, flh*0.024  );
 titleText.align = Align.Left;
 titleText.set_rgb(255,255,255);
 titleText.font = "NanumBarunGothicBold";
 
-local titleText = fe.add_text( "© [Year] [Manufacturer]", flx*0.31, fly*0.325, flw*0.6, flh*0.0235  );
+local titleText = fe.add_text( "© [Year] [Manufacturer]", flx*0.01953, fly*0.8375, flw*0.6, flh*0.0235  );
 titleText.align = Align.Left;
 titleText.set_rgb(170,220,240);
 titleText.font = "NanumBarunGothicBold";
 
-local titleText = fe.add_text( "[Category]", flx*0.312, fly*0.360, flw*0.6, flh*0.0235  );
+local titleText = fe.add_text( "[Category]", flx*0.01867, fly*0.8725, flw*0.6, flh*0.0235  );
 titleText.align = Align.Left;
 titleText.set_rgb(170,220,240);
 titleText.font = "NanumBarunGothicBold";
@@ -776,7 +776,7 @@ if ( my_config["spinwheelArt"] == "list box" )
     fe.add_image("listbox/box_green.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
 
 
-    // 리스트 게임번호 그림자
+    // 리스트 박스 게임번호 그림자
     local listbox1b = fe.add_listbox( flw*0.541666667,flh*0.2064815, flw*0.1796875, flh*0.6759259 );
     listbox1b.charsize = 36;
     listbox1b.set_sel_rgb( 208, 56, 0 );
@@ -827,20 +827,20 @@ if ( my_config["spinwheelArt"] == "list box" )
 
 
     // 시계
-    local clockbtext = fe.add_text( "현재시각:", flw*0.515625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
+    local clockbtext = fe.add_text( "현재시각:", flw*0.5259375, flh*0.92962963, flw*0.124166667, flh*0.042592593 );
     clockbtext.set_rgb( 0, 0, 0 );
     clockbtext.charsize = 36;
 
-    local clocktext = fe.add_text( "현재시각:", flw*0.5140625, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
+    local clocktext = fe.add_text( "현재시각:", flw*0.52434375, flh*0.926851852, flw*0.124166667, flh*0.042592593 );
     clocktext.set_rgb( 211, 250, 255 );
     clocktext.charsize = 36;
 
-    local clockb = fe.add_text( "", flw*0.604166667, flh*0.92962963, flw*0.166666667, flh*0.042592593  );
+    local clockb = fe.add_text( "", flw*0.6253125003, flh*0.92962963, flw*0.166666667, flh*0.042592593  );
     clockb.align = Align.Left;
     clockb.charsize = 36;
     clockb.set_rgb( 0, 0, 0 );
 
-    local clock = fe.add_text( "", flw*0.602604167, flh*0.926851852, flw*0.166666667, flh*0.042592593  );
+    local clock = fe.add_text( "", flw*0.6236953128, flh*0.926851852, flw*0.166666667, flh*0.042592593  );
     clock.align = Align.Left;
     clock.charsize = 36;
     clock.set_rgb( 73, 223, 222 );
@@ -856,12 +856,12 @@ if ( my_config["spinwheelArt"] == "list box" )
 
 
     // 즐겨찾기 필터
-    local listtextb = fe.add_text( "[!filter] 게임:", flw*0.708333333, flh*0.92962963, flw*0.234375, flh*0.042592593 );
+    local listtextb = fe.add_text( "[!filter] 게임:", flw*0.7331249997, flh*0.92962963, flw*0.234375, flh*0.042592593 );
     listtextb.set_rgb( 208, 56, 0 );
     listtextb.charsize = 36;
     listtextb.align = Align.Left;
 
-    local listtext = fe.add_text( "[!filter] 게임:", flw*0.706770833, flh*0.926851852, flw*0.234375, flh*0.042592593 );
+    local listtext = fe.add_text( "[!filter] 게임:", flw*0.7315078122, flh*0.926851852, flw*0.234375, flh*0.042592593 );
     listtext.set_rgb( 255 243, 20 );
     listtext.charsize = 36;
     listtext.align = Align.Left;
@@ -894,12 +894,12 @@ if ( my_config["spinwheelArt"] == "list box" )
         return text.toupper();
     }
 
-    local listb = fe.add_text("[ListSize]", flw*0.9140625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
+    local listb = fe.add_text("[ListSize]", flw*0.9140625, flh*0.92962963, flw*0.124166667, flh*0.042592593 );
     listb.set_rgb( 0, 0, 0 );
     listb.charsize=36;
     listb.align = Align.Left;
 
-    local list = fe.add_text( "[ListSize]", flw*0.9125, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
+    local list = fe.add_text( "[ListSize]", flw*0.9125, flh*0.926851852, flw*0.124166667, flh*0.042592593 );
     list.set_rgb( 73, 223, 222 );
     list.charsize=36;
     list.align = Align.Left;
