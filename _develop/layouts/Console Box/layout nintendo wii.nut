@@ -75,7 +75,7 @@ local flh = fe.layout.height;
 // default background image (if background art is not enabled) ------------- START
 
 // image animation
-local bgArt1 = fe.add_image("background/green.png", 0, 0, flw, flh );
+local bgArt1 = fe.add_image("background/cyan.png", 0, 0, flw, flh );
 local bgArt2 = fe.add_clone(bgArt1);
 
 animation.add( PropertyAnimation( bgArt1, {when = Transition.StartLayout, property = "x", start =   0, end = -flw, time = 28000, loop=true}));
@@ -176,7 +176,7 @@ if ( my_config["select_character"] == "By Game" )
 // 2D 또는 3D 박스 이미지 표시
 if ( my_config["boximage_type"] == "Cartridge Disc" )
 {
-	local boximage = fe.add_artwork( "cartridge_disc", 0.331*flw, 0.704*flh, 0.208*flw, 0.274*flh );
+	local boximage = fe.add_artwork( "cartridge", 0.331*flw, 0.704*flh, 0.208*flw, 0.274*flh );
 	boximage.preserve_aspect_ratio = true;
 	local move_boximage = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800

@@ -193,7 +193,7 @@ if ( my_config["select_character"] == "By Game" )
 // 2D 또는 3D 박스 이미지 표시
 if ( my_config["boximage_type"] == "Cartridge Disc" )
 {
-	local boximage = fe.add_artwork( "cartridge_disc", 0.365*flw, 0.731*flh, 0.141*flw, 0.25*flh );
+	local boximage = fe.add_artwork( "cartridge", 0.365*flw, 0.731*flh, 0.141*flw, 0.25*flh );
 	boximage.preserve_aspect_ratio = true;
 	local move_boximage = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800

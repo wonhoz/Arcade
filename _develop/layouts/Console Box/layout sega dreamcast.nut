@@ -75,7 +75,7 @@ local flh = fe.layout.height;
 // default background image (if background art is not enabled) ------------- START
 
 // image animation
-local bgArt1 = fe.add_image("background/purple.png", 0, 0, flw, flh );
+local bgArt1 = fe.add_image("background/violet.png", 0, 0, flw, flh );
 local bgArt2 = fe.add_clone(bgArt1);
 
 animation.add( PropertyAnimation( bgArt1, {when = Transition.StartLayout, property = "x", start =   0, end = -flw, time = 28000, loop=true}));
@@ -97,7 +97,7 @@ local blackbg = fe.add_image("black.png", 0.061*flw, 0.132*flh, 0.375*flw, 0.502
 
 // 모니터와 콘솔기기
 fe.add_image("monitor/monitor.png",      0.027*flw, 0.068*flh, 0.442*flw, 0.752*flh );
-fe.add_image("system/[DisplayName].png", 0.102*flw, 0.75*flh, 0.245*flw, 0.242*flh );
+fe.add_image("system/[DisplayName].png", 0.094*flw, 0.769*flh, 0.246*flw, 0.204*flh );
 
 
 // 동영상
@@ -176,7 +176,7 @@ if ( my_config["select_character"] == "By Game" )
 // 2D 또는 3D 박스 이미지 표시
 if ( my_config["boximage_type"] == "Cartridge Disc" )
 {
-	local boximage = fe.add_artwork( "cartridge_disc", 0.354*flw, 0.718*flh, 0.146*flw, 0.259*flh );
+	local boximage = fe.add_artwork( "cartridge", 0.354*flw, 0.685*flh, 0.146*flw, 0.259*flh );
 	boximage.preserve_aspect_ratio = true;
 	local move_boximage = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
@@ -186,7 +186,7 @@ if ( my_config["boximage_type"] == "Cartridge Disc" )
 
 if ( my_config["boximage_type"] == "3D Box" )
 {
-	local boximage2 = fe.add_artwork( "3dbox", 0.354*flw, 0.718*flh, 0.146*flw, 0.259*flh );
+	local boximage2 = fe.add_artwork( "3dbox", 0.354*flw, 0.685*flh, 0.146*flw, 0.259*flh );
 	boximage2.preserve_aspect_ratio = true;
 	local move_boximage2 = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
