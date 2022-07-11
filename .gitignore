@@ -22,6 +22,7 @@ _develop/emulators/PCSX2/memcards/Soul Calibur III (K).ps2
 _develop/emulators/PPSSPP/Game ISO/
 _develop/emulators/PSXMAME/roms/
 _develop/menu-art/
+_develop_old/
 emulators/Cemu/keys.txt
 emulators/Cemu/log.txt
 emulators/Cemu/mlc01/sys/title/0005001b/1005c000/content/
@@ -66,4 +67,3 @@ emulators/SuperModel/ROMs/
 menu-art/
 last_run.log
 script.nv
-_develop_old/
