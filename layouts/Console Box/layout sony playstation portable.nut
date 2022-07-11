@@ -63,6 +63,9 @@ fe.load_module( "fade" );
 fe.load_module( "animate" );
 fe.load_module( "pan-and-scan" );
 
+fe.layout.width  = 2133;
+fe.layout.height = 1200;
+
 local blip = fe.layout.height;
 local flx = fe.layout.width;
 local fly = fe.layout.height;
@@ -97,7 +100,7 @@ animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, proper
 
 // 모니터와 콘솔기기
 fe.add_image("monitor/monitor_psp.png",  0.005*flw, 0.103*flh, 0.51*flw, 0.398*flh );
-fe.add_image("system/[DisplayName].png", 0.019*flw, 0.572*flh, 0.481*flw, 0.38*flh );
+fe.add_image("system/[DisplayName].png", 0.019*flw, 0.522*flh, 0.481*flw, 0.38*flh );
 
 
 // 동영상
@@ -176,7 +179,7 @@ if ( my_config["select_character"] == "By Game" )
 // 2D 또는 3D 박스 이미지 표시
 if ( my_config["boximage_type"] == "Cartridge Disc" )
 {
-	local boximage = fe.add_artwork( "cartridge", 0.331*flw, 0.704*flh, 0.208*flw, 0.274*flh );
+	local boximage = fe.add_artwork( "cartridge", 0.331*flw, 0.608*flh, 0.208*flw, 0.274*flh );
 	boximage.preserve_aspect_ratio = true;
 	local move_boximage = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
@@ -186,7 +189,7 @@ if ( my_config["boximage_type"] == "Cartridge Disc" )
 
 if ( my_config["boximage_type"] == "3D Box" )
 {
-	local boximage2 = fe.add_artwork( "3dbox", 0.331*flw, 0.704*flh, 0.208*flw, 0.274*flh );
+	local boximage2 = fe.add_artwork( "3dbox", 0.331*flw, 0.608*flh, 0.208*flw, 0.274*flh );
 	boximage2.preserve_aspect_ratio = true;
 	local move_boximage2 = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
@@ -207,22 +210,22 @@ fe.add_image( "listbox/box_green.png", flw*0.534896, flh*0.507407407, flw*0.4458
 
 // 리스트 박스 게임번호 그림자
 local listbox1b = fe.add_listbox( flw*0.541666667,flh*0.2064815, flw*0.1796875, flh*0.6759259 );
-listbox1b.charsize = 40;
+listbox1b.charsize = 36;
 listbox1b.set_sel_rgb( 208, 56, 0 );
 listbox1b.set_rgb( 0, 0, 0 );
 listbox1b.selbg_alpha = 0;
 listbox1b.align = Align.Left;
-listbox1b.font="texgyreheros-bold";
+listbox1b.charsize=36;
 listbox1b.format_string = "[ListEntry]";
 
 // 리스트 박스 게임번호
 local listbox1 = fe.add_listbox( flw*0.540104167, flh*0.2037037, flw*0.1796875, flh*0.6759259 );
-listbox1.charsize = 40;
+listbox1.charsize = 36;
 listbox1.set_sel_rgb( 255 243, 20 );
 listbox1.set_rgb( 73, 223, 222 );
 listbox1.selbg_alpha = 0;
 listbox1.align = Align.Left;
-listbox1.font="texgyreheros-bold";
+listbox1.charsize=36;
 listbox1.format_string = "[ListEntry]";
 
 
@@ -256,20 +259,20 @@ function gamename( index_offset )
 
 
 // 시계
-local clockbtext = fe.add_text( "현재시각:", flw*0.515625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
+local clockbtext = fe.add_text( "현재시각:", flw*0.528515625, flh*0.92962963, flw*0.124166667, flh*0.042592593 );
 clockbtext.set_rgb( 0, 0, 0 );
 clockbtext.charsize = 36;
 
-local clocktext = fe.add_text( "현재시각:", flw*0.5140625, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
+local clocktext = fe.add_text( "현재시각:", flw*0.5269140625, flh*0.926851852, flw*0.124166667, flh*0.042592593 );
 clocktext.set_rgb( 211, 250, 255 );
 clocktext.charsize = 36;
 
-local clockb = fe.add_text( "", flw*0.604166667, flh*0.92962963, flw*0.166666667, flh*0.042592593  );
+local clockb = fe.add_text( "", flw*0.6283333337, flh*0.92962963, flw*0.166666667, flh*0.042592593  );
 clockb.align = Align.Left;
 clockb.charsize = 36;
 clockb.set_rgb( 0, 0, 0 );
 
-local clock = fe.add_text( "", flw*0.602604167, flh*0.926851852, flw*0.166666667, flh*0.042592593  );
+local clock = fe.add_text( "", flw*0.6267083337, flh*0.926851852, flw*0.166666667, flh*0.042592593  );
 clock.align = Align.Left;
 clock.charsize = 36;
 clock.set_rgb( 73, 223, 222 );
@@ -285,12 +288,12 @@ fe.add_ticks_callback( this, "update_clock" );
 
 
 // 즐겨찾기 필터
-local listtextb = fe.add_text( "[!filter] 게임:", flw*0.708333333, flh*0.92962963, flw*0.234375, flh*0.042592593 );
+local listtextb = fe.add_text( "[!filter] 게임:", flw*0.7331249997, flh*0.92962963, flw*0.234375, flh*0.042592593 );
 listtextb.set_rgb( 208, 56, 0 );
 listtextb.charsize = 36;
 listtextb.align = Align.Left;
 
-local listtext = fe.add_text( "[!filter] 게임:", flw*0.706770833, flh*0.926851852, flw*0.234375, flh*0.042592593 );
+local listtext = fe.add_text( "[!filter] 게임:", flw*0.7315078122, flh*0.926851852, flw*0.234375, flh*0.042592593 );
 listtext.set_rgb( 255 243, 20 );
 listtext.charsize = 36;
 listtext.align = Align.Left;
@@ -323,12 +326,12 @@ function filter()
     return text.toupper();
 }
 
-local listb = fe.add_text("[ListSize]", flw*0.9140625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
+local listb = fe.add_text("[ListSize]", flw*0.9140625, flh*0.92962963, flw*0.124166667, flh*0.042592593 );
 listb.set_rgb( 0, 0, 0 );
 listb.charsize=36;
 listb.align = Align.Left;
 
-local list = fe.add_text( "[ListSize]", flw*0.9125, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
+local list = fe.add_text( "[ListSize]", flw*0.9125, flh*0.926851852, flw*0.124166667, flh*0.042592593 );
 list.set_rgb( 73, 223, 222 );
 list.charsize=36;
 list.align = Align.Left;
