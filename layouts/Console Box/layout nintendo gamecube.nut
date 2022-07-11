@@ -100,7 +100,7 @@ local blackbg = fe.add_image("black.png", 0.061*flw, 0.132*flh, 0.401*flw, 0.502
 
 // 모니터와 콘솔기기
 fe.add_image("monitor/monitor.png",      0.027*flw, 0.083*flh, 0.472*flw, 0.602*flh );
-fe.add_image("system/[DisplayName].png", 0.089*flw, 0.663*flh, 0.399*flw, 0.327*flh );
+fe.add_image("system/[DisplayName].png", 0.048*flw, 0.583*flh, 0.399*flw, 0.327*flh );
 
 
 // 동영상
@@ -179,7 +179,7 @@ if ( my_config["select_character"] == "By Game" )
 // 2D 또는 3D 박스 이미지 표시
 if ( my_config["boximage_type"] == "Cartridge Disc" )
 {
-	local boximage = fe.add_artwork( "cartridge", 0.331*flw, 0.704*flh, 0.208*flw, 0.274*flh );
+	local boximage = fe.add_artwork( "cartridge", 0.331*flw, 0.608*flh, 0.208*flw, 0.274*flh );
 	boximage.preserve_aspect_ratio = true;
 	local move_boximage = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
@@ -189,7 +189,7 @@ if ( my_config["boximage_type"] == "Cartridge Disc" )
 
 if ( my_config["boximage_type"] == "3D Box" )
 {
-	local boximage2 = fe.add_artwork( "3dbox", 0.331*flw, 0.704*flh, 0.208*flw, 0.274*flh );
+	local boximage2 = fe.add_artwork( "3dbox", 0.331*flw, 0.608*flh, 0.208*flw, 0.274*flh );
 	boximage2.preserve_aspect_ratio = true;
 	local move_boximage2 = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
