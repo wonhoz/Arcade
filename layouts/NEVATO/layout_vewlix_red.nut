@@ -416,7 +416,7 @@ cab.preserve_aspect_ratio = true;
 
 //snap (video or screenshot) on cab screen ------------- START
 
-local cabScreen = fe.add_artwork ("snap", blip*0.12598, blip*0.32813, blip*0.41797, blip*0.30664);
+local cabScreen = fe.add_artwork ("snap", blip*0.12698, blip*0.32813, blip*0.41797, blip*0.30664);
 // cabScreen.skew_x = Setting("aspectDepend", "snap_skewX");
 // cabScreen.skew_y = Setting("aspectDepend", "snap_skewY");
 // cabScreen.pinch_x = Setting("aspectDepend", "snap_pinchX");
@@ -440,7 +440,7 @@ if ( my_config["cabScreenType"] == "screenshot" )
 
 if ( my_config["enable_scanlines"] == "light" )
 {
-    local scanlines = fe.add_image( "scanlines.png", blip*0.12598, blip*0.32813, blip*0.41797, blip*0.30664 );
+    local scanlines = fe.add_image( "scanlines.png", blip*0.12698, blip*0.32813, blip*0.41797, blip*0.30664 );
     // scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
     // scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
     // scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
@@ -452,7 +452,7 @@ if ( my_config["enable_scanlines"] == "light" )
 
 if ( my_config["enable_scanlines"] == "medium" )
 {
-    local scanlines = fe.add_image( "scanlines.png", blip*0.12598, blip*0.32813, blip*0.41797, blip*0.30664 );
+    local scanlines = fe.add_image( "scanlines.png", blip*0.12698, blip*0.32813, blip*0.41797, blip*0.30664 );
     // scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
     // scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
     // scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
@@ -464,7 +464,7 @@ if ( my_config["enable_scanlines"] == "medium" )
 
 if ( my_config["enable_scanlines"] == "dark" )
 {
-    local scanlines = fe.add_image( "scanlines.png", blip*0.12598, blip*0.32813, blip*0.41797, blip*0.30664 );
+    local scanlines = fe.add_image( "scanlines.png", blip*0.12698, blip*0.32813, blip*0.41797, blip*0.30664 );
     // scanlines.skew_x = Setting("aspectDepend", "snap_skewX");
     // scanlines.skew_y = Setting("aspectDepend", "snap_skewY");
     // scanlines.pinch_x = Setting("aspectDepend", "snap_pinchX");
