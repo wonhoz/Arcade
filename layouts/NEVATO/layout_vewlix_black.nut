@@ -301,8 +301,8 @@ animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, proper
 
 if ( my_config["bg_art"] == "flyer") 
 {
-    //  local bgart = fe.add_artwork( "flyer", flw*0.2, flw*0, flw*0.6, 0);
-    local bgart = PanAndScanArt( "flyer", flw*0.2, 0, flw*0.6, flh);
+    //  local bgart = fe.add_artwork( "flyer", flw*0.3, flw*0, flw*0.6, 0);
+    local bgart = PanAndScanArt( "flyer", flw*0.3, 0, flw*0.6, flh);
     bgart.preserve_aspect_ratio = true;
     local mask = fe.add_image( "mask_edges.png", 0 , 0, mask_factor*flh, flh );  //gradient to mask left and right edge of the flyer 1.6 for 4:3 and 16:10  1.9 for 16:9
     mask.preserve_aspect_ratio = false;
@@ -370,7 +370,7 @@ if ( my_config["bg_mask"] == "medium" )
 {
     local masking = fe.add_image( "background_mask.png", 0, 0, flx, fly );
     masking.preserve_aspect_ratio = false;
-    masking.alpha = 250;           // here you can change mask opacity light=100, medium=150, dark (default)=255
+    masking.alpha = 150;           // here you can change mask opacity light=100, medium=150, dark (default)=255
     local maskingMedium = fe.add_image( "background_mask_medium.png", 0, 0, flx, fly );
     maskingMedium.preserve_aspect_ratio = false;
 }
