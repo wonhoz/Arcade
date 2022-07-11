@@ -301,8 +301,8 @@ animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, proper
 
 if ( my_config["bg_art"] == "flyer") 
 {
-    //  local bgart = fe.add_artwork( "flyer", flw*0.3, flw*0, flw*0.6, 0);
-    local bgart = PanAndScanArt( "flyer", flw*0.3, 0, flw*0.6, flh);
+    //  local bgart = fe.add_artwork( "flyer", flw*0.4, flw*0, flw*0.6, 0);
+    local bgart = PanAndScanArt( "flyer", flw*0.4, 0, flw*0.6, flh);
     bgart.preserve_aspect_ratio = true;
     local mask = fe.add_image( "mask_edges.png", 0 , 0, mask_factor*flh, flh );  //gradient to mask left and right edge of the flyer 1.6 for 4:3 and 16:10  1.9 for 16:9
     mask.preserve_aspect_ratio = false;
