@@ -32,7 +32,7 @@ class UserConfig
     //-----------------------------------------------------------------
     </ label="선택 박스 색상", help="선택 박스의 테두리 색상을 선택하세요.", options="blue,green,pink", order=8 /> select_box_color="green";
     </ label="캐릭터 표시방식", help="디스플레이 이름별 (By Display), 또는 게임 파일별 (By Game) 중에서 표시방식을 선택하세요.", options="By Display,By Game,None", order=9 /> select_character="By Display";
-    </ label="캐릭터 투명도", help="0 (투명) 에서 254 (불투명) 사이의 값을 입력하세요.", options="", order=10 /> character_alpha="254";
+    </ label="캐릭터 투명도", help="0 (투명) 에서 255 (불투명) 사이의 값을 입력하세요.", options="", order=10 /> character_alpha="255";
     
     </ label="--------------------------", help=" ", options=" ", order=11 /> divider5="";
     //-----------------------------------------------------------------
@@ -121,6 +121,8 @@ fe.add_image("system/[DisplayName].png", 0.094*flw, 0.769*flh, 0.28*flw, 0.22*fl
 local snap = fe.add_artwork("snap", 0.064*flw, 0.14*flh, 0.368*flw, 0.49*flh );
 //snap.preserve_aspect_ratio = true;
 snap.trigger = Transition.EndNavigation;
+
+
 //scanlines over cab screen --------------------------- START
 
 if ( my_config["enable_scanlines"] == "light" )

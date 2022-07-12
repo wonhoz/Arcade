@@ -107,7 +107,32 @@ fe.add_image("system/[DisplayName].png", 0.048*flw, 0.677*flh, 0.28*flw, 0.22*fl
 local snap = fe.add_artwork("snap", 0.064*flw, 0.14*flh, 0.368*flw, 0.49*flh );
 //snap.preserve_aspect_ratio = true;
 snap.trigger = Transition.EndNavigation;
-fe.add_image("scanline.png", 0.064*flw, 0.14*flh, 0.369*flw, 0.49*flh );
+
+
+//scanlines over cab screen --------------------------- START
+
+if ( my_config["enable_scanlines"] == "light" )
+{
+    local scanlines = fe.add_image("scanline.png", 0.064*flw, 0.14*flh, 0.369*flw, 0.49*flh );
+    scanlines.preserve_aspect_ratio = false;
+    scanlines.alpha = 50;
+}
+
+if ( my_config["enable_scanlines"] == "medium" )
+{
+    local scanlines = fe.add_image("scanline.png", 0.064*flw, 0.14*flh, 0.369*flw, 0.49*flh );
+    scanlines.preserve_aspect_ratio = false;
+    scanlines.alpha = 150;
+}
+
+if ( my_config["enable_scanlines"] == "dark" )
+{
+    local scanlines = fe.add_image("scanline.png", 0.064*flw, 0.14*flh, 0.369*flw, 0.49*flh );
+    scanlines.preserve_aspect_ratio = false;
+    scanlines.alpha = 200;
+}
+
+//scanlines over cab screen --------------------------- END
 
 
 
