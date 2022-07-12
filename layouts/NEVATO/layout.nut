@@ -391,6 +391,16 @@ if ( my_config["bg_mask"] == "none" )
 }
 
 
+if ( my_config["bg_mask"] == "light" )
+{
+    local masking = fe.add_image( "background_mask.png", 0, 0, flx,fly);   //for 4:3 fix 1.6*fly
+    masking.preserve_aspect_ratio = false;
+    masking.alpha = 50;           // here you can change mask opacity light=100, medium=150, dark (default)=255
+    local maskingMedium = fe.add_image( "background_mask_medium.png", 0, 0, flx, fly );
+    maskingMedium.preserve_aspect_ratio = false;
+}
+
+
 if ( my_config["bg_mask"] == "medium" )
 {
     local masking = fe.add_image( "background_mask.png", 0, 0, flx, fly );
@@ -405,7 +415,7 @@ if ( my_config["bg_mask"] == "dark" )
 {
     local masking = fe.add_image( "background_mask.png", 0, 0, flx,fly);   //for 4:3 fix 1.6*fly
     masking.preserve_aspect_ratio = false;
-    masking.alpha = 255;           // here you can change mask opacity light=100, medium=150, dark (default)=255
+    masking.alpha = 200;           // here you can change mask opacity light=100, medium=150, dark (default)=255
 }
 
 //masking background (adding scanlines and vignette) -------------------- END
