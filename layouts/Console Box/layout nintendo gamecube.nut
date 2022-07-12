@@ -93,6 +93,31 @@ animation.add( PropertyAnimation( bgArt2, {when = Transition.StartLayout, proper
 // default background image (if background art is not enabled) ------------- END
 
 
+
+
+// background art --------------------------------------------------------- START
+
+local bgart = PanAndScanArt( "flyer", flw*0.2, 0, flw*0.6, flh);
+bgart.preserve_aspect_ratio = true;
+local mask = fe.add_image( "mask_edges.png", 0 , 0, 1.9*flh, flh );  //gradient to mask left and right edge of the flyer 1.6 for 4:3 and 16:10  1.9 for 16:9
+mask.preserve_aspect_ratio = false;
+
+bgart.trigger = Transition.EndNavigation;
+bgart.set_fit_or_fill("fill");
+bgart.set_anchor(::Anchor.Center);
+bgart.set_zoom(4.5, 0.00008);
+bgart.set_animate(::AnimateType.Bounce, 0.50, 0.50);
+
+bgart.set_randomize_on_transition(true);
+bgart.set_start_scale(1.1);
+local alpha_cfg = {
+    when = Transition.ToNewSelection, property = "alpha", start = 0, end = 240, time = 1500
+}
+animation.add( PropertyAnimation( bgart, alpha_cfg ) );
+
+// background art --------------------------------------------------------- END
+
+
 //masking background (adding scanlines and vignette) -------------------- START
 
 if ( my_config["bg_mask"] == "none" )
