@@ -293,8 +293,29 @@ if ( my_config["boximage_type"] == "3D Box" )
 // 에뮬 디스플레이 타이틀
 local displayName = fe.add_image ( "wheel/[DisplayName]", flw*0.56771, flh*0.02222, flw*0.3906, flh*0.1852 );
 
-// 게임선택 박스
-fe.add_image( "listbox/box_green.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
+
+
+
+// 게임선택 박스 --------------------------- START
+
+if ( my_config["select_box_color"] == "blue" )
+{
+    fe.add_image( "listbox/box_blue.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
+}
+
+if ( my_config["select_box_color"] == "green" )
+{
+    fe.add_image( "listbox/box_green.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
+}
+
+if ( my_config["select_box_color"] == "pink" )
+{
+    fe.add_image( "listbox/box_pink.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
+}
+
+// 게임선택 박스 --------------------------- END
+
+
 
 
 // 리스트 박스 게임번호 그림자
