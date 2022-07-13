@@ -43,7 +43,7 @@ class UserConfig
     </ label="--------------------------", help=" ", options=" ", order=15 /> divider6="";
     //-----------------------------------------------------------------
     </ label="게임 로고 애니메이션", help="게임의 마키 영상을 애니메이션에 사용할 수 있습니다.", options="Yes,No", order=16 /> enable_gamelogo="Yes";
-    </ label="아트웍 영상 선택", help="선택된 아트웍 영상이 콘솔 시스템 오른쪽에 표시됩니다.", options="Cartridge Disc,3D Box,None", order=17 /> boximage_type="Cartridge Disc";
+    </ label="아트웍 영상 선택", help="선택된 아트웍 영상이 콘솔 시스템 오른쪽에 표시됩니다.", options="Cartridge,3D Box,None", order=17 /> boximage_type="Cartridge";
     // </ label="히스토리 파일 위치", help="히스토리 파일의 위치를 입력하세요.", order=18 /> history_path=".\\history.dat";
 
     </ label="--------------------------", help=" ", options=" ", order=18 /> divider7="";
@@ -280,7 +280,7 @@ if ( my_config["select_character"] == "By Game" )
 
 
 // 2D 또는 3D 박스 이미지 표시
-if ( my_config["boximage_type"] == "Cartridge Disc" )
+if ( my_config["boximage_type"] == "Cartridge" )
 {
 	local boximage = fe.add_artwork( "cartridge", 0.365*flw, 0.731*flh, 0.141*flw, 0.25*flh );
 	boximage.preserve_aspect_ratio = true;
