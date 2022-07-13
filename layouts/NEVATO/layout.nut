@@ -760,7 +760,7 @@ if ( my_config["spinwheelArt"] == "list box" )
     if ( my_config["select_character"] == "By Display" )
     {
         local mascot = fe.add_image ("character/[DisplayName].png", 0.65*flw, 0.20625*flh, 480, 760);
-        mascot.alpha = abs(("0" + my_config["character_alpha"]).tointeger()) % 255;;
+        mascot.alpha = abs(("0" + my_config["character_alpha"]).tointeger()) % 256;
         mascot.preserve_aspect_ratio = true;
     }
 
