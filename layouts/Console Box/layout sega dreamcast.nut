@@ -457,9 +457,17 @@ list.align = Align.Left;
 
 function getFavs(index_offset)
 {
-    if (fe.game_info( Info.Favourite, index_offset ) == "1") return "fav.png";
+    if (fe.game_info( Info.Favourite, index_offset ) == "1") return "★.png";
     else return "";
 }
+
+local listFav = fe.add_listbox( flw*0.5, flh*0.2037037, flw*0.03125, flh*0.6759259 );
+listFav.charsize = 30;
+listFav.set_sel_rgb( 255, 255, 0 );
+listFav.set_rgb( 255, 255, 0 );
+listFav.selbg_alpha = 0;
+listFav.align = Align.Left;
+listFav.format_string = "[!getFavs]";
 
 local romFav = fe.add_image( getFavs(0), flw*0.5, flh*0.5185, flw*0.03125, flh*0.0555 );
 
@@ -478,7 +486,7 @@ function updateFavs( signal_str )
 {
     if(signal_str == "add_favourite"){
         if(romFav.file_name != "") romFav.file_name = "";
-        else romFav.file_name = "fav.png";
+        else romFav.file_name = "★.png";
     }
 }
 
