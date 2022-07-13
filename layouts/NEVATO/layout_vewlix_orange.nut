@@ -56,14 +56,14 @@ class UserConfig
     </ label="--------------------------", help=" ", options=" ", order=15 /> divider7="";
     //-----------------------------------------------------------------
     </ label="배경 아트", help="플라이어, 팬아트, 스크린샷, 비디오 중에서 배경에 표시할 항목을 선택하세요.", options="flyer,fanart,snap,video,none", order=16 /> bg_art="flyer";
-    </ label="배경 영상", help="배경 영상을 선택하세요.", options="black,gray,red,orange,green,cyan,blue,purple,violet,dot,drop,dust,square,none", order=17 /> bg_media="blue";
-    </ label="배경 마스크", help="medium 또는 dark 로 배경 마스크를 선택하세요.", options="dark,medium", order=18 /> bg_mask="dark";
+    </ label="배경 영상", help="배경 영상을 선택하세요.", options="black,gray,red,orange,green,cyan,blue,purple,violet,dot,drop,dust,square,none", order=17 /> bg_media="black";
+    </ label="배경 마스크", help="배경 마스크 효과를 조절할 수 있습니다.", options="light,medium,dark,off", order=18 /> bg_mask="medium";
 
     </ label="--------------------------", help=" ", options=" ", order=19 /> divider8="";
     //-----------------------------------------------------------------
     </ label="선택 박스 색상", help="선택 박스의 테두리 색상을 선택하세요.", options="blue,green,pink", order=20 /> select_box_color="green";
     </ label="캐릭터 표시방식", help="디스플레이 이름별 (By Display), 또는 게임 파일별 (By Game) 중에서 표시방식을 선택하세요.", options="By Display,By Game,None", order=21 /> select_character="By Display";
-    </ label="캐릭터 투명도", help="0 (투명) 에서 254 (불투명) 사이의 값을 입력하세요.", options="", order=22 /> character_alpha="254";
+    </ label="캐릭터 투명도", help="0 (투명) 에서 255 (불투명) 사이의 값을 입력하세요.", options="", order=22 /> character_alpha="255";
 
     </ label="--------------------------", help=" ", options=" ", order=23 /> divider9="";
     //-----------------------------------------------------------------
@@ -366,11 +366,21 @@ if ( my_config["bg_mask"] == "none" )
 }
 
 
+if ( my_config["bg_mask"] == "light" )
+{
+    local masking = fe.add_image( "background_mask.png", 0, 0, flx,fly);   //for 4:3 fix 1.6*fly
+    masking.preserve_aspect_ratio = false;
+    masking.alpha = 50;           // here you can change mask opacity light=100, medium=150, dark (default)=255
+    local maskingMedium = fe.add_image( "background_mask_medium.png", 0, 0, flx, fly );
+    maskingMedium.preserve_aspect_ratio = false;
+}
+
+
 if ( my_config["bg_mask"] == "medium" )
 {
     local masking = fe.add_image( "background_mask.png", 0, 0, flx, fly );
     masking.preserve_aspect_ratio = false;
-    masking.alpha = 250;           // here you can change mask opacity light=100, medium=150, dark (default)=255
+    masking.alpha = 150;           // here you can change mask opacity light=100, medium=150, dark (default)=255
     local maskingMedium = fe.add_image( "background_mask_medium.png", 0, 0, flx, fly );
     maskingMedium.preserve_aspect_ratio = false;
 }
@@ -380,7 +390,7 @@ if ( my_config["bg_mask"] == "dark" )
 {
     local masking = fe.add_image( "background_mask.png", 0, 0, flx,fly);   //for 4:3 fix 1.6*fly
     masking.preserve_aspect_ratio = false;
-    masking.alpha = 255;           // here you can change mask opacity light=100, medium=150, dark (default)=255
+    masking.alpha = 200;           // here you can change mask opacity light=100, medium=150, dark (default)=255
 }
 
 //masking background (adding scanlines and vignette) -------------------- END
@@ -759,11 +769,32 @@ if ( my_config["spinwheelArt"] == "list box" )
     // 에뮬 디스플레이 타이틀
     local displayName = fe.add_image ("wheel/[DisplayName]", flw*0.56771, flh*0.02222, flw*0.3906, flh*0.1852 );
 
-    // 게임선택 박스
-    fe.add_image("listbox/box_green.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
 
 
-    // 리스트 게임번호 그림자
+
+    // 게임선택 박스 --------------------------- START
+
+    if ( my_config["select_box_color"] == "blue" )
+    {
+        fe.add_image( "listbox/box_blue.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
+    }
+
+    if ( my_config["select_box_color"] == "green" )
+    {
+        fe.add_image( "listbox/box_green.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
+    }
+
+    if ( my_config["select_box_color"] == "pink" )
+    {
+        fe.add_image( "listbox/box_pink.png", flw*0.534896, flh*0.507407407, flw*0.445833, flh*0.074074074 );
+    }
+
+    // 게임선택 박스 --------------------------- END
+
+
+
+
+    // 리스트 박스 게임번호 그림자
     local listbox1b = fe.add_listbox( flw*0.541666667,flh*0.2064815, flw*0.1796875, flh*0.6759259 );
     listbox1b.charsize = 36;
     listbox1b.set_sel_rgb( 208, 56, 0 );
@@ -814,20 +845,20 @@ if ( my_config["spinwheelArt"] == "list box" )
 
 
     // 시계
-    local clockbtext = fe.add_text( "현재시각:", flw*0.515625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
+    local clockbtext = fe.add_text( "현재시각:", flw*0.528515625, flh*0.92962963, flw*0.124166667, flh*0.042592593 );
     clockbtext.set_rgb( 0, 0, 0 );
     clockbtext.charsize = 36;
 
-    local clocktext = fe.add_text( "현재시각:", flw*0.5140625, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
+    local clocktext = fe.add_text( "현재시각:", flw*0.5269140625, flh*0.926851852, flw*0.124166667, flh*0.042592593 );
     clocktext.set_rgb( 211, 250, 255 );
     clocktext.charsize = 36;
 
-    local clockb = fe.add_text( "", flw*0.604166667, flh*0.92962963, flw*0.166666667, flh*0.042592593  );
+    local clockb = fe.add_text( "", flw*0.6283333337, flh*0.92962963, flw*0.166666667, flh*0.042592593  );
     clockb.align = Align.Left;
     clockb.charsize = 36;
     clockb.set_rgb( 0, 0, 0 );
 
-    local clock = fe.add_text( "", flw*0.602604167, flh*0.926851852, flw*0.166666667, flh*0.042592593  );
+    local clock = fe.add_text( "", flw*0.6267083337, flh*0.926851852, flw*0.166666667, flh*0.042592593  );
     clock.align = Align.Left;
     clock.charsize = 36;
     clock.set_rgb( 73, 223, 222 );
@@ -843,12 +874,12 @@ if ( my_config["spinwheelArt"] == "list box" )
 
 
     // 즐겨찾기 필터
-    local listtextb = fe.add_text( "[!filter] 게임:", flw*0.708333333, flh*0.92962963, flw*0.234375, flh*0.042592593 );
+    local listtextb = fe.add_text( "[!filter] 게임:", flw*0.7331249997, flh*0.92962963, flw*0.234375, flh*0.042592593 );
     listtextb.set_rgb( 208, 56, 0 );
     listtextb.charsize = 36;
     listtextb.align = Align.Left;
 
-    local listtext = fe.add_text( "[!filter] 게임:", flw*0.706770833, flh*0.926851852, flw*0.234375, flh*0.042592593 );
+    local listtext = fe.add_text( "[!filter] 게임:", flw*0.7315078122, flh*0.926851852, flw*0.234375, flh*0.042592593 );
     listtext.set_rgb( 255 243, 20 );
     listtext.charsize = 36;
     listtext.align = Align.Left;
@@ -881,12 +912,12 @@ if ( my_config["spinwheelArt"] == "list box" )
         return text.toupper();
     }
 
-    local listb = fe.add_text("[ListSize]", flw*0.9140625, flh*0.92962963, flw*0.104166667, flh*0.042592593 );
+    local listb = fe.add_text("[ListSize]", flw*0.9140625, flh*0.92962963, flw*0.124166667, flh*0.042592593 );
     listb.set_rgb( 0, 0, 0 );
     listb.charsize=36;
     listb.align = Align.Left;
 
-    local list = fe.add_text( "[ListSize]", flw*0.9125, flh*0.926851852, flw*0.104166667, flh*0.042592593 );
+    local list = fe.add_text( "[ListSize]", flw*0.9125, flh*0.926851852, flw*0.124166667, flh*0.042592593 );
     list.set_rgb( 73, 223, 222 );
     list.charsize=36;
     list.align = Align.Left;
