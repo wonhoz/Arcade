@@ -26,8 +26,8 @@ class UserConfig
 
     </ label="--------------------------", help=" ", options=" ", order=5 /> divider3="";
     //-----------------------------------------------------------------
-    </ label="배경 영상", help="배경 영상을 선택하세요.", options="black,gray,red,orange,green,cyan,blue,purple,violet,dot,drop,dust,square,none", order=6 /> bg_media="blue";
-    </ label="배경 마스크", help="배경 마스크 효과를 조절할 수 있습니다.", options="light,medium,dark,off", order=7 /> bg_mask="light";
+    </ label="배경 영상", help="배경 영상을 선택하세요.", options="black,gray,red,orange,green,cyan,blue,purple,violet,dot,drop,dust,square,none", order=6 /> bg_media="black";
+    </ label="배경 마스크", help="배경 마스크 효과를 조절할 수 있습니다.", options="light,medium,dark,off", order=7 /> bg_mask="medium";
 
     </ label="--------------------------", help=" ", options=" ", order=8 /> divider4="";
     //-----------------------------------------------------------------
