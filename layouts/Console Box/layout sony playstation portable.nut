@@ -237,7 +237,7 @@ listbg.alpha = 150;
 if ( my_config["enable_flyer"] == "Yes" )
 {
 	local flyer = fe.add_artwork( "flyer", 0.525*flw, 0.206*flh, 0.445*flw, 0.683*flh );
-	flyer.alpha = abs(("0"+my_config["flyer_alpha"]).tointeger()) % 255;;
+	flyer.alpha = abs(("0"+my_config["flyer_alpha"]).tointeger()) % 256;
 	flyer.trigger = Transition.EndNavigation;
 }
 
