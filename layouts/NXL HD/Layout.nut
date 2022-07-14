@@ -1004,6 +1004,7 @@ if (my_config["aspect_ratio"] == "No")
 		local supported = {
 			//filename : [ match1, match2 ]
 			"action": [ "action" ],
+			"arcade": [ "arcade" ],
 			"adventure": [ "adventure" ],
 			"fighting": [ "fighting", "fighter", "beat'em up" ],
 			"platform": [ "platformer", "platform" ],
@@ -1071,7 +1072,7 @@ if (my_config["aspect_ratio"] == "No")
 			"개발자 / 프로듀서 SUCCESS / 게임 정보는 https://www.success-corp.co.jp/ 사이트를 참고해주세요.": [ "shooter", "shmup" ],
 			"개발자 / 프로듀서 CAPCOM / 게임 정보는 www.capcom.co.jp/ 사이트를 참고해주세요.": [ "Capcom" ],
 			"개발자 / 프로듀서 TREASURE inc. / ゲーム情報については http://www.treasure-inc.co.jp/ 사이트를 참고해주세요.": [ "Treasure"],
-			"개발자 / 프로듀서 SNK/PLAYMORE / 게임 정보는 https://www.snk-corp.co.jp/us/ 사이트를 참고해주세요.": [ "SNK Playmore" ]
+			"개발자 / 프로듀서 SNK/PLAYMORE / 게임 정보는 https://www.snk-corp.co.jp/us/ 사이트를 참고해주세요.": [ "SNK", "SNK Playmore" ]
 			"개발자 / 프로듀서 NYU MEDIA/YDT / 게임 정보는 http://nyu-media.com/ 사이트를 참고해주세요.": [ "Nyu Media" ]
 			"개발자 / 프로듀서 SEIBU KAIHATSU/MOSS / 게임 정보는 http://www.mossjp.co.jp/ 사이트를 참고해주세요.": [ "Moss" ]
 			"개발자 / 프로듀서 LAB ZERO GAMES/M2 / 게임 정보는 https://labzerogames.com/ 사이트를 참고해주세요.": [ "Lab Zero Games" ]
