@@ -332,7 +332,7 @@ if (my_config["aspect_ratio"] == "No")
 			    
 			switch ( direction )	
 			{
-			case "down":
+			case "up":
 				transition_swap_point=0.0;
 				if ( vert_flow && ( sel_y > 0 ) )
 				{
@@ -353,7 +353,7 @@ if (my_config["aspect_ratio"] == "No")
 				return true;
 				break;
 				
-			case "up":
+			case "down":
 				transition_swap_point=0.0;
 				if ( vert_flow && ( sel_y < rows - 1 ))
 				{
