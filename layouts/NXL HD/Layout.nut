@@ -879,10 +879,10 @@ if (my_config["aspect_ratio"] == "No")
 
 
 	// add game title to top
-	gridc.child_t = fe.add_text( "", 0, fe.layout.height / -72 , fe.layout.width ,fe.layout.height / 22  );
+	gridc.child_t = fe.add_text( "[Title]", 0, fe.layout.height / -72 , fe.layout.width ,fe.layout.height / 16  );
 	gridc.child_t.font = "futureforces";
-	local titletext = fe.add_text( "[Title]", 0, 5 , fe.layout.width ,fe.layout.height / 30  );
-	titletext.font = "futureforces";
+	gridc.child_t.charsize=30;
+	gridc.child_t.align=Align.BottomCentre;
 
 	// add top layout overlay
 	local bgoverlay = fe.add_image("assets/uielements/wings.png", 0 ,0 ,fe.layout.width ,fe.layout.height );
