@@ -111,7 +111,7 @@
 
 class UserConfig </ help="Navigation controls: Up/Down (to move up and down) and Page Up/Page Down (to move left and right)" />{
 	</ label="Grid Artwork", help="The artwork to display in the grid", options="snap,marquee,flyer,wheel", order=1 />
-	art="wheel";
+	art="marquee";
 	
 	</ label="Gane Selection Glow", help="Add a highlight effect to the select game", options="Yes,No", order=2 />
 	shader="false";
@@ -119,7 +119,7 @@ class UserConfig </ help="Navigation controls: Up/Down (to move up and down) and
 	aspect_ratio="No";	
 	
 	</ label="Logo Artwork", help="The artwork to display in the upper right corner", options="logo,snap,marquee,flyer,wheel", order=4 />
-	logo="logo";
+	logo="wheel";
 	
     </ label="Flow", help="Select the flow direction of the grid", options="Horizontal,Vertical", order=7 />
 	flow="Horizontal";
@@ -879,8 +879,10 @@ if (my_config["aspect_ratio"] == "No")
 
 
 	// add game title to top
-	gridc.child_t = fe.add_text( "[Title]", 0, fe.layout.height / -72 , fe.layout.width ,fe.layout.height / 22  );
+	gridc.child_t = fe.add_text( "", 0, fe.layout.height / -72 , fe.layout.width ,fe.layout.height / 22  );
 	gridc.child_t.font = "futureforces";
+	local titletext = fe.add_text( "[Title]", 0, 5 , fe.layout.width ,fe.layout.height / 30  );
+	titletext.font = "futureforces";
 
 	// add top layout overlay
 	local bgoverlay = fe.add_image("assets/uielements/wings.png", 0 ,0 ,fe.layout.width ,fe.layout.height );
@@ -1055,41 +1057,42 @@ if (my_config["aspect_ratio"] == "No")
 	// Dynamically change the Manufacturer rss text
 	function rss(offset)
 	{
-		local result = "デベロッパー / プロデューサー Unknown / ゲーム情報については、http：//Attractmode.org をご覧ください";
+		local result = "개발자 / 프로듀서 Unknown / 게임 정보는 http：//Attractmode.org 사이트를 참고해주세요.";
 		local cat = " " + fe.game_info(Info.Manufacturer, offset);
 		local supported = {
 			//filename : [ match1, match2 ]
-			"デベロッパー / プロデューサー ARC SYSTEM WORKS / ゲーム情報については、http：/arcsystemworksu.com/ をご覧ください": [ "Arc System Works" ],
-			"デベロッパー / プロデューサー CAVE Co., ltd. / ゲーム情報については、https://www.cave.co.jp/en/ をご覧ください。": [ "Cave" ],
-			"デベロッパー / プロデューサー EXAMU / ゲーム情報については、https://www.examu.co.jp/ をご覧ください。": [ "Examu" ],
-			"デベロッパー / プロデューサー TAITO CORP. / ゲーム情報については、http：//Nesica.net/ をご覧ください。": [ "Taito" ],
-			"デベロッパー / プロデューサー BOUKEN/YOTSUBANE / ゲーム情報については、http：//www.taito.com をご覧ください。": [ "Yotsubane" ],
-			"デベロッパー / プロデューサー ATLUS / ゲーム情報については、http：//atlus.com/ をご覧ください。": [ "Atlus" ],
-			"デベロッパー / プロデューサー SKONEC / ゲーム情報については、http：//www.skonec.com をご覧ください。": [ "Skonec" ],
-			"デベロッパー / プロデューサー SUCCESS / ゲーム情報については、https://www.success-corp.co.jp/ をご覧ください": [ "shooter", "shmup" ],
-			"デベロッパー / プロデューサー CAPCOM / ゲーム情報については、www.capcom.co.jp/ をご覧ください。": [ "Capcom" ],
-			"デベロッパー / プロデューサー TREASURE inc. / ゲーム情報については http://www.treasure-inc.co.jp/ をご覧ください。": [ "Treasure"],
-			"デベロッパー / プロデューサー SNK/PLAYMORE / ゲーム情報については、https://www.snk-corp.co.jp/us/ をご覧ください。": [ "SNK Playmore" ]
-			"デベロッパー / プロデューサー NYU MEDIA/YDT / ゲーム情報については、http://nyu-media.com/ をご覧ください。": [ "Nyu Media" ]
-			"デベロッパー / プロデューサー SEIBU KAIHATSU/MOSS / ゲーム情報については、http://www.mossjp.co.jp/ をご覧ください。": [ "Moss" ]
-			"デベロッパー / プロデューサー LAB ZERO GAMES/M2 / ゲーム情報については、https://labzerogames.com/ をご覧ください。": [ "Lab Zero Games" ]
-			"デベロッパー / プロデューサー FK DIGITAL / ゲーム情報については、http://www.fkdigital.net をご覧ください。": [ "FK Digital" ]
-			"デベロッパー / プロデューサー HOBIBOX / ゲーム情報については、http://www.teck.jp/ をご覧ください。": [ "TechArts" ]
-			"デベロッパー / プロデューサー G.REV / ゲーム情報については、http://www.grev.co.jp/ をご覧ください。": [ "G.rev" ]
-			"デベロッパー / プロデューサー Arika .ltd / ゲーム情報については、http://www.arika.co.jp/ をご覧ください。": [ "Arika" ]
-			"デベロッパー / プロデューサー 07th-Expansion / ゲーム情報については、http://07th-expansion.net/ をご覧ください。": [ "07th-Expansion" ]
-			"デベロッパー / プロデューサー Baseson / ゲーム情報については、http://baseson.nexton-net.jp/ をご覧ください。": [ "Baseson" ]
-			"デベロッパー / プロデューサー Edelweiss / ゲーム情報については、http://edelweiss.skr.jp/ をご覧ください。": [ "Edelweiss" ]
-			"デベロッパー / プロデューサー eigoMANGA / ゲーム情報については、http://www.eigomanga.com/ をご覧ください。": [ "eigoMANGA" ]
-			"デベロッパー / プロデューサー Flat/ ゲーム情報については、http://exceedseries.com をご覧ください。": [ "Flat" ]
-			"デベロッパー / プロデューサー French Bread / ゲーム情報については、http://www13.plala.or.jp/french/ をご覧ください。": [ "French Bread" ]
-			"デベロッパー / プロデューサー Frontier Aja/ ゲーム情報については、http：//aja-games.com をご覧ください。": [ "Frontier Aja" ]
-			"デベロッパー / プロデューサー nrf / ゲーム情報については、http：//aja-games.com をご覧ください。": [ "nrf" ]
-			"デベロッパー / プロデューサー PROJECT ATSUKI / ゲーム情報については、http://www.fightabase.com/compMain.aspx?id=802 をご覧ください。": [ "PROJECT ATSUKI" ]
-			"デベロッパー / プロデューサー Type moon / ゲーム情報については、http://www.typemoon.org/ をご覧ください。": [ "Type moon" ]
-			"デベロッパー / プロデューサー rocking andiod/ ゲーム情報については、http://www.rockinandroid.com/ をご覧ください。": [ "rocking andiod" ]
-			"デベロッパー / プロデューサー Paragon/ ゲーム情報については、Paragon をご覧ください。": [ "Paragon" ]
-			"デベロッパー / プロデューサー Team Shanghai Alice / ゲーム情報については、Touhou Project をご覧ください。": [ "Team Shanghai Alice" ]
+			"개발자 / 프로듀서 ARC SYSTEM WORKS / 게임 정보는 http：/arcsystemworksu.com/ 사이트를 참고해주세요.": [ "Arc System Works" ],
+			"개발자 / 프로듀서 CAVE Co., ltd. / 게임 정보는 https://www.cave.co.jp/en/ 사이트를 참고해주세요.": [ "Cave" ],
+			"개발자 / 프로듀서 EXAMU / 게임 정보는 https://www.examu.co.jp/ 사이트를 참고해주세요.": [ "Examu" ],
+			"개발자 / 프로듀서 TAITO CORP. / 게임 정보는 http：//Nesica.net/ 사이트를 참고해주세요.": [ "Taito" ],
+			"개발자 / 프로듀서 BOUKEN/YOTSUBANE / 게임 정보는 http：//www.taito.com 사이트를 참고해주세요.": [ "Yotsubane" ],
+			"개발자 / 프로듀서 ATLUS / 게임 정보는 http：//atlus.com/ 사이트를 참고해주세요.": [ "Atlus" ],
+			"개발자 / 프로듀서 SKONEC / 게임 정보는 http：//www.skonec.com 사이트를 참고해주세요.": [ "Skonec" ],
+			"개발자 / 프로듀서 SUCCESS / 게임 정보는 https://www.success-corp.co.jp/ 사이트를 참고해주세요.": [ "shooter", "shmup" ],
+			"개발자 / 프로듀서 CAPCOM / 게임 정보는 www.capcom.co.jp/ 사이트를 참고해주세요.": [ "Capcom" ],
+			"개발자 / 프로듀서 TREASURE inc. / ゲーム情報については http://www.treasure-inc.co.jp/ 사이트를 참고해주세요.": [ "Treasure"],
+			"개발자 / 프로듀서 SNK/PLAYMORE / 게임 정보는 https://www.snk-corp.co.jp/us/ 사이트를 참고해주세요.": [ "SNK Playmore" ]
+			"개발자 / 프로듀서 NYU MEDIA/YDT / 게임 정보는 http://nyu-media.com/ 사이트를 참고해주세요.": [ "Nyu Media" ]
+			"개발자 / 프로듀서 SEIBU KAIHATSU/MOSS / 게임 정보는 http://www.mossjp.co.jp/ 사이트를 참고해주세요.": [ "Moss" ]
+			"개발자 / 프로듀서 LAB ZERO GAMES/M2 / 게임 정보는 https://labzerogames.com/ 사이트를 참고해주세요.": [ "Lab Zero Games" ]
+			"개발자 / 프로듀서 FK DIGITAL / 게임 정보는 http://www.fkdigital.net 사이트를 참고해주세요.": [ "FK Digital" ]
+			"개발자 / 프로듀서 HOBIBOX / 게임 정보는 http://www.teck.jp/ 사이트를 참고해주세요.": [ "TechArts" ]
+			"개발자 / 프로듀서 G.REV / 게임 정보는 http://www.grev.co.jp/ 사이트를 참고해주세요.": [ "G.rev" ]
+			"개발자 / 프로듀서 Arika .ltd / 게임 정보는 http://www.arika.co.jp/ 사이트를 참고해주세요.": [ "Arika" ]
+			"개발자 / 프로듀서 07th-Expansion / 게임 정보는 http://07th-expansion.net/ 사이트를 참고해주세요.": [ "07th-Expansion" ]
+			"개발자 / 프로듀서 Baseson / 게임 정보는 http://baseson.nexton-net.jp/ 사이트를 참고해주세요.": [ "Baseson" ]
+			"개발자 / 프로듀서 Edelweiss / 게임 정보는 http://edelweiss.skr.jp/ 사이트를 참고해주세요.": [ "Edelweiss" ]
+			"개발자 / 프로듀서 eigoMANGA / 게임 정보는 http://www.eigomanga.com/ 사이트를 참고해주세요.": [ "eigoMANGA" ]
+			"개발자 / 프로듀서 Flat/ 게임 정보는 http://exceedseries.com 사이트를 참고해주세요.": [ "Flat" ]
+			"개발자 / 프로듀서 French Bread / 게임 정보는 http://www13.plala.or.jp/french/ 사이트를 참고해주세요.": [ "French Bread" ]
+			"개발자 / 프로듀서 Frontier Aja/ 게임 정보는 http：//aja-games.com 사이트를 참고해주세요.": [ "Frontier Aja" ]
+			"개발자 / 프로듀서 nrf / 게임 정보는 http：//aja-games.com 사이트를 참고해주세요.": [ "nrf" ]
+			"개발자 / 프로듀서 PROJECT ATSUKI / 게임 정보는 http://www.fightabase.com/compMain.aspx?id=802 사이트를 참고해주세요.": [ "PROJECT ATSUKI" ]
+			"개발자 / 프로듀서 Type moon / 게임 정보는 http://www.typemoon.org/ 사이트를 참고해주세요.": [ "Type moon" ]
+			"개발자 / 프로듀서 rocking andiod/ 게임 정보는 http://www.rockinandroid.com/ 사이트를 참고해주세요.": [ "rocking andiod" ]
+			"개발자 / 프로듀서 Paragon/ 게임 정보는 Paragon 사이트를 참고해주세요.": [ "Paragon" ]
+			"개발자 / 프로듀서 Team Shanghai Alice / 게임 정보는 Touhou Project 사이트를 참고해주세요.": [ "Team Shanghai Alice" ]
+			"개발자 / 프로듀서 Namco / 게임 정보는 https://www.bandainamcoent.co.jp/ 사이트를 참고해주세요.": [ "Namco" ]
           "mahjong": [ "mahjong" ],
 		
 		}
