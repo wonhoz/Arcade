@@ -14,7 +14,7 @@ void main()
 	{
 		for (j = -3; j < 3; j++)
 		{
-			sum += gl_Color * texture2D(bgl_RenderedTexture, texcoord + vec2(j, i)*0.004) * 0.25;
+			sum += gl_Color * texture2D(bgl_RenderedTexture, texcoord + vec2(j, i)*0.004) * 0.1;
 		}
 	}
 	if (texture2D(bgl_RenderedTexture, texcoord).r < 0.3)
