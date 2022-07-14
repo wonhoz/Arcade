@@ -204,7 +204,7 @@ snap.trigger = Transition.EndNavigation;
 
 //Game Marquee Animation
 ::OBJECTS <- {
-    marquee = fe.add_artwork( "marquee", 0.172*flw, 0.017*flh, 0.188*flw, 0.111*flh ),
+    marquee = fe.add_artwork( "wheel", 0.172*flw, 0.017*flh, 0.188*flw, 0.111*flh ),
 }
 
 if ( my_config["enable_gamelogo"] == "Yes" )
