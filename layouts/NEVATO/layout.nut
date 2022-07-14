@@ -955,7 +955,7 @@ function getFavs(index_offset)
 
 if ( my_config["spinwheelArt"] == "list box" )
 {
-    local listFav = fe.add_listbox( flw*0.5, flh*0.2037037, flw*0.03125, flh*0.6759259 );
+    local listFav = fe.add_listbox( flw*0.494, flh*0.2037037, flw*0.03125, flh*0.6759259 );
     listFav.charsize = 30;
     listFav.set_sel_rgb( 255, 255, 0 );
     listFav.set_rgb( 255, 255, 0 );
@@ -963,11 +963,11 @@ if ( my_config["spinwheelArt"] == "list box" )
     listFav.align = Align.Left;
     listFav.format_string = "[!getFavs]";
 
-    romFav = fe.add_image( getFavs(0), flw*0.5, flh*0.5185, flw*0.03125, flh*0.0555 );
+    romFav = fe.add_image( getFavs(0), flw*0.5, flh*0.5185, flw*0.03125, flw*0.03125 );
 }
 else
 {
-    romFav = fe.add_image( getFavs(0), flx*0.312, fly*0.40, flw*0.03125, flh*0.0555 );
+    romFav = fe.add_image( getFavs(0), flx*0.312, fly*0.40, flw*0.03125, flw*0.03125 );
 }
 
 fe.add_transition_callback( "update_my_list" );
