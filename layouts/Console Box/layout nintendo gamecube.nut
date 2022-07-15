@@ -200,21 +200,21 @@ snap.trigger = Transition.EndNavigation;
 //scanlines over cab screen --------------------------- END
 
 
-// 콘솔기기
-//fe.add_image("monitor/monitor.png",      0.027*flw, 0.068*flh, 0.442*flw, 0.752*flh );
-fe.add_image("system/[DisplayName].png", 0.048*flw, 0.583*flh, 0.399*flw, 0.327*flh );
-
-
 // 게임 정보 표시 --------------------------- START
 
 local infobox = fe.add_image("black.png", 0.06354*flw, 0.59584*flh, 0.369*flw, 40 );
 infobox.alpha = 200;
 
-local info_db = fe.add_text( "개발사: [Manufacturer]    |    발매년도: [Year]    |    장르: [Category]    |    [Players]인용    |    [Extra]", 0.06354*flw, 0.60584*flh, 0.5*flw, 20 );
+local info_db = fe.add_text( "개발사: [Manufacturer]   |   발매년도: [Year]   |   장르: [Category]   |   [Extra]", 0.06354*flw, 0.60584*flh, 0.5*flw, 20 );
 info_db.align = Align.Left;
 info_db.alpha = 200;
 
 // 게임 정보 표시 --------------------------- END
+
+
+// 콘솔기기
+//fe.add_image("monitor/monitor.png",      0.027*flw, 0.068*flh, 0.442*flw, 0.752*flh );
+fe.add_image("system/[DisplayName].png", 0.048*flw, 0.583*flh, 0.399*flw, 0.327*flh );
 
 
 
