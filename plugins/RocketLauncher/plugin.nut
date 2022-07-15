@@ -28,10 +28,10 @@ class UserConfig </ help="Configure the RocketLauncher integration with AttractM
 	</ label="screenshot(RL Background)", help="Determine which AttractMode Artwork should be used to show Rocketlauncher game backgrounds in the fade screen", options="none, snap,wheel, fanart,marquee,flyer", order=3 />
 	screenshot = "snap";
 	
-	</ label="wheel art(RL Logo)", help="Determine which AttractMode Artwork should be used to show Rocketlauncher wheels/box art in the fade screen", options="none, snap,wheel, fanart,marquee,flyer", order=4 />
+	</ label="wheel art(RL Logo)", help="Determine which AttractMode Artwork should be used to show Rocketlauncher wheels/box art in the fade screen", options="none, snap,wheel,Logo, fanart,marquee,flyer", order=4 />
 	wheel = "wheel";
 	
-	</ label="game_video(RL Video)", help="Determine which AttractMode Artwork should be used to show Rocketlauncher videos in the fade screen", options="none, snap,wheel, fanart,marquee,flyer", order=5 />
+	</ label="game_video(RL Video)", help="Determine which AttractMode Artwork should be used to show Rocketlauncher videos in the fade screen", options="none, snap,wheel, fanart,marquee,flyer,logo", order=5 />
 	video = "snap";
 	
 	</ label="game_marquee(RL Artwork)", help="Determine which AttractMode Artwork should be used to show Rocketlauncher game artwork in the fade screen ", options="none, snap,wheel, fanart,marquee,flyer", order=6 />

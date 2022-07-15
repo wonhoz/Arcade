@@ -200,16 +200,28 @@ snap.trigger = Transition.EndNavigation;
 //scanlines over cab screen --------------------------- END
 
 
+// 게임 정보 표시 --------------------------- START
+
+local infobox = fe.add_image("black.png", 0.06354*flw, 0.59584*flh, 0.369*flw, 40 );
+infobox.alpha = 200;
+
+local info_db = fe.add_text( "개발사: [Manufacturer]   |   발매년도: [Year]   |   장르: [Category]   |   [Extra]", 0.06354*flw, 0.60584*flh, 0.369*flw, 20 );
+info_db.align = Align.Centre;
+info_db.alpha = 200;
+
+// 게임 정보 표시 --------------------------- END
+
+
 // 콘솔기기
 //fe.add_image("monitor/monitor.png",      0.027*flw, 0.068*flh, 0.442*flw, 0.752*flh );
-fe.add_image("system/[DisplayName].png", 0.048*flw, 0.583*flh, 0.399*flw, 0.327*flh );
+fe.add_image("system/[DisplayName].png", 0.048*flw, 0.683*flh, 0.2793*flw, 0.2289*flh );
 
 
 
 
 //Game Marquee Animation
 ::OBJECTS <- {
-    marquee = fe.add_artwork( "marquee", 0.154*flw, 0.019*flh, 0.188*flw, 0.111*flh ),
+    marquee = fe.add_artwork( "wheel", 0.154*flw, 0.019*flh, 0.188*flw, 0.111*flh ),
 }
 
 if ( my_config["enable_gamelogo"] == "Yes" )
@@ -274,7 +286,7 @@ if ( my_config["select_character"] == "By Game" )
 // 2D 또는 3D 박스 이미지 표시
 if ( my_config["boximage_type"] == "Cartridge" )
 {
-	local boximage = fe.add_artwork( "cartridge", 0.331*flw, 0.608*flh, 0.208*flw, 0.274*flh );
+	local boximage = fe.add_artwork( "cartridge", 0.304*flw, 0.638*flh, 0.208*flw, 0.274*flh );
 	boximage.preserve_aspect_ratio = true;
 	local move_boximage = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
@@ -284,7 +296,7 @@ if ( my_config["boximage_type"] == "Cartridge" )
 
 if ( my_config["boximage_type"] == "3D Box" )
 {
-	local boximage2 = fe.add_artwork( "3dbox", 0.331*flw, 0.608*flh, 0.208*flw, 0.274*flh );
+	local boximage2 = fe.add_artwork( "3dbox", 0.304*flw, 0.638*flh, 0.208*flw, 0.274*flh );
 	boximage2.preserve_aspect_ratio = true;
 	local move_boximage2 = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
