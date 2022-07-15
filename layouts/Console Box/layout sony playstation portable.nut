@@ -204,8 +204,8 @@ snap.trigger = Transition.EndNavigation;
 // local infobox = fe.add_image("black.png", 0.06354*flw, 0.59584*flh, 0.369*flw, 40 );
 // infobox.alpha = 200;
 
-// local info_db = fe.add_text( "개발사: [Manufacturer]   |   발매년도: [Year]   |   장르: [Category]   |   [Players]인용   |   [Extra]", 0.06354*flw, 0.60584*flh, 0.5*flw, 20 );
-// info_db.align = Align.Left;
+// local info_db = fe.add_text( "개발사: [Manufacturer]   |   발매년도: [Year]   |   장르: [Category]   |   [Players]인용   |   [Extra]", 0.06354*flw, 0.60584*flh, 0.369*flw, 20 );
+// info_db.align = Align.Centre;
 // info_db.alpha = 200;
 
 // 게임 정보 표시 --------------------------- END

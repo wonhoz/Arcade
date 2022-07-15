@@ -487,18 +487,6 @@ if ( my_config["enable_scanlines"] == "dark" )
 //scanlines over cab screen --------------------------- END
 
 
-// 게임 정보 표시 --------------------------- START
-
-local infobox = fe.add_image("black.png", 0.06354*flw, 0.59584*flh, 0.369*flw, 40 );
-infobox.alpha = 200;
-
-local info_db = fe.add_text( "개발사: [Manufacturer]    |    발매년도: [Year]    |    장르: [Category]    |    [Players]인용    |    [Extra]", 0.06354*flw, 0.60584*flh, 0.5*flw, 20 );
-info_db.align = Align.Left;
-info_db.alpha = 200;
-
-// 게임 정보 표시 --------------------------- END
-
-
 
 
 
@@ -580,62 +568,62 @@ if ( my_config["marquee_type"] == "my-own" )
 //LCD display text under cab screen ------------------------------------------------ START
 
 // local lcdLeftText = fe.add_text( "PLAYED: " + "[PlayedCount]", blip*0.2021, blip*0.2728, blip*0.231, blip*0.04 );  // here you can change what is displayed on left side
-local lcdLeftText = fe.add_text( "YEAR: " + "[Year]", blip*0.2021, blip*0.2728, blip*0.231, blip*0.04 );
-lcdLeftText.set_rgb( 170, 220, 240);
-lcdLeftText.align = Align.Centre;  
+// local lcdLeftText = fe.add_text( "YEAR: " + "[Year]", blip*0.2021, blip*0.2728, blip*0.231, blip*0.04 );
+// lcdLeftText.set_rgb( 170, 220, 240);
+// lcdLeftText.align = Align.Centre;  
 // lcdLeftText.rotation = -6.5;
-lcdLeftText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+// lcdLeftText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
 
 
 
-if ( my_config["lcdRight"] == "filter" )
-{
-    local lcdRightText = fe.add_text( "[FilterName]", blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
-    lcdRightText.set_rgb( 170, 220, 240);
-    lcdRightText.align = Align.Centre;
-    // lcdRightText.rotation = -6.6;
-    lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
-}
+// if ( my_config["lcdRight"] == "filter" )
+// {
+//     local lcdRightText = fe.add_text( "[FilterName]", blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
+//     lcdRightText.set_rgb( 170, 220, 240);
+//     lcdRightText.align = Align.Centre;
+//     // lcdRightText.rotation = -6.6;
+//     lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+// }
 
 
-if ( my_config["lcdRight"] == "rom-filename" )
-{
-    local lcdRightText = fe.add_text( "[Name]", blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
-    lcdRightText.set_rgb( 170, 220, 240);
-    lcdRightText.align = Align.Centre;
-    // lcdRightText.rotation = -6.6;
-    lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
-}
+// if ( my_config["lcdRight"] == "rom-filename" )
+// {
+//     local lcdRightText = fe.add_text( "[Name]", blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
+//     lcdRightText.set_rgb( 170, 220, 240);
+//     lcdRightText.align = Align.Centre;
+//     // lcdRightText.rotation = -6.6;
+//     lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+// }
 
 
-if ( my_config["lcdRight"] == "display-name" )
-{
-    local lcdRightText = fe.add_text( "[DisplayName]", blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
-    lcdRightText.set_rgb( 170, 220, 240);
-    lcdRightText.align = Align.Centre;
-    // lcdRightText.rotation = -6.6;
-    lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
-}
+// if ( my_config["lcdRight"] == "display-name" )
+// {
+//     local lcdRightText = fe.add_text( "[DisplayName]", blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
+//     lcdRightText.set_rgb( 170, 220, 240);
+//     lcdRightText.align = Align.Centre;
+//     // lcdRightText.rotation = -6.6;
+//     lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+// }
 
 
-if ( my_config["lcdRight"] == "emulator" )
-{
-    local lcdRightText = fe.add_text( "[Emulator]", blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
-    lcdRightText.set_rgb( 170, 220, 240);
-    lcdRightText.align = Align.Centre;
-    // lcdRightText.rotation = -6.6;
-    lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
-}
+// if ( my_config["lcdRight"] == "emulator" )
+// {
+//     local lcdRightText = fe.add_text( "[Emulator]", blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
+//     lcdRightText.set_rgb( 170, 220, 240);
+//     lcdRightText.align = Align.Centre;
+//     // lcdRightText.rotation = -6.6;
+//     lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+// }
 
 
-if ( my_config["lcdRight"] == "off" )
-{
-    local lcdRightText = fe.add_text( my_config["lcdRightText"], blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
-    lcdRightText.set_rgb( 170, 220, 240);
-    lcdRightText.align = Align.Centre;
-    // lcdRightText.rotation = -6.6;
-    lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
-}
+// if ( my_config["lcdRight"] == "off" )
+// {
+//     local lcdRightText = fe.add_text( my_config["lcdRightText"], blip*0.575, blip*0.2728, blip*0.231, blip*0.04 );
+//     lcdRightText.set_rgb( 170, 220, 240);
+//     lcdRightText.align = Align.Centre;
+//     // lcdRightText.rotation = -6.6;
+//     lcdRightText.font="digital-7 (italic)";  // free font (for personal use) - can be downloaded here: http://www.dafont.com/digital-7.font
+// }
 
 //LCD display text --------------------------------------------------------- END
 
@@ -726,20 +714,34 @@ try { conveyor.transition_ms = my_config["transition_ms"].tointeger(); } catch (
 
 local titleText = fe.add_text( "[Title]", flx*0.11913, fly*0.6401, flw*0.307, flh*0.024  );
 titleText.align = Align.Centre;
-titleText.set_rgb(170,220,240);
+titleText.set_rgb(230,230,230);
 titleText.font = "NanumBarunGothicBold";
 
 // local titleText = fe.add_text( "© [Year] [Manufacturer]", flx*0.31, fly*0.325, flw*0.6, flh*0.0235  );
 // titleText.align = Align.Left;
-// titleText.set_rgb(170,220,240);
+// titleText.set_rgb(230,230,230);
 // titleText.font = "NanumBarunGothicBold";
 
 // local titleText = fe.add_text( "[Category]", flx*0.312, fly*0.360, flw*0.6, flh*0.0235  );
 // titleText.align = Align.Left;
-// titleText.set_rgb(170,220,240);
+// titleText.set_rgb(230,230,230);
 // titleText.font = "NanumBarunGothicBold";
 
 // 게임 개발사 로고 표시 -------------------------------------------------------END
+
+
+
+
+
+
+// 게임 정보 표시 --------------------------- START
+
+local info_db = fe.add_text( "개발사: [Manufacturer]   |   발매년도: [Year]   |   장르: [Category]   |   [Players]인용   |   [Extra]", 0.10154*flw, 0.29584*flh, 0.334*flw, flh*0.019 );
+info_db.align = Align.Centre;
+info_db.set_rgb(230,230,230);
+info_db.font = "NanumBarunGothicBold";
+
+// 게임 정보 표시 --------------------------- END
 
 
 
