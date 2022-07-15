@@ -216,11 +216,23 @@ if ( my_config["enable_scanlines"] == "dark" )
 //scanlines over cab screen --------------------------- END
 
 
+// 게임 정보 표시 --------------------------- START
+
+local infobox = fe.add_image("black.png", 0.06354*flw, 0.59584*flh, 0.369*flw, 40 );
+infobox.alpha = 200;
+
+local info_db = fe.add_text( "개발사: [Manufacturer]   |   발매년도: [Year]   |   장르: [Category]   |   [Players]인용   |   [Extra]", 0.06354*flw, 0.60584*flh, 0.5*flw, 20 );
+info_db.align = Align.Left;
+info_db.alpha = 200;
+
+// 게임 정보 표시 --------------------------- END
+
+
 
 
 //Game Marquee Animation
 ::OBJECTS <- {
-    marquee = fe.add_artwork( "marquee", 0.164*flw, 0.019*flh, 0.188*flw, 0.111*flh ),
+    marquee = fe.add_artwork( "wheel", 0.164*flw, 0.019*flh, 0.188*flw, 0.111*flh ),
 }
 
 if ( my_config["enable_gamelogo"] == "Yes" )
