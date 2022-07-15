@@ -1058,42 +1058,44 @@ if (my_config["aspect_ratio"] == "No")
 	// Dynamically change the Manufacturer rss text
 	function rss(offset)
 	{
-		local result = "개발자 / 프로듀서 Unknown / 게임 정보는 http：//Attractmode.org 사이트를 참고해주세요.";
+		local result = "개발 및 프로듀스: Unknown / 게임 정보는 http：//Attractmode.org 사이트를 참고해주세요.";
 		local cat = " " + fe.game_info(Info.Manufacturer, offset);
 		local supported = {
 			//filename : [ match1, match2 ]
-			"개발자 / 프로듀서 ARC SYSTEM WORKS / 게임 정보는 http：/arcsystemworksu.com/ 사이트를 참고해주세요.": [ "Arc System Works" ],
-			"개발자 / 프로듀서 CAVE Co., ltd. / 게임 정보는 https://www.cave.co.jp/en/ 사이트를 참고해주세요.": [ "Cave" ],
-			"개발자 / 프로듀서 EXAMU / 게임 정보는 https://www.examu.co.jp/ 사이트를 참고해주세요.": [ "Examu" ],
-			"개발자 / 프로듀서 TAITO CORP. / 게임 정보는 http：//Nesica.net/ 사이트를 참고해주세요.": [ "Taito" ],
-			"개발자 / 프로듀서 BOUKEN/YOTSUBANE / 게임 정보는 http：//www.taito.com 사이트를 참고해주세요.": [ "Yotsubane" ],
-			"개발자 / 프로듀서 ATLUS / 게임 정보는 http：//atlus.com/ 사이트를 참고해주세요.": [ "Atlus" ],
-			"개발자 / 프로듀서 SKONEC / 게임 정보는 http：//www.skonec.com 사이트를 참고해주세요.": [ "Skonec" ],
-			"개발자 / 프로듀서 SUCCESS / 게임 정보는 https://www.success-corp.co.jp/ 사이트를 참고해주세요.": [ "shooter", "shmup" ],
-			"개발자 / 프로듀서 CAPCOM / 게임 정보는 www.capcom.co.jp/ 사이트를 참고해주세요.": [ "Capcom" ],
-			"개발자 / 프로듀서 TREASURE inc. / ゲーム情報については http://www.treasure-inc.co.jp/ 사이트를 참고해주세요.": [ "Treasure"],
-			"개발자 / 프로듀서 SNK/PLAYMORE / 게임 정보는 https://www.snk-corp.co.jp/us/ 사이트를 참고해주세요.": [ "SNK", "SNK Playmore" ]
-			"개발자 / 프로듀서 NYU MEDIA/YDT / 게임 정보는 http://nyu-media.com/ 사이트를 참고해주세요.": [ "Nyu Media" ]
-			"개발자 / 프로듀서 SEIBU KAIHATSU/MOSS / 게임 정보는 http://www.mossjp.co.jp/ 사이트를 참고해주세요.": [ "Moss" ]
-			"개발자 / 프로듀서 LAB ZERO GAMES/M2 / 게임 정보는 https://labzerogames.com/ 사이트를 참고해주세요.": [ "Lab Zero Games" ]
-			"개발자 / 프로듀서 FK DIGITAL / 게임 정보는 http://www.fkdigital.net 사이트를 참고해주세요.": [ "FK Digital" ]
-			"개발자 / 프로듀서 HOBIBOX / 게임 정보는 http://www.teck.jp/ 사이트를 참고해주세요.": [ "TechArts" ]
-			"개발자 / 프로듀서 G.REV / 게임 정보는 http://www.grev.co.jp/ 사이트를 참고해주세요.": [ "G.rev" ]
-			"개발자 / 프로듀서 Arika .ltd / 게임 정보는 http://www.arika.co.jp/ 사이트를 참고해주세요.": [ "Arika" ]
-			"개발자 / 프로듀서 07th-Expansion / 게임 정보는 http://07th-expansion.net/ 사이트를 참고해주세요.": [ "07th-Expansion" ]
-			"개발자 / 프로듀서 Baseson / 게임 정보는 http://baseson.nexton-net.jp/ 사이트를 참고해주세요.": [ "Baseson" ]
-			"개발자 / 프로듀서 Edelweiss / 게임 정보는 http://edelweiss.skr.jp/ 사이트를 참고해주세요.": [ "Edelweiss" ]
-			"개발자 / 프로듀서 eigoMANGA / 게임 정보는 http://www.eigomanga.com/ 사이트를 참고해주세요.": [ "eigoMANGA" ]
-			"개발자 / 프로듀서 Flat/ 게임 정보는 http://exceedseries.com 사이트를 참고해주세요.": [ "Flat" ]
-			"개발자 / 프로듀서 French Bread / 게임 정보는 http://www13.plala.or.jp/french/ 사이트를 참고해주세요.": [ "French Bread" ]
-			"개발자 / 프로듀서 Frontier Aja/ 게임 정보는 http：//aja-games.com 사이트를 참고해주세요.": [ "Frontier Aja" ]
-			"개발자 / 프로듀서 nrf / 게임 정보는 http：//aja-games.com 사이트를 참고해주세요.": [ "nrf" ]
-			"개발자 / 프로듀서 PROJECT ATSUKI / 게임 정보는 http://www.fightabase.com/compMain.aspx?id=802 사이트를 참고해주세요.": [ "PROJECT ATSUKI" ]
-			"개발자 / 프로듀서 Type moon / 게임 정보는 http://www.typemoon.org/ 사이트를 참고해주세요.": [ "Type moon" ]
-			"개발자 / 프로듀서 rocking andiod/ 게임 정보는 http://www.rockinandroid.com/ 사이트를 참고해주세요.": [ "rocking andiod" ]
-			"개발자 / 프로듀서 Paragon/ 게임 정보는 Paragon 사이트를 참고해주세요.": [ "Paragon" ]
-			"개발자 / 프로듀서 Team Shanghai Alice / 게임 정보는 Touhou Project 사이트를 참고해주세요.": [ "Team Shanghai Alice" ]
-			"개발자 / 프로듀서 Namco / 게임 정보는 https://www.bandainamcoent.co.jp/ 사이트를 참고해주세요.": [ "Namco" ]
+			"개발 및 프로듀스: ARC SYSTEM WORKS / 게임 정보는 http：/arcsystemworksu.com/ 사이트를 참고해주세요.": [ "Arc System Works" ],
+			"개발 및 프로듀스: CAVE Co., ltd. / 게임 정보는 https://www.cave.co.jp/en/ 사이트를 참고해주세요.": [ "Cave" ],
+			"개발 및 프로듀스: EXAMU / 게임 정보는 https://www.examu.co.jp/ 사이트를 참고해주세요.": [ "Examu" ],
+			"개발 및 프로듀스: TAITO CORP. / 게임 정보는 http：//Nesica.net/ 사이트를 참고해주세요.": [ "Taito" ],
+			"개발 및 프로듀스: BOUKEN/YOTSUBANE / 게임 정보는 http：//www.taito.com 사이트를 참고해주세요.": [ "Yotsubane" ],
+			"개발 및 프로듀스: ATLUS / 게임 정보는 http：//atlus.com/ 사이트를 참고해주세요.": [ "Atlus" ],
+			"개발 및 프로듀스: SKONEC / 게임 정보는 http：//www.skonec.com 사이트를 참고해주세요.": [ "Skonec" ],
+			"개발 및 프로듀스: SUCCESS / 게임 정보는 https://www.success-corp.co.jp/ 사이트를 참고해주세요.": [ "shooter", "shmup" ],
+			"개발 및 프로듀스: CAPCOM / 게임 정보는 www.capcom.co.jp/ 사이트를 참고해주세요.": [ "Capcom" ],
+			"개발 및 프로듀스: TREASURE inc. / 게임 정보는 http://www.treasure-inc.co.jp/ 사이트를 참고해주세요.": [ "Treasure" ],
+			"개발 및 프로듀스: SNK / 게임 정보는 https://www.snk-corp.co.jp/us/ 사이트를 참고해주세요.": [ "SNK" ],
+			"개발 및 프로듀스: SNK PLAYMORE / 게임 정보는 https://www.snk-corp.co.jp/us/ 사이트를 참고해주세요.": [ "SNK Playmore" ],
+			"개발 및 프로듀스: NYU MEDIA/YDT / 게임 정보는 http://nyu-media.com/ 사이트를 참고해주세요.": [ "Nyu Media" ],
+			"개발 및 프로듀스: SEIBU KAIHATSU/MOSS / 게임 정보는 http://www.mossjp.co.jp/ 사이트를 참고해주세요.": [ "Moss" ],
+			"개발 및 프로듀스: LAB ZERO GAMES/M2 / 게임 정보는 https://labzerogames.com/ 사이트를 참고해주세요.": [ "Lab Zero Games" ],
+			"개발 및 프로듀스: FK DIGITAL / 게임 정보는 http://www.fkdigital.net 사이트를 참고해주세요.": [ "FK Digital" ],
+			"개발 및 프로듀스: HOBIBOX / 게임 정보는 http://www.teck.jp/ 사이트를 참고해주세요.": [ "TechArts" ],
+			"개발 및 프로듀스: G.REV / 게임 정보는 http://www.grev.co.jp/ 사이트를 참고해주세요.": [ "G.rev" ],
+			"개발 및 프로듀스: Arika .ltd / 게임 정보는 http://www.arika.co.jp/ 사이트를 참고해주세요.": [ "Arika" ],
+			"개발 및 프로듀스: 07th-Expansion / 게임 정보는 http://07th-expansion.net/ 사이트를 참고해주세요.": [ "07th-Expansion" ],
+			"개발 및 프로듀스: Baseson / 게임 정보는 http://baseson.nexton-net.jp/ 사이트를 참고해주세요.": [ "Baseson" ],
+			"개발 및 프로듀스: Edelweiss / 게임 정보는 http://edelweiss.skr.jp/ 사이트를 참고해주세요.": [ "Edelweiss" ],
+			"개발 및 프로듀스: eigoMANGA / 게임 정보는 http://www.eigomanga.com/ 사이트를 참고해주세요.": [ "eigoMANGA" ],
+			"개발 및 프로듀스: Flat / 게임 정보는 http://exceedseries.com 사이트를 참고해주세요.": [ "Flat" ],
+			"개발 및 프로듀스: French Bread / 게임 정보는 http://www13.plala.or.jp/french/ 사이트를 참고해주세요.": [ "French Bread" ],
+			"개발 및 프로듀스: Frontier Aja / 게임 정보는 http：//aja-games.com 사이트를 참고해주세요.": [ "Frontier Aja" ],
+			"개발 및 프로듀스: nrf / 게임 정보는 http：//aja-games.com 사이트를 참고해주세요.": [ "nrf" ],
+			"개발 및 프로듀스: PROJECT ATSUKI / 게임 정보는 http://www.fightabase.com/compMain.aspx?id=802 사이트를 참고해주세요.": [ "PROJECT ATSUKI" ],
+			"개발 및 프로듀스: Type moon / 게임 정보는 http://www.typemoon.org/ 사이트를 참고해주세요.": [ "Type moon" ],
+			"개발 및 프로듀스: rocking andiod / 게임 정보는 http://www.rockinandroid.com/ 사이트를 참고해주세요.": [ "rocking andiod" ],
+			"개발 및 프로듀스: Paragon / 게임 정보는 Paragon 사이트를 참고해주세요.": [ "Paragon" ],
+			"개발 및 프로듀스: Team Shanghai Alice / 게임 정보는 Touhou Project 사이트를 참고해주세요.": [ "Team Shanghai Alice" ],
+			"개발 및 프로듀스: Namco / 게임 정보는 https://www.bandainamcoent.co.jp/ 사이트를 참고해주세요.": [ "Namco" ],
+			"개발 및 프로듀스: Bandai Namco / 게임 정보는 https://www.bandainamcoent.co.jp/ 사이트를 참고해주세요.": [ "Bandai Namco" ],
           "mahjong": [ "mahjong" ],
 		
 		}
@@ -1103,7 +1105,17 @@ if (my_config["aspect_ratio"] == "No")
 		{
 			foreach( nickname in val )
 			{
-				if ( cat.find(nickname, 0) ) matches.push(key);
+				if ( cat.find(nickname, 0) )
+				{
+					if ((nickname == "SNK Playmore") && (matches.len() > 0))
+					{
+						matches[0] = key;
+					}
+					else
+					{
+						matches.push(key);
+					}
+				}
 			}
 		}
 		if ( matches.len() > 0 )
