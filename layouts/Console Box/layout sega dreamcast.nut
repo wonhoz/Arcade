@@ -199,6 +199,18 @@ if ( my_config["enable_scanlines"] == "dark" )
 //scanlines over cab screen --------------------------- END
 
 
+// 게임 정보 표시 --------------------------- START
+
+local infobox = fe.add_image("black.png", 0.06354*flw, 0.59584*flh, 0.369*flw, 40 );
+infobox.alpha = 200;
+
+local info_db = fe.add_text( "개발사: [Manufacturer]   |   발매년도: [Year]   |   장르: [Category]   |   [Players]인용   |   [Extra]", 0.06354*flw, 0.60584*flh, 0.369*flw, 20 );
+info_db.align = Align.Centre;
+info_db.alpha = 200;
+
+// 게임 정보 표시 --------------------------- END
+
+
 
 
 //Game Marquee Animation
@@ -268,7 +280,7 @@ if ( my_config["select_character"] == "By Game" )
 // 2D 또는 3D 박스 이미지 표시
 if ( my_config["boximage_type"] == "Cartridge" )
 {
-	local boximage = fe.add_artwork( "cartridge", 0.354*flw, 0.655*flh, 0.146*flw, 0.259*flh );
+	local boximage = fe.add_artwork( "cartridge", 0.304*flw, 0.655*flh, 0.146*flw, 0.259*flh );
 	boximage.preserve_aspect_ratio = true;
 	local move_boximage = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
@@ -278,7 +290,7 @@ if ( my_config["boximage_type"] == "Cartridge" )
 
 if ( my_config["boximage_type"] == "3D Box" )
 {
-	local boximage2 = fe.add_artwork( "3dbox", 0.354*flw, 0.655*flh, 0.146*flw, 0.259*flh );
+	local boximage2 = fe.add_artwork( "3dbox", 0.304*flw, 0.655*flh, 0.146*flw, 0.259*flh );
 	boximage2.preserve_aspect_ratio = true;
 	local move_boximage2 = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
