@@ -573,7 +573,7 @@ class Animation
         }
         
         //stop the animation when we reach the end
-        if ( config.when != When.Always && time >= config.time ) stop();
+        if ( time >= config.time ) stop();
     }
     
     //called to cancel the animation
