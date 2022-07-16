@@ -1003,18 +1003,18 @@ if (my_config["aspect_ratio"] == "No")
 		local cat = " " + fe.game_info(Info.Category, offset).tolower();
 		local supported = {
 			//filename : [ match1, match2 ]
-			"action": [ "action" ],
-			"arcade": [ "arcade" ],
-			"adventure": [ "adventure" ],
-			"fighting": [ "fighting", "fighter", "beat'em up" ],
-			"platform": [ "platformer", "platform" ],
-			"puzzle": [ "puzzle" ],
-			"racing": [ "racing", "driving" ],
-			"rpg": [ "rpg", "role playing", "role playing game" ],
-			"shooter": [ "shooter", "shmup" ],
-			"sports": [ "sports", "boxing", "golf", "baseball", "football", "soccer" ],
-			"strategy": [ "strategy"],
-			"mahjong": [ "mahjong" ],
+			"액션": [ "action" ],
+			"아케이드": [ "arcade" ],
+			"어드벤쳐": [ "adventure" ],
+			"격투": [ "fighting", "fighter", "beat'em up" ],
+			"플랫폼": [ "platformer", "platform" ],
+			"퍼즐": [ "puzzle" ],
+			"레이싱": [ "racing", "driving" ],
+			"롤플레잉": [ "rpg", "role playing", "role playing game" ],
+			"슈팅": [ "shooter", "shmup" ],
+			"스포츠": [ "sports", "boxing", "golf", "baseball", "football", "soccer" ],
+			"전략": [ "strategy"],
+			"마작": [ "mahjong" ],
 		
 		}
 		
