@@ -63,8 +63,9 @@ emulators/PPSSPP/Game ISO/
 emulators/Project64_v1.7/Roms/
 emulators/Project64/Roms/
 emulators/PSXMAME/roms/
+emulators/RetroArch/cores/
+emulators/RetroArch/system/
 emulators/SuperModel/ROMs/
 menu-art/
 last_run.log
 script.nv
-emulators/RetroArch/
