@@ -1,0 +1,24 @@
+rcm_23a.8f	rcm_23a_8f	CRC(efd96cb2)
+rcm_22a.7f	rcm_22a_7f	CRC(8729a689)
+rcm_01.3a	rcm_01_3a	CRC(6ecdf13f)
+rcm_02.4a	rcm_02_4a	CRC(944d4f0f)
+rcm_03.5a	rcm_03_5a	CRC(36f3073c)
+rcm_04.6a	rcm_04_6a	CRC(54e622ff)
+rcm_10.3c	rcm_10_3c	CRC(4dc8ada9)
+rcm_11.4c	rcm_11_4c	CRC(f2b9ee06)
+rcm_12.5c	rcm_12_5c	CRC(fed5f203)
+rcm_13.6c	rcm_13_6c	CRC(5069d4a9)
+
+[ko_KR]
+한글화 패치 v1.0
+
+*** 작업 인원 ***
+
+DsNo   : 기타 나머지
+한마루 : 번역 및 그래픽
+
+
+*** 작업 내용 ***
+
+그래픽 : 100%
+텍스트 : 100%

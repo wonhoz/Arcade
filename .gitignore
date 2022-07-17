@@ -37,6 +37,7 @@ emulators/Demul/Roms/
 emulators/Demul/scache/
 emulators/Dolphin/Game ISO/
 emulators/ePSXe/isos/
+emulators/fbneo/roms/
 emulators/M2/Roms/
 emulators/MAME/.mamepgui/cache/gamelist.cache
 emulators/MAME/artwork/

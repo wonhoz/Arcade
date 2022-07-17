@@ -1,0 +1,31 @@
+dmj_38.12f	dmj_38_12f	CRC(82fd1798)
+dmj_39.12h	dmj_39_12h	CRC(35366ccc)
+dmj_40.13f	dmj_40_13f	CRC(a17c170a)
+dmj_41.13h	dmj_41_13h	CRC(6af0b391)
+dm_02.4b	dm_02_4b	CRC(8b98dc48)
+dm_01.4a	dm_01_4a	CRC(80896c33)
+dm_10.9b	dm_10_9b	CRC(c2e7d9ef)
+dm_09.9a	dm_09_9a	CRC(c9c4afa5)
+dm_18.5e	dm_18_5e	CRC(1aa0db99)
+dm_17.5c	dm_17_5c	CRC(dc6ed8ad)
+dm_30.8h	dm_30_8h	CRC(d9d3f8bd)
+dm_29.8f	dm_29_8f	CRC(49a48796)
+dm_06.7b	dm_06_7b	CRC(ae24bb19)
+dm_05.7a	dm_05_7a	CRC(d34e271a)
+dm_14.11b	dm_14_11b	CRC(3f70dd37)
+dm_13.11a	dm_13_11a	CRC(7e69e2e6)
+dm_22.8e	dm_22_8e	CRC(37c9b6c6)
+dm_21.8c	dm_21_8c	CRC(2f1345b4)
+dm_26.10e	dm_26_10e	CRC(3c2a212a)
+dm_25.10c	dm_25_10c	CRC(889aac05)
+
+[ko_KR]
+대마계촌 - 한글화 패치 v1.0
+
+*** 작업 인원 ***
+
+DsNo   : 기타 나머지
+한마루 : 번역 및 타이틀 그래픽
+
+그래픽 : 100%
+텍스트 : 100%

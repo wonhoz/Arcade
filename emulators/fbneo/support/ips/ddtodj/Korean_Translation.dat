@@ -1,0 +1,25 @@
+dadj.03c	dadj_03c	CRC(0b1b5798)
+dadj.04c	dadj_04c	CRC(c6a2fbc8)
+dad.06a	dad_06a	CRC(6225495a)
+dad.13m	dad_13m	CRC(da3cb7d6)
+dad.14m	dad_14m	CRC(837e6f3f)
+dad.15m	dad_15m	CRC(92b63172)
+dad.16m	dad_16m	CRC(f0916bdb)
+dad.17m	dad_17m	CRC(b98757f5)
+dad.18m	dad_18m	CRC(cef393ef)
+dad.19m	dad_19m	CRC(8121ce46)
+dad.20m	dad_20m	CRC(8953fe9e)
+
+[ko_KR]
+한글화 패치 v0.91
+
+*** 작업 인원 ***
+
+DsNo   : 기타 나머지
+한마루 : 번역
+
+
+*** 작업 내용 ***
+
+그래픽 :  80%
+텍스트 : 100%
