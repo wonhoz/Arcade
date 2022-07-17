@@ -15,7 +15,7 @@ Soul Calibur II (K);소울 칼리버 II;Sony PlayStation 2 ISO;SoulCalibur II (U
 sf2;스트리트 파이터 II - 월드 워리어;MAME;0;1991;Capcom;Fighting;1-2;영어;Joystick (8-way);;1;raster;cps2;Street Fighters 2: World Warriors;0;6;;;;
 sf2ce;스트리트 파이터 II' - 챔피언 에디션;MAME;0;1992;Capcom;Fighting;1-2;영어;Joystick (8-way);;1;raster;cps2;Street Fighters 2: Champion's Edition;0;6;;;;
 sf2hf;스트리트 파이터 II' - 하이퍼 파이팅;MAME;0;1992;Capcom;Fighting;1-2;영어;Joystick (8-way);;1;raster;cps2;Street Fighters 2: Hyper Fighting;0;6;;;;
-knightsj;원탁의 기사;FinalBurn Neo;0;1991;Capcom;Arcade;1-3;한국어;Joystick (8-way);;;;cps1;Knights of the Round;;2;;;;
+knightsja;원탁의 기사;FinalBurn Neo;0;1991;Capcom;Arcade;1-3;한국어;Joystick (8-way);;;;cps1;Knights of the Round;;2;;;;
 wofj;천지를 먹다 II - 적벽대전;FinalBurn Neo;wof;1992;Capcom;Arcade;1-3;한국어;Joystick (8-way);;1;raster;cps2;Warriors of Fate;0;2;;;;
 tekken;철권;PSXMAME;0;1994;Namco;Fighting;1-2;영어;Joystick (8-way);;;;es3;Tekken;;4;;;;
 #Tekken;철권 (PS1);Sony PlayStation CUE;0;1995;Namco;Fighting;1-2;영어;Joystick (8-way);;;;es3;Tekken;영어;4;;;;
@@ -34,5 +34,5 @@ tektagt;철권 태그 토너먼트;PSXMAME;0;1999;Namco;Fighting;1-2;영어;Joys
 Tekken;철권 태그 토너먼트 2;Nintendo Wii U;Tekken Tag Tournament 2 - Wii U Edition (USA);2012;Namco;Fighting;1-2;한국어;Joystick (8-way);;;;es3;Tekken Tag Tournament 2;영어;5;;;;
 dino;캐딜락 공룡신세기;MAME;0;1993;Capcom;Arcade;1-3;영어;Joystick (8-way);;1;raster;cps1;Cadillacs and Dinosours;0;2;;;;
 kodj;킹 오브 드래곤;FinalBurn Neo;0;1991;Capcom;Action;1-3;한국어;Joystick (8-way);;1;raster;cps1;The King of Dragons;0;2;;;;
-ffightj;파이널 파이트;FinalBurn Neo;0;1989;Capcom;Arcade;1-2;영어;Joystick (8-way);;1;raster;cps1;Final Fight;0;2;;;;
+ffight;파이널 파이트;FinalBurn Neo;0;1989;Capcom;Arcade;1-2;영어;Joystick (8-way);;1;raster;cps1;Final Fight;0;2;;;;
 punisherj;퍼니셔;FinalBurn Neo;0;1993;Capcom;Arcade;1-2;영어;Joystick (8-way);;1;raster;cps1;The Punisher;0;2;;;;
