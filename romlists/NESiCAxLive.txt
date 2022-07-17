@@ -1,6 +1,6 @@
 #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons;Series;Language;Region;Rating
-ddsom;던전&드래곤즈: 섀도우 오브 미스타라;MAME;0;1996;Capcom;Arcade;1-4;영어;Joystick (8-way);;1;raster;cps2;Dungeons & Dragons: Shadow over Mystara;0;4;;;;
-ddtod;던전&드래곤즈: 운명의 탑;MAME;0;1994;Capcom;Arcade;1-4;영어;Joystick (8-way);;1;raster;cps2;Dungeons & Dragons: Tower of Doom;0;4;;;;
+ddsomj;던전&드래곤즈: 섀도우 오브 미스타라;RetroArch FinalBurn Neo;0;1996;Capcom;Arcade;1-4;한국어;Joystick (8-way);;1;raster;cps2;Dungeons & Dragons: Shadow over Mystara;0;4;;;;
+ddtodj;던전&드래곤즈: 운명의 탑;RetroArch FinalBurn Neo;0;1994;Capcom;Arcade;1-4;한국어;Joystick (8-way);;1;raster;cps2;Dungeons & Dragons: Tower of Doom;0;4;;;;
 mslug;메탈슬러그 1;MAME;0;1996;SNK;Action;1-2;영어;Joystick (8-way);;1;;neogeo;Metal Slug;;3;;;;
 mslug2;메탈슬러그 2;MAME;0;1998;SNK;Action;1-2;영어;Joystick (8-way);;1;raster;neogeo;Metal Slug 2;0;3;;;;
 mslug3;메탈슬러그 3;MAME;0;2000;SNK;Action;1-2;영어;Joystick (8-way);;1;raster;neogeo;Metal Slug 3;0;3;;;;
@@ -15,8 +15,8 @@ Soul Calibur II (K);소울 칼리버 II;Sony PlayStation 2 ISO;SoulCalibur II (U
 sf2;스트리트 파이터 II - 월드 워리어;MAME;0;1991;Capcom;Fighting;1-2;영어;Joystick (8-way);;1;raster;cps2;Street Fighters 2: World Warriors;0;6;;;;
 sf2ce;스트리트 파이터 II' - 챔피언 에디션;MAME;0;1992;Capcom;Fighting;1-2;영어;Joystick (8-way);;1;raster;cps2;Street Fighters 2: Champion's Edition;0;6;;;;
 sf2hf;스트리트 파이터 II' - 하이퍼 파이팅;MAME;0;1992;Capcom;Fighting;1-2;영어;Joystick (8-way);;1;raster;cps2;Street Fighters 2: Hyper Fighting;0;6;;;;
-knights;원탁의 기사;MAME;0;1991;Capcom;Arcade;1-3;영어;Joystick (8-way);;;;cps1;Knights of the Round;;2;;;;
-wofj;천지를 먹다 II - 적벽대전;MAME;wof;1992;Capcom;Arcade;1-3;영어;Joystick (8-way);;1;raster;cps2;Warriors of Fate;0;2;;;;
+knightsja;원탁의 기사;RetroArch FinalBurn Neo;0;1991;Capcom;Arcade;1-3;한국어;Joystick (8-way);;;;cps1;Knights of the Round;;2;;;;
+wofj;천지를 먹다 II - 적벽대전;RetroArch FinalBurn Neo;wof;1992;Capcom;Arcade;1-3;한국어;Joystick (8-way);;1;raster;cps2;Warriors of Fate;0;2;;;;
 tekken;철권;PSXMAME;0;1994;Namco;Fighting;1-2;영어;Joystick (8-way);;;;es3;Tekken;;4;;;;
 #Tekken;철권 (PS1);Sony PlayStation CUE;0;1995;Namco;Fighting;1-2;영어;Joystick (8-way);;;;es3;Tekken;영어;4;;;;
 tekken2;철권 2;PSXMAME;0;1995;Namco;Fighting;1-2;영어;Joystick (8-way);;;;es3;Tekken 2;;4;;;;
@@ -33,6 +33,6 @@ tektagt;철권 태그 토너먼트;PSXMAME;0;1999;Namco;Fighting;1-2;영어;Joys
 #Tekken TT (K);철권 태그 토너먼트 (PS2);Sony PlayStation 2 GZ;Tekken Tag Tournament (USA);2000;Namco;Fighting;1-2;한국어;Joystick (8-way);;;;es3;Tekken Tag Tournament;한국어;5;;;;
 Tekken;철권 태그 토너먼트 2;Nintendo Wii U;Tekken Tag Tournament 2 - Wii U Edition (USA);2012;Namco;Fighting;1-2;한국어;Joystick (8-way);;;;es3;Tekken Tag Tournament 2;영어;5;;;;
 dino;캐딜락 공룡신세기;MAME;0;1993;Capcom;Arcade;1-3;영어;Joystick (8-way);;1;raster;cps1;Cadillacs and Dinosours;0;2;;;;
-kod;킹 오브 드래곤;MAME;0;1991;Capcom;Action;1-3;영어;Joystick (8-way);;1;raster;cps1;The King of Dragons;0;2;;;;
-ffight;파이널 파이트;MAME;0;1989;Capcom;Arcade;1-2;영어;Joystick (8-way);;1;raster;cps1;Final Fight;0;2;;;;
-punisher;퍼니셔;MAME;0;1993;Capcom;Arcade;1-2;영어;Joystick (8-way);;1;raster;cps1;The Punisher;0;2;;;;
+kodj;킹 오브 드래곤;RetroArch FinalBurn Neo;0;1991;Capcom;Action;1-3;한국어;Joystick (8-way);;1;raster;cps1;The King of Dragons;0;2;;;;
+ffight;파이널 파이트;RetroArch FinalBurn Neo;0;1989;Capcom;Arcade;1-2;한국어;Joystick (8-way);;1;raster;cps1;Final Fight;0;2;;;;
+punisherj;퍼니셔;RetroArch FinalBurn Neo;0;1993;Capcom;Arcade;1-2;한국어;Joystick (8-way);;1;raster;cps1;The Punisher;0;2;;;;
