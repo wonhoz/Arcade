@@ -8,25 +8,9 @@
   "sort_mode": 2,
   "items": [
     {
-      "path": "C:\\Git\\AttractMode\\emulators\\retroarch\\system\\fbneo\\patched\\ffight.zip",
+      "path": "D:\\AttractMode\\emulators\\retroarch\\system\\fbneo\\patched\\ffight.zip",
       "label": "",
-      "core_path": "C:\\Git\\AttractMode\\emulators\\retroarch\\cores\\fbneo_libretro.dll",
-      "core_name": "Arcade (FinalBurn Neo)",
-      "crc32": "",
-      "db_name": ""
-    },
-    {
-      "path": "C:\\Git\\AttractMode\\emulators\\retroarch\\system\\fbneo\\patched\\knightsja.zip",
-      "label": "",
-      "core_path": "C:\\Git\\AttractMode\\emulators\\retroarch\\cores\\fbneo_libretro.dll",
-      "core_name": "Arcade (FinalBurn Neo)",
-      "crc32": "",
-      "db_name": ""
-    },
-    {
-      "path": "C:\\Git\\AttractMode\\emulators\\retroarch\\system\\fbneo\\patched\\punisherj.zip",
-      "label": "",
-      "core_path": "C:\\Git\\AttractMode\\emulators\\retroarch\\cores\\fbneo_libretro.dll",
+      "core_path": "D:\\AttractMode\\emulators\\retroarch\\cores\\fbneo_libretro.dll",
       "core_name": "Arcade (FinalBurn Neo)",
       "crc32": "",
       "db_name": ""
