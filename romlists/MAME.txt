@@ -277,6 +277,7 @@ bmfinal;비트매니아 파이널;MAME;0;2002;Konami;Rhythm;2;0;dial;good;1;rast
 bigfight;빅파이트;MAME;0;1992;Tatsumi;Arcade;4;0;Joystick (8-way);imperfect;1;raster;0;0;0;3;;;;
 realbrk;빌리어드 아카데미 리얼 브레이크;MAME;;1998;Nakanihon;Sports;2;0;Joystick (8-way);imperfect;1;raster;;;;2;;;;
 realbrkk;빌리어드 아카데미 리얼 브레이크 (한국판);EKMAME;realbrk;1998;Nakanihon;Sports;2;0;Joystick (8-way);imperfect;1;raster;realbrk;;;2;;;;
+ppchamp;빠샤빠샤 챔프 미니게임 페스티발;MAME;0;1997;동성;Puzzle;3;0;0;imperfect;1;raster;0;0;0;3;;;;
 pasha2;빠샤빠샤 2;MAME;0;1998;동성;Puzzle;3;0;0;imperfect;1;raster;0;0;0;3;;;;
 #popeye;뽀빠이;MAME;0;1982;Nintendo;Action;2;0;Joystick (4-way);good;1;raster;0;0;0;1;;;;
 #pooyan;뿌얀;MAME Vertical;0;1982;Konami;Classic;2;90;Joystick (vertical2-way);good;1;raster;0;0;0;1;;;;
@@ -593,7 +594,7 @@ puzzloop;퍼즈루프;MAME;0;1998;Mitchell;Puzzle;2;0;Joystick (8-way),dial;impe
 puzzloopk;퍼즈루프 (한국판);EKMAME;puzzloop;1998;Mitchell;Puzzle;2;0;Joystick (8-way),dial;imperfect;1;raster;puzzloop;;;2;;;;
 pzloop2;퍼즈루프 2;MAME;0;2001;Mitchell;Puzzle;;;;;;;;0;0;4;;;;
 sandor;퍼즐 & 액션: 산도-R (일본판);MAME;;1995;Sega;Puzzle;4;0;Joystick (8-way);imperfect;1;raster;stvbios;;;4;;;;
-thuntk;보물을 찾아라 - 퍼즐 & 액션: 산도-R (한글판);EKMAME;0;1995;SEGA;Puzzle;2;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;4;;;;
+thuntk;퍼즐 & 액션: 보물을 찾아라 (한글판);EKMAME;0;1995;SEGA;Puzzle;2;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;4;;;;
 puzzlove;퍼즐 러브;MAME;;1994;Para;Puzzle;2;0;Joystick (8-way);good;1;raster;;;;3;;;;
 puzzlovek;퍼즐 러브;EKMAME;puzzlove;1994;Para;Puzzle;2;0;Joystick (8-way);good;1;raster;puzzlove;;;3;;;;
 mushitam;퍼즐 벌레공주;MAME;0;2005;CAVE;Puzzle;2;;;;;;;;;;;;;
