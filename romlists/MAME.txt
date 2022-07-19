@@ -631,7 +631,7 @@ fixeightbl;픽스에이트 (한국판, 해적판);EKMAME;fixeight;1992;bootleg;S
 #hotd;하우스 오브 더 데드;MAME;0;1997;SEGA;GunShooting;2;0;Joystick (8-way);preliminary;1;raster;0;0;0;4;;;;
 #hotd2;하우스 오브 더 데드 2;MAME;0;1999;SEGA;GunShooting;2;0;lightgun;preliminary;1;raster;hod2bios;0;0;2;;;;
 #hyprduel;하이퍼 듀얼;MAME;0;1993;Technosoft;Shooting;2;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;4;;;;
-hyperbbck;하이퍼 비시바시;MAME;hyperbbc;1998;Konami;Puzzle;3;0;;good;1;;;;;;;;;
+hyperbbck;하이퍼 비시바시 챔프;MAME;hyperbbc;1998;Konami;Puzzle;3;0;;good;1;;;;;;;;;
 hyperspt;하이퍼 스포츠 / 하이퍼 올림픽 '84;MAME;0;1984;Konami;Sports;2;0;Joystick (8-way),dial;good;1;raster;0;0;0;2;;;;
 #inthunt;해저대전쟁 / 인 더 헌트;MAME;0;1993;Irem;Shooting;2;0;Joystick (8-way);good;1;raster;0;0;0;2;;;;
 hangon;행온;MAME;0;1985;SEGA;Racing;1;0;Paddle,pedal;good;1;raster;0;0;0;0;;;;

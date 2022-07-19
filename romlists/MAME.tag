@@ -38,6 +38,7 @@ pbobble
 pbobble3
 pbobble4
 photoy2k
+ppchamp
 sailormn
 sailormnk
 sailormnok
