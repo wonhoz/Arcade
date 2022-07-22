@@ -8,8 +8,8 @@ bballoon;BnB 아케이드;MAME;0;1999;Eolith;Puzzle;2;0;Joystick (8-way),dial;go
 djboy;DJ 보이;MAME;0;1989;Sammy;Action;1;0;Joystick (8-way);good;;;;;;;;;;
 gloc;G-LOC 에어 배틀;MAME;0;1990;SEGA;Shooting;1;0;;good;1;;;;;;;;;
 jjsquawk;J. J. 스쿼커즈;MAME;0;1993;Athena / Able;Action;2;0;Joystick (8-way);imperfect;1;raster;0;0;0;2;;;;
-nbajamex;NBA Jam EX;MAME;0;1996;Acclaim;Sports;4;0;Joystick (8-way);imperfect;1;raster;0;0;0;3;;;;
-nbajamte;NBA Jam TE;MAME;0;1994;Midway;Sports;4;0;Joystick (8-way);good;1;raster;0;0;0;3;;;;
+nbajamex;NBA Jam 익스트림;MAME;0;1996;Acclaim;Sports;4;0;Joystick (8-way);imperfect;1;raster;0;0;0;3;;;;
+nbajamte;NBA Jam 토너먼트;MAME;0;1994;Midway;Sports;4;0;Joystick (8-way);good;1;raster;0;0;0;3;;;;
 #p47;P-47: 팬텀 파이터;MAME;0;1995;Jaleco;Shooting;;;;;;;;;;;;;;
 #rtype;R 타입;MAME;0;1987;Irem;Shooting;2;0;Joystick (8-way);good;1;raster;0;0;0;4;;;;
 #rtype2;R 타입 II;MAME;0;1989;Irem;Shooting;2;0;Joystick (8-way);good;1;raster;0;0;0;4;;;;

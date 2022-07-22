@@ -496,7 +496,7 @@ if ( my_config["enable_scanlines"] == "dark" )
 if ( my_config["marquee_type"] == "marquee" )
 {
     //local marqueesta = fe.add_image("static.jpg", blip*0.18796, blip*0.05648, blip*0.57685, blip*0.10000 );
-    local marqueeBkg = fe.add_image("[marquee]", blip*0.18796, blip*0.05648, blip*0.57685, blip*0.10000 );
+    local marqueeBkg = fe.add_image("[wheel]", blip*0.18796, blip*0.05648, blip*0.57685, blip*0.10000 );
     // marqueeBkg.skew_x = Setting("aspectDepend", "marquee_skewX");
     // marqueeBkg.skew_y = Setting("aspectDepend", "marquee_skewY");
     // marqueeBkg.pinch_x = Setting("aspectDepend", "marquee_pinchX");
@@ -505,7 +505,7 @@ if ( my_config["marquee_type"] == "marquee" )
     marqueeBkg.trigger = Transition.EndNavigation;
     marqueeBkg.preserve_aspect_ratio = false;
 
-    local marquee = FadeArt("marquee", blip*0.18796, blip*0.05648, blip*0.57685, blip*0.10000 );
+    local marquee = FadeArt("wheel", blip*0.18796, blip*0.05648, blip*0.57685, blip*0.10000 );
     // marquee.skew_x = Setting("aspectDepend", "marquee_skewX");
     // marquee.skew_y = Setting("aspectDepend", "marquee_skewY");
     // marquee.pinch_x = Setting("aspectDepend", "marquee_pinchX");
