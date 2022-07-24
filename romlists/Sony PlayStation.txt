@@ -7,6 +7,7 @@ Resident Evil 2-Dual Shock (K);레지던트 이블 2;Sony PlayStation PBP;0;1998
 Resident Evil 3 - Last Escapea (K);레지던트 이블 3;Sony PlayStation PBP;0;1999;Capcom;Action;1;;;;;;;;한국어;;;;;
 Rockman 8-Metal Heroes (K);록맨 8;Sony PlayStation CUE;0;1996;Capcom;Action;1;;;;;;;;한국어;;;;;
 Rockman X4 (K);록맨 X4;Sony PlayStation CUE;0;1997;Capcom;Action;1;;;;;;;;한국어;;;;;
+RockManX5;록맨 X5;Sony PlayStation CUE;Mega Man X5 (USA);2000;Capcom;Action;1;;;;;;;rockman;일본어;;;;;
 Mega Man X6 (K);록맨 X6;Sony PlayStation CUE;0;2001;Capcom;Action;1;;;;;;;;한국어;;;;;
 #R4 - Ridge Racer Type 4 (USA);릿지 레이서 타입 4;Sony PlayStation CUE;0;1998;Namco;Racing;1;;;;;;;;영어;;;;;
 #Manic Game Girl (K);매닉 게임 걸;Sony PlayStation CUE;0;2002;JoyCast;Action;1;;;;;;;;한국어;;;;;
@@ -32,6 +33,7 @@ Clock Tower 2 The Struggle Within;클락 타워 2;Sony PlayStation CUE;0;1998;Hu
 #Tales of Destiny II (USA) (Disc 2);테일즈 오브 데스티니 II Disc 2;Sony PlayStation CUE;Tales of Destiny II (USA) (Disc 1);2000;Namco;RPG;1;;;;;;;;영어;;;;;
 Tomb Raider - The Last Revelation;툼 레이더;Sony PlayStation CUE;0;1999;Core Design;Action;1;;;;;;;;영어;;;;;
 Final Fantasy 7 (K) v1.73;파이널 판타지 7;Sony PlayStation PBP;0;1997;Square;RPG;1;;;;;;;;한국어;;;;;
+Final Fantasy VIII (USA);파이널 판타지 8;Sony PlayStation CUE;Final Fantasy VIII (USA) (Disc 1);1999;Square;RPG;1;;;;;;;;영어;;;;;
 Final Fantasy 9 (K);파이널 판타지 9;Sony PlayStation PBP;0;2000;Square;RPG;1;;;;;;;;한국어;;;;;
 Parasite Eve (K);패러사이트 이브 1;Sony PlayStation PBP;0;1998;Square;ARPG;1;;;;;;;;한국어;;;;;
 Parasite Eve 2 [Disc1of2] [U] [SLUS-01042];패러사이트 이브 2. Disc 1;Sony PlayStation CCD;0;1999;Square;ARPG;1;;;;;;;;영어;;;;;
