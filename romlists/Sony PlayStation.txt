@@ -1,5 +1,5 @@
 #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons;Series;Language;Region;Rating
-Gundam Battle Assault 2 (USA);건담 배틀 어절트 2;Sony PlayStation CUE;0;2002;Bandai;Fighting;2;;;;;;;;영어;;;;;
+Gundam Battle Assault 2 (USA);건담 배틀 어설트 2;Sony PlayStation CUE;0;2002;Bandai;Fighting;2;;;;;;;;영어;;;;;
 Dino Crisis 1 (K);디노 크라이시스 1;Sony PlayStation CUE;Dino Crisis (USA);1999;Capcom;Action;1;;;;;;;;한국어;;;;;
 Dino Crisis 2 (K);디노 크라이시스 2;Sony PlayStation PBP;Dino Crisis 2 (USA);2000;Capcom;Action;1;;;;;;;;한국어;;;;;
 Resident Evil 1-Director's Cut Dual Shock (K);레지던트 이블 1;Sony PlayStation PBP;0;1996;Capcom;Action;1;;;;;;;;한국어;;;;;

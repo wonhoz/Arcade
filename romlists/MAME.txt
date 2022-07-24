@@ -187,7 +187,7 @@ othellos;렛츠 플레이 오델로;MAME;0;1998;Success;Puzzle;2;0;Joystick (8-w
 growl;루나크 / 그라울;MAME;0;1990;Taito;Arcade;2;0;Joystick (8-way);good;;;;;;;;;;
 #le2;리썰 엔포서스 2;MAME;0;1994;Konami;Shooting;4;0;Joystick (8-way),lightgun;imperfect;1;raster;konamigx;0;0;3;;;;
 ghostb;리얼 고스트버스터;MAME;;1987;Data East;Action;2;0;Joystick (8-way);good;1;raster;;;;2;;;;
-liquidk;리키드 퀴즈;MAME;0;1990;Taito;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2;;;;
+liquidk;리퀴드 퀴즈;MAME;0;1990;Taito;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2;;;;
 #repulse;리펄스;MAME Vertical;0;1985;SEGA;Shooting;1;90;;good;1;raster;0;0;0;1;;;;
 ridgerac;릿지 레이서;MAME;;1993;Namco;Racing;1;0;Joystick (8-way),paddle,pedal;imperfect;1;raster;;;;3;;;;
 ridgera2;릿지 레이서 2;MAME;0;1994;Namco;Racing;1;;;;;;;;;;;;;
