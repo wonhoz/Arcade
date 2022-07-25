@@ -30,6 +30,6 @@
 Tekken;철권 태그 토너먼트 2 Wii U;Nintendo Wii U;Tekken Tag Tournament 2 - Wii U Edition (USA);2012;Namco;Fighting;;;;;;;;;영어;;;;;
 #seven;터치! 커비 슈퍼 레인보우;Nintendo Wii U;Kirby and the Rainbow Curse (USA);2015;HAL Laboratory,Inc.;Action;;;;;;;;;영어;;;;;
 #project;패스트 레이싱 네오;Nintendo Wii U;Fast Racing NEO (USA);2015;Shin'en Multimedia;Racing;;;;;;;;;영어;;;;;
-Pokken Tournament;폿권 토너먼트;Nintendo Wii U;Pokken Tournament (USA);2014;Bandai Namco;Fighting;;;;;;;;;영어;;;;;
+ferrum_app;폿권 토너먼트;Nintendo Wii U;Pokken Tournament (USA);2014;Bandai Namco;Fighting;;;;;;;;;영어;;;;;
 #carrot;피크민 3;Nintendo Wii U;Pikmin 3 (USA);2013;Nintendo;Action;;;;;;;;;영어;;;;;
 #Stainless;환영이문록 #FE;Nintendo Wii U;Tokyo Mirage Sessions FE (Europe);2016;Atlus;SRPG;;;;;;;;;영어;;;;;
