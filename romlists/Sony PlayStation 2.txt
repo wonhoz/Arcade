@@ -1,5 +1,4 @@
 #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons;Series;Language;Region;Rating
-Bujingai (K);무인가;Sony PlayStation 2 GZ;Bujingai - The Forsaken City (USA);2003;Taito;Action;;;;;;;;;;;;;;
 #NBA Street Vol. 2 (K);NBA 스트리트 Vol. 2;Sony PlayStation 2 GZ;NBA Street Vol. 2 (USA);2003;EA;Sports;2;;;;;;;;한국어;;;;;
 #R-Type Final (K);R-타입 파이널;Sony PlayStation 2 GZ;R-Type Final (USA);2003;Irem;Shooting;1;;;;;;;;한국어;;;;;
 #SD Gundam G Generation NEO (K);SD 건담 G 제너레이션 네오;Sony PlayStation 2 GZ;0;2003;Badai;SRPG;1;;;;;;;;한국어;;;;;
@@ -8,8 +7,8 @@ SSX 3 (K);SSX 3;Sony PlayStation 2 GZ;SSX 3 (USA);2003;EA;Sports;1;;;;;;;;한국
 #Smack Down Vs Row (K);WWE 스맥다운 Vs. Raw;Sony PlayStation 2 GZ;WWE SmackDown! vs. Raw (USA);2004;THQ;Sports;6;;;;;;;;한국어;;;;;
 God of War (K);갓 오브 워 1;Sony PlayStation 2 ISO;God of War (USA);2005;SIEA;Action;1;;;;;;;;한국어;;;;;
 God of war 2 (K);갓 오브 워 2;Sony PlayStation 2 GZ;God of War II (USA);2007;SIEA;Action;1;;;;;;;;한국어;;;;;
-#God Hand (K);갓 핸드;Sony PlayStation 2 GZ;God Hand (USA);2006;Capcom;Action;1;;;;;;;;한국어;;;;;
-#Keroro Battle Royal Z (K);개구리중사 케로로 불꽃튀는 배틀로얄 Z;Sony PlayStation 2 GZ;;2005;BANDAI;Fighting;4;;;;;;;;한국어;;;;;
+God Hand (K);갓 핸드;Sony PlayStation 2 ISO;God Hand (USA);2006;Capcom;Action;1;;;;;;;;한국어;;;;;
+Keroro Battle Royal Z (K);개구리중사 케로로 불꽃튀는 배틀로얄 Z;Sony PlayStation 2 ISO;;2005;BANDAI;Fighting;4;;;;;;;;한국어;;;;;
 #Gun Survivor 3 Dino Crisis;건 서바이버 3 디노 크라이시스;Sony PlayStation 2 GZ;Dino Stalker (USA);2002;Capcom;GunShooting;1;;;;;;;;한국어;;;;;
 Biohazard Gun Survivor 4;건 서바이버 4 바이오 해자드;Sony PlayStation 2 GZ;Resident Evil - Dead Aim (USA);2003;Capcom;GunShooting;1;;;;;;;;한국어;;;;;
 Gungrave (K);건그레이브;Sony PlayStation 2 GZ;Gungrave (USA);2002;RED Entertainment;Action;1;;;;;;;;한국어;;;;;
@@ -40,6 +39,7 @@ Demon Chaos (K);데몬 카오스;Sony PlayStation 2 GZ;Demon Chaos (Europe);2005
 #Devil May Cry 2 (K);데빌 메이 크라이 2;Sony PlayStation 2 GZ;Devil May Cry 2 (USA) (Disc 1);2003;Capcom;Action;1;;;;;;;;한국어;;;;;
 Devil May Cry 3 (K);데빌 메이 크라이 3;Sony PlayStation 2 GZ;Devil May Cry 3 - Dante's Awakening (USA);2005;Capcom;Action;1;;;;;;;;한국어;;;;;
 Dororo (K);도로로;Sony PlayStation 2 GZ;0;2004;SEGA;Action;1;;;;;;;;한국어;;;;;
+Dragon Ball Z 3 (K);드래곤볼 Z 3 (한글판);Sony PlayStation 2 ISO;DragonBall Z - Budokai 3 (USA);2005;Badai;Fighting;2;;;;;;;dragon;한국어;;;;;
 Dragonball Z Sparking Meteor (K);드래곤볼 Z 스파킹 메테오;Sony PlayStation 2 GZ;DragonBall Z - Budokai Tenkaichi 3 (USA);2007;Badai;Fighting;2;;;;;;;;한국어;;;;;
 #Demento (K);디멘토 / 혼팅 그라운드;Sony PlayStation 2 GZ;Haunting Ground (USA);2005;Capcom;Horror Adventure;1;;;;;;;;한국어;;;;;
 Raiden III;라이덴 3;Sony PlayStation 2 GZ;Raiden III (USA);2005;MOSS;Shooting;2;;;;;;;;일본어;;;;;
@@ -48,6 +48,7 @@ Ratchet & Clank - Up Your Arsenal (K);라쳇 & 클랭크 3 - 공구전사 리로
 Ratchet - Deadlocked (K);라쳇 & 클랭크 4 - 공구전사 위기일발;Sony PlayStation 2 GZ;Ratchet - Deadlocked (USA);2005;Sony;Action;1;;;;;;;;한국어;;;;;
 Ratchet & Clank - Size Matters (K);라쳇 & 클랭크 5 - 공구들고 바캉스;Sony PlayStation 2 GZ;Ratchet & Clank - Size Matters (USA);2008;Sony;Action;1;;;;;;;;한국어;;;;;
 Fatal Frame II - Crimson Butterfly (K);령제로 - 붉은 나비;Sony PlayStation 2 GZ;Fatal Frame II - Crimson Butterfly (USA);2003;Tecmo;Horror Adventure;1;;;;;;;;한국어;;;;;
+Rogue Galaxy (USA);로그 갤럭시 - 디렉터스 컷;Sony PlayStation 2 ISO;;2007;Square;RPG;1;;;;;;;;영어;;;;;
 #LuluRara Karaoke vol.1 (K);룰루랄라 노래방 Vol.1;Sony PlayStation 2 GZ;;2005;SCEK;Karaoke;2;;;;;;;;한국어;;;;;
 #LuluRara Karaoke vol.2 (K);룰루랄라 노래방 Vol.2;Sony PlayStation 2 GZ;;2006;SCEK;Karaoke;2;;;;;;;;한국어;;;;;
 #Magna Carta Tears of Blood (K);마그나카르타 진홍의 성흔;Sony PlayStation 2 GZ;Magna Carta - Tears of Blood (USA);2004;Softmax;RPG;1;;;;;;;;한국어;;;;;
@@ -75,8 +76,9 @@ Silent Hill 4;사일런트 힐 4;Sony PlayStation 2 GZ;Silent Hill 4 - The Room 
 #Sakura Wars 5 - So Long, My Love (K);사쿠라 대전 V - 안녕히 사랑하는 사람이여;Sony PlayStation 2 GZ;Sakura Wars - So Long, My Love (USA) (Disc 2) (Japanese Voice Over);2005;SEGA;Adventure;1;;;;;;;;한국어;;;;;
 #Sakura Wars 5 Episode 0 (K);사쿠라 대전 V - 에피소드 0;Sony PlayStation 2 GZ;Sakura Wars 5 Episode 0 (Japan);2005;SEGA;Adventure;1;;;;;;;;한국어;;;;;
 #Shining Tears (K);샤이닝 티어스;Sony PlayStation 2 GZ;Shining Tears (USA);2004;SEGA;RPG;1;;;;;;;;한국어;;;;;
-#Saint Seiya - The Sanctuary (Europe);세인트 세이야 - 성역 12궁편 (유럽판);Sony PlayStation 2 GZ;;2005;Dimps;Fighting;2;;;;;;;;영어;;;;;
-#Saint Seiya - The Hades (Europe);세인트 세이야 - 하데스 12궁편 (유럽판);Sony PlayStation 2 GZ;;2006;Dimps;Fighting;2;;;;;;;;영어;;;;;
+Shining Force EXA (USA);샤이닝 포스 이쿠사 (미국판);Sony PlayStation 2 ISO;;2007;Neverland;RPG;1;;;;;;;;영문일음;;;;;
+Saint Seiya - The Sanctuary (Europe);세인트 세이야 - 성역 12궁편 (유럽판);Sony PlayStation 2 ISO;;2005;Dimps;Fighting;2;;;;;;;;영어;;;;;
+Saint Seiya - The Hades (Europe);세인트 세이야 - 하데스 12궁편 (유럽판);Sony PlayStation 2 ISO;;2006;Dimps;Fighting;2;;;;;;;;영어;;;;;
 Soul Calibur II (K);소울 칼리버 II;Sony PlayStation 2 ISO;SoulCalibur II (USA);2002;Namco;Fighting;2;;;;;;;;한국어;;;;;
 Soul Calibur III (K);소울 칼리버 III;Sony PlayStation 2 GZ;SoulCalibur III (USA);2005;Namco;Fighting;2;;;;;;;;한국어;;;;;
 Altered Beast;수왕기;Sony PlayStation 2 ISO;Altered Beast (USA);2005;SEGA;Action;1;;;;;;;;영어;;;;;
@@ -85,24 +87,24 @@ Altered Beast;수왕기;Sony PlayStation 2 ISO;Altered Beast (USA);2005;SEGA;Act
 #Street Fighter Anniversary Collection (K);스트리트 파이터 기념 콜렉션;Sony PlayStation 2 GZ;Street Fighter Anniversary Collection (USA);2004;Capcom;Fighting;1;;;;;;;;한국어;;;;;
 Shinobi (K);시노비;Sony PlayStation 2 GZ;0;2002;SEGA;Action;1;;;;;;;;한국어;;;;;
 #Castle Shikigami 2 (K);식신의 성 2;Sony PlayStation 2 GZ;Castle Shikigami 2 (USA);2003;Alfa System;Shooting;2;;;;;;;;한국어;;;;;
-#Onimusha - Dawn of Dreams (USA) (Disc 1);신귀무자 Disc 1 (미국판);Sony PlayStation 2 GZ;;2006;Capcom;Action;1;;;;;;;;영어;;;;;
-#Onimusha - Dawn of Dreams (USA) (Disc 2);신귀무자 Disc 2 (미국판);Sony PlayStation 2 GZ;Onimusha - Dawn of Dreams (USA) (Disc 1);2006;Capcom;Action;1;;;;;;;;영어;;;;;
+Onimusha - Dawn of Dreams (USA) (Disc 1);신귀무자 Disc 1 (미국판);Sony PlayStation 2 ISO;;2006;Capcom;Action;1;;;;;;;;영어;;;;;
+Onimusha - Dawn of Dreams (USA) (Disc 2);신귀무자 Disc 2 (미국판);Sony PlayStation 2 ISO;Onimusha - Dawn of Dreams (USA) (Disc 1);2006;Capcom;Action;1;;;;;;;;영어;;;;;
 #Silpheed - The Lost Planet (USA);실피드 - 로스트 플래닛;Sony PlayStation 2 GZ;0;2000;GameArts;Shooting;1;;;;;;;;영어;;;;;
 #The Simpsons Game (USA);심슨 게임;Sony PlayStation 2 GZ;Simpsons Game, The (USA);2007;Electronic Arts;Action;1;;;;;;;;영어;;;;;
 Summer Heat Beach Volleyball;썸머 히트 비치 발리볼;Sony PlayStation 2 GZ;Summer Heat Beach Volleyball (USA);2003;Acclaim;Sports;2;;;;;;;;영어;;;;;
 Argus no Senshi (K);아르고스의 전사;Sony PlayStation 2 GZ;Rygar - The Legendary Adventure (USA);2003;Tecmo;Action;1;;;;;;;;한국어;;;;;
-#OutRun2 SP (Japan);아웃런 2 스페셜 투어즈 (일본판);Sony PlayStation 2 GZ;;2003;SEGA;Racing;1;;;;;;;;일본어;;;;;
+OutRun2 SP (Japan);아웃런 2 스페셜 투어즈 (일본판);Sony PlayStation 2 ISO;;2003;SEGA;Racing;1;;;;;;;;일본어;;;;;
 #XI5 (K);아쿠이 오형제 / 봄바스틱;Sony PlayStation 2 GZ;Bombastic (USA);2003;Sony;Puzzle;1;;;;;;;;한국어;;;;;
 Castlevania Lament of Innocence (K);악마성 드라큐라 - 순결의 애도;Sony PlayStation 2 GZ;Castlevania - Lament of Innocence (USA);2003;Konami;Action;1;;;;;;;;한국어;;;;;
 Castlevania Curse of Darkness (K);악마성 드라큐라 - 어둠의 저주;Sony PlayStation 2 GZ;Castlevania - Curse of Darkness (USA);2005;Konami;Action;1;;;;;;;;한국어;;;;;
 Urban Reign;어반 레인;Sony PlayStation 2 ISO;0;2005;Namco;Action;;;;;;;;;영어;;;;;
 #Odin Sphere (K);오딘 스피어;Sony PlayStation 2 GZ;Odin Sphere (USA);2002;Atlus;RPG;1;;;;;;;;영어;;;;;
-#Okami (USA);오오카미 (미국판);Sony PlayStation 2 GZ;;2006;Capcom;Action;1;;;;;;;;영어;;;;;
+Okami (USA);오오카미 (미국판);Sony PlayStation 2 ISO;;2006;Capcom;Action;1;;;;;;;;영어;;;;;
 Shadow of the Colossus (K);완다와 거상;Sony PlayStation 2 GZ;Shadow of the Colossus (USA);2005;Sony;RPG;1;;;;;;;;한국어;;;;;
-Initial D;이니셜 D;Sony PlayStation 2 ISO;0;2003;SEGA;Racing;;;;;;;;;한국어;;;;;
 #Astro Boy Atom (K);우주소년 아톰;Sony PlayStation 2 GZ;Astro Boy (USA);2004;SEGA;Action;1;;;;;;;;한국어;;;;;
 #War of the Monsters (K);워 오브 더 몬스터즈 - 괴수대격전;Sony PlayStation 2 GZ;War of the Monsters (USA);2003;Capcom;Action;1;;;;;;;;한국어;;;;;
 #Winning Eleven10 Liveware Evolution (K);위닝 일레븐 10 라이브웨어 에볼루션;Sony PlayStation 2 GZ;Winning Eleven - Pro Evolution Soccer 2007 (USA);2006;Konami;Sports;2;;;;;;;;한국어;;;;;
+Initial D;이니셜 D;Sony PlayStation 2 ISO;0;2003;SEGA;Racing;;;;;;;;;한국어;;;;;
 Disaster Report (K);절체절명도시;Sony PlayStation 2 GZ;Disaster Report (USA);2002;Irem;Adventure;1;;;;;;;;한국어;;;;;
 #Xenosaga Episode 3 Disc 1 (USA)(Undub);제노사가 에피소드 3. Disc 1;Sony PlayStation 2 GZ;Xenosaga Episode III - Also sprach Zarathustra (USA) (Disc 1);2006;Monolith Soft;RPG;1;;;;;;;;영어;;;;;
 #Xenosaga Episode 3 Disc 2 (USA)(Undub);제노사가 에피소드 3. Disc 2;Sony PlayStation 2 GZ;Xenosaga Episode III - Also sprach Zarathustra (USA) (Disc 2);2006;Monolith Soft;RPG;1;;;;;;;;영어;;;;;
@@ -136,6 +138,7 @@ Tantei Jinguji Saburo - Kind of Blue (K);탐정 진구지 사부로 - 카인드 
 Final Fight - Streetwise;파이널 파이트 - 스트리트와이즈;Sony PlayStation 2 ISO;0;2006;Capcom;Action;;;;;;;;;영어;;;;;
 Final Fantasy X International (K);파이널 판타지 X;Sony PlayStation 2 GZ;Final Fantasy X (USA);2002;Square;RPG;1;;;;;;;;한국어;;;;;
 Final Fantasy X-2 (K);파이널 판타지 X-2;Sony PlayStation 2 GZ;Final Fantasy X-2 (USA);2004;Square;RPG;1;;;;;;;;한국어;;;;;
+Pump It Up Exceed (K);펌프 잇 업 익시드 (한글판);Sony PlayStation 2 ISO;Pump It Up - Exceed (USA);2004;Andamiro;Rhythm;2;;;;;;;;한국어;;;;;
 Prince of Persia The Sands of Time (K);페르시아의 왕자 2;Sony PlayStation 2 GZ;Prince of Persia - The Sands of Time (USA);2003;Ubisoft;Action;1;;;;;;;;한국어;;;;;
 #Fate-Unlimited Codes (Japan);페이트 언리미티드 코드 (일본판);Sony PlayStation 2 GZ;;2008;Eighting;Fighting;2;;;;;;;;일본어;;;;;
 #Fuuun Shinsengumi Bakumatsu (K);풍운 막말전;Sony PlayStation 2 GZ;0;2006;Genki;Action;1;;;;;;;;한국어;;;;;
@@ -143,5 +146,5 @@ Prince of Persia The Sands of Time (K);페르시아의 왕자 2;Sony PlayStation
 #Princess Maker 1 (K);프린세스 메이커 1;Sony PlayStation 2 GZ;0;2004;Gainax;SLG;1;;;;;;;;한국어;;;;;
 #Princess Maker 2 (K);프린세스 메이커 2;Sony PlayStation 2 GZ;0;2004;Gainax;SLG;1;;;;;;;;한국어;;;;;
 #Princess Maker 4;프린세스 메이커 4;Sony PlayStation 2 GZ;0;2005;Gainax;SLG;1;;;;;;;;한국어;;;;;
-#Hajime no Ippo2 (K);하지메의 일보 2 ;Sony PlayStation 2 GZ;Victorious Boxers 2 - Fighting Spirit (USA);2004;ESP;Sports;2;;;;;;;;한국어;;;;;
+Hajime no Ippo2 (K);하지메의 일보 2 ;Sony PlayStation 2 ISO;Victorious Boxers 2 - Fighting Spirit (USA);2004;ESP;Sports;2;;;;;;;;한국어;;;;;
 #Hitman 2 (K);히트맨 2 - 사일런트 어쌔신 ;Sony PlayStation 2 GZ;Hitman 2 - Silent Assassin (USA);2002;IO Interactive;Action;1;;;;;;;;한국어;;;;;
