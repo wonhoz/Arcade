@@ -8,8 +8,8 @@ bballoon;BnB 아케이드;MAME;0;1999;Eolith;Puzzle;2;0;Joystick (8-way),dial;go
 djboy;DJ 보이;MAME;0;1989;Sammy;Action;1;0;Joystick (8-way);good;;;;;;;;;;
 gloc;G-LOC 에어 배틀;MAME;0;1990;SEGA;Shooting;1;0;;good;1;;;;;;;;;
 jjsquawk;J. J. 스쿼커즈;MAME;0;1993;Athena / Able;Action;2;0;Joystick (8-way);imperfect;1;raster;0;0;0;2;;;;
-nbajamex;NBA Jam EX;MAME;0;1996;Acclaim;Sports;4;0;Joystick (8-way);imperfect;1;raster;0;0;0;3;;;;
-nbajamte;NBA Jam TE;MAME;0;1994;Midway;Sports;4;0;Joystick (8-way);good;1;raster;0;0;0;3;;;;
+nbajamex;NBA Jam 익스트림;MAME;0;1996;Acclaim;Sports;4;0;Joystick (8-way);imperfect;1;raster;0;0;0;3;;;;
+nbajamte;NBA Jam 토너먼트;MAME;0;1994;Midway;Sports;4;0;Joystick (8-way);good;1;raster;0;0;0;3;;;;
 #p47;P-47: 팬텀 파이터;MAME;0;1995;Jaleco;Shooting;;;;;;;;;;;;;;
 #rtype;R 타입;MAME;0;1987;Irem;Shooting;2;0;Joystick (8-way);good;1;raster;0;0;0;4;;;;
 #rtype2;R 타입 II;MAME;0;1989;Irem;Shooting;2;0;Joystick (8-way);good;1;raster;0;0;0;4;;;;
@@ -187,7 +187,7 @@ othellos;렛츠 플레이 오델로;MAME;0;1998;Success;Puzzle;2;0;Joystick (8-w
 growl;루나크 / 그라울;MAME;0;1990;Taito;Arcade;2;0;Joystick (8-way);good;;;;;;;;;;
 #le2;리썰 엔포서스 2;MAME;0;1994;Konami;Shooting;4;0;Joystick (8-way),lightgun;imperfect;1;raster;konamigx;0;0;3;;;;
 ghostb;리얼 고스트버스터;MAME;;1987;Data East;Action;2;0;Joystick (8-way);good;1;raster;;;;2;;;;
-liquidk;리키드 퀴즈;MAME;0;1990;Taito;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2;;;;
+liquidk;리퀴드 퀴즈;MAME;0;1990;Taito;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2;;;;
 #repulse;리펄스;MAME Vertical;0;1985;SEGA;Shooting;1;90;;good;1;raster;0;0;0;1;;;;
 ridgerac;릿지 레이서;MAME;;1993;Namco;Racing;1;0;Joystick (8-way),paddle,pedal;imperfect;1;raster;;;;3;;;;
 ridgera2;릿지 레이서 2;MAME;0;1994;Namco;Racing;1;;;;;;;;;;;;;
@@ -277,6 +277,7 @@ bmfinal;비트매니아 파이널;MAME;0;2002;Konami;Rhythm;2;0;dial;good;1;rast
 bigfight;빅파이트;MAME;0;1992;Tatsumi;Arcade;4;0;Joystick (8-way);imperfect;1;raster;0;0;0;3;;;;
 realbrk;빌리어드 아카데미 리얼 브레이크;MAME;;1998;Nakanihon;Sports;2;0;Joystick (8-way);imperfect;1;raster;;;;2;;;;
 realbrkk;빌리어드 아카데미 리얼 브레이크 (한국판);EKMAME;realbrk;1998;Nakanihon;Sports;2;0;Joystick (8-way);imperfect;1;raster;realbrk;;;2;;;;
+ppchamp;빠샤빠샤 챔프 미니게임 페스티발;MAME;0;1997;동성;Puzzle;3;0;0;imperfect;1;raster;0;0;0;3;;;;
 pasha2;빠샤빠샤 2;MAME;0;1998;동성;Puzzle;3;0;0;imperfect;1;raster;0;0;0;3;;;;
 #popeye;뽀빠이;MAME;0;1982;Nintendo;Action;2;0;Joystick (4-way);good;1;raster;0;0;0;1;;;;
 #pooyan;뿌얀;MAME Vertical;0;1982;Konami;Classic;2;90;Joystick (vertical2-way);good;1;raster;0;0;0;1;;;;
@@ -593,7 +594,7 @@ puzzloop;퍼즈루프;MAME;0;1998;Mitchell;Puzzle;2;0;Joystick (8-way),dial;impe
 puzzloopk;퍼즈루프 (한국판);EKMAME;puzzloop;1998;Mitchell;Puzzle;2;0;Joystick (8-way),dial;imperfect;1;raster;puzzloop;;;2;;;;
 pzloop2;퍼즈루프 2;MAME;0;2001;Mitchell;Puzzle;;;;;;;;0;0;4;;;;
 sandor;퍼즐 & 액션: 산도-R (일본판);MAME;;1995;Sega;Puzzle;4;0;Joystick (8-way);imperfect;1;raster;stvbios;;;4;;;;
-thuntk;보물을 찾아라 - 퍼즐 & 액션: 산도-R (한글판);EKMAME;0;1995;SEGA;Puzzle;2;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;4;;;;
+thuntk;퍼즐 & 액션: 보물을 찾아라 (한글판);EKMAME;0;1995;SEGA;Puzzle;2;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;4;;;;
 puzzlove;퍼즐 러브;MAME;;1994;Para;Puzzle;2;0;Joystick (8-way);good;1;raster;;;;3;;;;
 puzzlovek;퍼즐 러브;EKMAME;puzzlove;1994;Para;Puzzle;2;0;Joystick (8-way);good;1;raster;puzzlove;;;3;;;;
 mushitam;퍼즐 벌레공주;MAME;0;2005;CAVE;Puzzle;2;;;;;;;;;;;;;
@@ -630,7 +631,7 @@ fixeightbl;픽스에이트 (한국판, 해적판);EKMAME;fixeight;1992;bootleg;S
 #hotd;하우스 오브 더 데드;MAME;0;1997;SEGA;GunShooting;2;0;Joystick (8-way);preliminary;1;raster;0;0;0;4;;;;
 #hotd2;하우스 오브 더 데드 2;MAME;0;1999;SEGA;GunShooting;2;0;lightgun;preliminary;1;raster;hod2bios;0;0;2;;;;
 #hyprduel;하이퍼 듀얼;MAME;0;1993;Technosoft;Shooting;2;0;Joystick (8-way),dial;good;1;raster;stvbios;0;0;4;;;;
-hyperbbck;하이퍼 비시바시;MAME;hyperbbc;1998;Konami;Puzzle;3;0;;good;1;;;;;;;;;
+hyperbbck;하이퍼 비시바시 챔프;MAME;hyperbbc;1998;Konami;Puzzle;3;0;;good;1;;;;;;;;;
 hyperspt;하이퍼 스포츠 / 하이퍼 올림픽 '84;MAME;0;1984;Konami;Sports;2;0;Joystick (8-way),dial;good;1;raster;0;0;0;2;;;;
 #inthunt;해저대전쟁 / 인 더 헌트;MAME;0;1993;Irem;Shooting;2;0;Joystick (8-way);good;1;raster;0;0;0;2;;;;
 hangon;행온;MAME;0;1985;SEGA;Racing;1;0;Paddle,pedal;good;1;raster;0;0;0;0;;;;

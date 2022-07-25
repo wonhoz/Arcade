@@ -12,7 +12,7 @@ vf3tb;버추어 파이터 3 팀배틀;SEGA MODEL 3;;1996;SEGA;Fighting;;;;;;;;;;
 srally2;세가 랠리 2;SEGA MODEL 3;;1998;SEGA;Racing;;;;;;;;;;;;;;
 scud;스커드 레이스;SEGA MODEL 3;;1996;SEGA;Racing;;;;;;;;;;;;;;
 scudp;스커드 레이스 플러스;SEGA MODEL 3;;1997;SEGA;Racing;;;;;;;;;;;;;;
-swtrilgy;스타워즈 트릴리지 아케이드;SEGA MODEL 3;;1998;SEGA;Shooting;;;;;;;;;;;;;;
+swtrilgy;스타워즈 트릴로지 아케이드;SEGA MODEL 3;;1998;SEGA;Shooting;;;;;;;;;;;;;;
 spikeofe;스파이크 아웃 파이널 에디션;SEGA MODEL 3;;1998;SEGA;Sports;;;;;;;;;;;;;;
 oceanhun;오션 헌터;SEGA MODEL 3;;1998;SEGA;Action;;;;;;;;;;;;;;
 von2;전뇌전기 버추얼온 2;SEGA MODEL 3;;1998;SEGA;Fighting;;;;;;;;;;;;;;
