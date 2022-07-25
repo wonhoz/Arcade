@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GameName>Dirty Drivin'</GameName>
+  <GamePath>G:\AttractMode\emulators\RetroArch\_emulators\TeknoParrot\Games\DirtyDrivin\sdaemon.exe</GamePath>
+  <TestMenuParameter />
+  <TestMenuIsExecutable>false</TestMenuIsExecutable>
+  <ExtraParameters />
+  <TestMenuExtraParameters />
+  <IconName>Icons/DirtyDrivin.png</IconName>
+  <ResetHint>false</ResetHint>
+  <ConfigValues>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>XInput</FieldName>
+      <FieldValue>1</FieldValue>
+      <FieldType>Bool</FieldType>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Windowed</FieldName>
+      <FieldValue>0</FieldValue>
+      <FieldType>Bool</FieldType>
+    </FieldInformation>
+  </ConfigValues>
+  <JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Start</ButtonName>
+      <XInputButton>
+        <IsLeftThumbX>false</IsLeftThumbX>
+        <IsRightThumbX>false</IsRightThumbX>
+        <IsLeftThumbY>false</IsLeftThumbY>
+        <IsRightThumbY>false</IsRightThumbY>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsLeftTrigger>false</IsLeftTrigger>
+        <IsRightTrigger>false</IsRightTrigger>
+        <ButtonCode>16</ButtonCode>
+        <IsButton>true</IsButton>
+        <ButtonIndex>0</ButtonIndex>
+        <XInputIndex>0</XInputIndex>
+      </XInputButton>
+      <InputMapping>P1ButtonStart</InputMapping>
+      <AnalogType>None</AnalogType>
+      <BindNameXi>Input Device 0 Start</BindNameXi>
+      <BindName>Input Device 0 Start</BindName>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Crank Up</ButtonName>
+      <XInputButton>
+        <IsLeftThumbX>false</IsLeftThumbX>
+        <IsRightThumbX>false</IsRightThumbX>
+        <IsLeftThumbY>false</IsLeftThumbY>
+        <IsRightThumbY>false</IsRightThumbY>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsLeftTrigger>false</IsLeftTrigger>
+        <IsRightTrigger>false</IsRightTrigger>
+        <ButtonCode>16384</ButtonCode>
+        <IsButton>true</IsButton>
+        <ButtonIndex>0</ButtonIndex>
+        <XInputIndex>0</XInputIndex>
+      </XInputButton>
+      <InputMapping>P1Button1</InputMapping>
+      <AnalogType>None</AnalogType>
+      <BindNameXi>Input Device 0 X</BindNameXi>
+      <BindName>Input Device 0 X</BindName>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>View</ButtonName>
+      <XInputButton>
+        <IsLeftThumbX>false</IsLeftThumbX>
+        <IsRightThumbX>false</IsRightThumbX>
+        <IsLeftThumbY>false</IsLeftThumbY>
+        <IsRightThumbY>false</IsRightThumbY>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsLeftTrigger>false</IsLeftTrigger>
+        <IsRightTrigger>false</IsRightTrigger>
+        <ButtonCode>8192</ButtonCode>
+        <IsButton>true</IsButton>
+        <ButtonIndex>0</ButtonIndex>
+        <XInputIndex>0</XInputIndex>
+      </XInputButton>
+      <InputMapping>P1Button3</InputMapping>
+      <AnalogType>None</AnalogType>
+      <BindNameXi>Input Device 0 B</BindNameXi>
+      <BindName>Input Device 0 B</BindName>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Wheel Axis</ButtonName>
+      <XInputButton>
+        <IsLeftThumbX>true</IsLeftThumbX>
+        <IsRightThumbX>false</IsRightThumbX>
+        <IsLeftThumbY>false</IsLeftThumbY>
+        <IsRightThumbY>false</IsRightThumbY>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsLeftTrigger>false</IsLeftTrigger>
+        <IsRightTrigger>false</IsRightTrigger>
+        <ButtonCode>0</ButtonCode>
+        <IsButton>false</IsButton>
+        <ButtonIndex>0</ButtonIndex>
+        <XInputIndex>0</XInputIndex>
+      </XInputButton>
+      <InputMapping>Analog0</InputMapping>
+      <AnalogType>Wheel</AnalogType>
+      <BindNameXi>Input Device 0 LeftThumbInput Device 0 X+</BindNameXi>
+      <BindName>Input Device 0 LeftThumbInput Device 0 X+</BindName>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Gas</ButtonName>
+      <XInputButton>
+        <IsLeftThumbX>false</IsLeftThumbX>
+        <IsRightThumbX>false</IsRightThumbX>
+        <IsLeftThumbY>false</IsLeftThumbY>
+        <IsRightThumbY>false</IsRightThumbY>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsLeftTrigger>false</IsLeftTrigger>
+        <IsRightTrigger>false</IsRightTrigger>
+        <ButtonCode>4096</ButtonCode>
+        <IsButton>true</IsButton>
+        <ButtonIndex>0</ButtonIndex>
+        <XInputIndex>0</XInputIndex>
+      </XInputButton>
+      <InputMapping>Analog2</InputMapping>
+      <AnalogType>Gas</AnalogType>
+      <BindNameXi>Input Device 0 A</BindNameXi>
+      <BindName>Input Device 0 A</BindName>
+    </JoystickButtons>
+  </JoystickButtons>
+  <EmulationProfile>RawThrillsFNF</EmulationProfile>
+  <GameProfileRevision>2</GameProfileRevision>
+  <HasSeparateTestMode>false</HasSeparateTestMode>
+  <Is64Bit>false</Is64Bit>
+  <EmulatorType>TeknoParrot</EmulatorType>
+  <GunGame>false</GunGame>
+  <Patreon>true</Patreon>
+  <RequiresAdmin>false</RequiresAdmin>
+  <msysType>0</msysType>
+  <InvertedMouseAxis>false</InvertedMouseAxis>
+  <DevOnly>false</DevOnly>
+  <ExecutableName>sdaemon.exe</ExecutableName>
+</GameProfile>

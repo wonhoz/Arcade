@@ -4,6 +4,7 @@ God Of War Ghost of Sparta [K];갓 오브 워: 고스트 오브 스파르타;Son
 God Of War Chains of Olympus [K];갓 오브 워: 체인 오브 올림푸스;Sony PlayStation Portable;0;;;Action;;;;;;;;;;;;;;
 #Darius burst;다라이어스 버스트;Sony PlayStation Portable;0;;;Shooting;;;;;;;;;;;;;;
 Dragon Ball Z - Tenkaichi Tag Team (U);드래곤 볼 Z - 천하제일 태그팀;Sony PlayStation Portable;0;;;Fighting;;;;;;;;;;;;;;
+Metal Gear Acid 2;메탈 기어 애시드 2 (한글판);Sony PlayStation Portable;Metal_Gear_Acid_2_USA_PSP-ARTiSAN;2005;Konami;Card;;;;;;;;mgs;한국어;;;;;
 SOULCALIBUR Broken Destiny;소울 칼리버: 브로큰 데스티니;Sony PlayStation Portable;0;;;Fighting;;;;;;;;;;;;;;
 #Super Robot Wars AP Kor v2.4 Vocal Edition;슈퍼 로봇대전 A 포터블;Sony PlayStation Portable;0;;;SRPG;;;;;;;;;;;;;;
 Assassins Creed Bloodlines;어쌔신 크리드: 블러드라인;Sony PlayStation Portable;0;;;Action;;;;;;;;;;;;;;
