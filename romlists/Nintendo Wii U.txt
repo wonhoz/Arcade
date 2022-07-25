@@ -24,8 +24,9 @@
 #Kinopio;전진! 키노피오 대장!;Nintendo Wii U;Captain Toad - Treasure Tracker (USA);2014;Nintendo;Action;;;;;;;;;한국어;;;;;
 #spaceTravel;제노블레이드 크로니클스 X;Nintendo Wii U;Xenoblade Chronicles X (USA);2015;Monolith Soft;RPG;;;;;;;;;영어;;;;;
 #ProjectZ;젤다 무쌍;Nintendo Wii U;Hyrule Warriors (USA);2014;Koei Tecmo;Action;;;;;;;;;영어;;;;;
-#cking;젤다의 전설 - 바람의 지휘봉 HD;Nintendo Wii U;Legend of Zelda, The - The Wind Waker HD (USA);2013;Nintendo;ARPG;;;;;;;;;한국어;;;;;
-#U-King;젤다의 전설 - 야생의 숨결;Nintendo Wii U;Legend of Zelda, The - Breath of the Wild (USA);2017;Nintendo;ARPG;;;;;;;;;한국어;;;;;
+#Zelda;젤다의 전설: 황혼의 공주 HD;WU;Legend of Zelda, The - Twilight Princess HD (USA);2016;Nintendo;ARPG;;;;;;;;zelda;한국어;;;;;
+#cking;젤다의 전설: 바람의 지휘봉 HD;Nintendo Wii U;Legend of Zelda, The - The Wind Waker HD (USA);2013;Nintendo;ARPG;;;;;;;;;한국어;;;;;
+#U-King;젤다의 전설: 야생의 숨결;Nintendo Wii U;Legend of Zelda, The - Breath of the Wild (USA);2017;Nintendo;ARPG;;;;;;;;;한국어;;;;;
 #HMusou2_NA;진 북두무쌍;Nintendo Wii U;Shin Hokuto Musou (Japan);2012;Koei;Action;;;;;;;;;영어;;;;;
 Tekken;철권 태그 토너먼트 2 Wii U;Nintendo Wii U;Tekken Tag Tournament 2 - Wii U Edition (USA);2012;Namco;Fighting;;;;;;;;;영어;;;;;
 #seven;터치! 커비 슈퍼 레인보우;Nintendo Wii U;Kirby and the Rainbow Curse (USA);2015;HAL Laboratory,Inc.;Action;;;;;;;;;영어;;;;;
