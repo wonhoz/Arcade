@@ -9,7 +9,7 @@ ggx;길티기어 X;SEGA NAOMI;;2000;ARC System Works;Fighting;;;;;;;;;;;;;;
 ggxxrl;길티기어 XX 샤프리로드;SEGA NAOMI;0;2003;ARC System Works;Fighting;2;;;;;;;;;;;;;
 ggxxsla;길티기어 XX 슬래시;SEGA NAOMI;;2005;ARC System Works;Fighting;2;;;;;;;;;;;;;
 ggxxac;길티기어 XX 액센트 코어;SEGA NAOMI;;2006;ARC System Works;Fighting;;;;;;;;;;;;;;
-ninjaslt;닌자 어절트;SEGA NAOMI;;2000;Namco;GunShooting;;;;;;;;;;;;;;
+ninjaslt;닌자 어설트;SEGA NAOMI;;2000;Namco;GunShooting;;;;;;;;;;;;;;
 #dybbnao;다이나마이트 야구 나오미;SEGA NAOMI;;1998;SEGA;Sports;;;;;;;;;;;;;;
 asndynmt;다이나마이트 형사 EX;SEGA NAOMI;;2007;SEGA;Action;;;;;;;;;;;;;;
 #mok;더 메이즈 오브 더 킹스;SEGA NAOMI;;2002;SEGA;GunShooting;;;;;;;;;;;;;;

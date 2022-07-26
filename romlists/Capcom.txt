@@ -63,8 +63,8 @@ willow;윌로우;MAME;0;1989;Capcom;Action;2;0;Joystick (8-way);good;1;raster;cp
 jojo;조조의 기묘한 모험;MAME;;1998;Capcom;Fighting;2;0;joystick (8-way);imperfect;1;raster;cps3;;chd;4;;;;
 jojoban;조조의 기묘한 모험: 미래로의 유산;MAME;jojoba;1999;Capcom;Fighting;;;;;;;cps3;;;;;;;
 dynwarj;천지를 먹다 / 다이너스티 워즈;MAME;dynwar;1989;Capcom;Action;2;0;Joystick (8-way),dial;good;1;raster;cps1;0;0;3;;;;
-wofj;천지를 먹다 II - 적벽대전 / 워리어즈 오브 페이트;MAME;wof;1992;Capcom;Arcade;3;0;Joystick (8-way);good;1;raster;cps2;0;0;2;;;;
-wofch;천지를 먹다 II - 적벽대전 / 워리어즈 오브 페이트;MAME;wof;1994;Capcom;Arcade;2;0;joystick (8-way);good;1;raster;cps1;;;6;;;;
+wofj;천지를 먹다 II - 적벽대전 / 워리어즈 오브 페이트 [j];MAME;wof;1992;Capcom;Arcade;3;0;Joystick (8-way);good;1;raster;cps2;0;0;2;;;;
+wofch;천지를 먹다 II - 적벽대전 / 워리어즈 오브 페이트 [ch];MAME;wof;1994;Capcom;Arcade;2;0;joystick (8-way);good;1;raster;cps1;;;6;;;;
 mtwins;치키치키 보이스 / 메가 트윈스;MAME;0;1990;Capcom;Action;2;0;Joystick (8-way);good;1;raster;cps1;0;0;3;;;;
 dino;캐딜락 공룡신세기;MAME;0;1993;Capcom;Arcade;3;0;Joystick (8-way);good;1;raster;cps1;0;0;2;;;;
 #cawing;캐리어 에어윙;MAME;0;1990;Capcom;Shooting;2;0;Joystick (8-way);good;1;raster;cps1;0;0;2;;;;
