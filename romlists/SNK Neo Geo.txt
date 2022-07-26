@@ -88,8 +88,8 @@ kabukikl;천외마경 진전 - 에덴의 동쪽 / 가부키 클래쉬;MAME;0;199
 gowcaizr;초인학원 고우카이저;MAME;0;1995;Technos Japan;Fighting;;;;;;;neogeo;0;0;4;;;;
 #ctomaday;캡틴 토마데이;MAME;0;1999;Visco;Shooting;;;;;;;neogeo;0;0;4;;;;
 sdodgeb;쿠니오의 열혈 투구전설 / 슈퍼 돗지볼;MAME;0;1996;Technos;Sports;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
-quizdaisk;퀴즈 사립 탐정;MAME;quizdais;1996;SNK;Quiz;2;0;;good;1;;neogeo;;;4;;;;
-quizkofk;퀴즈 킹 오브 화이터즈;MAME;quizkof;1995;SNK;Quiz;2;0;;good;1;;neogeo;;;4;;;;
+quizdaisk;퀴즈 사립 탐정 (한글판);MAME;quizdais;1996;SNK;Quiz;2;0;;good;1;;neogeo;;;4;;;;
+quizkofk;퀴즈 킹 오브 화이터즈 (한글판);MAME;quizkof;1995;SNK;Quiz;2;0;;good;1;;neogeo;;;4;;;;
 kotm;킹 오브 더 몬스터즈;MAME;;1991;SNK;Fighting;2;0;joystick (8-way);good;1;raster;neogeo;;;4;;;;
 kotm2;킹 오브 더 몬스터즈 2;MAME;0;1992;SNK;Fighting;;;;;;;neogeo;;;;;;;
 kof94;킹 오브 파이터즈 '94;MAME;0;1994;SNK;Fighting;2;0;;good;1;;neogeo;;;4;;;;
