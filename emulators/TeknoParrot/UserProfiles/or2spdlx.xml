@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GameName>OutRun 2 SP SDX</GameName>
-  <GamePath>G:\AttractMode\emulators\RetroArch\_emulators\TeknoParrot\Games\or2\Jennifer\Jennifer_patched</GamePath>
+  <GamePath>D:\attract-v2.6.2-win64\emulators\TeknoParrot\Games\OutRun 2 SP SDX\or2g\disk0\Jennifer\Jennifer_patched</GamePath>
   <TestMenuParameter>..\JenTest\JenTest</TestMenuParameter>
   <TestMenuIsExecutable>true</TestMenuIsExecutable>
   <ExtraParameters />
