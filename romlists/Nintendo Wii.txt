@@ -45,6 +45,6 @@ Sin & Punishment- Star Successor (USA);죄와 벌 2 - 우주의 후계자 (미�
 #The King of Fighters Collection - The Orochi Saga (K);킹 오브 파이터즈 콜렉션 - 오로치 사가 (한글판);Nintendo Wii GCZ;;2009;SNK;Fighting;2;;;;;;;kof;한국어;;;;;
 Animal Crossing- City Folk (K);타운으로 놀러가요 동물의 숲 (한글판);Nintendo Wii GCZ;Animal Crossing- City Folk (USA);2008;Nintendo;Communication;1;;;;;;;;한국어;;;;;
 Tatsunoko vs. Capcom- Ultimate All-Stars (USA);타츠노코 VS 캡콤 울티메이트 올스타즈 (미국판);Nintendo Wii WBFS;;2010;Capcom;Fighting;2;;;;;;;capcom;영어;;;;;
-Toshinden (J);투진전 (일본판);Nintendo Wii GCZ;;2009;Takara Tomy;Fighting;2;;;;;;;;일본어;;;;;
+Toshinden (J);투신전 (일본판);Nintendo Wii GCZ;;2009;Takara Tomy;Fighting;2;;;;;;;;일본어;;;;;
 #Pikmin (K);피크민 (한글판);Nintendo Wii GCZ;Pikmin (USA);2011;Nintendo;Action;1;;;;;;;;한국어;;;;;
 #Harry Potter and the Half Blood Prince (K);해리포터와 혼혈왕자 (한글판);Nintendo Wii WBFS;Harry Potter and the Half Blood Prince (USA);2009;EA;Action;1;;;;;;;;한국어;;;;;

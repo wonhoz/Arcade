@@ -33,7 +33,10 @@ Clock Tower 2 The Struggle Within;클락 타워 2;Sony PlayStation CUE;Clock Tow
 #Tales of Destiny II (USA) (Disc 2);테일즈 오브 데스티니 II Disc 2;Sony PlayStation CUE;Tales of Destiny II (USA) (Disc 1);2000;Namco;RPG;1;;;;;;;;영어;;;;;
 Tomb Raider - The Last Revelation;툼 레이더;Sony PlayStation CUE;Tomb Raider - The Last Revelation;1999;Core Design;Action;1;;;;;;;;영어;;;;;
 Final Fantasy 7 (K) v1.73;파이널 판타지 VII (한글판);Sony PlayStation PBP;Final Fantasy 7 (K) v1.73;1997;Square;RPG;1;;;;;;;ff;한국어;;;;;
-Final Fantasy VIII (USA);파이널 판타지 VIII;Sony PlayStation CUE;Final Fantasy VIII (USA) (Disc 1);1999;Square;RPG;1;;;;;;;ff;영어;;;;;
+Final Fantasy VIII (USA) (Disc 1);파이널 판타지 VIII Disc 1;Sony PlayStation CUE;Final Fantasy VIII (USA) (Disc 1);1999;Square;RPG;1;;;;;;;ff;영어;;;;;
+Final Fantasy VIII (USA) (Disc 2);파이널 판타지 VIII Disc 2;Sony PlayStation CUE;Final Fantasy VIII (USA) (Disc 1);1999;Square;RPG;1;;;;;;;ff;영어;;;;;
+Final Fantasy VIII (USA) (Disc 3);파이널 판타지 VIII Disc 3;Sony PlayStation CUE;Final Fantasy VIII (USA) (Disc 1);1999;Square;RPG;1;;;;;;;ff;영어;;;;;
+Final Fantasy VIII (USA) (Disc 4);파이널 판타지 VIII Disc 4;Sony PlayStation CUE;Final Fantasy VIII (USA) (Disc 1);1999;Square;RPG;1;;;;;;;ff;영어;;;;;
 Final Fantasy 9 (K);파이널 판타지 IV (한글판);Sony PlayStation PBP;Final Fantasy 9 (K);2000;Square;RPG;1;;;;;;;ff;한국어;;;;;
 Parasite Eve (K);패러사이트 이브 (한글판);Sony PlayStation PBP;Parasite Eve (K);1998;Square;ARPG;1;;;;;;;;한국어;;;;;
 Parasite Eve 2 [Disc1of2] [U] [SLUS-01042];패러사이트 이브 2. Disc 1;Sony PlayStation CCD;Parasite Eve 2 [Disc1of2] [U] [SLUS-01042];1999;Square;ARPG;1;;;;;;;;영어;;;;;
