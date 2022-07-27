@@ -14,7 +14,7 @@ galpanis;갈스 패닉 S - 특별판;MAME Adult;0;1997;Kaneko;Adult;;;;;;;;;;;;;
 galpans2;갈스 패닉 S2;MAME Adult;0;1999;kaneko;Adult;;;;;;;;;;;;;;
 galpans3;갈스 패닉 S3;MAME Adult;0;2003;kaneko;Adult;;;;;;;;;;;;;;
 go2000;고스톱 2000;MAME Adult;0;2000;SA;Adult;1;0;Joystick (2-way);good;1;raster;0;0;0;6;;;;
-goldstar;골드 스타;MAME Adult;0;199?;IGS;Adult;1;0;gambling;;;;;;;;;;;
+goldstar;골드 스타 (빠칭코);MAME Adult;0;199?;IGS;Adult;1;0;gambling;;;;;;;;;;;
 kotbinyo;꽃비녀;MAME Adult;hanakanz;1997;Dynax;Adult;;;;;;;;;;;;;;
 kotbinsp;꽃비녀 스페셜;MAME Adult;0;1997;Dynax;Adult;1;0;joystick (8-way),hanafuda;good;1;raster;;;;1;;;;
 #fromanc2;대전 마작 파이널 로맨스 2;MAME Adult;0;1995;Video System;Adult;;;;;;;;;;;;;;
