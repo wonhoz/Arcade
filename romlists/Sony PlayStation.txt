@@ -2,7 +2,7 @@
 Gundam Battle Assault 2 (USA);건담 배틀 어설트 2;Sony PlayStation CUE;Gundam Battle Assault 2 (USA);2002;Bandai;Fighting;2;;;;;;;gundam;영어;;;;;
 Dino Crisis 1 (K);디노 크라이시스 (한글판);Sony PlayStation CUE;Dino Crisis (USA);1999;Capcom;Action;1;;;;;;;;한국어;;;;;
 Dino Crisis 2 (K);디노 크라이시스 2 (한글판);Sony PlayStation PBP;Dino Crisis 2 (USA);2000;Capcom;Action;1;;;;;;;;한국어;;;;;
-Resident Evil 1-Director's Cut Dual Shock (K);레지던트 이블 1 (한글판);Sony PlayStation PBP;0;1996;Capcom;Action;1;;;;;;;;한국어;;;;;
+Resident Evil 1-Director's Cut Dual Shock (K);레지던트 이블 (한글판);Sony PlayStation PBP;0;1996;Capcom;Action;1;;;;;;;;한국어;;;;;
 Resident Evil 2-Dual Shock (K);레지던트 이블 2 (한글판);Sony PlayStation PBP;0;1998;Capcom;Action;1;;;;;;;;한국어;;;;;
 Resident Evil 3 - Last Escapea (K);레지던트 이블 3 (한글판);Sony PlayStation PBP;0;1999;Capcom;Action;1;;;;;;;;한국어;;;;;
 Rockman 8-Metal Heroes (K);록맨 8 (한글판);Sony PlayStation CUE;Rockman 8-Metal Heroes (K);1996;Capcom;Action;1;;;;;;;rockman;한국어;;;;;
@@ -39,5 +39,5 @@ Final Fantasy VIII (USA) (Disc 3);파이널 판타지 VIII Disc 3;Sony PlayStati
 Final Fantasy VIII (USA) (Disc 4);파이널 판타지 VIII Disc 4;Sony PlayStation CUE;Final Fantasy VIII (USA) (Disc 1);1999;Square;RPG;1;;;;;;;ff;영어;;;;;
 Final Fantasy 9 (K);파이널 판타지 IV (한글판);Sony PlayStation PBP;Final Fantasy 9 (K);2000;Square;RPG;1;;;;;;;ff;한국어;;;;;
 Parasite Eve (K);패러사이트 이브 (한글판);Sony PlayStation PBP;Parasite Eve (K);1998;Square;ARPG;1;;;;;;;;한국어;;;;;
-Parasite Eve 2 [Disc1of2] [U] [SLUS-01042];패러사이트 이브 2. Disc 1;Sony PlayStation CCD;Parasite Eve 2 [Disc1of2] [U] [SLUS-01042];1999;Square;ARPG;1;;;;;;;;영어;;;;;
-Parasite Eve 2 [Disc2of2] [U] [SLUS-01042];패러사이트 이브 2. Disc 2;Sony PlayStation CCD;Parasite Eve 2 [Disc1of2] [U] [SLUS-01042];1999;Square;ARPG;1;;;;;;;;영어;;;;;
+Parasite Eve 2 [Disc1of2] [U] [SLUS-01042];패러사이트 이브 II Disc 1;Sony PlayStation CCD;Parasite Eve 2 [Disc1of2] [U] [SLUS-01042];1999;Square;ARPG;1;;;;;;;;영어;;;;;
+Parasite Eve 2 [Disc2of2] [U] [SLUS-01042];패러사이트 이브 II Disc 2;Sony PlayStation CCD;Parasite Eve 2 [Disc1of2] [U] [SLUS-01042];1999;Square;ARPG;1;;;;;;;;영어;;;;;

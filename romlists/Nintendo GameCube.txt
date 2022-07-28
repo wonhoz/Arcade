@@ -2,7 +2,7 @@
 F-Zero GX (USA);F-Zero GX (미국판);Nintendo GameCube GCZ;;2003;Nintendo;Racing;;;;;;;;;영어;;;;;
 #NBA Live 2005 (USA);NBA 라이브 2005 (미국판);Nintendo GameCube GCZ;;2005;EA Sports;Sports;;;;;;;;;영어;;;;;
 #SD Gundam Gashapon Wars (J);SD 건담 가챠퐁 워즈 (일본판);Nintendo GameCube GCZ;;2005;Bandai;SRPG;;;;;;;;;일본어;;;;;
-Zatch Bell! - Mamodo Battles (USA);금색의 갓슈벨 - 우정파괴 태그 배틀 2 (미국판);Nintendo GameCube ISO;;2005;Bandai;Fighting;;;;;;;;;영어;;;;;
+Zatch Bell! - Mamodo Battles (USA);금색의 갓슈벨! - 우정의 태그 배틀 2 (미국판);Nintendo GameCube ISO;;2005;Bandai;Fighting;;;;;;;;;영어;;;;;
 #Mobile Suit Gundam - Senshitachi no Kiseki (J);기동전사 건담 - 전사들의 궤적 (일본판);Nintendo GameCube GCZ;;2004;Bandai;Action;;;;;;;;;일본어;;;;;
 Naruto - Gekitou Ninja Taisen! 4 (Japan);나루토 격투 닌자대전! 4 (일본판);Nintendo GameCube GCZ;;2005;Tomy;Fighting;;;;;;;;;일본어;;;;;
 Dragonball Z Budokai 2 (U);드래곤볼 Z 무도회 2 (미국판);Nintendo GameCube GCZ;;2006;Bandai;Fighting;;;;;;;;dragon;영어;;;;;
@@ -27,8 +27,8 @@ Super Mario Strikers (USA);슈퍼 마리오 축구 (미국판);Nintendo GameCube
 #Super Smash Bros. Melee v1.02 NTSC-U;슈퍼 스매시 브로스 밀리 (미국판);Nintendo GameCube GCZ;;2001;Nintendo;Fighting;;;;;;;;;영어;;;;;
 Star Fox Adventures (USA);스타 폭스 어드벤처 (미국판);Nintendo GameCube GCZ;;2002;Rare;RPG;;;;;;;;;영어;;;;;
 Star Fox Assault (USA);스타 폭스 어설트 (미국판);Nintendo GameCube GCZ;;2005;Namco;Shooting;;;;;;;;;영어;;;;;
-Star Wars - Rogue Squadron 2 - Rogue Leader NTSC-U;스타워즈 로그 스쿼드런 2 - 로그 리더 (미국판);Nintendo GameCube ISO;;2001;Factor 5;Shooting;;;;;;;;;영어;;;;;
-Star Wars - Rogue Squadron 3 - Rebel Strike NTSC-U;스타워즈 로그 스쿼드런 3 - 저항군의 공격 (미국판);Nintendo GameCube ISO;;2003;Factor 5;Shooting;;;;;;;;;영어;;;;;
+Star Wars - Rogue Squadron 2 - Rogue Leader NTSC-U;스타워즈 로그 스쿼드런 II - 로그 리더 (미국판);Nintendo GameCube ISO;;2001;Factor 5;Shooting;;;;;;;;;영어;;;;;
+Star Wars - Rogue Squadron 3 - Rebel Strike NTSC-U;스타워즈 로그 스쿼드런 III - 저항군의 공격 (미국판);Nintendo GameCube ISO;;2003;Factor 5;Shooting;;;;;;;;;영어;;;;;
 #Simpsons The - Hit & Run (USA);심슨: 히트&런 (미국판);Nintendo GameCube GCZ;;2003;Radical Entertainment;Action;;;;;;;;;영어;;;;;
 Wario World (USA);와리오 월드 (미국판);Nintendo GameCube GCZ;;2004;Nintendo;Action;;;;;;;;;영어;;;;;
 Wave Race - Blue Storm (USA);웨이브 레이서: 블루 스톰 (미국판);Nintendo GameCube GCZ;;2001;Nintendo;Racing;;;;;;;;;영어;;;;;
