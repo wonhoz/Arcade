@@ -8,7 +8,7 @@ lemans24;르망 24;SEGA MODEL 3;;1997;SEGA;Racing;;;;;;;;;;;;;;
 magtruck;매지컬 트럭 어드벤처;SEGA MODEL 3;;1998;SEGA;Action;;;;;;;;;;;;;;
 vs2;버추어 스트라이커 2;SEGA MODEL 3;;1997;SEGA;Sports;;;;;;;;;;;;;;
 vf3;버추어 파이터 3;SEGA MODEL 3;;1996;SEGA;Fighting;;;;;;;;;;;;;;
-vf3tb;버추어 파이터 3 팀배틀;SEGA MODEL 3;;1996;SEGA;Fighting;;;;;;;;;;;;;;
+vf3tb;버추어 파이터 3 팀배틀;SEGA MODEL 3;vf3;1996;SEGA;Fighting;;;;;;;;;;;;;;
 srally2;세가 랠리 2;SEGA MODEL 3;;1998;SEGA;Racing;;;;;;;;;;;;;;
 scud;스커드 레이스;SEGA MODEL 3;;1996;SEGA;Racing;;;;;;;;;;;;;;
 scudp;스커드 레이스 플러스;SEGA MODEL 3;;1997;SEGA;Racing;;;;;;;;;;;;;;
