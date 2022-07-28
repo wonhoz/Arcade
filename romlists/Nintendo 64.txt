@@ -66,7 +66,7 @@ Toy Story 2 (USA);토이 스토리 2 (미국판);Nintendo 64;;;;Action;;;;;;;;;�
 Fighter Destiny 2 (U);파이터즈 데스티니 2 (미국판);Nintendo 64;;;;Fighting;;;;;;;;;영어;;;;;
 Fighting Force 64 (USA);파이팅 포스 64 (미국판);Nintendo 64;;;;Arcade;;;;;;;;;영어;;;;;
 Pilotwings 64 (USA);파일럿윙스 64 (미국판);Nintendo 64;;;;Flight;;;;;;;;;영어;;;;;
-Paper Mario (USA);페이퍼 마리오 (미국판);Nintendo 64 v1.7;;;;RPG;;;;;;;;mario;영어;;;;;
+Paper Mario (USA);페이퍼 마리오 (미국판);Nintendo 64 v1.7;Paper Mario (K);;;RPG;;;;;;;;mario;영어;;;;;
 Paper Mario (K);페이퍼 마리오 (한글판);Nintendo 64 v1.7;;;;RPG;;;;;;;;mario;한국어;;;;;
 Pokemon Stadium 2 (USA);포켓몬스터 스타디움 2 (미국판);Nintendo 64;;;;RPG;;;;;;;;pokemon;영어;;;;;
 Hydro Thunder (USA);하이드로 썬더 (미국판);Nintendo 64;;;;Racing;;;;;;;;;영어;;;;;
