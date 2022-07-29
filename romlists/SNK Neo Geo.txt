@@ -115,7 +115,7 @@ kof2000;킹 오브 파이터즈 2000;MAME;0;2000;SNK;Fighting;2;0;Joystick (8-wa
 kof2001;킹 오브 파이터즈 2001;MAME;0;2001;SNK;Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 kof2002;킹 오브 파이터즈 2002;MAME;0;2002;SNK Playmore;Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 kof2003;킹 오브 파이터즈 2003;MAME;0;2003;SNK Playmore;Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
-kf2k3upl;킹 오브 파이터즈 2004 울트라 Plus;MAME;0;2003;SNK Playmore;Fighting;2;0;joystick (8-way);;;;neogeo;;;;;;;
+kf2k3upl;킹 오브 파이터즈 2004 울트라 플러스;MAME;0;2003;SNK Playmore;Fighting;2;0;joystick (8-way);;;;neogeo;;;;;;;
 tophuntr;탑헌터 - 로디 & 케시;MAME Vertical;0;1994;SNK;Action;2;270;Joystick (8-way);good;1;raster;neogeo;0;0;3;;;;
 #twinspri;트윙클 스프라이트;MAME;0;1996;ADK;Shooting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 pspikes;파워 스파이크;MAME;0;1991;Video System;Sports;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;

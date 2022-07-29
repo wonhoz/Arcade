@@ -9,7 +9,7 @@ dstlk;다크 스토커즈;MAME;0;1994;Capcom;Fighting;2;0;Joystick (8-way);good;
 daimakai;대마계촌 / 구울 앤 고스트;MAME;0;1988;Capcom;Action;2;0;joystick (8-way);;;;cps1;;;;;;;
 ddsom;던전&드래곤즈: 섀도우 오브 미스타라;MAME;0;1996;Capcom;Arcade;4;0;Joystick (8-way);good;1;raster;cps2;0;0;4;;;;
 ddtod;던전&드래곤즈: 운명의 탑;MAME;0;1994;Capcom;Arcade;4;0;Joystick (8-way);good;1;raster;cps2;0;0;4;;;;
-redearth;레드어쓰;MAME;0;1996;Capcom;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cps3;0;chd;6;;;;
+redearth;레드어스;MAME;0;1996;Capcom;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cps3;0;chd;6;;;;
 mshvsf;마블 VS 스트리트 파이터;MAME;0;1997;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
 mvsc;마블 VS 캡콤;MAME;0;1998;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6;;;;
 msh;마블 슈퍼 히어로즈;MAME;0;1995;Capcom;Fighting;2;0;joystick (8-way);;;;cps2;;;;;;;
