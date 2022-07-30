@@ -6,7 +6,7 @@ wownfant;WOW 뉴 판타지아;MAME Adult;0;2002;Comad;Adult;;;;;;;;;;;;;;
 galpanic;갈스 패닉;MAME Adult;0;1990;kaneko;Adult;;;;;;;;;;;;;;
 galsnew;갈스 패닉;MAME Adult;;1990;Kaneko;Adult;2;90;joystick (4-way);good;1;raster;;;;2;;;;
 galsnewk;갈스 패닉 (한국판);MAME Adult;galsnew;1990;Kaneko;Adult;2;90;joystick (4-way);good;1;raster;galsnew;;;2;;;;
-galpani2;갈스 패닉 2;MAME Adult;0;1993;kaneko;Adult;;;;;;;;;;;;;;
+galpani2;갈스 패닉 II;MAME Adult;0;1993;kaneko;Adult;;;;;;;;;;;;;;
 galpani3;갈스 패닉 3;MAME Adult;0;1995;kaneko;Adult;;;;;;;;;;;;;;
 galpani3k;갈스 패닉 3 (한국판);MAME Adult;galpani3;1995;Kaneko;Adult;2;90;joystick (8-way);imperfect;1;raster;galpani3;;;1;;;;
 galpani4;갈스 패닉 4;MAME Adult;0;1996;kaneko;Adult;;;;;;;;;;;;;;
@@ -49,7 +49,7 @@ klondkp;클론다이크+;MAME Adult;;1999;Eolith;Adult;1;0;joystick (8-way);good
 finalgdr;파이널 고도리;MAME Adult;0;2001;Semicom;Adult;1;0;Joystick (4-way);;1;raster;0;0;0;2;;;;
 sxyreac2;파칭코 섹시 리액션 2;MAME Adult;0;1999;Sammy;Adult;;;;;;;;;;;;;;
 pkgnsh;파칭코 은구슬 승부;MAME Adult;0;1998;Dynax;Adult;;;;;;;;;;;;;;
-fantsia2;판티지아 2;MAME Adult;0;1997;Comad;Adult;;;;;;;;0;0;4;;;;
+fantsia2;판티지아 II;MAME Adult;0;1997;Comad;Adult;;;;;;;;0;0;4;;;;
 funybubl;퍼니 버블;MAME Adult;0;1999;Comad;Adult;;;;;;;;0;0;4;;;;
 pcktgal;포켓걸;MAME Adult;0;1987;Data East;Adult;2;0;joystick (8-way);;;;;;;;;;;
 pcktgalk;포켓걸 (한글판);MAME Adult;pcktgal;1987;Data East;Adult;1;0;Joystick (4-way);imperfect;1;raster;0;0;0;2;;;;
