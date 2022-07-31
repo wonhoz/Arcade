@@ -164,7 +164,7 @@ local blackbg = fe.add_image("black.png", 0.061*flw, 0.132*flh, 0.375*flw, 0.502
 
 // 모니터와 콘솔기기
 fe.add_image("monitor/monitor.png",      0.027*flw, 0.068*flh, 0.442*flw, 0.752*flh );
-fe.add_image("system/[DisplayName].png", 0.048*flw, 0.677*flh, 0.246*flw, 0.204*flh );
+fe.add_image("system/[DisplayName].png", 0.048*flw, 0.687*flh, 0.246*flw, 0.204*flh );
 
 
 // 동영상

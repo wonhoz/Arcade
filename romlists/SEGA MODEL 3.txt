@@ -1,20 +1,20 @@
 #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons;Series;Language;Region;Rating
-lamachin;LA 머신건;SEGA MODEL 3;;1998;SEGA;GunShooting;;;;;;;;;;;;;;
+lamachin;L.A. 머신건;SEGA MODEL 3;;1998;SEGA;GunShooting;;;;;;;;;;;;;;
 dirtdvls;더티 데빌스;SEGA MODEL 3;;1998;SEGA;Racing;;;;;;;;;;;;;;
-daytona2;데이토나 USA 2;SEGA MODEL 3;;1998;SEGA;Racing;;;;;;;;;;;;;;
-dayto2pe;데이토나 USA 2 퍼펙트 에디션;SEGA MODEL 3;;1998;SEGA;Racing;;;;;;;;;;;;;;
-lostwsga;로스트 월드;SEGA MODEL 3;;1997;SEGA;GunShooting;;;;;;;;;;;;;;
+daytona2;데이토나 USA 2 배틀 온 더 엣지;SEGA MODEL 3;;1998;SEGA;Racing;;;;;;;;;;;;;;
+dayto2pe;데이토나 USA 2 파워 에디션;SEGA MODEL 3;;1998;SEGA;Racing;;;;;;;;;;;;;;
 lemans24;르망 24;SEGA MODEL 3;;1997;SEGA;Racing;;;;;;;;;;;;;;
 magtruck;매지컬 트럭 어드벤처;SEGA MODEL 3;;1998;SEGA;Action;;;;;;;;;;;;;;
 vs2;버추어 스트라이커 2;SEGA MODEL 3;;1997;SEGA;Sports;;;;;;;;;;;;;;
 vf3;버추어 파이터 3;SEGA MODEL 3;;1996;SEGA;Fighting;;;;;;;;;;;;;;
-vf3tb;버추어 파이터 3 팀배틀;SEGA MODEL 3;;1996;SEGA;Fighting;;;;;;;;;;;;;;
+vf3tb;버추어 파이터 3 팀배틀;SEGA MODEL 3;vf3;1996;SEGA;Fighting;;;;;;;;;;;;;;
 srally2;세가 랠리 2;SEGA MODEL 3;;1998;SEGA;Racing;;;;;;;;;;;;;;
 scud;스커드 레이스;SEGA MODEL 3;;1996;SEGA;Racing;;;;;;;;;;;;;;
-scudp;스커드 레이스 플러스;SEGA MODEL 3;;1997;SEGA;Racing;;;;;;;;;;;;;;
+scudp;스커드 레이스 플러스 / 슈퍼 GT;SEGA MODEL 3;;1997;SEGA;Racing;;;;;;;;;;;;;;
 swtrilgy;스타워즈 트릴로지 아케이드;SEGA MODEL 3;;1998;SEGA;Shooting;;;;;;;;;;;;;;
 spikeofe;스파이크 아웃 파이널 에디션;SEGA MODEL 3;;1998;SEGA;Sports;;;;;;;;;;;;;;
 oceanhun;오션 헌터;SEGA MODEL 3;;1998;SEGA;Action;;;;;;;;;;;;;;
 von2;전뇌전기 버추얼온 2;SEGA MODEL 3;;1998;SEGA;Fighting;;;;;;;;;;;;;;
+lostwsga;쥬라기 공원 잃어버린 세계;SEGA MODEL 3;;1997;SEGA;GunShooting;;;;;;;;;;;;;;
 fvipers2;파이팅 바이퍼즈 2;SEGA MODEL 3;;1998;SEGA;Fighting;;;;;;;;;;;;;;
 harley;할리 데이비슨;SEGA MODEL 3;;1997;SEGA;Racing;;;;;;;;;;;;;;
