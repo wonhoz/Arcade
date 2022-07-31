@@ -16,11 +16,11 @@ SOULCALIBUR Broken Destiny;소울 칼리버: 브로큰 데스티니;Sony PlaySta
 #Super Robot Wars AP Kor v2.4 Vocal Edition;슈퍼 로봇대전 A 포터블 (한글판);Sony PlayStation Portable;0;2008;Banpresto;SRPG;;;;;;;;super_robot;한국어;;;;;
 #Suzumiya Haruhi no Yakusoku (K);스즈미야 하루히의 약속 (한글판);Sony PlayStation Portable;Suzumiya Haruhi no Yakusoku (J);2007;Bandai Namco;Adventure;;;;;;;;;한국어;;;;;
 Assassins Creed Bloodlines;어쌔신 크리드: 블러드라인;Sony PlayStation Portable;0;;;Action;;;;;;;;;;;;;;
-Ikki Tousen - Eloquent Fist (J);일기당천 - 제갈공명;Sony PlayStation Portable;0;2008;Marvelous;Arcade;;;;;;;;;;;;;;
-Ikki Tousen - Xross Impact (J);일기당천 - 크로스 임팩트;Sony PlayStation Portable;0;2010;Marvelous;Arcade;;;;;;;;;;;;;;
+Ikki Tousen - Eloquent Fist (J);일기당천: 엘로퀀트 피스트;Sony PlayStation Portable;0;2008;Marvelous;Arcade;;;;;;;;;;;;;;
+Ikki Tousen - Xross Impact (J);일기당천: 크로스 임팩트;Sony PlayStation Portable;0;2010;Marvelous;Arcade;;;;;;;;;;;;;;
 #Jeanne Darc (K);잔다르크 (한글판);Sony PlayStation Portable;;2007;Level-5;SRPG;;;;;;;;;한국어;;;;;
 Shin Sangoku Musou 5 Special-[K];진삼국무쌍 5 스페셜 (한글판);Sony PlayStation Portable;Shin Sangoku Musou 5 Special (J);2010;Koei Tecmo;Action;;;;;;;;;한국어;;;;;
-TEKKEN 5 (K);철권 5 (한글판);Sony PlayStation Portable;0;;;Fighting;;;;;;;;tekken;한국어;;;;;
+TEKKEN 5 (K);철권 5 다크 레저렉션(한글판);Sony PlayStation Portable;0;;;Fighting;;;;;;;;tekken;한국어;;;;;
 TEKKEN 6 (K);철권 6 (한글판);Sony PlayStation Portable;Tekken 6 (USA) (En,Fr,De,Es,It,Ru);2009;Bandai Namco;Fighting;;;;;;;;tekken;한국어;;;;;
 Chongseong and Diamond [K];총성과 다이아몬드 (한글판);Sony PlayStation Portable;0;;;Adventure;;;;;;;;;;;;;;
 #Tora Dora Portable! (K);토라도라 포터블! (한글판);Sony PlayStation Portable;Tora Dora Portable! (J);2009;Guyzware;Adventure;;;;;;;;;한국어;;;;;

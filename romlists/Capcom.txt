@@ -7,9 +7,9 @@
 nwarr;나이트 워리어즈: 다크스토커즈의 복수;MAME;;1995;Capcom;Fighting;2;0;joystick (8-way);good;1;raster;cps2;;;6;;;;
 dstlk;다크 스토커즈;MAME;0;1994;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6;;;;
 daimakai;대마계촌 / 구울 앤 고스트;MAME;0;1988;Capcom;Action;2;0;joystick (8-way);;;;cps1;;;;;;;
-ddsom;던전&드래곤즈: 섀도우 오브 미스타라;MAME;0;1996;Capcom;Arcade;4;0;Joystick (8-way);good;1;raster;cps2;0;0;4;;;;
+ddsom;던전&드래곤즈: 섀도우 오버 미스타라;MAME;0;1996;Capcom;Arcade;4;0;Joystick (8-way);good;1;raster;cps2;0;0;4;;;;
 ddtod;던전&드래곤즈: 운명의 탑;MAME;0;1994;Capcom;Arcade;4;0;Joystick (8-way);good;1;raster;cps2;0;0;4;;;;
-redearth;레드어쓰;MAME;0;1996;Capcom;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cps3;0;chd;6;;;;
+redearth;레드 어스;MAME;0;1996;Capcom;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cps3;0;chd;6;;;;
 mshvsf;마블 VS 스트리트 파이터;MAME;0;1997;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
 mvsc;마블 VS 캡콤;MAME;0;1998;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6;;;;
 msh;마블 슈퍼 히어로즈;MAME;0;1995;Capcom;Fighting;2;0;joystick (8-way);;;;cps2;;;;;;;
@@ -29,7 +29,7 @@ hsf2;하이퍼 스트리트 파이터 II 기념판;MAME;0;2004;Capcom;Fighting;2
 sgemf;슈퍼 젬 파이터 미니믹스;MAME;0;1997;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;3;;;;
 spf2t;슈퍼 퍼즐 파이터 II 터보;MAME;0;1996;Capcom;Puzzle;;;;;;;cps2;sf;;;;;;
 sf;스트리트 파이터;MAME;0;1987;Capcom;Fighting;2;;;;;;MAME;sf;;;;;;
-kenseim;스트리트 파이터 II - 두더지 잡기 게임;MAME;0;1994;Capcom;Puzzle;2;;;;;;cps2;sf;0;4;;;;
+kenseim;스트리트 파이터 II - 두더지 잡기;MAME;0;1994;Capcom;Puzzle;2;;;;;;cps2;sf;0;4;;;;
 sf2;스트리트 파이터 II - 월드 워리어;MAME;0;1991;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
 sf2ce;스트리트 파이터 II' - 챔피언 에디션;MAME;0;1992;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
 sf2hf;스트리트 파이터 II' - 하이퍼 파이팅;MAME;0;1992;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
@@ -49,7 +49,7 @@ sfa2;스트리트 파이터 알파 2;MAME;0;1996;Capcom;Fighting;2;0;Joystick (8
 sfa3;스트리트 파이터 알파 3;MAME;0;1998;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
 strider;스트라이더 비룡;MAME;0;1989;Capcom;Action;2;0;Joystick (8-way);good;1;raster;cps1;0;0;3;;;;
 slammast;슬램 마스터즈;MAME;0;1993;Capcom;Sports;4;0;Joystick (8-way);good;1;raster;cps1;0;0;3;;;;
-ringdest;슬램 마스터즈 2;MAME;0;1994;Capcom;Sports;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6;;;;
+ringdest;슬램 마스터즈 II: 링 오브 디스트럭션;MAME;0;1994;Capcom;Sports;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6;;;;
 3wonders;쓰리 원더스;MAME;0;1991;Capcom;Action;;;;;;;cps1;;;;;;;
 armwar;아머드 워리어스;MAME;0;1994;Capcom;Arcade;3;0;Joystick (8-way);good;1;raster;cps2;0;0;3;;;;
 #unsquad;에어리어 88 / U.N. 특수부대;MAME;0;1989;Capcom;Shooting;2;0;Joystick (8-way);good;1;raster;cps1;0;0;3;;;;

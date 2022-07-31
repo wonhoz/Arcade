@@ -1,5 +1,5 @@
 #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons;Series;Language;Region;Rating
-ddsomj;던전&드래곤즈: 섀도우 오브 미스타라;RetroArch FinalBurn Neo;0;1996;Capcom;Arcade;1-4;한국어;Joystick (8-way);;1;raster;cps2;Dungeons & Dragons: Shadow over Mystara;0;4;;;;
+ddsomj;던전&드래곤즈: 섀도우 오버 미스타라;RetroArch FinalBurn Neo;0;1996;Capcom;Arcade;1-4;한국어;Joystick (8-way);;1;raster;cps2;Dungeons & Dragons: Shadow over Mystara;0;4;;;;
 ddtodj;던전&드래곤즈: 운명의 탑;RetroArch FinalBurn Neo;0;1994;Capcom;Arcade;1-4;한국어;Joystick (8-way);;1;raster;cps2;Dungeons & Dragons: Tower of Doom;0;4;;;;
 mslug;메탈슬러그 1;MAME;0;1996;SNK;Action;1-2;영어;Joystick (8-way);;1;;neogeo;Metal Slug;;3;;;;
 mslug2;메탈슬러그 2;MAME;0;1998;SNK;Action;1-2;영어;Joystick (8-way);;1;raster;neogeo;Metal Slug 2;0;3;;;;

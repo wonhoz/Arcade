@@ -1,8 +1,8 @@
 #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons;Series;Language;Region;Rating
 ggx15;길티기어 X Ver.1.5;Sammy Atomiswave;ggx;2000;ARC System Works;Fighting;;;;;;;;;;;;;;
 ggisuka;길티기어 이수카;Sammy Atomiswave;;2003;ARC System Works;Fighting;;;;;;;;;;;;;;
-ngbc;네오지오 배틀 콜레세움;Sammy Atomiswave;;2005;SNK;Fighting;;;;;;;;;;;;;;
-demofist;데몰리시 피스트;Sammy Atomiswave;;2003;Polygon Magic;Action;;;;;;;;;;;;;;
+ngbc;네오지오 배틀 콜로세움;Sammy Atomiswave;;2005;SNK;Fighting;;;;;;;;;;;;;;
+demofist;데몰리쉬 피스트;Sammy Atomiswave;;2003;Polygon Magic;Action;;;;;;;;;;;;;;
 #dolphin;돌핀 블루;Sammy Atomiswave;;2003;Sammy;Action;;;;;;;;;;;;;;
 rumblef2;럼블 피쉬 2;Sammy Atomiswave;;2005;Sammy;Fighting;;;;;;;;;;;;;;
 mslug6;메탈 슬러그 6;Sammy Atomiswave;;2004;SNK Playmore;Action;;;;;;;;;;;;;;
