@@ -164,7 +164,7 @@ local blackbg = fe.add_image("black.png", 0.061*flw, 0.132*flh, 0.375*flw, 0.502
 
 // 모니터와 콘솔기기
 fe.add_image("monitor/monitor.png",      0.027*flw, 0.068*flh, 0.442*flw, 0.752*flh );
-fe.add_image("system/[DisplayName].png", 0.048*flw, 0.646*flh, 0.276*flw, 0.218*flh );
+fe.add_image("system/[DisplayName].png", 0.048*flw, 0.683*flh, 0.276*flw, 0.218*flh );
 
 
 // 동영상
@@ -280,7 +280,7 @@ if ( my_config["select_character"] == "By Game" )
 // 2D 또는 3D 박스 이미지 표시
 if ( my_config["boximage_type"] == "Cartridge" )
 {
-	local boximage = fe.add_artwork( "cartridge", 0.331*flw, 0.608*flh, 0.208*flw, 0.274*flh );
+	local boximage = fe.add_artwork( "cartridge", 0.306*flw, 0.648*flh, 0.1872*flw, 0.2466*flh );
 	boximage.preserve_aspect_ratio = true;
 	local move_boximage = {
        when = Transition.ToNewSelection, property = "alpha", start = 0, end = 254, time = 800
