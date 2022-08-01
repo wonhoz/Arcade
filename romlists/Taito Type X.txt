@@ -4,10 +4,10 @@
 #SuggoiArcanaHeart2Nesica;대단해! 아르카나 하트 2;TeknoParrot;Suggoi! Arcana Heart 2;2008;EXAMU;Fighting;2;;;;;;;;;;;;;
 The BishiBashi;더 비시바시 (Keyboard Only);Taito Type X The BishiBashi;;2009;Konami;Puzzle;3;;;;;;;;;;;;;
 #DeathSmiles II;데스스마일스 II - 마계의 메리 크리스마스;Taito Type X_Deathsmiles II;0;2009;Cave;Shooting;2;;;;;;;;;;;;;
-Raiden III;라이덴 III;TeknoParrot;;2005;MOSS;Shooting;2;;;;;;;;;;;;;
-Raiden III NesicaXLive;라이덴 III NesicaXLive;TeknoParrot;Raiden III;2005;MOSS;Shooting;2;;;;;;;;;;;;;
-Raiden IV;라이덴 IV;TeknoParrot;;2007;MOSS;Shooting;2;;;;;;;;;;;;;
-Raiden IV NesicaXLive;라이덴 IV NesicaXLive;TeknoParrot;Raiden IV;2007;MOSS;Shooting;2;;;;;;;;;;;;;
+RaidenIII;라이덴 III;TeknoParrot;;2005;MOSS;Shooting;2;;;;;;;;;;;;;
+RaidenIIINesica;라이덴 III NesicaXLive;TeknoParrot;RaidenIII;2005;MOSS;Shooting;2;;;;;;;;;;;;;
+RaidenIV;라이덴 IV;TeknoParrot;;2007;MOSS;Shooting;2;;;;;;;;;;;;;
+RaidenIVNesica;라이덴 IV NesicaXLive;TeknoParrot;RaidenIV;2007;MOSS;Shooting;2;;;;;;;;;;;;;
 #Battle Fantasia;배틀 판타지아;Taito Type X_Battle Fantasia;0;2007;ARC System Works;Fighting;2;;;;;;;;;;;;;
 #BlazBlue Calamity Trigger;블레이블루 - 캘러미티 트리거 (M);Taito Type X_BlazBlue Calamity Trigger;BlazBlueCalaminityTrigger;2008;ARC System Works;Fighting;2;;;;;;;;;;;;;
 #BlazBlueContinuumShift;블레이블루 - 컨티뉴엄 시프트;TeknoParrot;BlazBlue Continuum Shift;2009;ARC System Works;Fighting;2;;;;;;;;;;;;;
