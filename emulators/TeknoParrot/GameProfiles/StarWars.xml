@@ -1,23 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GameName>STAR WARS: Battle Pod</GameName>
+  <GameGenre>Flying</GameGenre>
   <GamePath/>
   <TestMenuParameter/>
   <TestMenuIsExecutable>false</TestMenuIsExecutable>
   <ExtraParameters/>
   <TestMenuExtraParameters/>
   <IconName>Icons\StarWars.png</IconName>
-  <GameProfileRevision>14</GameProfileRevision>
+  <GameProfileRevision>29</GameProfileRevision>
   <Is64Bit>true</Is64Bit>
   <HasSeparateTestMode>false</HasSeparateTestMode>
   <EmulationProfile>NamcoMachStorm</EmulationProfile>
   <EmulatorType>OpenParrot</EmulatorType>
+  <ExecutableName>RSLauncher.exe</ExecutableName>
   <ConfigValues>
     <FieldInformation>
       <CategoryName>General</CategoryName>
-      <FieldName>XInput</FieldName>
-      <FieldValue>0</FieldValue>
-      <FieldType>Bool</FieldType>
+      <FieldName>Input API</FieldName>
+      <FieldValue>DirectInput</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>DirectInput</string>
+        <string>XInput</string>
+      </FieldOptions>
     </FieldInformation>
     <FieldInformation>
       <CategoryName>General</CategoryName>
@@ -49,6 +55,42 @@
       <FieldValue>0</FieldValue>
       <FieldType>Bool</FieldType>
     </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Reverse Y Axis</FieldName>
+      <FieldValue>0</FieldValue>
+      <FieldType>Bool</FieldType>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Reverse Throttle Axis</FieldName>
+      <FieldValue>0</FieldValue>
+      <FieldType>Bool</FieldType>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Use Keyboard/Button For Axis</FieldName>
+      <FieldValue>0</FieldValue>
+      <FieldType>Bool</FieldType>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Keyboard/Button Axis X/Y Sensitivity</FieldName>
+      <FieldValue>10</FieldValue>
+      <FieldType>Slider</FieldType>
+      <FieldMin>1</FieldMin>
+      <FieldMax>127</FieldMax>
+      <FieldOptions />
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Keyboard/Button Axis Throttle Sensitivity</FieldName>
+      <FieldValue>10</FieldValue>
+      <FieldType>Slider</FieldType>
+      <FieldMin>1</FieldMin>
+      <FieldMax>255</FieldMax>
+      <FieldOptions />
+    </FieldInformation>
   </ConfigValues>
   <JoystickButtons>
     <JoystickButtons>
@@ -69,13 +111,50 @@
       <AnalogType>SWThrottle</AnalogType>
     </JoystickButtons>
     <JoystickButtons>
+      <ButtonName>Throttle Brake</ButtonName>
+      <InputMapping>Analog2</InputMapping>
+      <HideWithXInput>true</HideWithXInput>
+      <HideWithoutKeyboardForAxis>true</HideWithoutKeyboardForAxis>
+      <AnalogType>SWThrottle</AnalogType>
+    </JoystickButtons>
+    <JoystickButtons>
       <ButtonName>Analog X</ButtonName>
       <InputMapping>Analog4</InputMapping>
+      <HideWithKeyboardForAxis>true</HideWithKeyboardForAxis>
       <AnalogType>AnalogJoystick</AnalogType>
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Analog Y</ButtonName>
       <InputMapping>Analog6</InputMapping>
+      <HideWithKeyboardForAxis>true</HideWithKeyboardForAxis>
+      <AnalogType>AnalogJoystickReverse</AnalogType>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Analog X Left</ButtonName>
+      <InputMapping>Analog4</InputMapping>
+      <HideWithXInput>true</HideWithXInput>
+      <HideWithoutKeyboardForAxis>true</HideWithoutKeyboardForAxis>
+      <AnalogType>AnalogJoystick</AnalogType>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Analog X Right</ButtonName>
+      <InputMapping>Analog4</InputMapping>
+      <HideWithXInput>true</HideWithXInput>
+      <HideWithoutKeyboardForAxis>true</HideWithoutKeyboardForAxis>
+      <AnalogType>AnalogJoystick</AnalogType>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Analog Y Up</ButtonName>
+      <InputMapping>Analog6</InputMapping>
+      <HideWithXInput>true</HideWithXInput>
+      <HideWithoutKeyboardForAxis>true</HideWithoutKeyboardForAxis>
+      <AnalogType>AnalogJoystickReverse</AnalogType>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Analog Y Down</ButtonName>
+      <InputMapping>Analog6</InputMapping>
+      <HideWithXInput>true</HideWithXInput>
+      <HideWithoutKeyboardForAxis>true</HideWithoutKeyboardForAxis>
       <AnalogType>AnalogJoystickReverse</AnalogType>
     </JoystickButtons>
     <JoystickButtons>
