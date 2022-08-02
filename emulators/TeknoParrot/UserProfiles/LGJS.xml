@@ -200,8 +200,16 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Coin 1</ButtonName>
+      <RawInputButton>
+        <DevicePath>\\?\HID#{00001812-0000-1000-8000-00805f9b34fb}_Dev_VID&amp;0205ac_PID&amp;024f_REV&amp;6701_d323c2427d58&amp;Col01#a&amp;243b772c&amp;0&amp;0000#{884b96c3-56ef-11d1-bc8c-00a0c91405dd}</DevicePath>
+        <DeviceType>Keyboard</DeviceType>
+        <MouseButton>None</MouseButton>
+        <KeyboardKey>D5</KeyboardKey>
+      </RawInputButton>
       <InputMapping>Coin1</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameRi>Unknown Manufacturer Unknown Product D5</BindNameRi>
+      <BindName>Unknown Manufacturer Unknown Product D5</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -222,8 +230,16 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Coin 2</ButtonName>
+      <RawInputButton>
+        <DevicePath>\\?\HID#{00001812-0000-1000-8000-00805f9b34fb}_Dev_VID&amp;0205ac_PID&amp;024f_REV&amp;6701_d323c2427d58&amp;Col01#a&amp;243b772c&amp;0&amp;0000#{884b96c3-56ef-11d1-bc8c-00a0c91405dd}</DevicePath>
+        <DeviceType>Keyboard</DeviceType>
+        <MouseButton>None</MouseButton>
+        <KeyboardKey>D6</KeyboardKey>
+      </RawInputButton>
       <InputMapping>Coin2</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameRi>Unknown Manufacturer Unknown Product D6</BindNameRi>
+      <BindName>Unknown Manufacturer Unknown Product D6</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -244,8 +260,16 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Player 1 Start</ButtonName>
+      <RawInputButton>
+        <DevicePath>\\?\HID#{00001812-0000-1000-8000-00805f9b34fb}_Dev_VID&amp;0205ac_PID&amp;024f_REV&amp;6701_d323c2427d58&amp;Col01#a&amp;243b772c&amp;0&amp;0000#{884b96c3-56ef-11d1-bc8c-00a0c91405dd}</DevicePath>
+        <DeviceType>Keyboard</DeviceType>
+        <MouseButton>None</MouseButton>
+        <KeyboardKey>D1</KeyboardKey>
+      </RawInputButton>
       <InputMapping>P1ButtonStart</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameRi>Unknown Manufacturer Unknown Product D1</BindNameRi>
+      <BindName>Unknown Manufacturer Unknown Product D1</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -266,8 +290,16 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Player 1 Light Gun</ButtonName>
+      <RawInputButton>
+        <DevicePath>Windows Mouse Cursor</DevicePath>
+        <DeviceType>Mouse</DeviceType>
+        <MouseButton>None</MouseButton>
+        <KeyboardKey>None</KeyboardKey>
+      </RawInputButton>
       <InputMapping>P1LightGun</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameRi>Windows Mouse Cursor</BindNameRi>
+      <BindName>Windows Mouse Cursor</BindName>
       <HideWithDirectInput>true</HideWithDirectInput>
       <HideWithXInput>true</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -420,8 +452,16 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Player 1 Gun Trigger</ButtonName>
+      <RawInputButton>
+        <DevicePath>\\?\HID#{00001812-0000-1000-8000-00805f9b34fb}_Dev_VID&amp;02248a_PID&amp;8261_REV&amp;0001_e01094406d31&amp;Col01#a&amp;1c49d8c9&amp;0&amp;0000#{378de44c-56ef-11d1-bc8c-00a0c91405dd}</DevicePath>
+        <DeviceType>Mouse</DeviceType>
+        <MouseButton>LeftButton</MouseButton>
+        <KeyboardKey>None</KeyboardKey>
+      </RawInputButton>
       <InputMapping>P1Button1</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameRi>Unknown Manufacturer Unknown Product LeftButton</BindNameRi>
+      <BindName>Unknown Manufacturer Unknown Product LeftButton</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -442,8 +482,16 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Player 1 Special</ButtonName>
+      <RawInputButton>
+        <DevicePath>\\?\HID#{00001812-0000-1000-8000-00805f9b34fb}_Dev_VID&amp;0205ac_PID&amp;024f_REV&amp;6701_d323c2427d58&amp;Col01#a&amp;243b772c&amp;0&amp;0000#{884b96c3-56ef-11d1-bc8c-00a0c91405dd}</DevicePath>
+        <DeviceType>Keyboard</DeviceType>
+        <MouseButton>None</MouseButton>
+        <KeyboardKey>E</KeyboardKey>
+      </RawInputButton>
       <InputMapping>P1Button2</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameRi>Unknown Manufacturer Unknown Product E</BindNameRi>
+      <BindName>Unknown Manufacturer Unknown Product E</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -464,8 +512,16 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Player 1 Gun Button</ButtonName>
+      <RawInputButton>
+        <DevicePath>\\?\HID#{00001812-0000-1000-8000-00805f9b34fb}_Dev_VID&amp;0205ac_PID&amp;024f_REV&amp;6701_d323c2427d58&amp;Col01#a&amp;243b772c&amp;0&amp;0000#{884b96c3-56ef-11d1-bc8c-00a0c91405dd}</DevicePath>
+        <DeviceType>Keyboard</DeviceType>
+        <MouseButton>None</MouseButton>
+        <KeyboardKey>W</KeyboardKey>
+      </RawInputButton>
       <InputMapping>P1Button3</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameRi>Unknown Manufacturer Unknown Product W</BindNameRi>
+      <BindName>Unknown Manufacturer Unknown Product W</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -486,8 +542,16 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Player 1 Action Button</ButtonName>
+      <RawInputButton>
+        <DevicePath>\\?\HID#{00001812-0000-1000-8000-00805f9b34fb}_Dev_VID&amp;0205ac_PID&amp;024f_REV&amp;6701_d323c2427d58&amp;Col01#a&amp;243b772c&amp;0&amp;0000#{884b96c3-56ef-11d1-bc8c-00a0c91405dd}</DevicePath>
+        <DeviceType>Keyboard</DeviceType>
+        <MouseButton>None</MouseButton>
+        <KeyboardKey>Q</KeyboardKey>
+      </RawInputButton>
       <InputMapping>P1Button4</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameRi>Unknown Manufacturer Unknown Product Q</BindNameRi>
+      <BindName>Unknown Manufacturer Unknown Product Q</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
