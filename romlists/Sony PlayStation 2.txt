@@ -18,7 +18,7 @@ Ghost in the Shell - Stand Alone Complex (K);공각기동대 SAC (한글판);Son
 #Katamari Damacy 2 (K);괴혼 2: 데굴데굴~ 쫀득쫀득~ 괴혼 (한글판);Sony PlayStation 2 GZ;;2005;Namco;Puzzle;1;;;;;;;;한국어;;;;;
 Katamari Damacy (K);괴혼: 굴려라 왕자님! (한글판);Sony PlayStation 2 GZ;Katamari Damacy (USA);2003;Namco;Puzzle;1;;;;;;;;한국어;;;;;
 Kuon (K);구온 (한글판);Sony PlayStation 2 GZ;Kuon (USA);2004;FromSoftware;Survival Horror;1;;;;;;;;한국어;;;;;
-Onimusha 2 Samurai's Destiny;귀무자 2: 사무라이의 운명 (한글판);Sony PlayStation 2 GZ;Onimusha 2 - Samurai's Destiny (USA);2002;Capcom;Action;1;;;;;;;;한국어;;;;;
+Onimusha 2 Samurai's Destiny;귀무자 2: 사무라이의 운명 (한글판);Sony PlayStation 2 ISO;Onimusha 2 - Samurai's Destiny (USA);2002;Capcom;Action;1;;;;;;;;한국어;;;;;
 Onimusha 3 - Demon Siege;귀무자 3: 데몬 시즈 (미국판);Sony PlayStation 2 GZ;Onimusha 3 - Demon Siege (USA);2004;Capcom;Action;1;;;;;;;;영어;;;;;
 #Onimusha 3 - Demon Siege (K);귀무자 3 (한글판);Sony PlayStation 2 GZ;Onimusha 3 - Demon Siege (USA);2004;Capcom;Action;1;;;;;;;;한국어;;;;;
 #Onimusha 3 - Demon Siege (USA);귀무자 3 (미국판);Sony PlayStation 2 GZ;Onimusha 3 - Demon Siege (USA);2004;Capcom;Action;1;;;;;;;;영어;;;;;
@@ -101,14 +101,14 @@ OutRun2 SP (Japan);아웃런 2 스페셜 투어즈 (일본판);Sony PlayStation 
 #XI5 (K);아쿠이 오형제 / 봄바스틱 (한글판);Sony PlayStation 2 GZ;Bombastic (USA);2003;Sony;Puzzle;1;;;;;;;;한국어;;;;;
 Castlevania Lament of Innocence (K);악마성 드라큘라: 순결의 애도 (한글판) / 캐슬바니아: 램넌트 오브 이노센스 (한글판);Sony PlayStation 2 GZ;Castlevania - Lament of Innocence (USA);2003;Konami;Action;1;;;;;;;castlevania;한국어;;;;;
 Castlevania Curse of Darkness (K);악마성 드라큘라: 어둠의 저주 (한글판) / 캐슬바니아: 어둠의 저주 (한글판);Sony PlayStation 2 GZ;Castlevania - Curse of Darkness (USA);2005;Konami;Action;1;;;;;;;castlevania;한국어;;;;;
-Urban Reign;어반 레인;Sony PlayStation 2 ISO;Urban Reign (USA);2005;Namco;Action;;;;;;;;;영어;;;;;
+Urban Reign;어반 레인 (한글판);Sony PlayStation 2 ISO;Urban Reign (USA);2005;Namco;Action;;;;;;;;;한국어;;;;;
 #Odin Sphere (K);오딘 스피어 (한글판);Sony PlayStation 2 GZ;Odin Sphere (USA);2002;Atlus;RPG;1;;;;;;;;한국어;;;;;
 Okami (USA);오오카미 (미국판);Sony PlayStation 2 ISO;;2006;Capcom;Action;1;;;;;;;;영어;;;;;
 Shadow of the Colossus (K);완다와 거상 (한글판);Sony PlayStation 2 GZ;Shadow of the Colossus (USA);2005;Sony;RPG;1;;;;;;;;한국어;;;;;
 #Astro Boy Atom (K);우주소년 아톰 (한글판);Sony PlayStation 2 GZ;Astro Boy (USA);2004;SEGA;Action;1;;;;;;;;한국어;;;;;
 #War of the Monsters (K);워 오브 더 몬스터즈 - 괴수대격전 (한글판);Sony PlayStation 2 GZ;War of the Monsters (USA);2003;Capcom;Action;1;;;;;;;;한국어;;;;;
 #Winning Eleven10 Liveware Evolution (K);위닝 일레븐 10 라이브웨어 에볼루션 (한글판);Sony PlayStation 2 GZ;Winning Eleven - Pro Evolution Soccer 2007 (USA);2006;Konami;Sports;2;;;;;;;;한국어;;;;;
-Initial D;이니셜 D - 스페셜 스테이지;Sony PlayStation 2 ISO;0;2003;SEGA;Racing;;;;;;;;;영어;;;;;
+Initial D;이니셜 D - 스페셜 스테이지 (일본판);Sony PlayStation 2 ISO;0;2003;SEGA;Racing;;;;;;;;;일본어;;;;;
 Disaster Report (K);절체절명도시 (한글판);Sony PlayStation 2 GZ;Disaster Report (USA);2002;Irem;Adventure;1;;;;;;;;한국어;;;;;
 #Xenosaga Episode 3 Disc 1 (USA)(Undub);제노사가 에피소드 3. Disc 1 (미국판);Sony PlayStation 2 GZ;Xenosaga Episode III - Also sprach Zarathustra (USA) (Disc 1);2006;Monolith Soft;RPG;1;;;;;;;;영어;;;;;
 #Xenosaga Episode 3 Disc 2 (USA)(Undub);제노사가 에피소드 3. Disc 2 (미국판);Sony PlayStation 2 GZ;Xenosaga Episode III - Also sprach Zarathustra (USA) (Disc 2);2006;Monolith Soft;RPG;1;;;;;;;;영어;;;;;
@@ -125,7 +125,7 @@ Tenchu 3 - Wrath of Heaven (K);천주 3: 천벌 (한글판);Sony PlayStation 2 G
 #Tenchu Kurenai (K);천주 쿠레나이 (한글판);Sony PlayStation 2 GZ;Tenchu - Fatal Shadows (USA);2004;From Software;Action;1;;;;;;;;한국어;;;;;
 Tekken 4 (K);철권 4 (한글판);Sony PlayStation 2 ISO;Tekken 4 (USA);2001;Namco;Fighting;2;;;;;;;tekken;한국어;;;;;
 Tekken 5;철권 5 (한글판);Sony PlayStation 2 GZ;Tekken 5 (USA);2005;Namco;Fighting;2;;;;;;;tekken;한국어;;;;;
-Death by Degrees;철권 니나: 데스 바이 디그리스;Sony PlayStation 2 ISO;Death by Degrees (USA);2005;Namco;Action;1;;;;;;;;영어;;;;;
+Death by Degrees;철권 니나: 데스 바이 디그리스 (한글판);Sony PlayStation 2 ISO;Death by Degrees (USA);2005;Namco;Action;1;;;;;;;;한국어;;;;;
 Tekken TT (K);철권 태그 토너먼트 (한글판);Sony PlayStation 2 GZ;Tekken Tag Tournament (USA);2000;Namco;Fighting;2;;;;;;;tekken;한국어;;;;;
 #Super Dimension Fortress Macross (Japan);초시공요새 마크로스 (일본판);Sony PlayStation 2 GZ;0;2003;SEGA;Shooting;1;;;;;;;;일본어;;;;;
 #Kaido Battle 2 Chain Reaction (K);카이도 배틀 2 체인 리액션 / 도쿄 익스트림 레이서 2 (한글판);Sony PlayStation 2 GZ;Tokyo Xtreme Racer - Drift 2 (USA);2004;Genki;Racing;1;;;;;;;;한국어;;;;;
@@ -139,10 +139,10 @@ KOF - Maximum Impact Regulation A (Japan);킹 오브 파이터 맥시멈 임팩�
 Jake Hunter - Innocent Black (K);탐정 진구지 사부로 이노센트 블랙 (한글판);Sony PlayStation 2 GZ;0;2002;WorkJam;Adventure;1;;;;;;;;한국어;;;;;
 Tantei Jinguji Saburo - Kind of Blue (K);탐정 진구지 사부로 카인드 오브 블루 (한글판);Sony PlayStation 2 GZ;0;2004;WorkJam;Adventure;1;;;;;;;;한국어;;;;;
 #Tales of Destiny 2;테일즈 오브 데스티니 2 (한글판);Sony PlayStation 2 GZ;0;2002;Namco;RPG;1;;;;;;;;한국어;;;;;
-Final Fight - Streetwise;파이널 파이트 스트리트와이즈;Sony PlayStation 2 ISO;0;2006;Capcom;Action;;;;;;;;;영어;;;;;
+Final Fight - Streetwise;파이널 파이트 스트리트와이즈 (미국판);Sony PlayStation 2 ISO;0;2006;Capcom;Action;;;;;;;;;영어;;;;;
 Final Fantasy X International (K);파이널 판타지 X (한글판);Sony PlayStation 2 GZ;Final Fantasy X (USA);2002;Square;RPG;1;;;;;;;ff;한국어;;;;;
 Final Fantasy X-2 (K);파이널 판타지 X-2 (한글판);Sony PlayStation 2 GZ;Final Fantasy X-2 (USA);2004;Square;RPG;1;;;;;;;ff;한국어;;;;;
-Pump It Up - Exceed (USA);펌프 잇 업 익시드 (한글판);Sony PlayStation 2 ISO;;2004;Andamiro;Rhythm;2;;;;;;;;한국어;;;;;
+Pump It Up - Exceed (USA);펌프 잇 업 익시드 (미국판);Sony PlayStation 2 ISO;;2004;Andamiro;Rhythm;2;;;;;;;;영어;;;;;
 Prince of Persia The Sands of Time (K);페르시아의 왕자: 시간의 모래 (한글판);Sony PlayStation 2 GZ;Prince of Persia - The Sands of Time (USA);2003;Ubisoft;Action;1;;;;;;;;한국어;;;;;
 #Fate-Unlimited Codes (Japan);페이트 언리미티드 코드 (일본판);Sony PlayStation 2 GZ;;2008;Eighting;Fighting;2;;;;;;;;일본어;;;;;
 #Fuuun Shinsengumi Bakumatsu (K);풍운 막말전 (한글판);Sony PlayStation 2 GZ;0;2006;Genki;Action;1;;;;;;;;한국어;;;;;
