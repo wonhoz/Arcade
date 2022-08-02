@@ -142,7 +142,7 @@ Tantei Jinguji Saburo - Kind of Blue (K);탐정 진구지 사부로 카인드 �
 Final Fight - Streetwise;파이널 파이트 스트리트와이즈 (미국판);Sony PlayStation 2 ISO;0;2006;Capcom;Action;;;;;;;;;영어;;;;;
 Final Fantasy X International (K);파이널 판타지 X (한글판);Sony PlayStation 2 GZ;Final Fantasy X (USA);2002;Square;RPG;1;;;;;;;ff;한국어;;;;;
 Final Fantasy X-2 (K);파이널 판타지 X-2 (한글판);Sony PlayStation 2 GZ;Final Fantasy X-2 (USA);2004;Square;RPG;1;;;;;;;ff;한국어;;;;;
-Pump It Up - Exceed (USA);펌프 잇 업 익시드 (미국판);Sony PlayStation 2 ISO;;2004;Andamiro;Rhythm;2;;;;;;;;영어;;;;;
+Pump It Up - Exceed (K);펌프 잇 업 익시드 (미국판);Sony PlayStation 2 ISO;;2004;Andamiro;Rhythm;2;;;;;;;;영어;;;;;
 Prince of Persia The Sands of Time (K);페르시아의 왕자: 시간의 모래 (한글판);Sony PlayStation 2 GZ;Prince of Persia - The Sands of Time (USA);2003;Ubisoft;Action;1;;;;;;;;한국어;;;;;
 #Fate-Unlimited Codes (Japan);페이트 언리미티드 코드 (일본판);Sony PlayStation 2 GZ;;2008;Eighting;Fighting;2;;;;;;;;일본어;;;;;
 #Fuuun Shinsengumi Bakumatsu (K);풍운 막말전 (한글판);Sony PlayStation 2 GZ;0;2006;Genki;Action;1;;;;;;;;한국어;;;;;
