@@ -2,7 +2,7 @@
 <GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GameName>Let's Go Island 3D: Lost on the Island of Tropics</GameName>
   <GameGenre>Shooter</GameGenre>
-  <GamePath>D:\attract-v2.6.2-win64\emulators\TeknoParrot\Games\Lets go Island 3d\LGI.exe</GamePath>
+  <GamePath>D:\AttractMode\emulators\TeknoParrot\Games\Lets go Island 3d\LGI.exe</GamePath>
   <TestMenuParameter>-TestMode</TestMenuParameter>
   <TestMenuIsExecutable>false</TestMenuIsExecutable>
   <ExtraParameters />
