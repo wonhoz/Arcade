@@ -7,7 +7,7 @@ Resident Evil 2-Dual Shock (K);레지던트 이블 2 (한글판);Sony PlayStatio
 Resident Evil 3 - Last Escapea (K);레지던트 이블 3 (한글판): 네메시스;Sony PlayStation PBP;0;1999;Capcom;Action;1;;;;;;;;한국어;;;;;
 Rockman 8-Metal Heroes (K);록맨 8 (한글판) / 메가맨 8;Sony PlayStation CUE;Rockman 8-Metal Heroes (K);1996;Capcom;Action;1;;;;;;;rockman;한국어;;;;;
 Rockman X4 (K);록맨 X4 (한글판) / 메가맨 X4;Sony PlayStation CUE;Rockman X4 (K);1997;Capcom;Action;1;;;;;;;rockman;한국어;;;;;
-Mega Man X5 (USA);록맨 X5 / 메가맨 X5 (미국판);Sony PlayStation CUE;Mega Man X5 (USA);2000;Capcom;Action;1;;;;;;;rockman;영어;;;;;
+Mega Man X5 (USA);록맨 X5 (미국판)/ 메가맨 X5 (미국판);Sony PlayStation CUE;Mega Man X5 (USA);2000;Capcom;Action;1;;;;;;;rockman;영어;;;;;
 Mega Man X6 (K);록맨 X6 (한글판) / 메가맨 X6;Sony PlayStation CUE;Mega Man X6 (USA);2001;Capcom;Action;1;;;;;;;rockman;한국어;;;;;
 #R4 - Ridge Racer Type 4 (USA);릿지 레이서 타입 4;Sony PlayStation CUE;R4 - Ridge Racer Type 4 (USA);1998;Namco;Racing;1;;;;;;;;영어;;;;;
 #Manic Game Girl (K);매닉 게임 걸 (한글판);Sony PlayStation CUE;Manic Game Girl (K);2002;JoyCast;Action;1;;;;;;;;한국어;;;;;
