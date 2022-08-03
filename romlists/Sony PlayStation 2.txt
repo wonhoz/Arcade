@@ -57,7 +57,7 @@ Rogue Galaxy (USA);로그 갤럭시: 디렉터스 컷 (미국판);Sony PlayStati
 #Magna Carta Tears of Blood (K);마그나카르타 진홍의 성흔 (한글판);Sony PlayStation 2 GZ;Magna Carta - Tears of Blood (USA);2004;Softmax;RPG;1;;;;;;;;한국어;;;;;
 #Marvel vs Capcom 2 (USA);마블 Vs. 캡콤 2 (미국판);Sony PlayStation 2 GZ;;2003;Capcom;Fighting;2;;;;;;;capcom;영어;;;;;
 Mega Man X7 (USA);메가맨 X7 (미국판);Sony PlayStation 2 ISO;Rock Man X7 (USA);2003;Konami;Capcom;1;;;;;;;;영어;;;;;
-Mega Man X8 (K);메가맨 X8 (한글판);Sony PlayStation 2 ISO;Rock Man X8 (K);2004;Konami;Capcom;1;;;;;;;;영어;;;;;
+Rock Man X8 (K);메가맨 X8 (한글판);Sony PlayStation 2 ISO;Mega Man X8 (K);2004;Konami;Capcom;1;;;;;;;;영어;;;;;
 #Metal Slug Complete (K);메탈 슬러그 컴플리트 (한글판);Sony PlayStation 2 GZ;Metal Slug Anthology (USA);2006;SNK;Action;2;;;;;;;;한국어;;;;;
 Metal Slug 3D (J);메탈 슬러그 3D (일본판);Sony PlayStation 2 ISO;;2006;SNK;Action;2;;;;;;;;한국어;;;;;
 Metal Gear Solid 2 - Substance (K);메탈기어 솔리드 2: 서브스턴스 (한글판);Sony PlayStation 2 GZ;Metal Gear Solid 2 - Substance (USA);2003;Konami;Action;1;;;;;;;mgs;한국어;;;;;
