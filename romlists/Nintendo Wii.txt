@@ -5,7 +5,7 @@
 Wii Music (K);Wii 뮤직 (한글판);Nintendo Wii WBFS;;2008;Nintendo;Rhythm;4;;;;;;;;한국어;;;;;
 #Wii Sports Pack for Revolution (K);Wii 스포츠 (한글판);Nintendo Wii GCZ;;2008;Nintendo;Sports;4;;;;;;;;한국어;;;;;
 #Wii Sports Resort (K);Wii 스포츠 리조트 (한글판);Nintendo Wii GCZ;;2010;Nintendo;Sports;4;;;;;;;;한국어;;;;;
-#Big Brain Academy - Wii Degree (K);Wii로 다함께! 말랑말랑 두뇌교실 (한글판);Nintendo Wii GCZ;Wii_gcz;Big Brain Academy - Wii Degree (USA);2007;Nintendo;Puzzle;1;;;;;;;;한국어;;;;;
+#Big Brain Academy - Wii Degree (K);Wii로 다함께! 말랑말랑 두뇌교실 (한글판);Nintendo Wii GCZ;Big Brain Academy - Wii Degree (USA);2007;Nintendo;Puzzle;1;;;;;;;;한국어;;;;;
 #Mobile Suit Gundam - MS Sensen 0079 (J);기동전사 건담 - MS 전선 0079 (일본판);Nintendo Wii GCZ;;2007;Bandai;Action;1;;;;;;;gundam;일본어;;;;;
 New Super Mario Bros Wii (K);뉴 슈퍼 마리오 브로스 Wii (한글판);Nintendo Wii GCZ;;2009;Nintendo;Action;1;;;;;;;mario;한국어;;;;;
 New Super Mario Bros Wii 2 - The Next Levels (USA);뉴 슈퍼 마리오 브로스 Wii 2 (미국판);Nintendo Wii WBFS;;2010;Nintendo;Action;1;;;;;;;mario;영어;;;;;
@@ -40,7 +40,7 @@ Onechanbara - Bikini Zombie Slayers (USA);오네찬바라: 비키니 좀비 슬�
 The Legend of Zelda - Skyward Sword (K);젤다의 전설: 스카이워드 스워드 (한글판);Nintendo Wii GCZ;;2011;Nintendo;RPG;1;;;;;;;zelda;한국어;;;;;
 Sin & Punishment- Star Successor (USA);죄와 벌 2: 우주의 후계자 (미국판);Nintendo Wii WBFS;;2010;Treasure;Shooting;1;;;;;;;;영어;;;;;
 #WarioWare Smooth Moves (K);춤춰라 메이드 인 와리오 (한글판);Nintendo Wii WBFS;;2006;Nintendo;Rhythm;2;;;;;;;;한국어;;;;;
-#Kirby's Epic Yarn (K);커비 에픽 얀 (한글판);Nintendo Wii WBFS;;2010;Nintendo;Action;;;;;;;;;한국어;;;;;
+#Kirby's Epic Yarn (K);커비 에픽 얀 (한글판);Nintendo Wii WBFS;;2010;Nintendo;Action;1;;;;;;;;한국어;;;;;
 #Kung Fu Panda (K);쿵푸 팬더 (한글판);Nintendo Wii WBFS;;2008;Activision;Action;2;;;;;;;;한국어;;;;;
 #The King of Fighters Collection - The Orochi Saga (K);킹 오브 파이터즈 콜렉션 - 오로치 사가 (한글판);Nintendo Wii GCZ;;2009;SNK;Fighting;2;;;;;;;kof;한국어;;;;;
 Animal Crossing- City Folk (K);타운으로 놀러가요 동물의 숲 (한글판);Nintendo Wii GCZ;Animal Crossing- City Folk (USA);2008;Nintendo;Communication;1;;;;;;;;한국어;;;;;
