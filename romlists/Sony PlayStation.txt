@@ -40,4 +40,4 @@ Final Fantasy VIII (USA) (Disc 4);파이널 판타지 VIII Disc 4;Sony PlayStati
 Final Fantasy 9 (K);파이널 판타지 IV (한글판);Sony PlayStation PBP;Final Fantasy 9 (K);2000;Square;RPG;1;;;;;;;ff;한국어;;;;;
 Parasite Eve (K);패러사이트 이브 (한글판);Sony PlayStation PBP;Parasite Eve (K);1998;Square;ARPG;1;;;;;;;;한국어;;;;;
 Parasite Eve 2 [Disc1of2] [U] [SLUS-01042];패러사이트 이브 II Disc 1;Sony PlayStation CCD;Parasite Eve 2 [Disc1of2] [U] [SLUS-01042];1999;Square;ARPG;1;;;;;;;;영어;;;;;
-Parasite Eve 2 [Disc2of2] [U] [SLUS-01042];패러사이트 이브 II Disc 2;Sony PlayStation CCD;Parasite Eve 2 [Disc1of2] [U] [SLUS-01042];1999;Square;ARPG;1;;;;;;;;영어;;;;;
+Parasite Eve 2 [Disc2of2] [U] [SLUS-01055];패러사이트 이브 II Disc 2;Sony PlayStation CCD;Parasite Eve 2 [Disc1of2] [U] [SLUS-01042];1999;Square;ARPG;1;;;;;;;;영어;;;;;
