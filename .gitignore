@@ -11,6 +11,13 @@ emulators/Demul/Disc Image/
 emulators/Demul/Roms/
 emulators/Demul/scache/
 emulators/Dolphin/Game ISO/
+emulators/EKMAME/EKMAME64.exe
+emulators/EKMAME/artwork/
+emulators/EKMAME/dats/history.dat
+emulators/EKMAME/dats/history.db
+emulators/EKMAME/hash/
+emulators/EKMAME/history/history.db
+emulators/EKMAME/roms/
 emulators/ePSXe/isos/
 emulators/M2/Roms/
 emulators/MAME/.mamepgui/cache/gamelist.cache
