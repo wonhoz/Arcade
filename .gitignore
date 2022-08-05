@@ -22,6 +22,8 @@ emulators/MAME/EKMAME64.exe
 emulators/MAME/flyer/
 emulators/MAME/hash/
 emulators/MAME/history/history.db
+emulators/MAME/mame.exe
+emulators/MAME/mame.sym
 emulators/MAME/mame64.exe
 emulators/MAME/mame64.sym
 emulators/MAME/marquee/
