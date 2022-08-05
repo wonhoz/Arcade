@@ -1,28 +1,3 @@
-_develop/emulators/ePSXe/isos/
-_develop/emulators/MAME/.mamepgui/cache/gamelist.cache
-_develop/emulators/MAME/artwork/
-_develop/emulators/MAME/artwork_/
-_develop/emulators/MAME/dats/history.dat
-_develop/emulators/MAME/dats/history.db
-_develop/emulators/MAME/EKMAME64.exe
-_develop/emulators/MAME/flyer/
-_develop/emulators/MAME/hash/
-_develop/emulators/MAME/history/history.db
-_develop/emulators/MAME/mame64.exe
-_develop/emulators/MAME/mame64.sym
-_develop/emulators/MAME/marquee/
-_develop/emulators/MAME/nvram/
-_develop/emulators/MAME/roms/
-_develop/emulators/MAME/snap/
-_develop/emulators/MAME/title/
-_develop/emulators/MAME/video/
-_develop/emulators/MAME/wheel/
-_develop/emulators/PCSX2/Game ISO/
-_develop/emulators/PCSX2/memcards/Soul Calibur III (K).ps2
-_develop/emulators/PPSSPP/Game ISO/
-_develop/emulators/PSXMAME/roms/
-_develop/menu-art/
-_develop_old/
 emulators/Cemu/keys.txt
 emulators/Cemu/log.txt
 emulators/Cemu/mlc01/sys/title/0005001b/1005c000/content/
@@ -80,6 +55,7 @@ emulators/TeknoParrot/Games/
 emulators/TeknoParrot/N2/TeknoParrot.dll
 emulators/TeknoParrot/TeknoParrot/avcodec-58.dll
 emulators/TeknoParrot/TeknoParrot/TeknoParrot.dll
+emulators_bak/
 menu-art/
 last_run.log
 script.nv
