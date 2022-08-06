@@ -55,8 +55,8 @@ armwar;아머드 워리어스;MAME;0;1994;Capcom;Arcade;3;0;Joystick (8-way);goo
 #unsquad;에어리어 88 / U.N. 특수부대;MAME;0;1989;Capcom;Shooting;2;0;Joystick (8-way);good;1;raster;cps1;0;0;3;;;;
 avsp;에일리언 대 프레데터;MAME;0;1994;Capcom;Arcade;3;0;Joystick (8-way);good;1;raster;cps2;0;0;3;;;;
 #ecofghtr;에코 파이터;MAME;0;1993;Irem;Shooting;2;0;Joystick (8-way);good;1;raster;cps1;0;0;2;;;;
-xmvsf;엑스맨 VS 스트리트 파이터;MAME;0;1996;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
 xmcota;엑스맨: 칠드런 오브 더 아톰;MAME;0;1995;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;0;0;6;;;;
+xmvsf;엑스맨 VS 스트리트 파이터;MAME;0;1996;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
 knights;원탁의 기사 / 나이츠 오브 더 라운드;MAME;0;1991;Capcom;Arcade;3;;;;;;cps1;;;;;;;
 willow;윌로우;MAME;0;1989;Capcom;Action;2;0;Joystick (8-way);good;1;raster;cps1;0;0;2;;;;
 #mercs;전장의 이리 II / 머크스;MAME Vertical;0;1990;Capcom;Shooting;3;270;Joystick (8-way);good;1;raster;cps1;0;0;2;;;;
