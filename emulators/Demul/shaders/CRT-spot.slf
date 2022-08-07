@@ -1,0 +1,104 @@
+uniform sampler2D OGL2Texture;
+uniform vec4 OGL2Size;
+
+static vec2 ScreenSize = vec2(1280.0, 960.0);
+static float ScanlinesFactor = 10.0;
+
+
+// Enable screen curvature
+#define CURVATURE
+
+// Comment the next line to disable interpolation in linear gamma (and gain speed).
+#define LINEAR_PROCESSING
+
+// Compensate for 16-235 level range as per Rec. 601.
+#define REF_LEVELS
+
+// Dot Mask emulation
+#define DOT_MASK
+
+// Controls the intensity of the barrel distortion used to emulate the
+// curvature of a CRT. 0.0 is perfectly flat, 1.0 is annoyingly
+// distorted, higher values are increasingly ridiculous.
+#define distortion 0.2
+
+// Simulate a CRT gamma of 2.4.
+#define inputGamma  2.4
+// Compensate for the standard sRGB gamma of 2.2.
+#define outputGamma 2.2
+
+
+static vec2 OriginalSize = vec2(640.0, 480.0);
+static vec2 one = ScreenSize / OriginalSize / 2048.0;
+
+// Macros.
+#ifdef REF_LEVELS
+	#define LEVELS(c) max((c - 16.0 / 255.0) * 255.0 / (235.0 - 16.0), 0.0)
+#else
+	#define LEVELS(c) c
+#endif
+
+#ifdef LINEAR_PROCESSING
+	#define TEX2D(c) pow(LEVELS(texture2D(OGL2Texture, (c))), vec4(inputGamma))
+#else
+	#define TEX2D(c) LEVELS(texture2D(OGL2Texture, (c)))
+#endif
+
+#define TEX2D(c) pow(texture2D(OGL2Texture, (c)), vec4(inputGamma))
+				// texture2D(OGL2Texture, (c))
+				// pow(texture2D(OGL2Texture, (c)), vec4(inputGamma))
+#define PI 3.141592653589
+#define FIX(c) max(abs(c), 1e-5);
+
+#ifdef CURVATURE
+// Apply radial distortion to the given coordinate.
+vec2 radialDistortion(vec2 coord)
+{
+	// coords range from 0 to ScreenSize/2048											
+	coord *= 2048.0 / ScreenSize;					// Normalisation : 0->1
+    vec2 cc = coord - vec2(0.5,0.5);				// cc: -0.5->0.5
+    float dist = dot(cc, cc) * distortion;
+    return (coord + cc * (1.0 + dist) * dist) * ScreenSize / 2048.0;
+}
+#endif
+
+void main()
+{
+    // Texture coordinates of the texel containing the active pixel.
+	#ifdef CURVATURE
+	    vec2 xy = radialDistortion( gl_TexCoord[0].xy );
+    #else
+	    vec2 xy = gl_TexCoord[0].xy;
+    #endif
+
+	vec2 original_xy = xy / one;
+	vec2 dxy = fract( original_xy ) - vec2(0.5, 0.5);
+	vec2 center = floor( original_xy );// + vec2(0.5, 0.5);
+	
+	vec4 col  = TEX2D( center * one );
+	float d1 = dot(dxy, dxy);
+	
+	vec4 col2;
+	float d2;
+
+	if (dxy.x<0)
+	{
+		col2  = TEX2D( (center + vec2(one.x,0.0)) * one );
+		dxy -= vec2(one.x,0.0);
+		d2 = dot(dxy, dxy);
+	}
+	else
+	{
+		col2  = TEX2D( (center - vec2(one.x,0.0)) * one );
+		dxy += vec2(one.x,0.0);
+		d2 = dot(dxy, dxy);
+	}
+        
+   #ifndef LINEAR_PROCESSING
+	    col  = pow(col , vec4(inputGamma));
+        col2 = pow(col2, vec4(inputGamma));
+	#endif
+	
+        
+    gl_FragColor = ( col * (d2) + col2 * (d1)) / (d1+d2);
+}
