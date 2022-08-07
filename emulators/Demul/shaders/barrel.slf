@@ -1,0 +1,73 @@
+uniform sampler2D OGL2Texture;
+uniform vec4 OGL2Size;
+
+vec2 ScreenSize = vec2( 1600, 1200 );	// Screen size
+float coef = 1.5;						// default value = 1.5
+
+float d  = (1.0/4096.0 * ScreenSize.y)* (1.0/4096.0 * ScreenSize.y);
+float factor = ( 1 + d*(1+d)*coef );
+
+vec2 Grid = vec2( ScreenSize.x/10, ScreenSize.y/10 );
+
+void main()
+{
+
+/**********************************************
+**********************************************/
+	vec2 screen_coords = gl_TexCoord[0].xy;
+	
+	// screen center in 0,0
+	screen_coords -= (1.0/4096.0 * ScreenSize);
+	float d = dot(screen_coords, screen_coords);
+	
+	vec2 coords = screen_coords * ( 1 + d*(1+d)*coef )/factor + (1.0/4096.0 * ScreenSize) ; 
+/**********************************************
+**********************************************/	
+	
+//	vec2 coords = gl_TexCoord[0].xy;
+	
+/*****************************************************
+** Bloom *****************************************/
+	vec4 sum = vec4(0);
+	int j,i;
+
+	for( i= -4 ;i < 4; i++)
+	{
+		for (j = -3; j < 3; j++)
+		{
+			sum += texture2D( OGL2Texture, coords + vec2(j, i) * 1/4096.0) * 0.25;
+		}
+	}
+	
+	vec4 rgb = texture2D( OGL2Texture, coords );
+
+	if ( rgb.r < 0.3)
+		gl_FragColor = sum*sum*0.012 + rgb;
+	else if (rgb.r < 0.5)
+		gl_FragColor = sum*sum*0.009 + rgb;
+	else
+		gl_FragColor = sum*sum*0.0075 + rgb;
+	gl_FragColor = clamp( gl_FragColor, 0.0, 1.5);
+	
+
+/*****************************************************
+** Scanlines *****************************************/
+	int line = ( int( coords.y * 2048 ) % 4 );
+
+	if ( line == 2 )
+		gl_FragColor *= 0.6;
+	if ( line == 3 )
+		gl_FragColor *= 0.3;
+		
+	gl_FragColor = clamp( gl_FragColor, 0.0, 1.0);
+/*****************************************************/
+
+/*****************************************************
+** GRID *********************************************/
+/*	if ( int( coords.y * 2048 ) % int(Grid.y)  <= 1 )
+		gl_FragColor = vec4(0,0,0,0);
+	if ( int( coords.x * 2048 ) % int(Grid.x)  <= 1 )
+		gl_FragColor = vec4(0,0,0,0);   */
+/*****************************************************/
+
+}

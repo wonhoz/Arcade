@@ -1,0 +1,30 @@
+
+uniform vec4 OGL2Param;
+uniform vec4 OGL2Size;
+uniform vec4 OGL2InvSize;
+uniform sampler2D OGL2Texture;
+
+void main()
+{
+vec4 t[7];
+vec4 weight;
+vec4 luma = vec4(0.299,0.587,0.114,0.0);
+
+t[0]=dot(t[0],luma)-dot(t[1],luma)+t[0];
+t[1]=t[0]*t[0]*t[0];
+
+vec2 d1 = vec2( OGL2Param.x,OGL2Param.y);
+vec2 d2 = vec2(-OGL2Param.x,OGL2Param.y);
+vec3 X = texture2D(OGL2Texture, vec2(gl_TexCoord[0])).xyz;
+vec3 T = texture2D(OGL2Texture, vec2(gl_TexCoord[1])).xyz;
+vec3 V = texture2D(OGL2Texture, vec2(gl_TexCoord[2])).xyz;
+vec3 W = texture2D(OGL2Texture, vec2(gl_TexCoord[4])).xyz;
+vec3 U = texture2D(OGL2Texture, vec2(gl_TexCoord[5])).xyz;
+vec3 TT = texture2D(OGL2Texture, vec2(gl_TexCoord[1])-d2).xyz;
+vec3 VV = texture2D(OGL2Texture, vec2(gl_TexCoord[2])+d2).xyz;
+vec3 WW = texture2D(OGL2Texture, vec2(gl_TexCoord[4])-d1).xyz;
+vec3 UU = texture2D(OGL2Texture, vec2(gl_TexCoord[5])+d1).xyz;
+
+gl_FragColor.xyz = (WW*WW+TT*TT+UU*UU+VV*VV +U+V+T+W +sqrt(X)*(0.1*OGL2Param.z+0.1))/7.6;
+
+}

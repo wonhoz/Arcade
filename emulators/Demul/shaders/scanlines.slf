@@ -1,0 +1,33 @@
+uniform sampler2D OGL2Texture;
+
+void main()
+{
+	vec4 rgbA = texture2D(OGL2Texture, gl_TexCoord[0].xy);
+	
+	// if x is even => smooth with next pixel
+	if (fract(gl_FragCoord.x*0.5)>0.5)
+		rgbA = ( rgbA + texture2D(OGL2Texture,gl_TexCoord[1].xy) )*0.5;
+
+
+/*	// Test on 2 lines
+	float test = fract(gl_FragCoord.y/2);		
+	if (test>0.5)	gl_FragColor = rgbA;
+	else     		gl_FragColor = rgbA*0.5;
+*/
+	
+/*	
+	// Test on 3 lines
+	float test = fract(gl_FragCoord.y/3);		
+	if (test>0.666)		gl_FragColor = rgbA;
+	else if(test>0.333)	gl_FragColor = rgbA*0.75;
+	else     			gl_FragColor = rgbA*0.5;
+*/
+
+	// Test on 4 lines
+	float test = fract(gl_FragCoord.y/4);		
+	if (test>0.75)		gl_FragColor = rgbA;
+	else if (test>0.5)	gl_FragColor = rgbA*0.75;
+	else if (test>0.25)	gl_FragColor = rgbA*0.5;
+	else     			gl_FragColor = rgbA*0.25;
+
+}
