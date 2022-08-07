@@ -2,7 +2,7 @@
 <GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GameName>Wangan Midnight Maximum Tune 5DX+</GameName>
   <GameGenre>Racing</GameGenre>
-  <GamePath>D:\attract-v2.6.2-win64\emulators\TeknoParrot\Games\Wangan Midnight Maximum Tune 5DX+\wmn5r.exe</GamePath>
+  <GamePath>C:\Git\AttractMode\emulators\TeknoParrot\Games\Wangan Midnight Maximum Tune 5DX+\wmn5r.exe</GamePath>
   <TestMenuParameter />
   <TestMenuIsExecutable>false</TestMenuIsExecutable>
   <ExtraParameters />

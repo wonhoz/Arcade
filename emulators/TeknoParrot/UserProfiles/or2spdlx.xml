@@ -2,7 +2,7 @@
 <GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GameName>OutRun 2 SP SDX</GameName>
   <GameGenre>Racing</GameGenre>
-  <GamePath>D:\attract-v2.6.2-win64\emulators\TeknoParrot\Games\OutRun 2 SP SDX\or2g\disk0\Jennifer\Jennifer_VGA</GamePath>
+  <GamePath>C:\Git\AttractMode\emulators\TeknoParrot\Games\OutRun 2 SP SDX\or2g\disk0\Jennifer\Jennifer_VGA</GamePath>
   <TestMenuParameter>..\JenTest\JenTest</TestMenuParameter>
   <TestMenuIsExecutable>true</TestMenuIsExecutable>
   <ExtraParameters />

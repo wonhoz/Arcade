@@ -2,7 +2,7 @@
 <GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GameName>Samurai Spirits Sen</GameName>
   <GameGenre>Fighting</GameGenre>
-  <GamePath>D:\attract-v2.6.2-win64\emulators\TeknoParrot\Games\Samurai Shodown - Edge of Destiny\game.exe</GamePath>
+  <GamePath>C:\Git\AttractMode\emulators\TeknoParrot\Games\Samurai Shodown - Edge of Destiny\game.exe</GamePath>
   <TestMenuParameter />
   <TestMenuIsExecutable>false</TestMenuIsExecutable>
   <ExtraParameters />

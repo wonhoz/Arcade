@@ -2,7 +2,7 @@
 <GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GameName>Initial D: Arcade Stage 4 (Export)</GameName>
   <GameGenre>Racing</GameGenre>
-  <GamePath>D:\attract-v2.6.2-win64\emulators\TeknoParrot\Games\Initial D 4 Export\id4.elf</GamePath>
+  <GamePath>C:\Git\AttractMode\emulators\TeknoParrot\Games\Initial D 4 Export\id4.elf</GamePath>
   <TestMenuParameter>-t</TestMenuParameter>
   <TestMenuIsExecutable>false</TestMenuIsExecutable>
   <ExtraParameters />
