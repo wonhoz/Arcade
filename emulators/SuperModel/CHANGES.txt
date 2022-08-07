@@ -1,0 +1,5122 @@
+
+
+  ####                                                      ###           ###
+ ##  ##                                                      ##            ##
+ ###     ##  ##  ## ###   ####   ## ###  ##  ##   ####       ##   ####     ##
+  ###    ##  ##   ##  ## ##  ##   ### ## ####### ##  ##   #####  ##  ##    ##
+    ###  ##  ##   ##  ## ######   ##  ## ####### ##  ##  ##  ##  ######    ##
+ ##  ##  ##  ##   #####  ##       ##     ## # ## ##  ##  ##  ##  ##        ##
+  ####    ### ##  ##      ####   ####    ##   ##  ####    ### ##  ####    ####
+                 ####
+
+                       A Sega Model 3 Arcade Emulator.
+
+                   Copyright 2003-2022 The Supermodel Team
+
+                                 CHANGE LOG
+
+
+Commit: d60feab2ca7739b59de602e55729bf7ef958ab58
+Author: trzy
+Date:   Mon Jul 18 13:00:27 2022 -0700
+
+    Merge pull request #1 from toxieainc/master
+
+    Fix some errors, fix some performance warnings, and some simple (but
+    effective) optimizations
+Commit: 7b8790863148e58fcd0278b1eaa0d29e511348e2
+Author: toxie
+Date:   Mon Jul 18 21:53:49 2022 +0200
+
+    Merge branch 'trzy:master' into master
+
+Commit: 27e071dafb787aa5c949b18315fbe6514dfb9408
+Author: toxieainc
+Date:   Mon Jul 18 21:43:13 2022 +0200
+
+    add comment
+
+Commit: dda48d7606bae606f5fed62fb2079a53e7abc1a4
+Author: toxieainc
+Date:   Sun Jul 17 20:29:25 2022 +0200
+
+    address review
+
+Commit: 24173a2140ab02b0fc052f631368050ed4f65019
+Author: toxieainc
+Date:   Sun Jul 17 20:25:51 2022 +0200
+
+    revert "" -> std::string()
+
+Commit: c42a2d89513acf504084cc1013dc6bf9fe4066d8
+Author: toxieainc
+Date:   Sun Jul 17 20:23:11 2022 +0200
+
+    check for __GNUC__ instead of just assuming it
+
+Commit: bd4399bcea5bf36660ec0a7625a3b2b0d68bef74
+Author: trzy
+Date:   Sat Jul 16 21:01:44 2022 -0700
+
+    Merge pull request #2 from ToBul/master
+
+    Games.xml: Align ROM names with MAME.
+Commit: e1e61c4bdc742b048c06266c0d0ea99ae62f183a
+Author: Tony Bulmer
+Date:   Tue Jul 12 10:45:39 2022 +0100
+
+    Games.xml: Align ROM names with MAME.
+
+    Minor and inconsequential change. Makes manual ROM building 'slightly'
+    easier when using latest MAME ROM set (currently 0.245).
+
+Commit: abb1273aa0182b2d1f80b48a36bb49ba501ff776
+Author: toxieainc
+Date:   Mon Jul 11 18:49:02 2022 +0200
+
+    slightly optimize DrawTileLine (less branches/logic)
+
+Commit: b98be0c2e7f2a333e6663eebfa90748d3f7ffe91
+Author: toxieainc
+Date:   Mon Jul 11 18:47:13 2022 +0200
+
+    optimize ReadRegister, as localtime (at least on MSVC/Windows) is
+    significantly showing up in profiling
+
+    e.g. in SW Trilogy
+
+    caches localtime until time changes (i.e. limits calls to 1/sec)
+
+Commit: ba7145df52d84b836e2443d6c4036be47056250a
+Author: toxieainc
+Date:   Mon Jul 11 18:42:15 2022 +0200
+
+    use intrinsics for endian swap
+
+Commit: b2b83969470eaf7798f006a05788fc7f671ea409
+Author: toxieainc
+Date:   Mon Jul 11 18:27:44 2022 +0200
+
+    missed 2 changed files with last commit
+
+Commit: 4961951a89cefe5b4ce5c657f628c758e685cef8
+Author: toxieainc
+Date:   Mon Jul 11 18:10:41 2022 +0200
+
+    fix a real error (m68kdasm) and some harmless performance warnings and use
+    modern headers
+
+Commit: e0053b3a4619f0dbe931139b2cdcf4d98b86f222
+Author: toxieainc
+Date:   Mon Jul 11 17:43:59 2022 +0200
+
+    fix some real errors (Model3,InputSystem), minor errors (SCSP,SDL/Main) and
+    some performance warnings
+
+Commit: 46eff8c5eb4f94c828115bc756c10e743f657eae
+Author: Bart Trzynadlowski
+Date:   Thu Jun 23 14:06:07 2022 -0700
+
+    supermodel_build_bot.py: New build bot script for GitHub
+
+Commit: 35a7e8a60b38c4411ec29c6ddf5ba0723f00637c
+Author: trzy
+Date:   Sat Jun 25 15:53:36 2022 -0700
+
+    Update README.md
+Commit: 237f2756c092d504d25360a1ed247da6a4a12cb5
+Author: Bart Trzynadlowski
+Date:   Thu Jun 23 12:41:32 2022 -0700
+
+    Rules.inc: whitespace error
+
+Commit: d42f7d6563a9d76539954e7356eac717caa5fe5f
+Author: Bart Trzynadlowski
+Date:   Thu Jun 23 12:38:58 2022 -0700
+
+    Rules.inc: Fixed git revision parsing
+
+Commit: 8c8cc3d32b99e8a92d653651f190f4292b99f453
+Author: Bart Trzynadlowski
+Date:   Thu Jun 23 12:34:02 2022 -0700
+
+    Preparing for Git snapshot build bot and updated copyright header to
+    reference full lifespan of Supermodel repo
+
+Commit: 3803d6b7058b419f9144afc5f4819617cbdaf124
+Author: trzy
+Date:   Mon Jun 20 23:42:42 2022 -0700
+
+    Updated Supermodel.ini comment to reference Supermodel.log instead of
+    error.log
+Commit: 015b96026a32335759b377d62ec22d534dc3981c
+Author: Bart Trzynadlowski
+Date:   Mon Jun 20 23:41:43 2022 -0700
+
+    Corrections to README.md and Supermodel.ini
+
+Commit: 6460a06c1a8e98d7a6d8804432292b556c420570
+Author: Bart Trzynadlowski
+Date:   Mon Jun 20 23:31:24 2022 -0700
+
+    Removed disassembly of Scud Race Plus
+
+Commit: 849f2e84076f8939a33409debaffac4cc988d13e
+Author: trzy
+Date:   Mon Jun 20 23:24:01 2022 -0700
+
+    Update README.md
+
+    Trying again to make the images fit side-by-side.
+Commit: ff7f6d5a443f793fcd707ff03fae7757ed2e90c7
+Author: trzy
+Date:   Mon Jun 20 23:21:50 2022 -0700
+
+    Update README.md
+
+    Fixed image layout and added some links.
+Commit: b58b5ce46d48014f8226735f5b0275ba1ae37f1b
+Author: Bart Trzynadlowski
+Date:   Mon Jun 20 23:07:32 2022 -0700
+
+    Smaller Real3D logo
+
+Commit: 81a43e03840660debd7bbb3936d24d289f378e64
+Author: Bart Trzynadlowski
+Date:   Mon Jun 20 22:59:19 2022 -0700
+
+    Added initial REAMDE.md
+
+Commit: a742a73772b7f6c131f98433a7607d63e8252ef3
+Author: Ian Curtis
+Date:   Sun Jun 19 16:15:54 2022 +0000
+
+    njz3: Fix sound volume with new quadrophonic audio code
+
+Commit: e3bc56c8f1d47750d7af330610ec9d414d7b6244
+Author: Ian Curtis
+Date:   Tue Jun 14 21:24:43 2022 +0000
+
+    values must be signed, to handle negative numbers, my bad 
+
+Commit: 78eab657498fc16f15bf9b0aab65174f23a43646
+Author: Ian Curtis
+Date:   Tue Jun 14 18:14:06 2022 +0000
+
+    minor fix
+
+Commit: 7be381c9badeed41c3161f921463be7ec1b89458
+Author: Bart Trzynadlowski
+Date:   Sun Jun 12 17:51:57 2022 +0000
+
+    Added configurable refresh rate. Default is 60 but -true-hz on the command
+    line enables 57.524 Hz mode, which some players report making Spikeout and
+    the timing of combos in VF3 more authentic. The config key is RefreshRate
+    and is specified as a floating point value. Should the desire arise,
+    arbitrary refresh rates can be set in Supermodel.ini using this key but
+    almost no validation of the value is performed. Thanks to forum user trap15
+    for the original code and PonMi for advocating for this patch to be
+    included.
+
+Commit: 83e7b5f45de84736e30a3c3b5ff0b3a2772d50ec
+Author: Ian Curtis
+Date:   Thu Jun 9 21:10:39 2022 +0000
+
+    njz3: Proper quadrophonic audio support. Need 4+ speakers to take advantage
+    otherwise down mixed to stereo.
+
+Commit: 5e61e2f388e07051dcad467aeeda170a548f2f76
+Author: Bart Trzynadlowski
+Date:   Thu Mar 31 23:09:32 2022 +0000
+
+    Added default values for PortIn, PortOut, and AddressOut
+
+Commit: 84ae9df665b8a8d540a461899d591ada995c485c
+Author: Ian Curtis
+Date:   Sun Feb 6 17:32:44 2022 +0000
+
+    fix: explicit specialization requires 'template <>'
+
+Commit: fe7baa108f760769d2a145d8b621806731b4d16f
+Author: Bart Trzynadlowski
+Date:   Sat Feb 5 06:44:53 2022 +0000
+
+    Bitmap size field in the BITMAPV4HEADER was not being set correctly (the
+    image viewers I've been using are unaffected by this but it ought to be
+    corrected)
+
+Commit: 3f6937e1a621fa3520f15211fb87074a2eaf8f31
+Author: Bart Trzynadlowski
+Date:   Sat Feb 5 00:52:34 2022 +0000
+
+    When dumping textures, two T1RGB5 texture maps are written: with and without
+    contour processing. Contour processing can be disabled per-polygon and some
+    textures intended to be used without contour processing contain pixels with
+    T=1 that are clearly not supposed to be transparent. We now output
+    textures_t1rgb5_contour.bmp and textures_t1rgb5_opaque.bmp.
+
+Commit: 32933ef9b0388e0f91f7e2a070a22d30287d41a9
+Author: Bart Trzynadlowski
+Date:   Tue Feb 1 23:15:06 2022 +0000
+
+    Added a -dump-textures option (config key DumpTextures) that writes texture
+    BMP files, one for each known format (12 in all currently)
+
+Commit: 646b46fd4bf0da32365b0611d21fd19cb5c5e135
+Author: Matthew Daniels
+Date:   Sun Jan 23 15:32:53 2022 +0000
+
+    Adjust the number of PowerPC cycles executed per frame to assume 57.524 Hz
+    refresh rate
+
+    Fighting Vipers 2 attract mode no longer requires 100+ MHz to run smoothly
+
+    Supermodel itself still runs at 60 Hz
+
+Commit: 0ef90899e17aef4a8e51d6c346bb9da886a93a13
+Author: Ian Curtis
+Date:   Sun Jan 2 12:48:09 2022 +0000
+
+    Double buffer the line of sight values. Should allow the correct values to
+    be returned if GPU threading is enabled. 
+
+Commit: 1a7e319aaf18f35e11aff485f82dd3fa5e78a489
+Author: Matthew Daniels
+Date:   Wed Dec 29 13:18:20 2021 +0000
+
+    Fixing Magical Truck Adventure bad ROM dump which was causing attract mode
+    to stop rendering
+
+Commit: bc774ca10e8bb9adb3bc0dbd769cf72ce3bdd909
+Author: Ian Curtis
+Date:   Sun Dec 19 17:48:38 2021 +0000
+
+    methods should be marked as noexcept because they cannot throw
+
+Commit: b8aac0a4f83ff9076088a02180fe2bed47a41104
+Author: Ian Curtis
+Date:   Fri Dec 17 23:58:20 2021 +0000
+
+    white space.
+
+Commit: 6f7130c50b4d37ce436f99bce1d147fbea93600e
+Author: Ian Curtis
+Date:   Fri Dec 17 23:57:12 2021 +0000
+
+    Better document real3d registers
+
+Commit: 6ff099b5ba3ac4a45995e294a9f083d1fe4f0141
+Author: Matthew Daniels
+Date:   Fri Dec 17 23:36:54 2021 +0000
+
+    Clear all Real3D DMA registers on reset; uninitialized values were causing
+    issues with MSVC debug builds
+
+Commit: 3e9c887277cdc32f1f49f1795632419eda719b15
+Author: Matthew Daniels
+Date:   Wed Dec 15 14:47:41 2021 +0000
+
+    Another header include fix
+
+Commit: 94772ae3d91ea501ffadfb906c7b6cf97e7157da
+Author: Matthew Daniels
+Date:   Wed Dec 15 13:55:27 2021 +0000
+
+    Include required header files in Model3GraphicsState.h - fixes potential
+    build errors in GCC
+
+Commit: 0c47ac831a9f3603714a7e4f96d91cbe7de75c01
+Author: Matthew Daniels
+Date:   Tue Nov 30 23:01:37 2021 +0000
+
+    Increase MIDI FIFO buffer size for SCSP; should prevent FIFO overflows
+
+    Also use similar macro for DSB FIFO buffer
+
+Commit: e93c5d710f74523d005ade8da1fc033e62c0ea85
+Author: Matthew Daniels
+Date:   Sun Nov 28 01:11:11 2021 +0000
+
+    PowerPC IRQ line deassertion; DMA only fires interrupts when required
+
+    PowerPC no longer clears its own IRQ line; it is now cleared by the IRQ
+    controller when there are no more pending interrupts. Not all games clear
+    DMA interrupts so it was necessary to tweak the 53C810 SCSI controller and
+    the Real3D DMA interface to only fire interrupts if a certain register is
+    correctly set. 53C810 has the documented DIEN (DMA Interrupt Enable)
+    register; Real3D DMA seems to use the low bit of the dmaConfig register.
+
+    Also I removed the net IRQ as no games seem to actually use it.
+
+Commit: 9ffce8b92a6bceef6bdd48139935847c99d3bb16
+Author: Matthew Daniels
+Date:   Mon Nov 22 17:15:06 2021 +0000
+
+    Getting rid of most of the includes from Supermodel.h; each file now
+    explicitly includes the header files it needs.
+
+    Making changes to a header file should no longer force the entire project to
+    recompile.
+
+Commit: 50465f9a5a1c5049f53e44d904704f936575b0ae
+Author: Matthew Daniels
+Date:   Fri Nov 5 00:23:29 2021 +0000
+
+    Shared RAM on simulated netboard is now double-buffered; Spikeout Final
+    Edition no longer requires a hack to work. Preparing to enable simulated
+    netboard to run in its own thread
+
+Commit: b62110617bd47d39f5188d49300b78ec9fe4e80f
+Author: Matthew Daniels
+Date:   Sat Oct 30 23:00:49 2021 +0000
+
+    New JTAG patch for Sega Rally 2; linked mode now fully working. Few other
+    minor changes
+
+Commit: 94d8a1b22d32ddc46a40f8f72fc9b34e55deb4c9
+Author: Matthew Daniels
+Date:   Tue Oct 26 22:47:24 2021 +0000
+
+    Increase size of DSB2 FIFO buffer; fixes Sega Rally 2 music occasionally not
+    switching or fading out
+
+Commit: b18f6d1b549c30d3d8a41bb9894bd55ccbd14323
+Author: Matthew Daniels
+Date:   Sun May 9 23:22:18 2021 +0000
+
+    Non-linked games no longer falsely list the net board under extra hardware
+
+Commit: b7755c9ae1685fc2ecbcf1c1b1f2cbd9a29ffbb4
+Author: Matthew Daniels
+Date:   Sun May 9 18:12:40 2021 +0000
+
+    Fix 16-bit variables not displaying correctly in Z80 debugger (at least in
+    MSVC builds)
+
+
+Commit: a20366d33804d572dd133506e2df8f81ac1a5e9a
+Author: Matthew Daniels
+Date:   Mon Apr 19 22:15:50 2021 +0000
+
+    Fix netboard resets and detection of simulated netboard linking to itself
+
+Commit: 5a570ce7fe3ec7ec328801559641ad836ebf5ded
+Author: Matthew Daniels
+Date:   Wed Apr 14 01:20:45 2021 +0000
+
+    Adding simulated netboard; all linked games except Sega Rally 2 working at
+    full speed.
+
+Commit: 98d4f1c6f6e018abfa17d536d86560d66276c0a3
+Author: Matthew Daniels
+Date:   Mon Mar 22 01:08:45 2021 +0000
+
+    Corrected alignment issues with netboard RAM; send/receive parameters no
+    longer need to be manipulated to work correctly. Fixes bugs including Scud
+    Race linked car orientation.
+
+Commit: 4b9221ecd69f48d794a9733951357aaf7bd15d42
+Author: Ian Curtis
+Date:   Mon Mar 15 15:55:39 2021 +0000
+
+    Add some async network methods. Async send copies to an internal buffer and
+    sends in another thread so doesn't block at all. Added CheckDataAvailable
+    method to the TCPReceive class. Can check or wait for data without blocking.
+
+Commit: 020e2d1b32c77ad69ab7fa2072cf8bb17c860e9b
+Author: SpinDizzy
+Date:   Sat Mar 13 08:17:11 2021 +0000
+
+    DSB2 clock speed from 4MHz to 11MHz.
+
+Commit: eb61bd91e50a3b4f7214f3b7f2729f68e9a0b6cd
+Author: SpinDizzy
+Date:   Sun Mar 7 10:14:36 2021 +0000
+
+    New dumps added: Virtua Striker 2 '99.1 (Step 1.5, Export, USA, Revision B) 
+    Virtua Striker 2 '99.1 (Step 1.5, Japan, Revision B) Thanks to Brian Troha
+    and The Dumping Union
+
+Commit: de470aaf527b54992abf1a932e43602abae8fa5a
+Author: SpinDizzy
+Date:   Sun Mar 7 10:12:37 2021 +0000
+
+    Fixed cycle counting overflow that was causing DSB2 to halt execution.
+
+Commit: 6cf997410224cb65d28695b24ebdb31b457cb155
+Author: Ian Curtis
+Date:   Wed Mar 3 20:31:57 2021 +0000
+
+    missing header
+
+Commit: 46b1de2238a23893787ea1ee58c9c7430b9cbf00
+Author: SpinDizzy
+Date:   Wed Mar 3 15:30:19 2021 +0000
+
+    DSB2 IRQ 2 now fires at 1KHz rather than once per frame, improving  music
+    timing in Daytona USA 2 and Sega Rally 2. DSB1 CPU timing  increased from
+    1MHz to 4MHz, improving music fade timing in Scud Race.  Thanks to
+    gm_matthew for these discoveries.
+
+Commit: e3374256ff424c050a7a2608a0f26aafe2c3cff3
+Author: Ian Curtis
+Date:   Sat Feb 20 22:19:16 2021 +0000
+
+    Just a few compile warnings
+
+Commit: 0bfc2aea3154401c43be26b41f74da07b6e5f2d7
+Author: Ian Curtis
+Date:   Fri Feb 19 11:03:48 2021 +0000
+
+    Fix project file
+
+Commit: f23b2f96f97f211ca415367c9e1fb706e755aa73
+Author: SpinDizzy
+Date:   Thu Feb 18 10:37:03 2021 +0000
+
+    Build bot script.
+
+Commit: e4998f57fd6719927c3717828776727ac220d887
+Author: SpinDizzy
+Date:   Thu Feb 18 10:35:38 2021 +0000
+
+    Skichamp Driveboard error fix.
+
+Commit: 08d4735ee8e51280e4803df61c37b80168d625a1
+Author: SpinDizzy
+Date:   Thu Feb 18 10:29:15 2021 +0000
+
+    Huge refactor of the Driveboard:
+    -Separate each possible boards (wheel, joystick, skipad, billboard).
+    -Defined a Driveboard type in Games.xml for each games.
+    -Due to the refactoring, Driveboard Savestates have changed (a common base
+    data + a specific board data are saved).
+    -Backwards compatibility with previous save states is maintained.
+    -Driveboard rom section is no longer required anymore. This disables
+    Driveboard emulation in case the rom is not found.
+    -Added Billboard emulation (vf3, vs2, fvipers2, von2). 7 segments and lamps
+    Outputs are redirected to Supermodel outputs.
+    -Changes project to C++ 17 standard.
+
+Commit: ab367774d3ba0081501653e3e310aa8c70c7f345
+Author: SpinDizzy
+Date:   Sat Jan 30 09:54:03 2021 +0000
+
+    Introduce new config keywords.
+
+    In xinput mode, lets the choice to have left and right gamepad motors
+    vibrate together. XInputStereoVibration = 1 (both motors) [default] 
+    XInputStereoVibration = 0 (separate motors)
+
+    In sdl input mode, new control option to set minimum strength above which a
+    Model 3 constant force command will be simulated on an sdl gamepad device. 
+    SDLConstForceThreshold = 30 [default] note : the vibration strength can be
+    mod with SDLConstForceMax = [val]
+
+
+Commit: 6627b1e95fcfb0873ec80d86bbbb0773d9f9257b
+Author: SpinDizzy
+Date:   Tue Jan 5 14:24:57 2021 +0000
+
+    The controls of bass/getbass games were no longer good, following recent rom
+    set name changes in Games.xml.
+
+Commit: 2fa9c8d0d71cbec5aff938dcae896911438daba8
+Author: SpinDizzy
+Date:   Tue Jan 5 14:23:24 2021 +0000
+
+    Corrected game set names & game titles (Brian Troha) New clones
+    -Sega Bass Fishing Deluxe (USA) (Brian Troha)
+    -Dirt Devils (USA, Revision A) (Brian Troha)
+
+    ------------ Note/Warning: This will match future Mame 0.228 changes. Please
+    Check/Edit carefully all your rom set because there are many changes (e.g.
+    set name). Thinking of delete or rename your nvram, or restart from the
+    start.
+
+Commit: 6626afc8bb948f3816fa4034b8091ba9f92399aa
+Author: SpinDizzy
+Date:   Wed Dec 30 17:14:14 2020 +0000
+
+    Added rumble skipad in Ski Champ game. This is only a simulation (cmd are
+    interpreted), not an emulation because we lack informations on the game
+    itself and its driveboard (does it have dedicated cpu/rom ?).
+
+Commit: f3a7ec52ba6be25dd94702c83117c2c528e88413
+Author: SpinDizzy
+Date:   Wed Dec 30 16:38:13 2020 +0000
+
+    Service menu activated in swtrilgyp. Note : The "feedback stick test" always
+    failed (change cab type DX to SD if needed).
+
+Commit: c8f47cc52b04cee14f4956bd1196e224244ba848
+Author: SpinDizzy
+Date:   Wed Dec 30 16:05:25 2020 +0000
+
+    - Add -O3 optimization option for OSX and Linux.
+    - Revert netboard to disable by default.
+
+Commit: 34c24c0104e05b0920f425fc04e9c0d15cc0aeaa
+Author: SpinDizzy
+Date:   Mon Dec 28 16:22:12 2020 +0000
+
+    - Suppressed net board console output (using debug logging now)
+    - Added GPL headers to net board source files
+
+Commit: 8df56ddcbfbf087887714db9f5dcca663f21cedb
+Author: SpinDizzy
+Date:   Sun Dec 27 13:14:37 2020 +0000
+
+    - Star Wars Trilogy untextured Death Star surface bug in gcc builds was
+    caused by -Ofast (thanks to rokfpoewrkcpoqwkcp for discovering this). Using
+    -O3 now.
+    - Net board enabled by default.
+
+
+Commit: cce9914a13533ec833fe74bffd8692db89887008
+Author: SpinDizzy
+Date:   Fri Dec 25 08:29:18 2020 +0000
+
+    Updated rules file.
+
+Commit: 53185c3effbc38733fb29669631b6d428564c38a
+Author: SpinDizzy
+Date:   Thu Dec 24 10:20:26 2020 +0000
+
+    Introducing a special release build target with SVN version stamping.
+
+Commit: 1f505199055eee5da722fd3ee35dd85b7423ca8e
+Author: SpinDizzy
+Date:   Mon Dec 21 15:39:15 2020 +0000
+
+    Magical Truck Adventure rom patch to unlock region. (enter service menu,
+    then Start P1, Start P1, Service, Start P1, Service, Test)
+
+Commit: 72c0c60c98da332ba84ce070e5d57c88655af568
+Author: Ian Curtis
+Date:   Sun Dec 20 18:17:34 2020 +0000
+
+    -wide-bg option to stretch the background tile layer when wide-screen mode
+    is enabled - Daro Land
+
+Commit: 7d2b21a6dc8acfabd57116d412a2e36382651c65
+Author: SpinDizzy
+Date:   Tue Dec 1 07:35:52 2020 +0000
+
+    Change the duration of constant force effect in SDL2 to correct daytona
+    games
+
+
+Commit: d70a79a127860f897ef26fef2877b8dd002680d4
+Author: SpinDizzy
+Date:   Fri Nov 6 09:24:16 2020 +0000
+
+    Makefiles update
+
+Commit: 5143669cb94f396bfe5be3d72b4e180651cc5231
+Author: SpinDizzy
+Date:   Sat Oct 24 09:12:54 2020 +0000
+
+    Star Wars Trilogy lever feedback activated
+
+Commit: 402baf87b86400e9efdb706a2167117fd1680959
+Author: SpinDizzy
+Date:   Wed Oct 21 08:19:51 2020 +0000
+
+    Force Feeback for Linux
+
+Commit: db013491b4b12bcedbd917d44f587647fa45b090
+Author: Ian Curtis
+Date:   Sat Sep 19 14:45:51 2020 +0000
+
+    hopefully fix building on linux
+
+Commit: 981cdc33f5a0537c762e3fc43c3120e8f92aff03
+Author: SpinDizzy
+Date:   Sat Sep 19 07:54:26 2020 +0000
+
+    Added Screenshot feature (ALT+S).
+
+Commit: ca57659fcb8e5a2021daef46f8f6acf16a3e76c9
+Author: SpinDizzy
+Date:   Wed Sep 16 07:03:03 2020 +0000
+
+    Remove using namespace from headers.
+
+Commit: c0729c1048ce32f0cc8d1cb569f48ec7ad56f518
+Author: Ian Curtis
+Date:   Tue Sep 15 08:51:23 2020 +0000
+
+    fix compiling with visual studio
+
+Commit: 75f8ee61a3b2f2d3725b4c40064238abcf7634f9
+Author: Ian Curtis
+Date:   Mon Sep 14 20:01:52 2020 +0000
+
+    fix missing polys with quad renderer
+
+Commit: 309537d64e67d7637e8b161135b13d1d350dc749
+Author: SpinDizzy
+Date:   Mon Sep 14 07:01:54 2020 +0000
+
+    Balance initial value set to "0" rather than "false". "False" is interpreted
+    as 0 when decoded as a float, so there will be no effect here, but this
+    expresses the intended logic better.
+
+Commit: 72b2c0eb2863ccc97e2a1db218a61371944b5235
+Author: SpinDizzy
+Date:   Mon Sep 14 06:59:38 2020 +0000
+
+    Fixed a longstanding bug that caused stereo channels to be flipped
+    incorrectly. This was due to the initial audio buffer write position being
+    aligned to the middle of a 4 byte (2 byte left, 2 byte right) audio sample. 
+    In multi-threaded mode, some sort of race condition caused this alignment to
+    be fixed until audio playback was temporarily paused (via pausing, loading a
+    state, etc.) Audio playback should now be fixed and work consistently in all
+    cases.
+
+
+Commit: 38c3ff61f95e99cd17526b3a9cf12b0328329f6f
+Author: Ian Curtis
+Date:   Tue Sep 8 09:10:24 2020 +0000
+
+    Clip scroll fog to viewport, instead of filling entire screen. Fixes fog bug
+    in Daytona credits.
+
+Commit: aaa26f678c959212fafe742a76e324443ca9c0b9
+Author: Ian Curtis
+Date:   Mon Sep 7 16:25:18 2020 +0000
+
+    Update scroll fog logic. Should fix the credits in virtua fighter and
+    daytona that have fogging applied to the background layer and shouldn't.
+
+Commit: 1d37358b8c77a40883650396c2a1c92e41c36663
+Author: SpinDizzy
+Date:   Fri Sep 4 05:48:41 2020 +0000
+
+    - Add missing library from previous windows makefile update. 
+    - NEW_FRAME_TIMING build option was removed because it was no longer used.
+
+Commit: 95488acb0a507a0af0068539120154ca8790b42c
+Author: SpinDizzy
+Date:   Thu Sep 3 06:27:57 2020 +0000
+
+    Windows makefile update
+
+Commit: 60c923f45f85b209b1c196bf5b176374de62affb
+Author: SpinDizzy
+Date:   Mon Aug 31 09:28:35 2020 +0000
+
+    - Reworked logging system to support output to multiple outputs: files,
+    stdout, stderr, and syslog (OutputDebugString on Windows, syslog on other
+    systems).
+    - Added ordinal logging level: all, debug, info, error. Compiling with DEBUG
+    defined is no longer necessary for debug logging. Be careful when logging
+    debug level because it produces copious output.
+    - Fixed -enter-debugger options when compiled with SUPERMODEL_DEBUGGER.
+    - Command line parse errors no longer ignored; Supermodel will now exit.
+
+
+Commit: 6491ed46a72b6ef233f4a5e8d9ffef633ab1d3da
+Author: SpinDizzy
+Date:   Wed Aug 26 16:14:54 2020 +0000
+
+    Rename command line SCSP option to -legacy-scsp and -new-scsp
+
+
+Commit: d3955062e40c68bec55498d277e05e8178f7cd73
+Author: SpinDizzy
+Date:   Wed Aug 26 16:05:23 2020 +0000
+
+    Correct the returned value from previous getbass patch There was a strange
+    side effect on Ocean Hunter game
+
+Commit: 9e8e99302640fa5ad5b7c2f9c531491749f22571
+Author: SpinDizzy
+Date:   Tue Aug 25 08:48:25 2020 +0000
+
+    Getbass related Game now boots in game Add missing analog input and buttons
+
+Commit: 97d61a970c92af8c4614f0f63b37cbdb584c8fd0
+Author: SpinDizzy
+Date:   Mon Aug 24 10:09:01 2020 +0000
+
+    Small oversight in the new SCSP code
+
+Commit: 816d541b98c72c8021cd4202607e063b38ab074c
+Author: Ian Curtis
+Date:   Sat Aug 22 20:41:47 2020 +0000
+
+    Various SCSP improvements and code cleanup:
+    - Ported MAME's implementation
+    - Corrected FM sound for songs in VF3 that use it 
+    - Music tempo now closer to real hardware thanks to emulating two SCSP
+    chips.
+    - Add LegacySoundDSP config option for games with SCSP DSP glitches (ex.
+    engine noises in Sega Rally 2, and loud garbage on Bahn's stage in Fighting
+    Vipers 2)
+    - Renamed SysFPS to "SoundClock" (since raising this appears to adjust the
+    sound frequency).
+
+    (Submitted by Paul Prosser)
+
+Commit: cf64375371da4e0d82435f8fe88dca00c32925d6
+Author: SpinDizzy
+Date:   Sat Aug 22 09:03:53 2020 +0000
+
+    New ecap crc rom + rom patch
+
+Commit: 27cda80abb97169524fc48605826461d78b70872
+Author: SpinDizzy
+Date:   Sat Aug 22 09:00:13 2020 +0000
+
+    Low level z80 core bug Discovered when looking at lemans ffb board (real
+    Model3 rom, not Model2 stcc one) This could affect other ffb board and/or
+    scud race DSB1 sound board However I didn't notice any bad things
+
+Commit: d77433b52561c13c2e537f807760f5722ca145c2
+Author: Ian Curtis
+Date:   Sat Aug 1 09:02:04 2020 +0000
+
+    Remove some debug code
+
+Commit: ba917aca6d7058ad5ad3e9b9ca5955cea67c7f62
+Author: Ian Curtis
+Date:   Fri Jul 31 19:18:51 2020 +0000
+
+    Update glew version
+
+Commit: 5e434e2644d1409c29a953cfec7df61404f67bc1
+Author: Ian Curtis
+Date:   Mon Jul 27 10:28:48 2020 +0000
+
+    build fixes for mac
+
+Commit: 858b84f424d8837d2f8df1490e1d6c63dea67bd5
+Author: SpinDizzy
+Date:   Mon Jul 27 09:02:07 2020 +0000
+
+    skichamp rom patch : prevent driveboard error at boot
+
+Commit: 6af882548f470bc9ea6d7a341655ddefad11a6ca
+Author: SpinDizzy
+Date:   Fri Jul 3 09:15:08 2020 +0000
+
+    Linux build compatibility changes
+
+Commit: 12081a9ff7983725bba8022e43eb69ceb95fa6df
+Author: SpinDizzy
+Date:   Fri Jul 3 09:08:03 2020 +0000
+
+    Update makefiles
+
+Commit: f7d75b783df0807bc48f769cc0de507f40a6a25b
+Author: Ian Curtis
+Date:   Wed Jul 1 17:51:21 2020 +0000
+
+    silence a few casting warnings
+
+Commit: a73a06d5462b35dbfc7fbf4cfed2aa6ac0b9d7a2
+Author: SpinDizzy
+Date:   Wed Jul 1 15:56:21 2020 +0000
+
+    Netboard related : Define a new hardware line in games.xml
+
+Commit: 345310fbee201eb176a8d2ad43afa18a513ee2d7
+Author: SpinDizzy
+Date:   Wed Jun 17 16:31:22 2020 +0000
+
+    _rotl() replacement
+
+Commit: 9a651bdb61c01c0b3e16287b82b8189b0512992f
+Author: Ian Curtis
+Date:   Wed Jun 17 15:11:58 2020 +0000
+
+    Only try and make a connection if we have enabled EmulateNet
+
+Commit: 1a3407bec833464ddf069128392958d30472e207
+Author: Ian Curtis
+Date:   Wed Jun 17 11:41:41 2020 +0000
+
+    Fix corrupted memory in network mode
+
+Commit: 597ea9374910c70e44a8541e06da502f9fa038ca
+Author: Ian Curtis
+Date:   Tue Jun 16 12:01:13 2020 +0000
+
+    remove old files
+
+Commit: daef27be3745a9595cd6be2744d2cc398f71516e
+Author: Ian Curtis
+Date:   Tue Jun 16 11:55:38 2020 +0000
+
+    Replace network code with new tcp implementation
+
+Commit: 8071efbf79126116217b4924a63c871b0862b3fc
+Author: Ian Curtis
+Date:   Sat Jun 13 19:46:12 2020 +0000
+
+    Add SDLnetworking + some basic tcp classes
+
+Commit: d688fdd3d50db68952df99e34d79df8367683814
+Author: Ian Curtis
+Date:   Fri Jun 12 17:33:21 2020 +0000
+
+    cache variable, without it is unusably slow in debug mode
+
+Commit: 8b4a4ec93f47e6d4cfdc7790934682fa19909569
+Author: Ian Curtis
+Date:   Wed Jun 10 09:12:34 2020 +0000
+
+    add missing file
+
+Commit: 90df4afbad4ec409de4c7d5908e100c41a415cca
+Author: Ian Curtis
+Date:   Mon Jun 8 14:27:37 2020 +0000
+
+    update vs project files
+
+Commit: f69d7c700699435590bef114f9bbd0b096d539df
+Author: Ian Curtis
+Date:   Mon Jun 8 10:14:03 2020 +0000
+
+    fix output values
+
+Commit: 6f6c98c671f62410561fd6253e48b5617d8b3505
+Author: Ian Curtis
+Date:   Mon May 11 09:05:46 2020 +0000
+
+    The translator map seems to work with paletted colour values too, and the
+    result is not clamped. Colours are passed to the GPU as unsigned bytes to
+    multiplying by 16 will overflow, so we do the logic in the shader. If we
+    passed floats we could skip the shader logic.
+
+Commit: e2ad593e883d6f220309a5a090aa0f4147337d2f
+Author: Ian Curtis
+Date:   Thu May 7 19:34:22 2020 +0000
+
+    When the translator map is enabled the colour values seem to use 4 bits,
+    0-16. Why not 0-31 I don't know. Anyway virtua on is overflowing these
+    values for some of the smoke effects. For us the numbers were wrapping
+    around. Clamping is enough to fix this. (Thanks model123)
+
+Commit: 5b406059ce55a4f24770b17f79153ff672614c47
+Author: SpinDizzy
+Date:   Fri Apr 24 07:04:41 2020 +0000
+
+    custom resolution bug fix
+
+Commit: 4f347ff3f1dda3bd53bd09a5e2c469c181a231be
+Author: SpinDizzy
+Date:   Sun Apr 19 08:34:58 2020 +0000
+
+    SDL1 to SDL2 internal changes
+
+Commit: 14e2a50212e9f73a15e13cd4cb51e099b80d108d
+Author: Ian Curtis
+Date:   Wed Jan 22 18:44:30 2020 +0000
+
+    remove files
+
+Commit: 247921dce4087c8690b891442fdd027820f86166
+Author: SpinDizzy
+Date:   Wed Jan 22 17:36:22 2020 +0000
+
+    
+
+Commit: 5ace960f148bb7a0926ecd856e300ddd3066c361
+Author: Ian Curtis
+Date:   Sat Jan 4 18:15:30 2020 +0000
+
+    tweak value so the map indicator still works at the start of spikeout
+
+Commit: 6b8a29105a0c23af641b32fb99cd42756cb51cf7
+Author: Ian Curtis
+Date:   Sat Jan 4 13:48:14 2020 +0000
+
+    Sutherland-Hodgeman clipping only works for planar primitives. Scud is
+    rendering non planar quads and this breaks our algorithm a little when using
+    the quad renderer. Stretching the near plane a few % is enough to fix it.
+
+Commit: d711afade1f97ac7a9ceaebf45492b4a91240a6a
+Author: Ian Curtis
+Date:   Sat Jan 4 13:45:55 2020 +0000
+
+    Only need to clip against 4 planes for poly culling
+
+Commit: 605dad2c0221c88ee7a57e06ab4648857688af68
+Author: Ian Curtis
+Date:   Fri Dec 27 21:36:46 2019 +0000
+
+    Fix the sky in harley in first person mode where pixels in the sky are
+    culled when they shouldn't be with the quad renderer. Basically we were
+    running out of precision in a rare corner case. Doing the maths with double
+    precision and casting back to float was enough to fix the issue.
+
+Commit: a5858e635d5e90b802639f393b997c95cd237e05
+Author: Ian Curtis
+Date:   Tue Dec 10 11:40:39 2019 +0000
+
+    To calculate the mipmap value the opengl needs to calculate the difference
+    in the texture coordinates between adjacent pixels. If there are no adjacent
+    pixels the hw may need to spawn invisible fragments outside of the visible
+    polygon. Our algorithm was culling these out so the mipamp calculation
+    failed for edge pixels. Anyway this fixes quad rendering looking broken with
+    the latest nvidia drivers.
+
+Commit: 06688de5fccbbcd4043db7c6e9e7d08f32c2863e
+Author: Ian Curtis
+Date:   Fri Nov 15 20:00:25 2019 +0000
+
+    Really should cull against 5 frustum planes.
+
+Commit: e1827cfd1373431b697b14f4c4860291b3dd9c61
+Author: Ian Curtis
+Date:   Fri Nov 8 20:36:11 2019 +0000
+
+    Stretch the time the ping_pong bit flips a bit to bump writes into correct
+    frame. Otherwise they end up getting written at like 99.8% of the frame and
+    overlapping with the next.
+
+Commit: ed2816cea478e97e5d63d6a61fa219c8c177938a
+Author: Ian Curtis
+Date:   Fri Nov 8 19:38:20 2019 +0000
+
+    Optimise Games.xml (Krom)
+
+Commit: 2e6968fe9df5806fb35944bcae8e889ed26c9d2a
+Author: Ian Curtis
+Date:   Thu Nov 7 20:29:17 2019 +0000
+
+    Thanks to our anonymous contributor who managed to patch a model 3 game and
+    run it on real h/w, we were able to obtain some timing values we had been
+    long been missing for correct emulation. The h/w polls something called the
+    ping_pong bit at start-up to sync the GPU with the CPU. Unfortunately we
+    didn't have the correct values and just manually used some per game hacks to
+    get games to run. This mostly worked, but some games were writing more or
+    less frames than they should have been for a given time period. When the
+    ping_pong bit flips at 66% of the frame time, games were writing data for a
+    new frame, which meant writes were often straddling 2 separate frames. We
+    aren't 100% sure if IRQ2 or the ping_pong bit is vblank. 
+
+Commit: 06b43c45b3021a1f54cf177980215a10c6ebb475
+Author: Ian Curtis
+Date:   Sat Nov 2 20:11:48 2019 +0000
+
+    Ocean hunter in the middle of the game is passing a few matrices with
+    FLT_MAX inside them, which blows apart our near/far calculation. The
+    hardware must have some method to sanitize the near/far for instance if you
+    render something extremely close to the origin you will also blow apart any
+    near/far calc.
+
+Commit: 714f6a123ab92e6c88200c67eae143a3ba20373d
+Author: Ian Curtis
+Date:   Sun Jul 28 12:14:13 2019 +0000
+
+    skip invalid culling nodes
+
+Commit: 17f4103123d54a5e2288a357bc20b596601e2b73
+Author: Ian Curtis
+Date:   Fri Jul 26 16:39:58 2019 +0000
+
+    A culling node must follow immediately after a viewport.
+
+Commit: cc830003f5784b6c532318ee05b28ce305516a82
+Author: Ian Curtis
+Date:   Fri Feb 22 01:00:41 2019 +0000
+
+    Fix possible negative pointer arithmetic which was causing the music to wrap
+    around.
+
+Commit: a76e46e3b843dff2fda46d511061c51aebcd1ccd
+Author: Ian Curtis
+Date:   Thu Feb 21 14:57:57 2019 +0000
+
+    Update makefiles 
+
+Commit: 8aa476aeeb9a51c2b9fcfed0abab0e2bdd476526
+Author: Ian Curtis
+Date:   Thu Feb 21 14:56:25 2019 +0000
+
+    Previous mpeg audio code worked for me in debug mode, but the release build
+    had some serious corruption issues when being built in visual studio.
+    Replaced the old spaghetti code with a more modern implementation.
+
+Commit: c86dab0fe9f8fab7f39652b479fa8c9e3e58e213
+Author: SpinDizzy
+Date:   Tue Feb 19 09:24:31 2019 +0000
+
+    - Disabled Alt-O (dump timings) and Alt-U (dump input state) when 
+    SUPERMODEL_DEBUGGER not defined
+    - Option '-print-inputs' works again if no ROM set specified
+
+
+Commit: 6fe878b1d3cf5b4d78b25e58a7cc724b65f0742d
+Author: SpinDizzy
+Date:   Thu Feb 7 06:32:46 2019 +0000
+
+    Restore Sega Rally 2 music in some practice stages 
+
+
+Commit: 383e6ac85cce5ae60826fe0f92019416d27b2f17
+Author: SpinDizzy
+Date:   Tue Feb 5 10:30:50 2019 +0000
+
+    Fixed MPEG music looping glitch.
+
+Commit: bb89bc8e544ec1ea19592762b922989118ce39ba
+Author: SpinDizzy
+Date:   Tue Feb 5 10:03:50 2019 +0000
+
+    Refactor code from previous svn768 (Note : break old savestate
+    compatibility)
+
+Commit: 90faeafbc4419de4d163cf0fed009960eee75ab8
+Author: Ian Curtis
+Date:   Fri Feb 1 21:02:02 2019 +0000
+
+    Fix the audio in sega rally2. The game has packed separate tracks into the
+    left and right audio channels. Selecting the correct track fixes the garbled
+    mess. (Spindizzi)
+
+Commit: f634d19fdc8954077528cd2782abfe1d3ee58107
+Author: Ian Curtis
+Date:   Thu Jan 24 19:11:26 2019 +0000
+
+    Fix shader. Why this worked on my nvidia card .. I'm not sure.
+
+Commit: 8094c2e2b7d05aaece0fe56904b0cb824af99cec
+Author: Ian Curtis
+Date:   Mon Jan 21 14:30:42 2019 +0000
+
+    Composite the alpha layers at the end of rendering. To do this we need to
+    mask the alpha pixels with the opaque pixels from the next priority layer.
+    Fixes some overlapping shadows in vf3tb that have different priority layers.
+    I assume that was a game bug, but it works on the real h/w.
+
+Commit: c171356f7d52d485835cf3e849e8455480b4df1d
+Author: SpinDizzy
+Date:   Sun Jan 20 08:02:01 2019 +0000
+
+    -Added support for specifying multiple sections simultaneously in INI 
+    files, e.g., [ daytona2, dayto2pe ]
+    -Forgetfulness in 763
+
+Commit: 864bb36b5a7c098f5bf353686887a24ef7342e31
+Author: Ian Curtis
+Date:   Wed Jan 16 01:07:56 2019 +0000
+
+    Technically backface culling should cull polys when the dot product = 0,
+    since when it equals 0 the polys is perpendicular to the camera and thus
+    invisible. When you complete sega rally2 (if you can get that far lol) the
+    champagne is invisible. The reason is because all the face normals are 0. So
+    when multiplied by the model matrix they are still 0 and get culled.
+    Tweaking the condition to only cull polys when greater than 0 fixes this,
+    and allows these 'bad' polys to render as they do on the model3.
+
+Commit: 98106df68b0a55455e1f9bad2b7871366119aa6c
+Author: SpinDizzy
+Date:   Sun Jan 13 16:20:19 2019 +0000
+
+    Inputs can now be configured on a per-game basis
+
+Commit: b0813ef7a07a8bd4c9700eb2ef266e1ad2c96794
+Author: SpinDizzy
+Date:   Sun Jan 13 16:00:37 2019 +0000
+
+    - PCI bridge can be specified in Games.xml for games that use a different
+    version than expected based on stepping. No more hard-coded exceptions.
+    - Real3D PCI ID can be specified in Games.xml for exceptions that require
+    it.
+    - Real3D status bit timing specified in Games.xml for exceptions that
+    require it.
+
+Commit: d8f736e7a835f12e24867c2b2076f4bc30cd5ef3
+Author: Ian Curtis
+Date:   Sun Jan 6 23:48:34 2019 +0000
+
+    timing fix for srally2x (Spindizzi)
+
+Commit: 24cbc401b9b18faf5ee377078e9df7e764a2a1d4
+Author: Ian Curtis
+Date:   Sun Jan 6 23:43:27 2019 +0000
+
+    Updates games.xml for new prototype games (Spindizzi)
+
+Commit: 0f49e0b1e97981ff41e88ecac40e7f87475a08ba
+Author: Ian Curtis
+Date:   Sat Dec 8 20:01:37 2018 +0000
+
+    remove commands that do nothing
+
+Commit: 08eeb2003342922de177bf2e58647799045e96af
+Author: Ian Curtis
+Date:   Sat Dec 8 19:55:26 2018 +0000
+
+    clear scissored out areas
+
+Commit: 60753528681bb0b80d49d6231af71040a410bb5a
+Author: Ian Curtis
+Date:   Tue Nov 27 20:43:27 2018 +0000
+
+    Optimise depth calculation for quad shader.
+
+Commit: 6eaf204d724970f955c6820624eb734b85c629e0
+Author: Ian Curtis
+Date:   Sun Nov 11 20:48:49 2018 +0000
+
+    Update Games.xml for games that were recently dumped
+
+Commit: 78039e91a8176922a3af90846350c0e78e6e15d3
+Author: Ian Curtis
+Date:   Sun Oct 28 18:30:04 2018 +0000
+
+    
+
+Commit: 538a714086976c415ecf7f884fd05aba41a8aeba
+Author: Ian Curtis
+Date:   Tue Oct 23 00:16:23 2018 +0000
+
+    Fade out microtextures with higher textures LODs. Fixes incorrectly applied
+    microtextures in LA machineguns.
+
+Commit: b8da2d6064133dcb74b2bc4559829815f9cacd19
+Author: Ian Curtis
+Date:   Mon Oct 22 21:59:01 2018 +0000
+
+    debug code should be disabled
+
+Commit: bf4d72597066f9d5223aac4ef2897f2f0e344be0
+Author: Ian Curtis
+Date:   Fri Oct 19 20:59:46 2018 +0000
+
+    Smooth texture repeat makes no sense for alpha/contour textures with pixel
+    dilate. HW seems to treat them as non smooth anyway. Also implement some
+    line of sight stuff, used by Scud. Really need to check the
+    threading/synchronisation of the register reads but it basically works. 
+
+Commit: df02d6a753b3609496380b6b3052bb71fc56a747
+Author: Ian Curtis
+Date:   Thu Oct 18 09:42:51 2018 +0000
+
+    return correct PCI ID
+
+Commit: 3dc69f89b81a11281f4bd3162558282e35264948
+Author: Ian Curtis
+Date:   Wed Oct 17 22:36:33 2018 +0000
+
+    fix debugging code
+
+Commit: 42eaa7f3d8a02c28456845205ee6584f1c453e6d
+Author: Ian Curtis
+Date:   Sun Oct 14 10:05:24 2018 +0000
+
+    fix copy paste error :]
+
+Commit: 3eeec35e7c5c910ee02f0b9e6d771d483e309299
+Author: Ian Curtis
+Date:   Sat Oct 13 13:29:45 2018 +0000
+
+    Correctly emulate the real3d pro-1000 texture modes in our shader.
+
+Commit: a5ad1c4099ff56148f9c1983492b956163912ec3
+Author: Ian Curtis
+Date:   Sun Oct 7 19:31:55 2018 +0000
+
+    Revert some patches (Spindizzi)
+
+Commit: 7bcc70a170d0afa1f7fa36bebeaa16d56eb1776b
+Author: Ian Curtis
+Date:   Mon Oct 1 17:42:45 2018 +0000
+
+    Update makefile 
+
+Commit: 3dbfa7373485f6497ceb51a462f12346d268c572
+Author: Ian Curtis
+Date:   Wed Sep 19 20:43:41 2018 +0000
+
+    Both lemans24 and dirt devils are rendering some totally transparent objects
+    as the first model in each viewport. The HW seems to skip these entirely,
+    and including them breaks our near/far plane calculations leading to Z
+    fighting. 
+
+Commit: e3255e45f301851e07761244fc7c65e3cab064be
+Author: Ian Curtis
+Date:   Tue Sep 18 21:46:38 2018 +0000
+
+    Tweak the ratio for the near plane. Fixes missing text on the map indicator
+    at the start of spikeout. The vertices are 0.003 units apart so a tonne of
+    precision is required at the near plane to not depth test out.
+
+Commit: c5b156d95db0671ef58d49a794105e6d1022bdfb
+Author: Ian Curtis
+Date:   Tue Sep 18 21:20:15 2018 +0000
+
+    remove debug code
+
+Commit: 5dab9910e2bd6fe8a7d9f1883cb6a92e3019abec
+Author: Ian Curtis
+Date:   Sun Sep 16 08:43:13 2018 +0000
+
+    avoid double matrix load
+
+Commit: a7e851d578e4f5ccdeaf4499fac3d5fa1fed41ba
+Author: Ian Curtis
+Date:   Fri Sep 14 20:31:34 2018 +0000
+
+    updated command line help
+
+Commit: b5f9ad96510704b6f25b25de2b2c5d738c1ab89f
+Author: Ian Curtis
+Date:   Thu Sep 13 12:50:34 2018 +0000
+
+    Quad rendering engine. Set QuadRendering = 1 in the ini file to use, or
+    -quad-rendering at the end of the command line to use.
+
+Commit: e4f5f0bcaf39defa256190f285b33882d8446780
+Author: Ian Curtis
+Date:   Sun Sep 2 21:36:24 2018 +0000
+
+    Sega bass fishing is starting some off the meshes with a shared vertex.
+    Without having a previous vertex to share with, the values were just
+    uninitialised and junk. The hardware itself seems to hold the value from the
+    previous mesh, and sega bass fishing relies on this undefined behaviour to
+    function correctly. Storing the cached vertices as member variables instead
+    of locally to the function means it holds the values from the last mesh, and
+    uses those values instead of random garbage.
+
+Commit: c1c2dedcfa878671aa801256a950cb14eed96abd
+Author: Ian Curtis
+Date:   Thu Aug 9 21:57:51 2018 +0000
+
+    remove dead variable
+
+Commit: 9f5a19a04ad50777135f86b8469556b5a194ad0d
+Author: Ian Curtis
+Date:   Mon Jul 9 08:06:06 2018 +0000
+
+    Use correct PCI IDs (Harry Tuttle)
+
+Commit: 80cf1f9b5232082e086e86d4d9be0b280db7bd3f
+Author: Ian Curtis
+Date:   Wed Jul 4 22:15:44 2018 +0000
+
+    add crosshair effect (Harry Tuttle)
+
+Commit: 73ff32a10d2088b5eac4323820a638a24c191ff2
+Author: Ian Curtis
+Date:   Mon Jun 18 10:24:46 2018 +0000
+
+    fix cast, and remove extra ; that had snuck into the shaders
+
+Commit: f9be1259c09a4c23b4d16c3722fb48a848017eb8
+Author: Ian Curtis
+Date:   Sun Jun 17 11:30:01 2018 +0000
+
+    Opaque polys definitely depth test with less than or equal. Virtua striker
+    is drawing co-planar polys for the bar gfx
+
+Commit: c7ffd0a80817a4c503b1c823d2ccf3887235dd56
+Author: Ian Curtis
+Date:   Sat Jun 16 21:31:29 2018 +0000
+
+    Draw transparent polys to separate layers and composite at the end. This
+    solves a tonne of transparency errors we had been battling with for a long
+    time. The model3 is strange in the fact it only supports a max of two
+    translucent overlapped polys. They are not blended into the frame normally.
+    Doing this means the topmost translucent polys only are visible in the
+    scene, the equivalent of doing a depth pass first, but without the added
+    cost.
+
+Commit: 7497e3f1a6f0b42a1874ac31e874ba2e09fe55fe
+Author: Ian Curtis
+Date:   Tue May 29 14:54:23 2018 +0000
+
+    forgot parentheses
+
+Commit: f9f43ca66b9c9d679b34dcc026440f398e39d3be
+Author: Ian Curtis
+Date:   Mon May 28 12:55:13 2018 +0000
+
+    
+
+Commit: c1e0e3728b8fec08b81fdde7799df79702acde5d
+Author: Ian Curtis
+Date:   Mon May 28 11:59:48 2018 +0000
+
+    optimise hash function and parse out transparency layer select bit
+
+Commit: 2af58f43526062aba2254f58734bd188d5228975
+Author: Ian Curtis
+Date:   Thu May 24 20:19:54 2018 +0000
+
+    select correct bit ..
+
+Commit: 8452d4c0ef69ea6157d3d88d96061a130facaed7
+Author: Ian Curtis
+Date:   Thu May 24 20:13:15 2018 +0000
+
+    Parse out TranslucencyPatternSelect
+
+Commit: 4d5c9e7231a0add2c7bef07e34d37fc0231af5bd
+Author: Bart Trzynadlowski
+Date:   Sun May 6 18:52:23 2018 +0000
+
+    Fixed Makefiles for non-MSYS builds. Unfortunately had to revert a lot of
+    the automated configuration that Harry had inserted. Users will again need
+    to hand-edit Makefile.Win32 for their configuration. Verbose warnings
+    (-Wall) have been restored.
+
+Commit: 4d275ba49e846bd9a7127c57bafb607680fa34a0
+Author: Ian Curtis
+Date:   Thu May 3 18:37:49 2018 +0000
+
+    Parse siblings after children. It's the only way to get Daytona water fall
+    to look correct without h/w poly sorting.
+
+Commit: 3f9b1b76e589ee857da8e1625952ae4be3b01f79
+Author: Bart Trzynadlowski
+Date:   Thu May 3 03:46:44 2018 +0000
+
+    Added a stretch mode (-stretch) and modified new renderer's viewport code
+    (hopefully correctly) to handle aspect ratio correction and widening the way
+    the legacy one does.
+
+Commit: c6b86c08126598e6527f3057f879ed5884ce36e6
+Author: Ian Curtis
+Date:   Wed May 2 20:10:02 2018 +0000
+
+    Render the opaque part of texture transparency in the first pass. Fixes
+    numerous transparency related issues in lemans24 and some in ocean hunter. I
+    don't really know if this is the 'correct' way of solving this because the
+    real3d pro-1000 is a complete black box. There is still a lot we don't
+    understand about how it handles transparency. 
+
+Commit: 11a3cdbfd14fdca9f96ab6a4f15c6570ad8dd9ec
+Author: Ian Curtis
+Date:   Tue Apr 24 13:51:53 2018 +0000
+
+    remove unnecessary copies 
+
+Commit: b39de6e4df8292c349203a55ea6179dde5df81be
+Author: Ian Curtis
+Date:   Fri Mar 30 12:04:27 2018 +0000
+
+    Fix controller inputs (Spindizzi)
+
+Commit: 934941423a13fd8a6d4f6e1ab2721417cbc1ee9a
+Author: Bart Trzynadlowski
+Date:   Mon Mar 26 23:02:30 2018 +0000
+
+    Inconsequential typo
+
+Commit: b5f1b7a2fd1555d2692323f3a87236d9f862421b
+Author: Bart Trzynadlowski
+Date:   Mon Mar 26 23:01:18 2018 +0000
+
+    Reverted version to 0.3a-WIP. Release version will be updated to 0.4a.
+
+Commit: f0ea6b45a8b2c291dccefd17dca99b42f5708ff6
+Author: Bart Trzynadlowski
+Date:   Mon Mar 26 22:59:06 2018 +0000
+
+    Added ability to load save state at startup using -load-state or
+    InitStateFile (in config file)
+
+Commit: d21e71dced5266c9dbeefce11f192189d278bc3a
+Author: Ian Curtis
+Date:   Wed Mar 21 10:26:05 2018 +0000
+
+    work around for non working jtag code in star wars
+
+Commit: b184ca3e1b38bdf6879b731cc282110efb04dfe7
+Author: Ian Curtis
+Date:   Sat Mar 10 09:13:28 2018 +0000
+
+    Clamping must be applied before the spotlight is applied on step 1.0 h/w. 
+
+Commit: 609d1ba19fd53a111d3a61e64072f61e11e3d8ee
+Author: Ian Curtis
+Date:   Thu Mar 8 14:27:28 2018 +0000
+
+    Fix step 1.0 games with NET_BOARD defined (Spindizzi)
+
+Commit: d8572a923a1dcf0498cf736858db21ac8bc59c69
+Author: Ian Curtis
+Date:   Sat Feb 24 15:53:18 2018 +0000
+
+    Update network code (Spindizzi)
+
+Commit: 995cf6adb069ad56b2199ecd83f37ceda868e941
+Author: Ian Curtis
+Date:   Mon Jan 29 19:33:29 2018 +0000
+
+    white space
+
+Commit: 10cefb7c618df7745eae297bf4c68598683e7c92
+Author: Ian Curtis
+Date:   Mon Jan 29 19:31:23 2018 +0000
+
+    Support both types of lightgun in lost world. 2nd type fixes some missing
+    fx. Thanks to Any for pointing this out. To use the old type change
+    analog_gun1 to gun1 in the xml file.
+
+Commit: 6bc4224154f0f649f0f7722930647b727089f44f
+Author: Ian Curtis
+Date:   Thu Jan 25 21:07:22 2018 +0000
+
+    fix a few compile warnings
+
+Commit: b210636c1c3f31893483d2e40eef11660d6157c9
+Author: Ian Curtis
+Date:   Thu Jan 25 21:03:43 2018 +0000
+
+    Add the netboard stuff to the ini file. Stops crashes when they are missing.
+
+Commit: 820f27cea108435e3ece5970231331cbe1a6d9d0
+Author: Ian Curtis
+Date:   Thu Jan 25 20:40:05 2018 +0000
+
+    A hack to get spikeout to work (uncomment to enable) (Spindizzi)
+
+Commit: 964f08c894e23afcc5eecaa7db562ad59739327a
+Author: Ian Curtis
+Date:   Thu Jan 25 20:38:31 2018 +0000
+
+    Disable the netboard if EmulateNet=0 (Spindizzi)
+
+Commit: 85a638bc06079d9dedcab4b48f6c3658d4d83d2a
+Author: Ian Curtis
+Date:   Mon Jan 22 21:10:20 2018 +0000
+
+    remove extra qualifier 
+
+Commit: 04758e38b6d3e94ee5c07e761c8aa10f3304b131
+Author: Ian Curtis
+Date:   Mon Jan 22 21:01:35 2018 +0000
+
+    Update make files and fix build for the various options (Harry Tuttle)
+
+Commit: b5bbda67d03673f61f9d785bd8e0a1b94ed82cb7
+Author: Ian Curtis
+Date:   Mon Jan 22 18:27:51 2018 +0000
+
+    fix header files
+
+Commit: 571d1060ee0f919b88b1a9a56ddadcc0219e4c33
+Author: Ian Curtis
+Date:   Sun Jan 21 15:09:11 2018 +0000
+
+    Remove using namespace std from the header files ..
+
+Commit: 8266eecabbb33610bb2d3f7caa30cfbf93f66f4f
+Author: Ian Curtis
+Date:   Mon Jan 15 21:27:21 2018 +0000
+
+    Parse out line of sight position. Only known to be used by scud.
+
+Commit: 99b5b9ba1b396a257963569be156c2cfff51de09
+Author: Ian Curtis
+Date:   Mon Jan 15 14:40:59 2018 +0000
+
+    make the logic a bit clearer
+
+Commit: 22a6166b82c8faa6ca8eb6d1f87bb11e28258e92
+Author: Ian Curtis
+Date:   Mon Jan 15 13:08:39 2018 +0000
+
+    fix Ian's bad maths :)
+
+Commit: a1350d95a241365b1adb67051eb31bd234fe16e5
+Author: Ian Curtis
+Date:   Sun Jan 14 12:56:24 2018 +0000
+
+    Update microtexture coordinate logic (Harry Tuttle)
+
+Commit: 303c77fbbeadce59d065cf382f04a310da13daf4
+Author: Ian Curtis
+Date:   Sat Jan 13 15:49:58 2018 +0000
+
+    fix illegal xml character sequence
+
+Commit: 863ea95013234a33464d7f00de8321dd40053d26
+Author: Ian Curtis
+Date:   Wed Jan 10 20:37:21 2018 +0000
+
+    simplify maths
+
+Commit: adb5196625791d5c3752d2938b7f43db7b3136f9
+Author: Ian Curtis
+Date:   Wed Jan 10 16:12:33 2018 +0000
+
+    comment out unneeded code
+
+Commit: d708ce9ba23bed1bbcd68245cb622d9080b2a07a
+Author: Ian Curtis
+Date:   Wed Jan 10 16:08:02 2018 +0000
+
+    top/bottom were swapped for off axis projection
+
+Commit: 6efa03112e8828f11f2b831df00cc17c9c6c1e2b
+Author: Ian Curtis
+Date:   Mon Jan 8 18:35:42 2018 +0000
+
+    Rewrite projection maths based upon previously unknown viewport values. The
+    previous values used roughly worked as the normals for frustum planes.
+    Perhaps they were only used for culling and not actually rendering, as
+    sometimes the values don't work correctly.
+
+Commit: cf7850602b26220466f6c517876121425b1eede3
+Author: Ian Curtis
+Date:   Mon Jan 8 00:13:23 2018 +0000
+
+    fix build
+
+Commit: 0b6da91cc097af3f364da3f5b35cc82e1c14624f
+Author: Ian Curtis
+Date:   Sun Jan 7 14:07:59 2018 +0000
+
+    add the rest of the network board code (Spindizzi)
+
+Commit: dc3048df24431d16852ae0755fee312497ff7b10
+Author: Ian Curtis
+Date:   Sat Jan 6 11:19:04 2018 +0000
+
+    use the correct c++ deleters 
+
+Commit: 19e6aab1fa4614f28a92f55424d846cccf3f32a2
+Author: Ian Curtis
+Date:   Sat Jan 6 01:18:14 2018 +0000
+
+    use a few macros to make debugging less painful
+
+Commit: 314279ed257e7ccd3bf234cd8d675062d2f7bbf9
+Author: Ian Curtis
+Date:   Thu Jan 4 19:14:12 2018 +0000
+
+    Add network board emulation. Currently not linked with the rest of the
+    project.
+
+Commit: f7678d918e6cb96eebad9d587944e3249cfeb706
+Author: Ian Curtis
+Date:   Wed Jan 3 17:51:24 2018 +0000
+
+    remove using namespace from headers ..
+
+Commit: 53c98283aa6749bee1b7b25992d37376414100ef
+Author: Ian Curtis
+Date:   Wed Jan 3 16:19:10 2018 +0000
+
+    rename to avoid clash with a #define
+
+Commit: 3ab93cf6eea1abba891a97da7cd3611d5082436f
+Author: Ian Curtis
+Date:   Tue Jan 2 18:54:34 2018 +0000
+
+    add asynchronous sending functions 
+
+Commit: 58dc18cd119dc7f607d382c74ad712cf9f217fe0
+Author: Ian Curtis
+Date:   Fri Dec 29 11:46:38 2017 +0000
+
+    remove dead variable 
+
+Commit: 78ae00faf1fd337b89eb7710a1b80b3dad15ee9d
+Author: Ian Curtis
+Date:   Fri Dec 29 11:42:03 2017 +0000
+
+    Add basic networking files to supermodel. Currently these are win32 specific
+    but can port to SDL or whatever later.
+
+Commit: 080acd08c23908ec0aa6dfbfcabb42ffe2e07aee
+Author: Ian Curtis
+Date:   Thu Dec 21 11:14:06 2017 +0000
+
+    Fix the smallest texture lods  (Harry Tuttle)
+
+Commit: a772dd32fc0a9197c3ae43dff84c0eb3a0ba873f
+Author: Ian Curtis
+Date:   Wed Dec 20 18:47:17 2017 +0000
+
+    fix array out of bounds 
+
+Commit: 4702fef33eb172ffd75f874bb4fd5dee47371fa5
+Author: Ian Curtis
+Date:   Tue Dec 19 11:43:17 2017 +0000
+
+    remove debug code
+
+Commit: 429d6cbb02ba43bdecb4fce3f63750fbff2d1deb
+Author: Ian Curtis
+Date:   Sun Dec 17 23:02:25 2017 +0000
+
+    mark as static
+
+Commit: cc28d5f00eedaa3a1274c52ea170b2deb709245e
+Author: Ian Curtis
+Date:   Sun Dec 17 22:25:50 2017 +0000
+
+    Implement sub 8x8 tile encoding. Fixes incomplete mipmap chains which
+    previously only went down to 8x8 pixels before. It wasn't known these
+    textures existed before. (Harry Tuttle)
+
+Commit: cede67468c3174d66fc076ffcf7746c3b0486a06
+Author: Ian Curtis
+Date:   Wed Dec 13 01:21:25 2017 +0000
+
+    Fix some bad/missing textures in fighting vipers. The game is referencing
+    totally illegal texture sizes. The real h/w was just handling it somehow,
+    whilst we were returning null for the textures. This might produce junk
+    textures for the lower mipmaps, but this can be clamped in a later update.
+
+Commit: 62d9584b0d100135bcb5a7ea1f3842a81ebc0c31
+Author: Ian Curtis
+Date:   Thu Nov 23 17:51:51 2017 +0000
+
+    Shift fog maths to fragment shader to fix bug in virtua on.
+
+Commit: bddc86aba9734a409d84fa617fb7ddca0272e8c3
+Author: Ian Curtis
+Date:   Mon Nov 20 22:21:15 2017 +0000
+
+    The vertex shader is run before clipping is done. If fogging values are
+    calculated and clamped in the vertex shader it can interpolate bad values,
+    since the range has been truncated. This happens if the polys overlap the
+    near plane. The solution to clamp the values in the fragment shader. This
+    fixes a bunch of fogging errors I long thought were transparency related
+    errors in the ocean hunter.
+
+Commit: bc7f1e9faccff5dfb3884dd3ff60078b1c1ee04b
+Author: Ian Curtis
+Date:   Tue Nov 7 00:15:57 2017 +0000
+
+    Fixed shading also works with untextured polys. Fixes some shading issues in
+    La machineguns. (Harry Tuttle)
+
+Commit: df44ad458b98debcca77f59efd73a0194b8acc64
+Author: Ian Curtis
+Date:   Sun Nov 5 13:25:33 2017 +0000
+
+    Update step 1.5 luminous logic with Harry's findings. Fixes various shading
+    issues.
+
+Commit: 8e13c3bbb950240bbafb38d544fa37c0d61f46d4
+Author: Ian Curtis
+Date:   Thu Oct 19 20:48:53 2017 +0000
+
+    Finish the hash function (Harry Tuttle)
+
+Commit: 7f6df0cc8430f5de88a24dcb0a6bbc33e6d79c6b
+Author: Ian Curtis
+Date:   Sat Oct 7 12:39:30 2017 +0000
+
+    Remove fixed shading check from specular.
+
+Commit: 4d685e07500c730ae9f64c9a90983493d9905955
+Author: Bart Trzynadlowski
+Date:   Fri Oct 6 01:04:49 2017 +0000
+
+    Makefile fixes: Moved Windows-specific source files out of Makefile.inc,
+    using 'bin' and 'obj' when bits are not explicitly set, and changed output
+    file to Supermodel rather than Supermodel.exe, which works on all platforms.
+
+Commit: eb798ed15ed55733ea705105c56e166da066c691
+Author: Ian Curtis
+Date:   Thu Oct 5 19:15:00 2017 +0000
+
+    Star wars is the only game to pass unsigned fixed shaded values (per vertex
+    brightness) to the renderer. Originally we thought that the specular flag
+    would turn on unsigned values since it's the only game to set specular with
+    these polys, but this logic turned out to be incorrect. The JTAG interface
+    seems to config the GPU to turn on this functionality. (Harry Tuttle)
+
+Commit: 7c84bc6aebf72cf8f9657f06a48f58775a00cc20
+Author: Ian Curtis
+Date:   Thu Oct 5 18:54:36 2017 +0000
+
+    update visual studio project
+
+Commit: 43cf6b3bbf8f4a5820abf78464623c775bb60550
+Author: Ian Curtis
+Date:   Thu Oct 5 18:49:08 2017 +0000
+
+    update spotlight code (Harry Tuttle)
+
+Commit: cee468b2bca271e0bd18e0dcaa4fe0d470e2ed37
+Author: Bart Trzynadlowski
+Date:   Thu Oct 5 02:17:48 2017 +0000
+
+    Harry's patch: add dirtdvlsj and change "Star Wars Trilogy" to "Star Wars
+    Trilogy Arcade"
+
+Commit: 2397b8225aab0fcf407811519b4b6382d9924a66
+Author: Bart Trzynadlowski
+Date:   Thu Oct 5 02:14:02 2017 +0000
+
+    New, saner Makefiles. They still require some customization but share a core
+    Makefile include with auto-generation of dependencies. Multi-threaded
+    building (e.g., make -j6) is supported now.
+
+Commit: 9bac7836edcab415362f92900c190096f77ded05
+Author: Ian Curtis
+Date:   Sat Sep 30 19:05:04 2017 +0000
+
+    add missing header
+
+Commit: 3ca37089ca722ed46f4b3008448a8141c591b3ea
+Author: Bart Trzynadlowski
+Date:   Wed Sep 27 13:20:09 2017 +0000
+
+    Get rid of unused variable warning
+
+Commit: 0afd9026dccb44bd4d78cb68c0143be9c48eaa3b
+Author: Ian Curtis
+Date:   Tue Sep 26 00:30:08 2017 +0000
+
+    Fix the sky in one of the levels in virtua on. The problem was caused by the
+    fact we didn't split the mesh by the fog % burn through, so all the polys
+    had the same value. We could use a vertex attrib, but % burn through fog is
+    so rarely used and when it is, normally every poly in the mesh has the same
+    value.
+
+Commit: 1eac755bc371c034ed0bb9855803e5f9092000b6
+Author: Bart Trzynadlowski
+Date:   Mon Sep 25 00:05:10 2017 +0000
+
+    Fix tiny memory leak
+
+Commit: 18f460db6fb1327d6f781d2d06735b05082bbb96
+Author: Ian Curtis
+Date:   Sun Sep 24 22:49:20 2017 +0000
+
+    
+
+Commit: da1342b5d9399baf1c04de5805840bad4f0227b2
+Author: Ian Curtis
+Date:   Sun Sep 24 22:39:53 2017 +0000
+
+    update project files
+
+Commit: 0376f74192dbeb69898d0cd4efb0f951d719e4cf
+Author: Ian Curtis
+Date:   Sun Sep 24 22:36:12 2017 +0000
+
+    work around for visual studio bug 
+
+Commit: adecec77de51c98c12d0f039760d34d7ba3db3fa
+Author: Ian Curtis
+Date:   Sun Sep 24 22:14:39 2017 +0000
+
+    fix missing header
+
+Commit: 7590f50350634f64a2c1d4083a8df941e66d8ee7
+Author: Ian Curtis
+Date:   Sun Sep 24 22:03:31 2017 +0000
+
+    cannot specify explicit initializer for arrays - fix for visual studio
+
+Commit: 55bb02d4e5d75c10eb527d1d4d32759acf67445e
+Author: Bart Trzynadlowski
+Date:   Sun Sep 24 20:52:48 2017 +0000
+
+    - New work-in-progress frame timing code (disabled by default, compile with
+    NEW_FRAME_TIMING defined to activate it)
+    - New JTAG emulation, moved into its own class, CJTAG
+    - Removed game-specific sun clamp hacks from CNew3D (JTAG and Real3D
+    emulation will call the appropriate method to configure this at run-time)
+    - Removed JTAG from Real3D save state data and reused some of that space for
+    new state variables having to do with the internal JTAG-based config as well
+    as new frame timing state variables
+
+Commit: c4f8471d7acb1dc31888519a5daf6fccf3192a9f
+Author: Bart Trzynadlowski
+Date:   Sun Sep 24 20:49:31 2017 +0000
+
+    Added functions to safely read and write bools
+
+Commit: 1db2f6bb847840b91ba858bde5cd2e309ef0321d
+Author: Bart Trzynadlowski
+Date:   Sun Sep 24 18:40:58 2017 +0000
+
+    Added functions to extract bits as integer values and updated comment about
+    bit vector layout
+
+Commit: 3041ca19220dfa69092d96e4a7245e98ff7964f4
+Author: Bart Trzynadlowski
+Date:   Sat Sep 23 16:08:27 2017 +0000
+
+    Added SetOnes() and SetZeros()
+
+Commit: c3eef706e8f22ed8558da57a2164d726a2a20ccd
+Author: Bart Trzynadlowski
+Date:   Sat Sep 23 15:40:20 2017 +0000
+
+    Safe guard against shifting empty register.
+
+Commit: 98b0354dd6870dcdfc05ecbfd34f4a09932c9987
+Author: Bart Trzynadlowski
+Date:   Sat Sep 23 15:33:26 2017 +0000
+
+    Hex formatting support extended to 64 bits.
+
+Commit: 61a0517bd9d0642ee7f4cdbc72e80e4934e3acd2
+Author: Bart Trzynadlowski
+Date:   Sat Sep 23 15:03:06 2017 +0000
+
+    Added ShiftOutLeft() and ShiftOutRight()
+
+Commit: 7a2e6b393a12fae1564aa8b0d920ee7a1893355b
+Author: Bart Trzynadlowski
+Date:   Sat Sep 23 14:42:05 2017 +0000
+
+    Renamed shift in/out functions to add/remove to be less ambiguous about
+    their functionality
+
+Commit: 86631695d7ff3600ed49f4323491dbc7fb6b4236
+Author: Bart Trzynadlowski
+Date:   Tue Sep 19 19:43:06 2017 +0000
+
+    Added ToHexString() and made ostream serialization use this
+
+Commit: e12a945dddbea4ef99b6b623f60f2728a09846fe
+Author: Bart Trzynadlowski
+Date:   Mon Sep 18 04:24:23 2017 +0000
+
+    Fix for VS2015 and newer by MetalliC
+
+Commit: f2030ac125fb787a5a23991e5f16001671fc3a26
+Author: Bart Trzynadlowski
+Date:   Thu Sep 7 19:33:25 2017 +0000
+
+    Added BitRegister class (for use in upcoming JTAG refactor): an inefficient
+    but flexible container for manipulating a dynamic bit stream.
+
+Commit: a3e2fb790603f8cdbcee2f21ba352fd51bdefc39
+Author: Ian Curtis
+Date:   Wed Sep 6 13:07:39 2017 +0000
+
+    Calculating the length of the vertex results in quite broken values for
+    fogging when the vertices are traversing the view frustum. The hardware also
+    wouldn't have been doing a square root per vertex for fogging. Simply using
+    the z values is enough. Todo check clamping of values for the near/far
+    planes.
+
+Commit: 2786d95795e48a77cd6200c256849b98a2bfe8ad
+Author: Ian Curtis
+Date:   Sat Sep 2 14:54:16 2017 +0000
+
+    add interface for sun clamp
+
+Commit: 266c9111332b01fbeed05847302bc3d28101fb80
+Author: Ian Curtis
+Date:   Wed Aug 30 21:45:25 2017 +0000
+
+    Optimise vertex data to cut down on unnecessary copying 
+
+Commit: 165926aa0605b3fc174cd942ccbc48fa77b00fd0
+Author: Ian Curtis
+Date:   Tue Aug 29 10:27:29 2017 +0000
+
+    Modern hardware does backface culling in window space by calculating the
+    face normal for the polygon, then doing a dot product against the view
+    vector. The real3d pro-1000 on the other hand passes a pre-calculated face
+    normal for each polygon which is used for culling. We were using this face
+    normal to rewind the polygons so that regular backface culling would work.
+    This worked 99.9% of the time. However this was failing on some models in
+    Virtua Striker. The reason was because the pre-calculated face normals being
+    passed were actually completely different to the actual face normals for the
+    poly (not just inverted like you would expect). This broke our code. The
+    solution was to emulate face culling directly in the vertex shader using the
+    pre-calculated face normals directly. Only minimally tested this but
+    hopefully there are no obvious regressions.
+
+Commit: f04a28572714be96e9bce16a45575ff22d31f8aa
+Author: Bart Trzynadlowski
+Date:   Tue Aug 29 01:28:21 2017 +0000
+
+    DMA and register space access for Real3D have been unified and
+    CReal3D::ReadRegister() returns little endian data now that the PowerPC
+    handler byte-swaps back, to be consistent with how DMA registers work.
+
+Commit: 50d1f95648c00c5af80e7f768d2d21eaed458c15
+Author: Ian Curtis
+Date:   Fri Aug 25 22:40:39 2017 +0000
+
+    Changed fixed shaded logic for step 1.5 hw based upon Harry's findings
+
+Commit: b21ed49512dc2a0dddf6d699c9f45db4b39d9471
+Author: Ian Curtis
+Date:   Mon Aug 21 23:00:29 2017 +0000
+
+    cosmetic
+
+Commit: cd5978773a0a7445ef9ac9226873874d815b4ecf
+Author: Ian Curtis
+Date:   Sat Aug 19 20:06:31 2017 +0000
+
+    Harry made some important discoveries with regards to fixed shading on the
+    model 3 (per vertex poly brightness values). Firstly values are allowed to
+    be negative, and they are used as a drop in replacement in the standard
+    lighting equation for the normal dot light vector. This quite radically
+    changes the brightness in LA Machine guns, but now correctly matches the
+    arcade.
+
+Commit: 94e6f9a156e6e4af46e6228d430d2486c8cbdda8
+Author: Bart Trzynadlowski
+Date:   Sat Aug 19 19:29:05 2017 +0000
+
+    Patched Sega Rally 2 DX to boot up. Enjoy Sega Rall 2 without MPEG music at
+    50% speed ;)
+
+Commit: 507990a3504b2d61100ad29efc434f0adf003f83
+Author: Bart Trzynadlowski
+Date:   Sat Aug 19 19:27:58 2017 +0000
+
+    Fixed up memory region dumping code to use the new Util::FlipEndian
+    functions
+
+Commit: 21f813ad3eba71a3db856b2421b94edd6966ec8d
+Author: Bart Trzynadlowski
+Date:   Wed Aug 16 00:58:39 2017 +0000
+
+    Fixed a bug in MCRFS instruction related to the VXSOFT, VXSQRT, and VXCVI
+    bits. Thanks to Spindizzi.
+
+Commit: 0efd4dac39df400302d3855a9747be455c0d0051
+Author: Ian Curtis
+Date:   Tue Aug 15 23:21:57 2017 +0000
+
+    Finish fixed shading for 2.0 hardware. I'm pretty sure it actually works
+    identically to step 1.5 hardware. The oddball is LA machine guns where the
+    viewport ambient doesn't seem to effect the brightness. But the ambient
+    works differently in this game because it uses the unclamped light model.
+    Still need to investigate if the diffuse factor effects fixed shading.
+
+Commit: b1cc9a615de723d4783ee9bb406ab234a160a7df
+Author: Ian Curtis
+Date:   Tue Aug 15 20:50:36 2017 +0000
+
+    With fixed shading, when lighting is disabled, fixed shading appears to be a
+    flat shaded version based upon the poly colour, instead of per vertex
+    attributes.
+
+Commit: 2422caadc617b99f1ea2bcdf23d3d76202ea9f6e
+Author: Ian Curtis
+Date:   Tue Aug 15 20:45:08 2017 +0000
+
+    Pad struct and align on 4 byte boundary.
+
+Commit: eac76f09081636d2dc9d85ff7fbdc28992e5564f
+Author: Ian Curtis
+Date:   Mon Aug 14 23:30:34 2017 +0000
+
+    simplify
+
+Commit: 81188bee07725f22ff20be50855a4960d6049284
+Author: Ian Curtis
+Date:   Mon Aug 14 16:10:26 2017 +0000
+
+    fixed shading doesn't effect the alpha channel
+
+Commit: c12e4c321585d3bd69134f6a40ed5bc508ce750d
+Author: Ian Curtis
+Date:   Mon Aug 14 09:14:06 2017 +0000
+
+    Fixed shading (per vertex poly colours) on step 1.5 hardware have the
+    viewport ambient value added to them. This fixes various shading on scud. To
+    do this had to switch the maths to the vertex shader.
+
+Commit: 8f622714a75a7ce2e077e32a86e713910184f140
+Author: Ian Curtis
+Date:   Fri Aug 11 11:59:41 2017 +0000
+
+    Fix attribute locations. glBindAttribLocation must be called linking
+
+Commit: a315627401b9fbb16edf778076777dac4387955c
+Author: Bart Trzynadlowski
+Date:   Fri Aug 11 00:41:10 2017 +0000
+
+    Added support for loading shaders from files for new engine and tile
+    renderer. Changed help text to reflect new engine being default.
+
+Commit: 7dc1eac614a7829bd456d90d1a889d1c054d8f6a
+Author: Ian Curtis
+Date:   Thu Aug 10 15:59:16 2017 +0000
+
+    make the new3d engine default :] Legacy engine can still be selected using
+    -legacy3d in the command line
+
+Commit: d7403afda6862bffc24825060a183770d4cd42ba
+Author: Ian Curtis
+Date:   Thu Aug 10 15:43:03 2017 +0000
+
+    use generic vertex attributes
+
+Commit: 57d0a513fd89a4b2418bb51c8deba65b7604f481
+Author: Ian Curtis
+Date:   Wed Aug 9 23:25:01 2017 +0000
+
+    Technically matrix casts are only allowed in glsl 1.2 and later
+
+Commit: 063b7d3ea4db4d92e42c633fb21e7830e3767b7b
+Author: Ian Curtis
+Date:   Wed Aug 9 21:40:48 2017 +0000
+
+    Remove debug code
+
+Commit: 5709ee265929cf682237fd34ec70441cb10bdf5d
+Author: Ian Curtis
+Date:   Wed Aug 9 16:56:56 2017 +0000
+
+    Sometime ago I managed to work out that specular on the model3 is not real
+    specular, and really is just an extension of diffuse lighting. But attempts
+    were derailed by corner cases and the fact we were not handling the normals
+    correctly. Anyway Harry managed to successfully come up with an algorithm,
+    and coefficients that give an almost perfect match to specular on the
+    model3, based soley on observations from video footage! He also worked out
+    that the lighting on hardware 1.5 onwards appears to be unclamped (ie
+    greater than 1). This quite radically changes the brightness of some of the
+    games, but much better matches the original hardware.
+
+Commit: 1d338877fc9fefc5cfa207ace58cf1f441985c60
+Author: Ian Curtis
+Date:   Thu Aug 3 11:05:04 2017 +0000
+
+    cosmetic
+
+Commit: 3fc28159eb2d89718ca5db70c844c450a4d85e58
+Author: Ian Curtis
+Date:   Thu Aug 3 10:41:18 2017 +0000
+
+    Add the unclamped light model we know exists to the shaders.
+
+Commit: b1bd877b82e99827e141ede02cab5fcccb8a2cd4
+Author: Ian Curtis
+Date:   Tue Aug 1 23:48:53 2017 +0000
+
+    Ski champ for some reason is passing denormalised numbers for the
+    modelscale. This is causing a NaN in our shader killing the lighting for
+    these models, so we simply skip these, since they are essentially zero
+    anyway. Thanks to Harry for finding this bug :)
+
+Commit: 9aa3f137777ad836580edee37db5898a67cfb957
+Author: Ian Curtis
+Date:   Sat Jul 29 16:30:30 2017 +0000
+
+    We were force normalising the result of matrix * normal, which looked
+    correct in most cases. But this didn't preserve the scaling of the matrix,
+    or the scaling of the model normals which resulted in many over bright
+    areas. On it's own this generally worked, but games like Star Wars looked
+    quite broken. Harry correctly figured out if you scale these normals by the
+    scaling value that is sometimes present in the culling nodes the lighting
+    looks correct. Still more work to do to correctly figure out the model3's
+    lighting model.
+
+Commit: a9b49c16768629785b842653c309fdd648ca00c3
+Author: Ian Curtis
+Date:   Sat Jul 22 17:15:14 2017 +0000
+
+    Implement unclamped light model based upon Harry's findings. Unknown how
+    this is turned on/off.
+
+Commit: 2335f3173bb2035077188439aa270ab97dd7e4a4
+Author: Ian Curtis
+Date:   Sat Jul 8 10:55:14 2017 +0000
+
+    Use c++11 raw string literals
+
+Commit: 3efb055344fc2436389efb9ba6a205a674456493
+Author: Ian Curtis
+Date:   Thu Jun 29 19:05:30 2017 +0000
+
+    Clamp the ambient light to a max of 0.75. LA Machine guns seems to use an
+    ambient value of 1, which is full bright for everything. But for some reason
+    the hardware seems to treat this as ~ 0.75. This fixes various missing
+    shading in the game. This doesn't seem to have any negative effects on other
+    games I have tested. Clamping in the shader as we might need the full range
+    of values for fixed shading.
+
+Commit: 9e9a549283ce4bcc43ead58b99adf5f971969351
+Author: Ian Curtis
+Date:   Sun Jun 25 20:09:45 2017 +0000
+
+    remove WIP code
+
+Commit: ec3872d1081677489d9ac934ae5165024b4f7abe
+Author: Ian Curtis
+Date:   Sun Jun 25 19:50:02 2017 +0000
+
+    convert sun angle coordinate system outside of the shader
+
+Commit: 97781108e8b30e9305ffd9e6d023262005f4921e
+Author: Ian Curtis
+Date:   Wed Jun 21 17:04:53 2017 +0000
+
+    A second go at fixing the fixed lighting in star wars .. Fixed shading is
+    per vertex poly colours. For some reason in star wars they are treated as
+    unsigned values instead of signed, like in every other game. These polys are
+    all marked with specular enabled, where as in the rest of the games they are
+    missing this flag. That's the only difference I can find.
+
+Commit: 1532168af79726d0141298180c1a0bd1b17c8ac4
+Author: Ian Curtis
+Date:   Tue Jun 20 21:44:58 2017 +0000
+
+    fix double offset
+
+Commit: b00315b072617c558aa250504215106f6468287a
+Author: Ian Curtis
+Date:   Tue Jun 20 20:13:42 2017 +0000
+
+    Revert previous fixed shading changes. Implement new logic for fixed shading
+    on step 1.5 hardware based upon Harry's findings.
+
+Commit: bb3c5388085b7c437ff76bbed1cff3a7005445bf
+Author: Ian Curtis
+Date:   Tue Jun 20 19:46:06 2017 +0000
+
+    remove debug code
+
+Commit: 260daa1b915d309d7e9724651bb00278521f14bd
+Author: Ian Curtis
+Date:   Sat Jun 17 16:05:54 2017 +0000
+
+    Fix the fix shading in star wars. Fixed shading still needs some work for
+    mag truck and dirt devils to match the arcade.
+
+Commit: 73a7d2760d16d2420cb34d1c2c2e6dde727b76d9
+Author: Ian Curtis
+Date:   Wed Jun 7 23:16:22 2017 +0000
+
+    cosmetic
+
+Commit: 1193069709c94578d2a3a076e133a174340794d6
+Author: Ian Curtis
+Date:   Wed Jun 7 23:14:01 2017 +0000
+
+    Tweak scroll fog logic again .. should fix missing 2d fogging in Spikeout.
+
+Commit: 45741b24d2b2e22340b2a6cce504d474e0793743
+Author: Ian Curtis
+Date:   Sat May 6 16:47:31 2017 +0000
+
+    rewrite scroll fog logic
+
+Commit: 80004b0dadd13ca287c8d5d4da66855f4524d8dd
+Author: Ian Curtis
+Date:   Tue Apr 25 00:31:39 2017 +0000
+
+    Remove debug code
+
+Commit: 7694e4eb0c3898a6c3ec50f96f464aa4ca8ec8d2
+Author: Ian Curtis
+Date:   Tue Apr 25 00:10:55 2017 +0000
+
+    minor culling node optimisations
+
+Commit: ff936c588b9f2e32b4d0f94306f912ddc723fb53
+Author: Ian Curtis
+Date:   Thu Apr 20 19:46:40 2017 +0000
+
+    don't need cast, conversion is implicit
+
+Commit: 912bb0e7cf9083bc9d0938d9a645bccc62aa00b5
+Author: Ian Curtis
+Date:   Thu Apr 20 19:43:41 2017 +0000
+
+    better state handling
+
+Commit: 9b226ed4782c8e2ac4f4ea133cd1124997de1b48
+Author: Ian Curtis
+Date:   Mon Apr 17 10:40:07 2017 +0000
+
+    parse out some culling node values
+
+Commit: 3c78571615bda17ca1f40700d3904cd44462913f
+Author: Ian Curtis
+Date:   Sat Apr 15 19:00:46 2017 +0000
+
+    There are 2 bits in the polyheader labelled discard. When both are set ie in
+    sega rally, the polygons are totally discarded. Scud seems to set bit 1
+    which seems halve the opacity.
+
+Commit: 21836c088c06e1eedc85f7a1d0c8d888cd2fdeb4
+Author: Ian Curtis
+Date:   Fri Apr 14 23:41:11 2017 +0000
+
+    The real3d has a flag that allows the hw to skip polygons so that they
+    aren't rendered. Sega rally2 uses this for the dust effects. Triangles or
+    quads that have this flag are junk, and look like random corruption if you
+    try to draw them. We assumed polys that shared vertices with these bad
+    polygons were also bad. It turns out the last few shared vertices in these
+    polys were in fact valid, and thus the entire quad/triangle strip should be
+    drawn and not discarded. 
+
+Commit: a2fcbf8a3a5e33dba44b02ee91d793a71e268fc2
+Author: Bart Trzynadlowski
+Date:   Fri Apr 14 17:09:33 2017 +0000
+
+    Linux Makefile fixed by Sergio Benjamin
+
+Commit: fc50bdee989de3f5358a8827761ed5b60245d395
+Author: Ian Curtis
+Date:   Fri Apr 14 00:08:17 2017 +0000
+
+    light parameters must be clamped (HarryTuttle)
+
+Commit: 391aafd4c1f6bcf1caa72eac730b84f839d5a7ca
+Author: Ian Curtis
+Date:   Wed Apr 12 15:47:57 2017 +0000
+
+    Virtua fighter has a few massive polys that shouldn't be visible. It looks
+    like these polys have a bad matrix, but the node distances are all zero.
+    This means the bounding box that encapsulates them is of size zero. Skipping
+    over these entirely seems to fix the issue.
+
+Commit: 4a70d5ec9ab40e76de44fba29419187abf9ce0bf
+Author: Bart Trzynadlowski
+Date:   Wed Apr 12 02:41:02 2017 +0000
+
+    Updated Util::Config::Node unit tests with multiple leaf node test
+
+Commit: e462fbeda0bd667e0379415fcd571750a1bd08f5
+Author: Ian Curtis
+Date:   Tue Apr 11 11:11:45 2017 +0000
+
+    remove unused variable
+
+Commit: 76817790d4429e397b214be58e5698007becd78a
+Author: Bart Trzynadlowski
+Date:   Tue Apr 11 07:03:47 2017 +0000
+
+    Extended -gfx-state to produce culling node analysis
+
+Commit: 9dd2b24729d6c6abaa8bb5840d89fca694600b13
+Author: Bart Trzynadlowski
+Date:   Tue Apr 11 07:03:10 2017 +0000
+
+    Fixed behavior of Util::Config::Node when adding nested nodes (only leaf
+    level can be duplicated; e.g., foo/bar and foo/bar will create one foo with
+    two bar children, rather than two foo each with one bar).
+
+Commit: 901b8c3fa4567ab5eb5099d425f6ef0c8ef23968
+Author: Bart Trzynadlowski
+Date:   Sun Apr 9 15:27:43 2017 +0000
+
+    Spindizzi's SCSP DSP fix for the VF3TB cave stage
+
+Commit: 9989eae8aaa63c2eb549d89ba87e0546d892d963
+Author: Bart Trzynadlowski
+Date:   Sun Apr 9 15:08:02 2017 +0000
+
+    Hooked up the command line help options (thanks, Spindizzi!) and updated
+    copyright info
+
+Commit: 53fcb57ec5d9e4ae42da46c56bd9182ccef48831
+Author: Bart Trzynadlowski
+Date:   Sun Apr 9 00:10:38 2017 +0000
+
+    Removed unnecessary patches from lemans24
+
+Commit: 06cb5708e334c78c2f76d6faf4f1513f71d456e4
+Author: Ian Curtis
+Date:   Sat Apr 8 21:01:11 2017 +0000
+
+    add missing include
+
+Commit: a649a0d36beb187b434f8075b4e7fc9224a120cb
+Author: Bart Trzynadlowski
+Date:   Sat Apr 8 18:30:29 2017 +0000
+
+    Removed patches from source code and moved them into game XML file. Created
+    ROMSet.cpp. Print a more descriptive error when game XML file fails to load.
+
+Commit: 86ffda66d8d450c1b7fb57ed7d1c1e13fccaa53a
+Author: Bart Trzynadlowski
+Date:   Sat Apr 8 18:28:49 2017 +0000
+
+    Updated help text to include -game-xml-file option
+
+Commit: c8053e31787c2ebb06466e6e09024584542ca0af
+Author: Bart Trzynadlowski
+Date:   Sat Apr 8 18:16:26 2017 +0000
+
+    Moved ROM patches into Games.xml and added patches to swtrilgy to make test
+    emu work and to eca/ecau to pass the network check
+
+Commit: 788a480ff32d686b363a1e1db9f17ae4e4b136c7
+Author: Ian Curtis
+Date:   Fri Apr 7 15:47:36 2017 +0000
+
+    add missing include
+
+Commit: 006260be47aa5a384b995868ca391a84ef9f91ca
+Author: Bart Trzynadlowski
+Date:   Fri Apr 7 04:42:04 2017 +0000
+
+    Harry Tuttle's fixes to fishing controls: invert fishing rod y and fishing
+    stick y axis values so setting a negative axis is not necessary. Also
+    changed reel to an analog input (similar to a pedal), whose neutral position
+    is 0.
+
+Commit: 4ca7d5ef0e340b2a45732a3bdca14ad5bee0278b
+Author: Bart Trzynadlowski
+Date:   Fri Apr 7 04:30:27 2017 +0000
+
+    Harry Tuttle's change to Harley gear shift to use a single bit instead of
+    two (no detectable difference in behavior, though)
+
+Commit: 205282a7588b2e1dcdf6920d43e53c521bcee814
+Author: Bart Trzynadlowski
+Date:   Thu Apr 6 03:23:32 2017 +0000
+
+    Removed unused file: Game.cpp 
+
+Commit: 25f22724d70e93e52e1b4c75f6976a8f0fadda4c
+Author: Bart Trzynadlowski
+Date:   Wed Apr 5 20:57:40 2017 +0000
+
+    Fixed lamachin title -- thanks Jiterdomer!
+
+Commit: 101e43213edb2f6d8b334e9dd42e15b763ef9ec0
+Author: Ian Curtis
+Date:   Wed Apr 5 19:32:01 2017 +0000
+
+    cosmetic 
+
+Commit: edfb521a9be36d741f1d245ee3b3635aaa9f5677
+Author: Ian Curtis
+Date:   Wed Apr 5 17:57:38 2017 +0000
+
+    Daytona seems to use this completely undocumented feature of the real3d
+    pro-1000, the ability to invert texture colours. This patch fixes the
+    colours on the cars, and the signs which should flash by alternating their
+    colours.
+
+Commit: cc32e0bf8e70d5377b35e44a96141374f969055c
+Author: Bart Trzynadlowski
+Date:   Wed Apr 5 16:19:08 2017 +0000
+
+    Removed last vestiges of CINIFile from input system and removed Games.cpp,
+    INIFile.cpp, and ROMLoad.cpp
+
+Commit: df283d9aa3f9d3a3478a0d607d730c0525dbce53
+Author: Bart Trzynadlowski
+Date:   Wed Apr 5 16:17:57 2017 +0000
+
+    Using Game::INPUT_* instead of obsolete GAME_INPUT_*
+
+Commit: c013eab71177b771bfbd160517b79e5320fbb1b4
+Author: Bart Trzynadlowski
+Date:   Wed Apr 5 05:35:45 2017 +0000
+
+    Changes by Harry Tuttle: game list more accurately reflects MAME's, added a
+    root level XML "games" node, print ROM version along with title
+
+Commit: f6707ecfbaac8a80d97516a1fdc7638926db36b1
+Author: Bart Trzynadlowski
+Date:   Tue Apr 4 23:28:06 2017 +0000
+
+    Fixed graphics state analyzer 
+
+Commit: c4bf565a1a848933fcb4e8d0bd69bbf5a8590eca
+Author: Bart Trzynadlowski
+Date:   Tue Apr 4 23:27:39 2017 +0000
+
+    Added cstring
+
+Commit: ad6b4b0e7175dee094bf214f76765d0dedcaa99b
+Author: Bart Trzynadlowski
+Date:   Tue Apr 4 05:27:37 2017 +0000
+
+    Added remaining games largely thanks to the efforts of the mysterious '阳阳'
+
+Commit: 4ebcf5865a03bb61639ff5a46f44430acdb2fea9
+Author: Ian Curtis
+Date:   Mon Apr 3 12:02:49 2017 +0000
+
+    more whitespace ..
+
+Commit: a141635be63e73c6b451b8ac6c7e5cff6e35de4c
+Author: Ian Curtis
+Date:   Mon Apr 3 12:01:37 2017 +0000
+
+    white space ..
+
+Commit: c617a453facb4ab3c8af6e291c77bedd4d4a19cc
+Author: Ian Curtis
+Date:   Mon Apr 3 12:00:25 2017 +0000
+
+    Cache dereferenced values. Cuts loading time from 15 to 5 seconds in debug
+    mode :)
+
+Commit: 5aafbbf936dbd1da0732d37b7200964519f85481
+Author: Bart Trzynadlowski
+Date:   Mon Apr 3 05:34:23 2017 +0000
+
+    Included cstring for memcpy
+
+Commit: 2aa9dc7967a3e8115f8c654b57e14c0bf6c90b3f
+Author: Bart Trzynadlowski
+Date:   Mon Apr 3 01:03:38 2017 +0000
+
+    Rewrote large parts of ROM loading code to more gracefully handle merged
+    sets where overwritten parent ROMs are not present. Better handling of
+    multiple zip files. Optimized ROM loading when stride and chunk size are
+    equal and got rid of safety checks that I don't believe are necessary any
+    longer.
+
+Commit: f0e00c5dc7c8d09bfd8ab3bb1045f45967d70be4
+Author: Ian Curtis
+Date:   Sun Apr 2 21:03:59 2017 +0000
+
+    Rewrite the spot light code, and implement the missing fog logic.
+    (HarryTuttle)
+
+Commit: 07660be0df4c6b7892f1fb07ab0b1e60fcd91362
+Author: Bart Trzynadlowski
+Date:   Sat Apr 1 05:08:50 2017 +0000
+
+    Fixed missing file detection (set_difference requires inputs sorted by
+    desired key) and improved error reporting
+
+Commit: e04c368114d12d6187921629f9d9a830392f0401
+Author: Bart Trzynadlowski
+Date:   Fri Mar 31 05:32:16 2017 +0000
+
+    Made scuda a child set of scud
+
+Commit: 68ebf35aac3b0e963370dcfeeba2e83f24dfa38c
+Author: Bart Trzynadlowski
+Date:   Fri Mar 31 05:23:34 2017 +0000
+
+    Removed TODO comment
+
+Commit: b0957e64599b6ea5648a539fdff84487c7a730a9
+Author: Bart Trzynadlowski
+Date:   Fri Mar 31 05:23:04 2017 +0000
+
+    Smarter game selection when a zip file contains multiple games (prefer child
+    when parent is also present in zip)
+
+Commit: e40d268214a9a4e6394273b1e75e3db2cde0cb22
+Author: Bart Trzynadlowski
+Date:   Fri Mar 31 04:44:45 2017 +0000
+
+    Warn about parent ROM sets having parent defined (not allowed)
+
+Commit: 47ce1322921f105016f1b6bea09938c872313199
+Author: Bart Trzynadlowski
+Date:   Fri Mar 31 04:27:09 2017 +0000
+
+    Print missing files from games
+
+Commit: fd0f7ec6d1f4f92bf6e8bdb5b2495416132b82f5
+Author: Bart Trzynadlowski
+Date:   Thu Mar 30 06:17:34 2017 +0000
+
+    Support loading of parent ROM sets (e.g., scudp will load scud)
+
+Commit: cd1a551e4bb88c6213b39408e4f97760e9f8be16
+Author: Ian Curtis
+Date:   Tue Mar 28 22:28:46 2017 +0000
+
+    compile fixes
+
+Commit: 1a766843b59cc1c17a2b22368a631b3350aa2bf0
+Author: Ian Curtis
+Date:   Tue Mar 28 21:02:14 2017 +0000
+
+    MSYS2 compile fix (HarryTuttle)
+
+Commit: 69eac95846dabbbb37ed3e8b928e633752968069
+Author: Ian Curtis
+Date:   Tue Mar 28 20:24:44 2017 +0000
+
+    Replace glsl 3 function. Apparently this doesn't work on OS X.
+
+Commit: 70259eec345b2bcf7e51cf06812ad506061d9933
+Author: Ian Curtis
+Date:   Tue Mar 28 19:33:16 2017 +0000
+
+    fix compile warnings
+
+Commit: 318f4cf6dcc7663beee33677259e365c2ddcc31b
+Author: Bart Trzynadlowski
+Date:   Tue Mar 28 04:03:38 2017 +0000
+
+    Sort games found in zip file by descending order of matching files so that
+    game with the *most* matching files is picked
+
+Commit: aa4331c2c4ef0ebceab5d41adf621add757501fa
+Author: Bart Trzynadlowski
+Date:   Tue Mar 28 04:01:50 2017 +0000
+
+    Added: bass, daytona2, dirtdvls, harley, lemans24, scuda, skichamp,
+    spikeofe, spikeout, von2, vs2, vs298, vs2v991 Fixed: dayto2pe title
+
+Commit: 40486fc840152527e917ffb910f9df5e4f044cc9
+Author: Bart Trzynadlowski
+Date:   Tue Mar 28 01:05:35 2017 +0000
+
+    Fixed scud mpeg roms
+
+
+Commit: ddbf08ac7371b2e97b3e22ad7802e5246c7e6722
+Author: Ian Curtis
+Date:   Mon Mar 27 22:06:23 2017 +0000
+
+    don't ask
+
+Commit: f320af204990d1c31de0b01f42dba5160da348da
+Author: Ian Curtis
+Date:   Mon Mar 27 22:01:31 2017 +0000
+
+    fix project files
+
+Commit: 3fefff36c2a610d91911569bf4378607050e1c9b
+Author: Ian Curtis
+Date:   Mon Mar 27 18:15:15 2017 +0000
+
+    fix multiple default constructors 
+
+Commit: 5c15dac16f9d6bab5f24a83d7a0344c1acc97c82
+Author: Ian Curtis
+Date:   Mon Mar 27 14:14:36 2017 +0000
+
+    add missing include
+
+Commit: f34e25dfc78f9bf61969497e4a40a2215398bc5b
+Author: Bart Trzynadlowski
+Date:   Mon Mar 27 03:19:15 2017 +0000
+
+    Massive internal change: removed CConfig object and replaced it with a
+    hierarchical config object system (Util::Config::Node). Games are now
+    defined in an XML file. Hopefully I didn't break too many things :/
+
+Commit: 26a4417a5f5c80054ddb10075da8e320ce714e34
+Author: Bart Trzynadlowski
+Date:   Mon Mar 27 03:13:34 2017 +0000
+
+    Cosmetic: renamed step to stepping
+
+Commit: 10befe493819ace153aacd2782ee046cbaf9c2f2
+Author: Bart Trzynadlowski
+Date:   Mon Mar 27 03:10:36 2017 +0000
+
+    No need to enclose values in quotes when writing INI file. Print that file
+    was saved to console and log.
+
+Commit: 35d9842dd89ad0d5eee57c93048602d57eb829fd
+Author: Bart Trzynadlowski
+Date:   Mon Mar 27 03:09:24 2017 +0000
+
+    Added a TODO list
+
+Commit: 2e6a58b21ca598a229ac304999b6be6bd4001954
+Author: Bart Trzynadlowski
+Date:   Mon Mar 27 03:08:40 2017 +0000
+
+    Added srally2
+
+Commit: c4a63821c331e32b510b718647ce1b12222d257c
+Author: Bart Trzynadlowski
+Date:   Mon Mar 27 02:02:22 2017 +0000
+
+    Encapsulated zip file handling and added a "parent" member to the Game
+    struct
+
+Commit: ba3a0b5e2a6662ae11aa49bc38d8ca2e63d7a4cb
+Author: Bart Trzynadlowski
+Date:   Sun Mar 26 16:38:55 2017 +0000
+
+    Checking in GameLoader.cpp, GameLoader.h, and ROMSet.h (not currently used
+    in build) because I need to make a substantial modification in my local tree
+
+Commit: 9e19b46692be1bd994bed6a6e6c3b9893f1446ae
+Author: Bart Trzynadlowski
+Date:   Sat Mar 25 17:39:09 2017 +0000
+
+    Fixed dayto2pe sample ROMs
+
+Commit: ff624afb4d4cc130d4a8d209331e6003e1f72fab
+Author: Ian Curtis
+Date:   Sat Mar 25 00:06:24 2017 +0000
+
+    The mipmap data in some games seems to being sent behind the base textures,
+    and when the base textures are bound and created the mipmap chain is not yet
+    valid in memory. To fix this, we invalidate the base textures, when the
+    mipmap chain is updated.
+
+Commit: 06c1cdcf9442986a9a39b0b2f0d0a5dcfed81dda
+Author: Ian Curtis
+Date:   Fri Mar 24 20:54:12 2017 +0000
+
+    Just use 1 hash map for the textures, instead of 1 for each format. Should
+    greatly speed up texture invalidation. TODO invalidate texture mipmaps ..
+    the h/w actually seems to stream the mipmap data separate from the base
+    textures in some cases.
+
+Commit: 98d56ff0113bc2272c650a2d2ca78e52ffa4cdb5
+Author: Ian Curtis
+Date:   Fri Mar 24 17:43:07 2017 +0000
+
+    cosmetic 
+
+Commit: 82ac030dff181abcd6ae7601e15feb6cf3194916
+Author: Ian Curtis
+Date:   Fri Mar 24 16:51:52 2017 +0000
+
+    calculate the correct number of mipmap textures
+
+Commit: 17f878421bf1b386a9e60dc9a946ad11ea80e12d
+Author: Ian Curtis
+Date:   Fri Mar 24 13:38:20 2017 +0000
+
+    Originally to do mipmapping, I just used the base texture and then let the
+    h/w automatically generate the mipmap chain. I wasn't sure the real3d api
+    even exposed to the programmer the ability to directly set the mipmap data.
+    Anyway, as pointed out by HarryTuttle scud actually uses darker mipmaps for
+    an effect on the water. This patch uses the uses the actual mipmap data from
+    the real3d memory. Only tested scud, so hopefully I didn't cause any
+    cataclysmic errors :)
+
+Commit: df3805e74118085b93547a160b88a44b4d1daf7d
+Author: Bart Trzynadlowski
+Date:   Fri Mar 24 05:33:25 2017 +0000
+
+    Added fvipers2
+
+Commit: 17f7c2d9f63e6ca5f9f5efcdbf8304d700283c97
+Author: Ian Curtis
+Date:   Thu Mar 23 17:18:33 2017 +0000
+
+    use 32bit types
+
+Commit: 3c2cf175f48aa1160ceea285dfa7db52f28ffe05
+Author: Bart Trzynadlowski
+Date:   Thu Mar 23 04:38:39 2017 +0000
+
+    Added more games to Games.xml: dayto2pe, eca, lamachin, lostwsga, magtruck,
+    oceanhun, vf3. Fixed swtrilgy (MPEG music).
+
+Commit: 61159c07f839d0c718bdbefb3ac4f948eb2a823d
+Author: Bart Trzynadlowski
+Date:   Thu Mar 23 04:22:25 2017 +0000
+
+    Added 8- and 16-bit tilegen VRAM access handlers to fix missing columns in
+    Star Wars Trilogy tilemaps. Thanks to Spindizzi for initial confirmation
+    that this was the problem.
+
+Commit: 9fb6acc92db0d962a56897517c8a15c9ba1eab1c
+Author: Ian Curtis
+Date:   Wed Mar 22 20:38:44 2017 +0000
+
+    fix scissor code for native resolution (thanks HarryTuttle)
+
+Commit: 519cce34f5fa8e3d38f230f7c4e4f24bfd64b20d
+Author: Ian Curtis
+Date:   Sun Mar 19 09:54:51 2017 +0000
+
+    remove debug code
+
+Commit: 9780f333b411b34704aec51d40fec657b8776c70
+Author: Ian Curtis
+Date:   Sun Mar 19 01:33:45 2017 +0000
+
+    The model3 has this weird issue where the 2d and 3d planes are misaligned by
+    2 pixels. Originally I made a quick hack that shifted subviewports 2 pixels.
+    But apparently that wasn't enough, as the issue effects everything. Thanks
+    to HarryTuttle for pointing this out, and making a patch :)
+
+Commit: b19ceb0b6a296147fdc37e0208aeebf0db8b5f00
+Author: Ian Curtis
+Date:   Mon Mar 13 00:59:35 2017 +0000
+
+    Texture coordinates seem to be scaled relative to the fixed texture size of
+    256. Thanks to HarryTurtle for figuring this crazy logic out. The road in
+    scud matches the arcade now almost perfectly.
+
+Commit: dcd018ab7e29811eb4f3dc6aa2174a4f34cb4bc9
+Author: Ian Curtis
+Date:   Sun Mar 12 19:00:00 2017 +0000
+
+    Change microtexture scaling values. Seem to much better match expected
+    output. (thanks HarryTuttle)
+
+Commit: 732e3ef51f8227c177b16ffa487e2468a1d27362
+Author: Ian Curtis
+Date:   Sat Mar 11 12:55:47 2017 +0000
+
+    More fixes to microtexture coordinates. They go vertically up and down the
+    texture sheet, and not horizontally as I had guessed. (Thanks HarryTurtle)
+
+Commit: 6636776f031c1807b4df6c2db9f334b549430403
+Author: Ian Curtis
+Date:   Sat Mar 11 01:18:43 2017 +0000
+
+    Fix microtexture texture coordinates (thanks HarryTuttle)
+        
+
+Commit: 503c88df11ebc66ad4bdc5c030d70648b2943658
+Author: Ian Curtis
+Date:   Tue Mar 7 01:29:07 2017 +0000
+
+    fix the bad projection matrix in dirt devils and lost world
+
+Commit: f173c3c3ce1e1f21d9b7613e864d59820a06e8ca
+Author: Ian Curtis
+Date:   Tue Feb 21 23:35:40 2017 +0000
+
+    The hardware actually seems to treat the quad primitive as a triangle strip.
+    The winding order can actually change between the first and second
+    'triangle' inside the quad, leading our code to incorrectly backface cull
+    the 2nd triangle. So we must re-calculate the winding order for the 2nd
+    triangle. This fixes a massive missing poly in the road in la machine guns,
+    probably other games too. The hardware is unaffected by the winding order,
+    as it doesn't calculate the poly normal from the vertices directly, instead
+    it uses the provided normal in the poly header.
+
+Commit: 5b9741bd5ddb383359d6656b86b70d8065f00bf2
+Author: Ian Curtis
+Date:   Mon Feb 20 17:22:32 2017 +0000
+
+    Support high priority polygons. They are treated as a separate overlay plane
+    by the h/w. Fixes some missing fx in harley.
+
+Commit: 2ae2010ee41c0213b768123fa36abded4d63b676
+Author: Ian Curtis
+Date:   Sat Feb 18 23:58:08 2017 +0000
+
+    Add high priority poly function. Used by harley.
+
+Commit: 4a116190b574b2de1f56f2adc40afb0e6bb2a10a
+Author: Ian Curtis
+Date:   Thu Feb 16 17:20:42 2017 +0000
+
+    When the translator map?? bit is enabled the colour format seems to be
+    4-5bit. Max observed value is 16. Scaling these values up seems to produce
+    the correct colours in harley and dirt devils.
+
+Commit: 7407d030361af225ee41299c1731e5819526944a
+Author: Ian Curtis
+Date:   Wed Feb 8 16:14:50 2017 +0000
+
+    Put a check in there, in case near values come out really close to zero.
+    Fixes a slight corner case in lemans24. A check probably should have been
+    there originally :)
+
+Commit: 24cbeed52681bbb797306d1ef0ce6bcab3f13362
+Author: Ian Curtis
+Date:   Tue Feb 7 14:05:03 2017 +0000
+
+    Dynamically calculate near/far frustum planes for each viewport priority
+    layer by clipping the overlapping meshes with the 4 frustum planes. A bit
+    brute forcy, but the results are great.
+
+Commit: 144125a62e0e51c80d23ef7f828eac83b7064c56
+Author: Ian Curtis
+Date:   Sun Feb 5 15:36:05 2017 +0000
+
+    mark the nodes without valid distances set
+
+Commit: c82dc55485519a48e3481401d4e99b1253ca0001
+Author: Ian Curtis
+Date:   Thu Dec 22 22:11:19 2016 +0000
+
+    cosmetics 
+
+Commit: 72dd0dbf982f6fbc575233b3ee6fcd8d2622b71a
+Author: Ian Curtis
+Date:   Thu Dec 22 22:09:13 2016 +0000
+
+    only need to cull against 4 clipping planes
+
+Commit: 20a9514aa221803d906abe310b04e0490d9d5a32
+Author: Ian Curtis
+Date:   Thu Dec 15 19:27:08 2016 +0000
+
+    For scroll fog set the viewport to the entire area, allows fog to work in
+    widescreen mode
+
+Commit: ca7046729e30035d4157251484c23d25161ae3f0
+Author: Ian Curtis
+Date:   Thu Dec 15 12:10:52 2016 +0000
+
+    properly cache un-normalised texture coordinates, fixes a texturing
+    regression in Daytona 
+
+Commit: f355e2d06282fbee2a5959cf0d1f6ba44977a8b4
+Author: Ian Curtis
+Date:   Thu Dec 15 00:45:32 2016 +0000
+
+    fix microtexture colours
+
+Commit: 89e75a9803a758eb3f4e406b6dcb5236742aedde
+Author: Ian Curtis
+Date:   Wed Dec 14 19:57:05 2016 +0000
+
+    Only check scroll fog value from the first viewport from each priority
+    layer. Seems to fix problems with background fogging.
+
+Commit: 707e945db99f962affc7add0d2915fd90702936f
+Author: Ian Curtis
+Date:   Fri Dec 9 14:15:11 2016 +0000
+
+    delete unused files
+
+Commit: 2c23268d88f5157e40e80251c2240574550103f0
+Author: Ian Curtis
+Date:   Fri Dec 9 14:13:46 2016 +0000
+
+    Support microtexture relative scale. The exact scaling values are not known,
+    but a 2x difference between each level seems highly likely. We know from
+    visual inspection from scud that the first level is exactly 4. The SDK has a
+    function that accepts a float input for scale and does this. lod = (1/scale)
+    + 0.5. If lod>3 lod = 3. So this is our best guess.
+
+Commit: da8b63b44b9e6eb98231c7509eecafe337041062
+Author: Ian Curtis
+Date:   Tue Dec 6 14:39:46 2016 +0000
+
+    The model3 shares vertices between polygons. But it also seems to do this
+    for polygons with different textures. This means the texture coordinate for
+    potentially different sizes textures is shared. Currently this was broken
+    leading to some corrupted looking textures. The fix is to simply cache the
+    old texture coordinates, and recalculate the normalised coordinates in the
+    new texture coordinate space.
+
+Commit: 10a5d2c0e1b9b8aa21383f4fa52587b2094bf69c
+Author: Ian Curtis
+Date:   Tue Dec 6 12:25:34 2016 +0000
+
+    refactor
+
+Commit: eece2d75b4970fea95040aa5dd611eeaddb5f8a0
+Author: Ian Curtis
+Date:   Sun Dec 4 22:37:49 2016 +0000
+
+    tweak scroll fog logic
+
+Commit: adbebb0204be10db8c15c2fa53b0e1cd56e3b89e
+Author: Ian Curtis
+Date:   Sun Dec 4 22:37:22 2016 +0000
+
+    clean up
+
+Commit: a310e8e5cf1210413c08e367dc728dd6ae1680da
+Author: Ian Curtis
+Date:   Mon Nov 28 17:32:25 2016 +0000
+
+    minor optimisations 
+
+Commit: abc8c24b69c4d04dddbdb1712693dcf84451deee
+Author: Ian Curtis
+Date:   Sun Nov 27 19:30:46 2016 +0000
+
+    Only check the geometry for culling with valid node distances. We will need
+    this later.
+
+Commit: fe60d115d22e02d1fb33c2834b079e243d699f2f
+Author: Ian Curtis
+Date:   Sat Nov 26 01:19:51 2016 +0000
+
+    Revert changes .. if we clip against the real3d clipping planes, our wide
+    screen hack won't work anymore.
+
+Commit: 665fa9042529209ae61690761858915fcc199b2c
+Author: Ian Curtis
+Date:   Sat Nov 26 01:12:08 2016 +0000
+
+    Get clipping planes directly from the viewport data. Also no need to clip
+    against a far plane
+
+Commit: 54c405709f253d532e8b51a21eab2d17d991a2df
+Author: Ian Curtis
+Date:   Tue Nov 22 20:30:10 2016 +0000
+
+    Need to walk back in memory and check the previous texture tiles to see if
+    they overlap with the current textures being invalidated. If they overlap
+    they must be cleared too. Algorithm is a bit brute forcy and more expensive
+    than I'd like but it fixes the bad textures in Spikeout.
+
+Commit: 84ae8f035ca1dd0a44fb95df6abeb1dc9ce16a2d
+Author: Ian Curtis
+Date:   Mon Nov 21 09:04:56 2016 +0000
+
+    Skip processing the mipmap section of memory. The real3d doesn't create
+    mipmaps down to 1x1 that is needed to do mipmapping properly on modern
+    hardware anyway.
+
+Commit: 2ddc8a30e05236a8b36a3ef0f93701baaa5acc79
+Author: Ian Curtis
+Date:   Sun Nov 20 17:02:59 2016 +0000
+
+    Clear queued texture uploads after processing them. Saves re-uploading the
+    same textures whilst paused
+
+Commit: 10dd530cdeca59bf4436f64fafa4ea725f71007e
+Author: Ian Curtis
+Date:   Tue Nov 15 12:44:47 2016 +0000
+
+    More accurate 2D colours. White should map to 255 not 248
+
+Commit: 483ba2f398800f64ea8cd109dd1967a634759fab
+Author: Ian Curtis
+Date:   Fri Nov 11 17:50:27 2016 +0000
+
+    Fix the shading in scud. When lighting is disabled the fixed shading
+    intensities appear to be offset values added to the colour value.
+
+Commit: 0a7c0d0864dd00d5f1b0bf94b009fd04035e157d
+Author: Ian Curtis
+Date:   Fri Oct 21 00:04:12 2016 +0000
+
+    change throttle logic for smoother playback, we could get closer to 60fps if
+    SDL timers weren't so lame
+
+Commit: 2f49012786a558a3bc4d43987ccecabdb675492b
+Author: Ian Curtis
+Date:   Sun Oct 9 18:10:57 2016 +0000
+
+    change scroll fog logic to parse the lower priority viewports first
+
+Commit: f0a15febd1f5260d947565cbcf21082d3abbbd87
+Author: Ian Curtis
+Date:   Sun Oct 9 16:34:12 2016 +0000
+
+    implement scroll fog, fixes a tonne of missing fx
+
+Commit: ef11990d190ccdb20348691781355f9c6e7f38fa
+Author: Ian Curtis
+Date:   Sat Oct 8 15:41:16 2016 +0000
+
+    Parse out scrollfog value used for blending over the 2d background. 
+
+Commit: 33e795de9b9f1aade7eef1fc947db5ed8fc0ca2d
+Author: Ian Curtis
+Date:   Sat Oct 8 15:15:25 2016 +0000
+
+    Fix scenes with missing fog in ocean hunter. The game was passing negative
+    fog densities. The sign seems to be ignored by the model 3.
+
+Commit: 9eeb81ac69f6ded202de066d12ce00743b818ea1
+Author: Ian Curtis
+Date:   Sat Oct 8 12:10:47 2016 +0000
+
+    same fix for legacy engine
+
+Commit: 33cf6c89d188710ea627ce7241601c372f58baa7
+Author: Ian Curtis
+Date:   Sat Oct 8 11:59:25 2016 +0000
+
+    our scratch mem must match correct max texture size
+
+Commit: c472d90fb961eb0600789520c092dcb1550e16d5
+Author: Ian Curtis
+Date:   Thu Oct 6 20:10:45 2016 +0000
+
+    Fix the sky in advanced stage in Dirt Devils. It uses a massive (for 1998
+    :p) 1024x256 texture.
+
+Commit: c3581c9fe8da3149c14e0a48ec5cfcfb0df8b86f
+Author: Ian Curtis
+Date:   Thu Oct 6 01:37:29 2016 +0000
+
+    Support multiple microTextures, fixes crazy texturing in sega ski champ. I'm
+    assuming microtextures are always located on the other memory bank to the
+    base texture. This logic seems to work for all our games anyway.
+
+Commit: e21ea9331909adb03e7b55fd91c26b2b9d186a77
+Author: Bart Trzynadlowski
+Date:   Wed Sep 7 01:25:27 2016 +0000
+
+    Added RGBA4 format to BMP file writer
+
+Commit: 3df361036184771b04021e3feb404d4c9f69a191
+Author: Bart Trzynadlowski
+Date:   Thu Aug 25 04:54:08 2016 +0000
+
+    Made parsing of hex values more robust
+
+Commit: 23435ae4fe71b9f468d51a3be6518ffa43d55a81
+Author: Bart Trzynadlowski
+Date:   Thu Aug 25 04:53:38 2016 +0000
+
+    Initial check in of Games.xml (only two games defined so far)
+
+Commit: 458684eb22c9651a1df7f0319498291f06f54643
+Author: Bart Trzynadlowski
+Date:   Wed Aug 24 22:21:18 2016 +0000
+
+    Fixed new 3D engine's fragment shader to work on some older GPUs by reducing
+    the number of discard statements to one
+
+Commit: 4b184b05dc768b61036a7e642bee37bb2b205c60
+Author: Bart Trzynadlowski
+Date:   Wed Aug 24 04:13:23 2016 +0000
+
+    Updated game loader to make use of latest changes to config tree: generic
+    value types and eliminated pointers
+
+Commit: c2f80cef6bf8a99b4d3b9f4f4310c78eb4324a21
+Author: Bart Trzynadlowski
+Date:   Wed Aug 24 04:11:52 2016 +0000
+
+    Support for hex numbers in string to integer conversions (with '0x' prefix)
+    and special keywords in string to bool conversions
+    (true/false/on/off/yes/no)
+
+Commit: f08ad1584f03da19ee9bb98bb16e1294cf0e370b
+Author: Bart Trzynadlowski
+Date:   Wed Aug 24 04:10:20 2016 +0000
+
+    Added Util::Stricmp() and small tweak to serialization of Util::Format
+
+Commit: 2efe18b5250688153a861976e9a83f7a52ceeccf
+Author: Bart Trzynadlowski
+Date:   Sun Aug 21 22:22:45 2016 +0000
+
+    Added support for multiple value types in config nodes. Removed Ptr_t and
+    ConstPtr_t from public interface, moved config tree builders into their own
+    file, and made them pass by reference and value. Exceptions can be thrown
+    now on lookup failures. Removed s_empty_node -- failed lookups in []
+    operator create a permanent "hidden" child. Updated comment in
+    NewConfig.cpp.
+
+Commit: 01a6ad159632ff2fb4a9b2846ae67a24b563e06f
+Author: Bart Trzynadlowski
+Date:   Fri Aug 19 00:01:45 2016 +0000
+
+    Added copy constructor and assignment operator using C++11 move semantics
+
+Commit: a9816467d8a20d390af1aa9b5d1604e2205101db
+Author: Bart Trzynadlowski
+Date:   Thu Aug 18 04:19:36 2016 +0000
+
+    Defined inputs
+
+Commit: fbeeb3c9227f394bd165712c6ceca0b2ffd86ed2
+Author: Bart Trzynadlowski
+Date:   Thu Aug 18 04:14:36 2016 +0000
+
+    Support for deep copies via assignment operator. This will pave the way for
+    elimination of Ptr_t and ConstPtr_t.
+
+Commit: 5652aab91fd74286416bf85f1f716d3010d4e4aa
+Author: Bart Trzynadlowski
+Date:   Thu Aug 18 04:13:50 2016 +0000
+
+    Added Write() method to write buffer to an ostream, and added an ostream
+    operator overload
+
+Commit: 1dc360a8b09580ebcc3aad993f30497877376142
+Author: Bart Trzynadlowski
+Date:   Thu Aug 11 03:53:19 2016 +0000
+
+    Changes to game loader interface, added 32-bit word swapping utility
+    function
+
+Commit: 41105c15d720620eb88cfa0c0abd616fdd8af773
+Author: Bart Trzynadlowski
+Date:   Wed Aug 10 03:38:19 2016 +0000
+
+    Added Logger.o to OSX and UNIX Makefiles. Should fix compilation on these
+    platforms.
+
+Commit: 821243b80f15f8960110a1a6621d5a3fce93d30f
+Author: Bart Trzynadlowski
+Date:   Wed Aug 10 03:37:29 2016 +0000
+
+    Removing MSVC Makefile 
+
+Commit: a2423a8b750e69831634d27b73224e8eb85e6e26
+Author: Bart Trzynadlowski
+Date:   Wed Aug 10 03:28:40 2016 +0000
+
+    Initial check-in of game loader (not operational yet)
+
+Commit: 037bfc648d47d5edb42ec59a1996a5d44cf55608
+Author: Bart Trzynadlowski
+Date:   Wed Aug 10 03:27:59 2016 +0000
+
+    Byte swapping utility function
+
+Commit: 718c237063b39ff6e445547de7211df78533a324
+Author: Bart Trzynadlowski
+Date:   Wed Aug 10 03:27:01 2016 +0000
+
+    Added ValueAsBool(), ValueAsBoolWithDefault(), and
+    ValueAsUnsignedWithDefault()
+
+Commit: f4311a0ab2430ebe27de8e4f48cba59d4ebf711e
+Author: Ian Curtis
+Date:   Sun Jul 10 13:11:51 2016 +0000
+
+    update visual studio project
+
+Commit: 52d6eac7e5176c68d4db8536a016f4cf541b599a
+Author: Bart Trzynadlowski
+Date:   Sun Jul 10 04:25:41 2016 +0000
+
+    Added Util::Config::Node::ValueAsUnsigned() with support for base 10 and 16
+    ('0x' prefix)
+
+Commit: 331d7042f2733dc04df672516b213259e25f71ef
+Author: Bart Trzynadlowski
+Date:   Sun Jul 10 04:25:12 2016 +0000
+
+    Added Util::ToLower()
+
+Commit: a84aacf80b9fd25eb670adc6fa7d452fedf3e3c6
+Author: Bart Trzynadlowski
+Date:   Sat Jul 9 15:19:17 2016 +0000
+
+    Config::Node::Add() now supports nested keys (e.g., Add("foo/bar/baz", "0")
+    will create three nested config nodes)
+
+Commit: 24c341120ae56597b23d7f51879a108de133fea8
+Author: Bart Trzynadlowski
+Date:   Sat Jul 9 14:45:48 2016 +0000
+
+    Changed Config::Node::Create() to Add() and added a Set() method (for INI
+    semantics). Turned Test_Config.cpp into a proper unit test reporting
+    pass/fail for each test.
+
+Commit: 2e069af6036ecb2414aebe20acdaaff86d03c40e
+Author: Bart Trzynadlowski
+Date:   Thu Jul 7 05:05:27 2016 +0000
+
+    Adding tinyxml2 lib
+
+Commit: 724dc932944899632f64b49130304d7cd8cd5b2f
+Author: Bart Trzynadlowski
+Date:   Thu Jul 7 04:59:10 2016 +0000
+
+    XML parsing support for new config system
+
+Commit: bcc663d4eb1335aca1b38600dae7fdb70cf121b1
+Author: Bart Trzynadlowski
+Date:   Tue Jul 5 01:15:58 2016 +0000
+
+    Moved logging functions into OSD/Logger.cpp (eventually logging system will
+    be reworked entirely) and added new config tree structure (not yet used). 
+
+Commit: 0650ffc37c0946c4e8c0adc22604b3afda6643c9
+Author: Bart Trzynadlowski
+Date:   Mon Jul 4 01:02:04 2016 +0000
+
+    Updated Win32 gcc, UNIX, and OSX Makefiles
+
+Commit: 0ab486645c48bee957320f2e094cdb58875fe828
+Author: Bart Trzynadlowski
+Date:   Mon Jul 4 01:00:24 2016 +0000
+
+    Updated Fragment_NoSpotlight.glsl (fragment shader for legacy engine without
+    spot light)
+
+Commit: 732bff2769b0fc3811e848c6ee8da783c46d6035
+Author: Ian Curtis
+Date:   Wed Jun 29 20:53:19 2016 +0000
+
+    disable spot light if the extent is zero
+
+Commit: 1c39956568102f10e80535e833c3db505e1ae250
+Author: Bart Trzynadlowski
+Date:   Wed Jun 29 03:29:00 2016 +0000
+
+    Saving progress on scudp disassembly
+
+Commit: efa7776871010592c0293407b7f2b6da9653e69c
+Author: Ian Curtis
+Date:   Mon Jun 27 17:35:27 2016 +0000
+
+    parse some unimplemented spot light values from viewport
+
+Commit: 012253efe344d89a71828a36858a599e72829207
+Author: Bart Trzynadlowski
+Date:   Mon Jun 27 03:22:38 2016 +0000
+
+    Added disassembly of Scud Race Plus
+
+Commit: de043355bcce41b77ea2121069d1c8701ba2aed0
+Author: Bart Trzynadlowski
+Date:   Fri Jun 24 01:01:30 2016 +0000
+
+    Marked offset of code in CROM for scudp
+
+Commit: d058a29ac85bbf965f069b779011be9bade49acd
+Author: Ian Curtis
+Date:   Sun Jun 19 23:33:06 2016 +0000
+
+    stencil translucent non textured polys
+
+Commit: 85c4d85562e66ad98b35cb24e377db895be1e863
+Author: Ian Curtis
+Date:   Sun Jun 19 21:43:09 2016 +0000
+
+    refactor
+
+Commit: c2b1db11f8b2777fa074366c203f93263acf6df7
+Author: Ian Curtis
+Date:   Thu Jun 16 20:05:29 2016 +0000
+
+    Cull geometry based on the culling distances in the nodes. Should give some
+    sort of speedup on lower end pcs where the CPU is predominantly the bottle
+    neck.
+
+Commit: f31f06b42e071db38cd23c6e58ec61210528f48a
+Author: Bart Trzynadlowski
+Date:   Mon Jun 13 00:53:39 2016 +0000
+
+    Fix compilation when SUPERMODEL_DEBUGGER enabled
+
+Commit: d799c63b1a7ea64378c844f20592cb08282cccba
+Author: Ian Curtis
+Date:   Fri Jun 10 11:29:20 2016 +0000
+
+    cache bound texture
+
+Commit: 48a79a8f141403971c5100cea80bf37c41f114f0
+Author: Ian Curtis
+Date:   Fri Jun 10 10:18:47 2016 +0000
+
+    cleaning
+
+Commit: b0911afd1fc28f7414d5552b36cefd415823502d
+Author: Bart Trzynadlowski
+Date:   Tue Jun 7 01:51:16 2016 +0000
+
+    Added drive board and lamp raw outputs (submitted by SailorSat)
+
+Commit: 8440bc7f037bc232234ef5c18e319b27ac1e507b
+Author: Ian Curtis
+Date:   Fri Jun 3 09:33:46 2016 +0000
+
+    support negative exponent 
+
+Commit: 5081ee99dc9ba4beeaadcd9e2d904bfe832938a8
+Author: Ian Curtis
+Date:   Fri Jun 3 00:01:34 2016 +0000
+
+    Add code to convert the 16bit float format used by the hardware back into
+    float 754 format. 16bit floats are used for the culling radiuses in the
+    nodes.
+
+Commit: 6dc5845d471dd9df3c9b314a4e2ac8bab41cab35
+Author: Bart Trzynadlowski
+Date:   Thu Jun 2 23:51:43 2016 +0000
+
+    Added -vsync and -no-vsync option descriptions to command line help
+
+Commit: 9bc1fbf0cbc152c8e5dbb1b11cff72d2f5e7006e
+Author: Ian Curtis
+Date:   Thu Jun 2 21:26:50 2016 +0000
+
+    remove dead code
+
+Commit: 968652bcfb876d429403b7048a8a30d7368907f2
+Author: Bart Trzynadlowski
+Date:   Thu Jun 2 03:14:46 2016 +0000
+
+    Added a Split() function to Util::Format.
+
+Commit: d1330d310cdce7a11fa8abf9d81345d405667bae
+Author: Bart Trzynadlowski
+Date:   Thu Jun 2 00:13:42 2016 +0000
+
+    XInput fix: search for all three possible XInput DLLs (xinput1_4.dll,
+    xinput1_3.dll, and xinput9_1_0.dll). I have not tested 32-bit builds.
+
+Commit: ff8e9d6aadcbb08def41c10fe1abe99bc86b5172
+Author: Ian Curtis
+Date:   Mon May 30 23:10:56 2016 +0000
+
+    Check for overflow. Fixes some fade effects
+
+Commit: 9a49fefe127e6cb1c444a7821d345185084b14ac
+Author: Bart Trzynadlowski
+Date:   Mon May 30 19:18:11 2016 +0000
+
+    Legacy engine: fixed texture offsets (VON2 was broken by last commit).
+    Texture coordinates are wrapped within the bank first and then the bank can
+    be swapped. This also allows the full range of texture coordinate bits to be
+    used as specified in the Pro-1000 SDK.
+
+Commit: 36074d9fd53b6416f9e0fc14070158b710cf48aa
+Author: Ian Curtis
+Date:   Mon May 30 13:25:00 2016 +0000
+
+    Y texture offsets are just 5 bits. Texture coordinate wrap around happens in
+    the same texture sheet, not into the next one. Fixes various texturing bugs
+    in sega rally.
+
+Commit: d1f49675b1a09047e55475c132520ac275d03c79
+Author: Bart Trzynadlowski
+Date:   Sun May 29 20:49:28 2016 +0000
+
+    Legacy engine: Culling node texture Y offset is only 5 bits (fixes Sega
+    Rally 2 initials decal)
+
+Commit: 2ee0d9018e3ce4f19b4d5b7ade167728ae20a6d3
+Author: Bart Trzynadlowski
+Date:   Sat May 28 20:54:25 2016 +0000
+
+    New engine: modf -> std::modf (fixes compilation on gcc)
+
+Commit: 1a908dd4142df23e98449b3145973f8c4e765d84
+Author: Bart Trzynadlowski
+Date:   Sat May 28 20:50:05 2016 +0000
+
+    Legacy engine: expanded color index to 12 bits from 11. Does this affect any
+    games?
+
+Commit: 5c1a240565985ea4da9fb9043e83076754951ec8
+Author: Bart Trzynadlowski
+Date:   Sat May 28 20:49:10 2016 +0000
+
+    New engine: expanded color indices to 12 bits from 11. Added
+    PolygonHeader::ColorIndex and SensorColorIndex methods.
+
+Commit: 2ef5203839b1a1368a0a3b9cc3ecd1870a293ed2
+Author: Bart Trzynadlowski
+Date:   Sat May 28 20:40:45 2016 +0000
+
+    Forgot to describe one polygon header field in Model.cpp
+
+Commit: e4a5c341dd0874b6f2523c4ce1cadf21b05a9e59
+Author: Bart Trzynadlowski
+Date:   Sat May 28 20:33:10 2016 +0000
+
+    Updated polygon header descriptions
+
+Commit: 0ebb8d5d478d6f15fe387b37a240a4b6dfebd120
+Author: Bart Trzynadlowski
+Date:   Sat May 28 19:52:30 2016 +0000
+
+    Legacy engine: Added stencil buffering for layered models and shadows. Not
+    as accurate as new engine because stencil buffering is applied per-model
+    rather than per-polygon, so the entire model must consist of stencil-tested
+    polygons. In practice, though, this seems to work fine.
+
+Commit: ce03c13847152373f027e2606ee842270fc2f10f
+Author: Ian Curtis
+Date:   Sat May 28 13:21:35 2016 +0000
+
+    Optimise non smooth texture repeat to only effect texture boundaries, rather
+    than poly boundaries. Fixes a few ugly artefacts
+
+Commit: 661f19be191f4c07af6583d13ab970bba2d62f47
+Author: Ian Curtis
+Date:   Fri May 27 22:20:57 2016 +0000
+
+    fix transparency values, values are from 0-32, not 0-16 where the top bit
+    disables
+
+Commit: 2086b1c9af924c358d7f9bff680679d5a14cd577
+Author: Ian Curtis
+Date:   Fri May 27 19:30:40 2016 +0000
+
+    Stencil layered polys, fixes shadow z fighting in some of the games. Other
+    games maybe using stipple alpha (yuck), not sure yet.
+
+Commit: 8979246642bae7bee137bf265b655da3fdae8bf5
+Author: Ian Curtis
+Date:   Thu May 26 16:21:42 2016 +0000
+
+    remove bad rom patches
+
+Commit: 3f9936d664c3f8efd676db3b7dd89129a434f160
+Author: Ian Curtis
+Date:   Thu May 26 09:06:09 2016 +0000
+
+    don't clamp after spot light code, looks much closer to h/w
+
+Commit: 8ba8d7290e17208367e2b94eef92ac7aa6a34232
+Author: Bart Trzynadlowski
+Date:   Thu May 26 04:13:22 2016 +0000
+
+    Hooked up Sega Bass Fishing / Get Bass controls
+
+Commit: 89c987fae12dabe8927a5f511e28cdc70ed06e7d
+Author: Ian Curtis
+Date:   Thu May 26 00:08:12 2016 +0000
+
+    basic spotlight code
+
+Commit: a0910f96fb680a45ba7936d3ae1c65918c86b57a
+Author: Bart Trzynadlowski
+Date:   Wed May 25 04:00:02 2016 +0000
+
+    Fixed fog in legacy 3D engine. Now computed same as new engine, with 4-bit
+    light modifier and corrected fog mixing in shaders.
+
+Commit: 6dc35f956309dd34592c6c906f525f1805d66120
+Author: Bart Trzynadlowski
+Date:   Wed May 25 03:10:36 2016 +0000
+
+    Updated legacy engine vertex shader to use specular shininess and
+    coefficient along with old equation. Still not correct (too strong compared
+    to the old method).
+
+Commit: c5ce2b9679465be2b23e8fa7bbe16f2978261799
+Author: Ian Curtis
+Date:   Sun May 22 19:17:15 2016 +0000
+
+    fix alpha testing for texture format 7
+
+Commit: 65d6342947f97637a6f1749b1ace7a5367a0b229
+Author: Ian Curtis
+Date:   Sat May 21 16:26:00 2016 +0000
+
+    remove dead code
+
+Commit: fd3eb49369133f71f43dd75f79fb3b8c74de72a0
+Author: Ian Curtis
+Date:   Sat May 21 15:50:54 2016 +0000
+
+    support 4 bit textures
+
+Commit: e108b566641d8bb9c33fac8dd411dc4af0ba315b
+Author: Ian Curtis
+Date:   Thu May 19 22:23:50 2016 +0000
+
+    correctly mask pointers
+
+Commit: a79fd2786ad6d5df9b0a71cee38f0d4c526313c8
+Author: Ian Curtis
+Date:   Thu May 19 19:04:44 2016 +0000
+
+    optimise hash table access for better performance
+
+Commit: ff8d311dccdb9800d2747a1a86df88aead59f355
+Author: Ian Curtis
+Date:   Wed May 18 23:06:41 2016 +0000
+
+    support colour table pointer
+
+Commit: 7e3c097a3152a556a7dce11140b7a2c450d4026c
+Author: Ian Curtis
+Date:   Mon May 16 17:26:53 2016 +0000
+
+    remove debug code
+
+Commit: 828fd8ebb476462e5b9bbc93dcea2a538c7a93b4
+Author: Ian Curtis
+Date:   Mon May 16 17:10:04 2016 +0000
+
+    Fog start is apparently the fog value at the viewport (0,0,0) I guess like
+    an ambient value. Default value is negative
+
+Commit: 9e279a0c1fc72879f6bed0a23de7d6f0fc494483
+Author: Ian Curtis
+Date:   Mon May 16 10:49:00 2016 +0000
+
+    Non luminous polygons seem to be effected by the lightModifier also. API
+    seems to have no restriction in this regard, neither does the SDK. The ocean
+    hunter requires this for some of the 2d stuff. Light modifier values only
+    seem to exist between 0-16, which is strange for 5 bits of precision.
+    Possibly top bit disables the effect and lower 4 bits are the value. This
+    clearly differs from the SDK, but without this the values come out clearly
+    wrong.
+
+Commit: 62eafacfc3cfa3964dd8983f26290a37b73a5b08
+Author: Ian Curtis
+Date:   Mon May 16 10:44:16 2016 +0000
+
+    adjust (hopefully correct) fog equation
+
+Commit: bc08276d60848e38780ddf73ee8d7e7ad3de5a47
+Author: Ian Curtis
+Date:   Sun May 15 16:24:49 2016 +0000
+
+    preliminary specular
+
+Commit: c9147bc93d40df53c8a87f4ada739ccfae814426
+Author: Bart Trzynadlowski
+Date:   Sat May 14 06:31:44 2016 +0000
+
+    - Removed a stale comment
+
+Commit: 897b1acb2176e2a7106aa81b2ce558a1d39f26cb
+Author: Bart Trzynadlowski
+Date:   Sat May 14 06:25:35 2016 +0000
+
+    Legacy renderer changes:
+    - Updated shading model. Unfortunately, it is far from perfect but it seems
+    to be the best I can do for now. Not really much of a difference from before
+    except that the Scud Race castle is fixed at the expense of the Yosemite
+    level in LA Machineguns being too bright.
+    - Added lots of notes in the shading code.
+    - Passing both specular coefficient and shininess to shader. This will
+    probably break specular lighting for now until the shader is updated to use
+    the shininess correctly.
+    - Color table address in polygon RAM is now obtained from culling nodes as
+    they are traversed (found this in the Pro-1000 SDK).
+
+Commit: 147faf37c99cd7eddc538e0e4f417a1e48df689c
+Author: Bart Trzynadlowski
+Date:   Sat May 14 06:21:56 2016 +0000
+
+    Added palette bit to list of bits to dump for analysis
+
+Commit: c4b5b185c6626fcea327ad976b7ee780b7b7c3bc
+Author: Ian Curtis
+Date:   Fri May 13 19:26:10 2016 +0000
+
+    Disable light modifier on fog, seems not to work .. values don't make sense.
+    Maybe the model3 doesn't use these.
+
+Commit: c8f8cd1655b382d4409d86b14219e289713b305e
+Author: Ian Curtis
+Date:   Fri May 13 08:40:53 2016 +0000
+
+    remove dead code
+
+Commit: e295ad6868fa687b977730e53eeee92bd1c2b83f
+Author: Ian Curtis
+Date:   Fri May 13 08:39:48 2016 +0000
+
+    double up polys for two sided polys, fixes some diffuse lighting problems
+
+Commit: ddf3d5213d6b97fbf09cce2c9f8ade2daa99b028
+Author: Bart Trzynadlowski
+Date:   Tue May 10 03:08:36 2016 +0000
+
+    FLT_MAX -> std::numeric_limits<float>::max()
+
+Commit: 8c082abab9c9e80bf4086395f5c31ee2dead1829
+Author: Bart Trzynadlowski
+Date:   Tue May 10 03:08:03 2016 +0000
+
+    Added some IRQ-related code (commented out for now) from MAME findings. May
+    incorporate in the future when investigating IRQs and timing again.
+
+Commit: 34c81eabee8045d4ac2d3a648fea5b2bda59bfc6
+Author: Ian Curtis
+Date:   Mon May 9 16:53:12 2016 +0000
+
+    update header documentation
+
+Commit: 43add90d2fe0b3a983cb2591df73c89895ce7221
+Author: Ian Curtis
+Date:   Mon May 9 16:26:34 2016 +0000
+
+    Fix bad texture seems
+
+Commit: 846c9d0edd2eb8208fc74a65a85b9aeaacc0e42b
+Author: Bart Trzynadlowski
+Date:   Sun May 8 21:17:02 2016 +0000
+
+    Reverted stencil mask change. This reintroduces the Scud Race 'ROLLING
+    START' bug. Previous 'fix' did not work for Magical Truck Adventure anyway
+    and also broke some games (Daytona 2 transmission and course select screen,
+    ECA title screen). The stencil mask is not shifted by 16 pixels and I
+    suspect that either there is some unknown trick to horizontal scrolling or
+    that the behavior is affected by hidden raster timing registers hidden in
+    the JTAG interface.
+
+Commit: a9095e6c8ecb508d31f27fa99a0c42ba0f586a02
+Author: Bart Trzynadlowski
+Date:   Sun May 8 20:30:45 2016 +0000
+
+    Added a register read handler for tilegen (although nothing seems to benefit
+    from it)
+
+Commit: 9249eaa29ff193273e19260d8f163f5adf9ff949
+Author: Bart Trzynadlowski
+Date:   Sun May 8 19:27:08 2016 +0000
+
+    Fixed logic for clearing bottom layer. Added new functions to 2D renderer
+    interface. Avoid drawing top and bottom surfaces when no layers are present
+    there. Added some comments to tile
+
+Commit: 5d048958b90d29dd606b2437092f50d9dd71c0f6
+Author: Bart Trzynadlowski
+Date:   Sat May 7 21:54:03 2016 +0000
+
+    Rewrote 2D renderer and fixed 2D layer priorities, stencil mask clipping
+    (Scud Race 'ROLLING START'), and cleaned up code. Unfortunately, the new
+    code is about 50% slower, mostly due to the need to perform stencil clipping
+    after scrolling.
+
+Commit: 69a44a5d5f43662161ea8c1f76e26eeb2563d723
+Author: Ian Curtis
+Date:   Sat May 7 18:57:06 2016 +0000
+
+    add texture helper functions
+
+Commit: 242cddac2d89a1c9fd2c604524a8dd79c5e20466
+Author: Ian Curtis
+Date:   Sat May 7 15:45:02 2016 +0000
+
+    remove pointless loop
+
+Commit: ded3168060f47fb747321883b61c639c38c3c8a4
+Author: Ian Curtis
+Date:   Sat May 7 15:28:04 2016 +0000
+
+    Split face colour from per vertex poly colour. Fixes colour bleeding between
+    connected polys in harley.
+
+Commit: 595e24ad60d9e2f7183e0207def3773b61d43f6b
+Author: Bart Trzynadlowski
+Date:   Sat May 7 03:25:05 2016 +0000
+
+    Changed XInput DLL failure message
+
+Commit: 05e1e4de379c0c6957885e1bea5e2e95c281df5d
+Author: Ian Curtis
+Date:   Fri May 6 15:00:12 2016 +0000
+
+    update poly header class
+
+Commit: fee1cfb1260746d99d9ee21b66b6c2d63bc67405
+Author: Bart Trzynadlowski
+Date:   Thu May 5 22:01:59 2016 +0000
+
+    Fixed compilation on gcc (gotos cannot cross variable declarations)
+
+Commit: da4bab5f9b12d552d866b732d2c0ff6c8b0411b1
+Author: Ian Curtis
+Date:   Thu May 5 08:06:06 2016 +0000
+
+    Flat shaded polys can't share vertex normals with adjacent connected polys.
+    Fixes some bad lighting in Harley on pavements
+
+Commit: b2da849d907072b29e90e7118871550228d7ca84
+Author: Ian Curtis
+Date:   Thu May 5 00:01:17 2016 +0000
+
+    support flat shading
+
+Commit: 3693a51cbb9c1efef9b6604775f41c903c14fcd4
+Author: Ian Curtis
+Date:   Wed May 4 16:30:15 2016 +0000
+
+    Make sure texture is bound to correct texture unit, stop flashing micro
+    textures in daytona
+
+Commit: b0569007ef06435eca3b532993ec48b68065d8b6
+Author: Ian Curtis
+Date:   Wed May 4 10:30:58 2016 +0000
+
+    set correct microtexture wrap mode
+
+Commit: c545b9fd8551770a8ef0f0778060cc3a4789ae83
+Author: Ian Curtis
+Date:   Wed May 4 00:35:07 2016 +0000
+
+    preliminary microtexture
+
+Commit: 396fba7d24805e536c879ed8d195f432d687708b
+Author: Ian Curtis
+Date:   Tue May 3 21:17:37 2016 +0000
+
+    skip viewports marked as disabled, might stop parsing some bad data
+
+Commit: 6d1aa4d527bc3d824bb668cd910430b688ff5879
+Author: Ian Curtis
+Date:   Tue May 3 18:38:06 2016 +0000
+
+    fix compilation
+
+Commit: fa65542d76616cd7782c62395282086561628324
+Author: Bart Trzynadlowski
+Date:   Tue May 3 00:28:56 2016 +0000
+
+    Added support for A1RGB5 to BMP file writer and added a (commented-out)
+    example of how to use it to dump texture memory in ~CReal3D()
+
+Commit: c459772f8ec8ee29537865fba6e33e320b6009ee
+Author: Ian Curtis
+Date:   Sun May 1 19:52:02 2016 +0000
+
+    wrap invalid texture sizes, seems to fix bad textures in srally2 (skid
+    marks)
+
+Commit: 7ec7906c0feb01be2c5122c4e05a1f558c65ee97
+Author: Ian Curtis
+Date:   Sat Apr 30 20:32:44 2016 +0000
+
+    Turn off lighting if fixed shading (or no normals) flag is present. Fixes
+    some of the lighting weirdness in scud
+
+Commit: 48767b2267ee45fa0152c400162dea9a99172fa9
+Author: Bart Trzynadlowski
+Date:   Sat Apr 30 16:23:25 2016 +0000
+
+    Legacy engine: fixed per-vertex fixed shading to incorporate Ian's findings
+    that the intensity value is signed and that fixed shading applies only when
+    lighting is enabled
+
+Commit: 23a5839d465433d4db572ffa3b1a3adbb605ca5d
+Author: Ian Curtis
+Date:   Sat Apr 30 09:02:38 2016 +0000
+
+    Daytona seems to use 3 bits for texture transparency, will figure it out
+    later but for now this works
+
+Commit: 30ca1792bb058bc10d2f39024cc1cf201582fe21
+Author: Ian Curtis
+Date:   Sat Apr 30 08:58:13 2016 +0000
+
+    Fix fixed shading maths
+
+Commit: e0513ec7234d1723b51697913d9fd2441eebd932
+Author: Bart Trzynadlowski
+Date:   Fri Apr 29 23:57:15 2016 +0000
+
+    Updated to-do comments
+
+Commit: c499e6640cdf2d618e8e236fb8b0579a088eef4a
+Author: Ian Curtis
+Date:   Fri Apr 29 23:03:46 2016 +0000
+
+    fixed shading code
+
+Commit: 57d5bc8367a5c893e8da18bcd8e087fbac523ba7
+Author: Bart Trzynadlowski
+Date:   Fri Apr 29 03:56:06 2016 +0000
+
+    Legacy engine: preliminary per-vertex fixed shading. Only limited testing
+    with LA Machineguns (appears to work), Sega Rally 2 (appears okay), and Scud
+    Race (fixes expert course bridge but not other mis-colored polygons).
+
+Commit: 2785ecd25f73d38d8641205e55782b428a74839c
+Author: Ian Curtis
+Date:   Thu Apr 28 22:15:36 2016 +0000
+
+    read front buffer
+
+Commit: 7456aa745c48af33f9fad9be25ad89d687f462c8
+Author: Bart Trzynadlowski
+Date:   Thu Apr 28 13:18:56 2016 +0000
+
+    Luminous bit is now also dumped in polygon header analysis because shading
+    modes may depend on whether or not lighting is enabled
+
+Commit: 34e8f00382d745ba6d1c641d79160fefe47db1cf
+Author: Bart Trzynadlowski
+Date:   Thu Apr 28 13:18:15 2016 +0000
+
+    Legacy engine: extracting fixed shading component (but still can't use it
+    because unsure of how to activate)
+
+Commit: 0ae9e8013b184627894ff4f1b863a937a0bd2d9a
+Author: Bart Trzynadlowski
+Date:   Thu Apr 28 01:27:35 2016 +0000
+
+    Fixed polygon header bit analysis code: was forgetting to swap GL buffer
+    back to retrieve pixels from last rendered frame
+
+Commit: 09e27e3082d0e1e00f162f38fb4c4de14a51b0fe
+Author: Ian Curtis
+Date:   Wed Apr 27 16:42:31 2016 +0000
+
+    color flag
+
+Commit: 74e7ff3d7d412c846c2b38c6f50597cd84183c12
+Author: Ian Curtis
+Date:   Wed Apr 27 11:17:28 2016 +0000
+
+    update project
+
+Commit: a246fc1454a01140de44c635e617dff7e6bb4b94
+Author: Ian Curtis
+Date:   Wed Apr 27 11:17:12 2016 +0000
+
+    make compilable with visual studio
+
+Commit: 8f6ab2fcf9f3a33759533aee7570f73ed671dc17
+Author: Ian Curtis
+Date:   Wed Apr 27 08:13:22 2016 +0000
+
+    simplify
+
+Commit: 3c5fcbd2411a2db8e38351b76867d64aeffe9a0a
+Author: Bart Trzynadlowski
+Date:   Wed Apr 27 04:15:22 2016 +0000
+
+    Forgot a newline
+
+Commit: c0ec610e991123ffc50367929c74213492805932
+Author: Bart Trzynadlowski
+Date:   Wed Apr 27 04:09:50 2016 +0000
+
+    Polygon header bit analysis code (need to #define DEBUG and use -gfx-state
+    option)
+
+Commit: 04fba1466d26d8104968f1281fef80120b88688f
+Author: Bart Trzynadlowski
+Date:   Wed Apr 27 04:08:49 2016 +0000
+
+    Added utility function to write BMP files
+
+Commit: 3682ab730015e622e8ae4429095c5e00bff7cb3c
+Author: Bart Trzynadlowski
+Date:   Tue Apr 26 23:06:40 2016 +0000
+
+    Updated polygon header description with double-sided bit (forgot it in last
+    update!)
+
+Commit: 85a77bb0163fc2e743064481bd27139c0db45dd8
+Author: Bart Trzynadlowski
+Date:   Tue Apr 26 23:04:11 2016 +0000
+
+    Added an updated description of the polygon header to the top of
+    Legacy3D/Models.cpp
+
+Commit: 3e8439c09cca75b656bf85c9b465f63ef488fc32
+Author: Ian Curtis
+Date:   Tue Apr 26 09:06:48 2016 +0000
+
+    fix model normals, add code for fixed shading, as of yet flag to turn it on
+    is unknown
+
+Commit: b730fc466cef8528213f64712e2f00acbdf6a6a8
+Author: Bart Trzynadlowski
+Date:   Tue Apr 26 00:12:02 2016 +0000
+
+    Legacy engine: vertex normals are standalone and do not need to be added to
+    polygon normal
+
+Commit: 112777385e796000fa73bf3fd07aa91cb1d0a504
+Author: Bart Trzynadlowski
+Date:   Sun Apr 24 17:06:14 2016 +0000
+
+    Added a debug option to load and render a single frame of graphics state
+    from a save state file. Only available if compiled with DEBUG defined.
+    Invoked using: -gfx-state=<file> on command line.
+
+Commit: 1265c8d1845cbfece142247c8a4206418334fe3b
+Author: Bart Trzynadlowski
+Date:   Sun Apr 24 03:01:42 2016 +0000
+
+    Using IEmulator interface instead of CModel3 directly
+
+Commit: 9baa0488e34391c1591c56c5bb2f8ab02f0b137f
+Author: Bart Trzynadlowski
+Date:   Sun Apr 24 01:50:03 2016 +0000
+
+    Changed save state file version (r340 changed Real3D save format, breaking
+    compatibility with older states, and states were probably already
+    incompatible with 0.2a)
+
+Commit: 3bd8e20639638bcac9453b08d9874d8099383fe0
+Author: Bart Trzynadlowski
+Date:   Sun Apr 24 01:40:16 2016 +0000
+
+    Fixed white space and warnings. Fixed second argument to -dis option in
+    cases where other numerical parameters are specified on command line.
+
+Commit: 908d979cd748ba7ca2462c192e03bc6b37c73ba4
+Author: Bart Trzynadlowski
+Date:   Fri Apr 22 23:46:49 2016 +0000
+
+    Flattened out nested if-statements in new engine's fragment shader to
+    improve compatibility with older GPUs (e.g., NVS 300)
+
+Commit: 58d187e59add6ec45995bc512f979e70623fd549
+Author: Ian Curtis
+Date:   Tue Apr 19 22:05:12 2016 +0000
+
+    parse viewports in normal order
+
+Commit: df9fefd064ff8f863bdaf962eece220f74a5a83d
+Author: Ian Curtis
+Date:   Mon Apr 18 22:25:05 2016 +0000
+
+    walk siblings before children, fixes some of the transparency drawing issues
+    in ocean hunter
+
+Commit: 057ee94210aaf281246dc15d36c2bfe7bf819c28
+Author: Ian Curtis
+Date:   Mon Apr 18 14:06:10 2016 +0000
+
+    simplify
+
+Commit: a5301efed699e3f2ede04bc6e23938d3fe908cff
+Author: Ian Curtis
+Date:   Sun Apr 17 00:02:16 2016 +0000
+
+    avoid cast warning
+
+Commit: c4dc96ef71bc93aa22882bedb2cfb73f1c9aea72
+Author: Ian Curtis
+Date:   Sun Apr 17 00:00:51 2016 +0000
+
+    simplify list code
+
+Commit: ad96676d6815440dc605dd47a66aa755fb04710a
+Author: Bart Trzynadlowski
+Date:   Fri Apr 15 23:54:58 2016 +0000
+
+    Updated Mac OS X Makefile
+
+Commit: 34d4d8981d06e1bf5390b9de7314918473d67df6
+Author: Bart Trzynadlowski
+Date:   Fri Apr 15 04:26:42 2016 +0000
+
+    Fixed 8-bit texture decoding in legacy 3D engine. Contour mode/alpha still
+    needs to be made consistent (as much as possible) with new engine.
+
+Commit: d6ce41f971b34f4dfb89376e370f6600df96acdd
+Author: Bart Trzynadlowski
+Date:   Thu Apr 14 01:15:13 2016 +0000
+
+    Updated Supermodel.ini with default Magical Truck Adventure controls
+
+Commit: 9a2bb78addae39eaccb5ce4155155c32440141e7
+Author: Bart Trzynadlowski
+Date:   Wed Apr 13 03:28:04 2016 +0000
+
+    Hooked up Magical Truck Adventure controls
+
+Commit: d2563c035f91216349383fe86b0d29154ea07c5e
+Author: Ian Curtis
+Date:   Mon Apr 11 15:16:35 2016 +0000
+
+    you were right Bart :) (Fixes broken sound in last build)
+
+Commit: 499ac0e1c902b7311e6c0226577434dfdeb19ba9
+Author: Ian Curtis
+Date:   Mon Apr 11 09:00:20 2016 +0000
+
+    Don't use variable sized variables across platforms, unless needed
+
+Commit: 6d313fcf9edc665d00d5e2c3c38c8afeb395e30e
+Author: Ian Curtis
+Date:   Mon Apr 11 08:38:59 2016 +0000
+
+    Fix - cannot specify explicit initializer for arrays
+
+Commit: 94c66eea7b68ca204d83fce005decc97b3dc3bbe
+Author: Bart Trzynadlowski
+Date:   Mon Apr 11 03:48:36 2016 +0000
+
+    Figured out Step 1.0 VROM texture uploads. Fixes missing textures in VF3 and
+    VF3TB.
+
+Commit: ef8709382458759ef0c4cf48b884f3f4eab1b48a
+Author: Bart Trzynadlowski
+Date:   Mon Apr 11 03:39:19 2016 +0000
+
+    Debugger compilation fixed: CBus -> IBus
+
+Commit: 2524f2e837aa7618fc0e4a66f3d9183ca994000d
+Author: Bart Trzynadlowski
+Date:   Mon Apr 11 00:19:10 2016 +0000
+
+    Fixed Magical Truck Adventure by emulating VROM texture ports as a FIFO.
+    Now, VF3 crashes on Akira's stage (and probably the other stages with
+    texture glitches). Other games may be affected, too (not thoroughly tested
+    yet).
+
+Commit: 775256118da1951316bc32cea490b0f87c8af3d6
+Author: Bart Trzynadlowski
+Date:   Sun Apr 10 23:57:55 2016 +0000
+
+    Fixed Magical Truck Adventure country check (accidentally removed a line in
+    previous commit).
+
+Commit: 7ade3a6abbaff1310798abba340866d2cddf06fa
+Author: Bart Trzynadlowski
+Date:   Sun Apr 10 21:47:07 2016 +0000
+
+    Magical Truck Adventure expects 0x03 to be returned from MIDI control port
+    (thanks, Ville). Game now boots but crashes because VROM texture uploads
+    clobber memory for some reason.
+
+Commit: 198a469ff7dc2573ad406c2cea38f12fc43ba918
+Author: Bart Trzynadlowski
+Date:   Sun Apr 10 03:42:41 2016 +0000
+
+    Created IEmulator interface, renamed CBus to IBus and CPCIDevice to
+    IPCIDevice. Frames now rendered when emulator paused.
+
+Commit: f52cb3c4916cb7b7c10f4c6c7d632a83987592d6
+Author: Ian Curtis
+Date:   Fri Apr 8 23:29:31 2016 +0000
+
+    tweak frustum planes
+
+Commit: e08b7541408bda9b21c23d79d288f93ea85f762f
+Author: Bart Trzynadlowski
+Date:   Tue Apr 5 04:31:39 2016 +0000
+
+    Changed help text to explain that -sound-volume and -music-volume only take
+    effect when DSB is present
+
+Commit: 22907b033f8351e726fa66b7e2cb7972b2bbda05
+Author: Bart Trzynadlowski
+Date:   Tue Apr 5 04:30:52 2016 +0000
+
+    Fixes for non-Windows builds: Makefile updated and fixed header files in
+    Vec.cpp
+
+Commit: 5f68544641252fe41a3cdd6c59e73e67ab6706f3
+Author: Ian Curtis
+Date:   Mon Apr 4 10:50:05 2016 +0000
+
+    revert viewport code
+
+Commit: ecea4cad569cf3e2c1275f23ca24fa7e2501210f
+Author: Ian Curtis
+Date:   Mon Apr 4 10:21:34 2016 +0000
+
+    change tex format 4
+
+Commit: 38d5d141575dc4e4c1c20ce79c4fead28ea798ba
+Author: Bart Trzynadlowski
+Date:   Mon Apr 4 04:32:10 2016 +0000
+
+    Clamping diffuse+ambient light intensity to 1.0 (legacy engine)
+
+Commit: faf5f9cf48b5b6697008a1acf7bab5be55b85df5
+Author: Bart Trzynadlowski
+Date:   Mon Apr 4 04:31:26 2016 +0000
+
+    Added a comment about viewports
+
+Commit: 6d9426759baa37e277514ab037fb21014a5bb37b
+Author: Bart Trzynadlowski
+Date:   Mon Apr 4 03:50:24 2016 +0000
+
+    Fixed texture enable bit (fixes Star Wars light sabers and Sega Rally 2
+    cones) and added a hack for (and more comments about) color modulation. Scud
+    Race, Sega Rally 2, LA Machineguns, etc. look correct now, but Fighting
+    Vipers 2 shadows are no longer dark enough. Other bugs may exist. 
+
+Commit: 1d4f5c871d3d155db78f1b1862ed6098f7696d4f
+Author: Bart Trzynadlowski
+Date:   Mon Apr 4 03:43:55 2016 +0000
+
+    Fixed Types.h include
+
+Commit: a202d8adc309c183848771ad6efa2230bc793711
+Author: Bart Trzynadlowski
+Date:   Mon Apr 4 03:42:55 2016 +0000
+
+    Do not print extra hardware message when there is none
+
+Commit: d8aefa421df82f17c9bbeb246416eecaad737c6e
+Author: Bart Trzynadlowski
+Date:   Mon Apr 4 03:42:26 2016 +0000
+
+    8-bit texture upload byte selection (thanks to Ville; but not tested yet);
+    code cleanup
+
+Commit: d155fbd6e45040be29f73bbb41f0007506c50890
+Author: Ian Curtis
+Date:   Sun Apr 3 23:21:50 2016 +0000
+
+    rgb values were swapped for paletted colours
+
+Commit: 3bc2794b0aa7f048cc08cfff48d43d5969415240
+Author: Ian Curtis
+Date:   Sun Apr 3 16:10:40 2016 +0000
+
+    Use the correct texture enable bit
+
+Commit: 3c8352f4ca3f00cefbb1091d906ef487781d2649
+Author: Bart Trzynadlowski
+Date:   Sun Apr 3 04:09:06 2016 +0000
+
+    Added a comment: observation of Star Wars and Scud Race color modulation
+    issues.
+
+Commit: f09dd457c53eab7f27d727e9385331a63a14adf7
+Author: Ian Curtis
+Date:   Sat Apr 2 22:14:39 2016 +0000
+
+    Update vs project for encryption code
+
+Commit: 688af268469c9019e6221f48b74aedea5bebedc9
+Author: Ian Curtis
+Date:   Sat Apr 2 22:13:59 2016 +0000
+
+    Possible work around for slightly incorrect viewport positions in ECA and
+    harley
+
+Commit: a99f022487162cbecd5fcc921af0569cbc88fa4e
+Author: Ian Curtis
+Date:   Sat Apr 2 22:08:25 2016 +0000
+
+    add missing include
+
+Commit: 6e5c301de8ac5dfcc8039a2d97bd70c77fc074c9
+Author: Bart Trzynadlowski
+Date:   Sat Apr 2 21:50:40 2016 +0000
+
+    Encryption device emulation (thanks to MAME), fixed warnings in Model3.cpp,
+    added a string formatter helper, and updated Win32 GCC Makefile.
+
+Commit: c0f679479a2f5c47b436589672ae8329c7686a30
+Author: Bart Trzynadlowski
+Date:   Sat Apr 2 21:35:06 2016 +0000
+
+    Added virtual destructor to CDSB
+
+Commit: 0d989831edb1c6f3fa8ed5eb75e5216cd570c143
+Author: Bart Trzynadlowski
+Date:   Sat Apr 2 21:33:33 2016 +0000
+
+    Added encryption keys, converted to cstdint types, fixed whitespace
+
+Commit: c7ad13fb31769f04d403e3787a9f0f17898a1e62
+Author: Bart Trzynadlowski
+Date:   Sat Apr 2 21:32:28 2016 +0000
+
+    Whitespace, cstdint types
+
+Commit: 9c2aff72c8c4a70729f04d50190cc255fcd46fb3
+Author: Ian Curtis
+Date:   Sat Apr 2 15:41:50 2016 +0000
+
+    add missing file
+
+Commit: c7412828d4bf0b695602d19f7f98e40b97ba9dde
+Author: Ian Curtis
+Date:   Sat Apr 2 12:23:46 2016 +0000
+
+    Use proper texture wrapping mode for 2d. Stops garbage down the top and left
+    sides. Should really use NPOT texture.
+
+Commit: 736f5ab958434d010e20820d60defb7aaee0d9b6
+Author: Ian Curtis
+Date:   Fri Apr 1 16:36:12 2016 +0000
+
+    add missing project files
+
+Commit: 7e7847bc83ee217dc9a992ca853418c65d856cff
+Author: Ian Curtis
+Date:   Thu Mar 31 09:27:42 2016 +0000
+
+    Allow asymmetric projection matrices. Fixes a bunch of missing effects and
+    bad camera angles in harley. 
+
+Commit: c398cab1b11a34a455fd3a0bd2c3e68eb2320ce9
+Author: Ian Curtis
+Date:   Tue Mar 29 15:29:15 2016 +0000
+
+    update project
+
+Commit: aee89390ba76279f282c187282d1dadd4d10c750
+Author: Ian Curtis
+Date:   Mon Mar 28 20:11:46 2016 +0000
+
+    add LOD table data. Maybe we can get clipping planes out of these
+
+Commit: e79b241a49355ae72fc07f9ee9db3e9a6110cc5b
+Author: Ian Curtis
+Date:   Mon Mar 28 19:58:36 2016 +0000
+
+    properly mark dynamic meshes as such
+
+Commit: e1278f4451c6c022edcaa6b2003e67078dd47ebc
+Author: Ian Curtis
+Date:   Sun Mar 27 08:39:40 2016 +0000
+
+    allow 8 bit  mono textures to be contour textures, fixes a bunch of missing
+    transparency in harley la riders 
+
+Commit: ffaed8ae32e606e9f3e46ef76258ab0ca8d84719
+Author: Ian Curtis
+Date:   Sat Mar 26 22:48:51 2016 +0000
+
+    clear the rom mesh buffer 
+
+Commit: 4992e596731d3bdda05ce21aa533b941c1d837ce
+Author: Ian Curtis
+Date:   Sat Mar 26 22:44:26 2016 +0000
+
+    Cache rom models, for better performance. 
+
+Commit: 8488f22ac5fbf54b077292968cba74f4af287099
+Author: Ian Curtis
+Date:   Thu Mar 24 13:26:28 2016 +0000
+
+    
+
+Commit: 0327db246feff26966b6129df5a6e140ced6cb80
+Author: Ian Curtis
+Date:   Thu Mar 24 13:17:17 2016 +0000
+
+    WIP
+
+Commit: 23172c9aecd1fac96e8b0df7e15341f3a6603191
+Author: Ian Curtis
+Date:   Wed Mar 23 01:05:02 2016 +0000
+
+    fix for bad matrix with NaN
+
+Commit: 5c513445b1592d40233a696b297181e34c73d539
+Author: Bart Trzynadlowski
+Date:   Wed Mar 23 00:47:53 2016 +0000
+
+    Fixed detected axis printf() and compiler warnings (hopefully I did not
+    parenthesize any conditionals incorrectly!)
+
+Commit: f031e5d095e29fe03c9c10570ba0a90dcc0d58c2
+Author: Ian Curtis
+Date:   Tue Mar 22 23:39:59 2016 +0000
+
+    finish front/back face culling code based on matrix determinant. Optimised
+    opengl to avoid redundant state changes.
+
+Commit: 44ea90218118782ff0a9af4ae3a3a3524a3b4d38
+Author: Ian Curtis
+Date:   Tue Mar 22 22:00:17 2016 +0000
+
+    add missing project file
+
+Commit: 8ea59780932a60c16b10dfe6468136601d1ea61c
+Author: Ian Curtis
+Date:   Tue Mar 22 21:59:51 2016 +0000
+
+    fix parenthesis error 
+
+Commit: e7eb912eaa30adb162938334a5313a9a94e92ecb
+Author: Ian Curtis
+Date:   Tue Mar 22 13:47:28 2016 +0000
+
+    add maths functions
+
+Commit: 93f6b01e0bd3bbcf2dc23f3715980c7ae30d0e5e
+Author: Ian Curtis
+Date:   Tue Mar 22 12:30:23 2016 +0000
+
+    Update project to vs 2013. Clean compile warnings
+
+Commit: ce99c47f8a8345bc5a23213d443f6ab8a8f7b57c
+Author: Ian Curtis
+Date:   Tue Mar 22 11:40:24 2016 +0000
+
+    Remove double copy of shaders
+
+Commit: 5b3eea25fb7137beecd98217ba80b8d99ba0357d
+Author: Ian Curtis
+Date:   Tue Mar 22 11:34:32 2016 +0000
+
+    fix basic compile errors (with vs)
+
+Commit: 09747bcd7c983c91e243c0788f3048410a229a4d
+Author: Bart Trzynadlowski
+Date:   Tue Mar 22 03:43:55 2016 +0000
+
+    Tweaked Windows gcc Makefile
+
+Commit: 3627213577fb76035bde3163daddc0558820f00a
+Author: Bart Trzynadlowski
+Date:   Tue Mar 22 03:43:31 2016 +0000
+
+    Fixed compiler warnings, whitespace, and moved local variable declarations
+    to site of assignment
+
+Commit: ec7588e2cdc5064e88f9aa7da121b27bc29ac948
+Author: Bart Trzynadlowski
+Date:   Tue Mar 22 03:41:00 2016 +0000
+
+    Include Version.h
+
+Commit: 028727b389dc9d18717328c21664a61fd21be50d
+Author: Bart Trzynadlowski
+Date:   Tue Mar 22 02:44:38 2016 +0000
+
+    Fixed typo that broke build
+
+Commit: 4c7186b1f105cc3192992333eeaa2f5ec1f12ef5
+Author: Bart Trzynadlowski
+Date:   Tue Mar 22 01:37:55 2016 +0000
+
+    Fixed warnings and whitespace
+
+Commit: 78609688c503283a8f098628bc01256c31d87209
+Author: Bart Trzynadlowski
+Date:   Tue Mar 22 01:24:23 2016 +0000
+
+    Fixed warnings and whitespace
+
+Commit: bd09b3b68b577251db0596d62ccbed964940fdc9
+Author: Bart Trzynadlowski
+Date:   Tue Mar 22 01:16:46 2016 +0000
+
+    Fixed warnings and whitespace
+
+Commit: f0488a3c946ed71efc1dd5ef750cff9f3528344b
+Author: Bart Trzynadlowski
+Date:   Tue Mar 22 01:05:34 2016 +0000
+
+    Moved lastCycles static int out of header file (fixes compiler warnings)
+
+Commit: 3afe3cf1a7ea6bb6d255f21caa0b9e3851adca48
+Author: Bart Trzynadlowski
+Date:   Mon Mar 21 23:27:30 2016 +0000
+
+    Moved
+
+Commit: 47c54d100be4e8dc949f689e947989b6de197ea7
+Author: Bart Trzynadlowski
+Date:   Mon Mar 21 23:25:29 2016 +0000
+
+    Updated to support new IRender3D interface and added FrameTimings object.
+
+Commit: 708455a82d9a7d07970ddccea70d677038defa0d
+Author: Bart Trzynadlowski
+Date:   Mon Mar 21 23:22:26 2016 +0000
+
+    CRender3D -> CLegacy3D
+
+Commit: 60ce6180c08b7da9feaa27377d24273136ec75c4
+Author: Bart Trzynadlowski
+Date:   Mon Mar 21 23:20:32 2016 +0000
+
+    Update Supermodel.h with graphics path and moved version string to separate
+    header file
+
+Commit: d61b01ab6f4eae744a8ed8919760adcaa699aab0
+Author: Bart Trzynadlowski
+Date:   Mon Mar 21 23:12:17 2016 +0000
+
+    Removing legacy 3D engine files that were already moved to Graphics/Legacy3D
+
+Commit: 34301e97e16b21f4d8566c22987a508648ca9380
+Author: Bart Trzynadlowski
+Date:   Mon Mar 21 04:10:14 2016 +0000
+
+    Adding new 3D engine by Ian Curtis. Old engine moved to Graphics/Legacy3D/.
+
+Commit: 9802bbbfd871df568a7c2f21fbfd81f51f087ffb
+Author: Bart Trzynadlowski
+Date:   Mon Mar 21 04:07:32 2016 +0000
+
+    Fixed compilation errors involving min and max functions
+
+Commit: 0579e65ebd447d22279f398fc9b6ea2794b15f16
+Author: Bart Trzynadlowski
+Date:   Mon Mar 21 04:03:44 2016 +0000
+
+    Added registers to debugger: ctr, xer, srr0, srr1, sdr1, imiss, dmiss, hid0,
+    hid1
+
+Commit: 27c20ff5e5787ac8c701ce7eef4168da37f02380
+Author: Bart Trzynadlowski
+Date:   Mon Mar 21 04:02:14 2016 +0000
+
+    Fixed compiler warnings
+
+Commit: 8f87bb16988a0887cf802c39e57ddcbf1c3672b1
+Author: Bart Trzynadlowski
+Date:   Tue Feb 23 05:28:17 2016 +0000
+
+    53c810: do not increment DSP when executing interrupt instruction. Fixes
+    invalid polygons in Virtua Fighter 3. Thanks to Ian Curtis for discovering
+    that the polygons were incorrectly-copied garbage.
+
+Commit: 8e6712d2c7a0e0e8cf5a8ee347166bd434bb1abc
+Author: Bart Trzynadlowski
+Date:   Mon Dec 7 05:56:36 2015 +0000
+
+    Fixed display of PowerPC condition code bits in debugger (were backwards)
+    and changed XER to print as hex.
+
+Commit: 3d00225cba53a8d18c19cd06a3c7b7b132e60c4f
+Author: Bart Trzynadlowski
+Date:   Mon Dec 7 05:29:07 2015 +0000
+
+    Support for loading an arbitrary (non-game) CROM image.
+
+Commit: 1035b0c6a84e9a9bf2f5150a008d1ec87eae8cc0
+Author: Bart Trzynadlowski
+Date:   Sat Jun 13 02:57:41 2015 +0000
+
+    Gracefully handle the case when a zip file contains no known Model 3 ROM
+    set.
+
+Commit: 6bf4244207567eef41fa02cc7f3a0eea52c1daa5
+Author: Bart Trzynadlowski
+Date:   Sat Jun 13 02:56:26 2015 +0000
+
+    Converted line endings from DOS to UNIX format.
+
+Commit: ee8afa17c3ca78de598a8452940e8086a9aea2e9
+Author: Bart Trzynadlowski
+Date:   Tue May 12 02:50:28 2015 +0000
+
+    Contribution by Luciano Lopez:
+
+    - Added vs215o ROM set.
+    - Security board data for vs298 now also returned for vs2v991, vs299,
+    vs299a, and vs299b, helping them run.
+
+Commit: 8835d6fe36da2e27109b4703a75a01caaf825d38
+Author: Nik Henson
+Date:   Sat Nov 30 19:39:59 2013 +0000
+
+    Some updates to Supermodel made at beginning of the year but only now got
+    around to checking in (better late than never...):
+    - hooked up the remaining controls in Supermodel (except for Magical Truck
+    Adventure which does not work at all yet).  The new controls are:
+     * InputAnalogJoyTrigger2 and InputAnalogJoyEvent2 for the additional second
+    trigger and event buttons that were missing from Star Wars Trilogy,
+     * InputRearBrake and InputMusicSelect for the rear brake and music
+    selection buttons that were missing from Harley Davidson,
+     * InputAnalogGunXXX, InputAnalogTriggerXXX, InputAnalogGunXXX2 and
+    InputAnalogTriggerXXX2 for the analogue guns of Ocean Hunter and LA
+    Machineguns (NOTE: these controls must be calibrated in the games' service
+    menus otherwise they will not work properly.  Also, the alignment of the gun
+    cursor does not line up very well with the mouse position at the moment, but
+    at least the games are a bit more playable now, although still with numerous
+    graphical glitches...)
+     * InputSkiXXX for the controls of Ski Champ, making the game playable now.
+    - hooked up existing InputViewChange control to Harley Davidson's view
+    change button
+    - improved the handling of InputGearShiftUp/Down inputs so that they work
+    better with the driving games.  With Dirt Devils, ECA, Harley and LeMans
+    this means they map directly to the game's own shift up/down controls, while
+    with the 4-speed games such as Daytona 2, Scud Racer and Sega Rally 2, they
+    simulate the user shifting up and down through the gears
+    - added defaults for the new controls to Supermodel.ini
+    - other small code tweaks:
+     * fix small bug with handling of pos/neg inputs mapping to a control with
+    inverted range (0XFF to 0x00) - this was needed to get Ski Champ's X-axis to
+    work properly
+     * removed Wait method from InputSystem and added to CThread as
+    CThread::Sleep instead
+     * added FrameTimings struct to hold all frame timings in a single place No
+    networking code yet as just haven't had a chance to work on it since initial
+    progress at the beginning of the year - am *hoping* might have some time to
+    pick it up again over Christmas...
+
+
+Commit: b017b24b1f948922b8c5b1bb8b8ee8feb28626f7
+Author: Bart Trzynadlowski
+Date:   Thu Sep 6 05:38:35 2012 +0000
+
+    Changed output "Pause" to "pause", as it is spelled in MAME, for MAMEHooker.
+
+Commit: 08d347ccc7f824b42a750709b3afa0caac45d771
+Author: Nik Henson
+Date:   Tue Jul 24 20:37:40 2012 +0000
+
+    Small tweak to get to compile under GCC (Unix/MacOS)
+
+Commit: a3c15e8208f4a2a58714a68b0f073e2c3ae7f6ba
+Author: Nik Henson
+Date:   Tue Jul 24 20:18:30 2012 +0000
+
+    Slight tweak to changes made to sound board synchronisation code in previous
+    commit.  The previous change was necessary to ensure no deadlock when
+    waiting for sound board thread to exit but it introduced unwanted buffer
+    overruns (with the end result being that the sound was often speeded up) so
+    have added an extra check in WakeSoundBoardThread to prevent this.
+
+
+Commit: 108ac64de83d4897c5ba0f95f8fc2e4578701281
+Author: Nik Henson
+Date:   Mon Jul 23 20:35:10 2012 +0000
+
+    - CModel3::StopThreads was rather gracelessly killing threads while they
+    were waiting on their semaphores, which works okay Windows but not on Mac
+    OS-X where it was preventing Supermodel from exiting properly.  Hence, have
+    instead altered StopThreads to signal to threads that they should exit and
+    wait until until they have all done so.  This is much better and is what I
+    should have done the first time around had I not been so lazy :-)!
+    - Also fixed a small race condition in WakeSoundBoardThread.  Previously if
+    it happened to be called just before the sound board thread had finished
+    processing a frame's worth of audio but before it had got around to waiting
+    on the sync condition variable then the wake notification would be lost.
+
+
+Commit: f1e93bcd8ffae7d3aac28af93e12a0330bc12389
+Author: Bart Trzynadlowski
+Date:   Mon Jul 16 02:27:55 2012 +0000
+
+    - Fixed Win32 GCC Makefile.
+    - Reverted Nik's polygon palette index change in Models.cpp. Subtracting 1
+    was breaking Scud Race.
+    - Added an explicit typecast in Inputs.cpp, which GCC requires for some
+    reason.
+
+Commit: 183dca563d7a927cc994aabadbf545cf36da9f2e
+Author: Nik Henson
+Date:   Sun Jul 15 21:04:46 2012 +0000
+
+    Committing various small updates that have been hanging around in my source
+    tree for a while now:
+    - Added 'crosshairs' command line and config option.
+    - Added 'vsync' command line and config option (so far only tested on NVidia
+    cards on Windows 7 - other graphics drivers, O/Ss or driver settings may
+    simply chose to ignore this).
+    - Added fullscreen toggle within game using Alt+Enter key combination.
+    - Added framework for lamp outputs and 'outputs' command line and config
+    option.  So far only the lamps for driving games are hooked up in the
+    emulator (others to be added later).
+    - Added an initial outputs implementation for Windows that sends MAMEHooker
+    compatible messages (-outputs=win to enable)
+    - Fixed fps calculation in Main.cpp that was producing incorrect results and
+    so giving the impression that frame throttling wasn't working properly when
+    in fact it was.
+    - Fixed palette indexed colours as the index was always off by one, causing
+    incorrect colours in various games, eg drivers' suits and flashing Start
+    sign in Daytona 2.
+    - Altered caching of models so that models with palette indexed colours use
+    the dynamic cache rather than the static one.  This is so that changes in
+    palette indexed colours appear on screen, eg the flashing Start sign on the
+    advanced course of Daytona 2 (although currently the START message itself is
+    not visible due to other problems with texture decoding).
+    - Fixed small bug in TileGen.cpp which meant both palettes were being
+    completely recomputed pretty much with every frame.  This was a significant
+    performance hit, particularly as palette recomputation is currently being
+    done in SyncSnapshots (it should be moved out of here at some point,
+    although for now it's no big deal).
+    - Made sure all OpenGL objects and resources are deleted in Render2D/3D
+    destructors, in particular the deleting of the VBO buffer in
+    DestroyModelCache.
+    - Made sure that GLSL uniforms are always checked to see if they are bound
+    before using them in order to stop unecessary (but harmless) GL errors.
+    - Altered the default texture sheet handling to use a single large GL
+    texture holding multiple Model3 texture sheets rather than multiple GL
+    textures as before (if required, the old behaviour can still be selected
+    with the mulisheet fragment shader).  I believe this fixes the disappearing
+    crosshairs/corrupt GL state problem which the multisheet fragment shader
+    seemed to be triggering somehow.
+    - Fixed a bug in debugger which meant memory watches were not triggering
+    properly 
+
+
+Commit: ac29fc1e88b5f29d3fc21046f539086631163be2
+Author: Bart Trzynadlowski
+Date:   Thu Jul 12 06:40:55 2012 +0000
+
+    Somehow John's Build.bat and Clean.bat did not get added in r262. Here they
+    are.
+
+Commit: 772c94d1227e2c116d1e7aea4f3f112da7dbb77d
+Author: Bart Trzynadlowski
+Date:   Thu Jul 12 06:13:24 2012 +0000
+
+    - Committing Nik's timing changes: the PowerPC's DEC and TBR now count at
+    the correct rate and time is accurately maintained between calls to the
+    emulator. A VBlank bit was identified in the Real3D status register space
+    and is now timed. Unfortunately, there are still some problems and not all
+    games are perfect, but FV2, VS2, and others are working much better or
+    perfectly.
+    - Added a new dump of Scud Race Plus (scudp1). Strangely, this one uses an
+    MPC106 instead of the MPC105 used by every other Step 1.5 game... 
+
+Commit: 3963a7a53cb74ea3c75a3b9f7d97ee505c618359
+Author: John Peterson
+Date:   Thu Jul 12 05:28:08 2012 +0000
+
+    Applied a series of patches by John Peterson:
+
+    - Fixed a printf statement in ConsoleDebugger.cpp.
+    - Fixed memory watches not breaking in CPUDebug.h.
+    - Added some helpful batch files to the VS2008 directory.
+    - Added support for automatic loading of parent ROM sets.
+
+Commit: 93b71c8429f90ad55acf8c42916ad808ab2beb7a
+Author: Bart Trzynadlowski
+Date:   Sat Mar 31 19:41:55 2012 +0000
+
+    Applied Nik's fix for cyclical scene graphs. Improves Harley Davidson, Ski
+    Champ, Emergency Call Ambulance, and Ocean Hunter.
+
+Commit: 1bce4446685da941e9ffed40ecbabacd9109d5a7
+Author: Bart Trzynadlowski
+Date:   Tue Feb 28 04:34:32 2012 +0000
+
+    Brought in the near clipping plane for Step 1.5+. Objects close to camera
+    are no longer cut-off (e.g., driver arms and steering wheels in cockpit
+    views). Note: This change should probably be applied to Step 1.0 as well in
+    the future. For now, I am leaving the old distance because Step 1.0
+    coordinates need closer investigation. Bringing in the near clipping plane
+    extends the view frustum depth and will worsen Z-buffer accuracy. Be on the
+    lookout for Z-fighting that did not previously exist.
+
+Commit: f9c3b9b5f82b105982e98a9c4261cf569513a3bc
+Author: Nik Henson
+Date:   Mon Feb 27 20:32:15 2012 +0000
+
+    DirectInputSystem's initial state wasn't being initialized properly, which
+    would sometimes result in invalid input values until keyboard or mouse was
+    successfully acquired
+
+Commit: 69610ef8dd65ce54cfa27e06e783cf3419dbaf13
+Author: Bart Trzynadlowski
+Date:   Sat Feb 25 06:36:04 2012 +0000
+
+    Added a clear() method to VBORef and removed unsafe memset() clear.
+
+Commit: 3b41239cfbe83d808027f1a1d5e61a6cf01fd1bb
+Author: Nik Henson
+Date:   Thu Feb 23 23:20:21 2012 +0000
+
+    This update fixes (hopefully) the last of the texture upload lags that were
+    affecting some games, in particular Daytona 2 and Spikeout. To achieve this
+    UploadTextures no longer clears the model cache when called.  Instead the
+    cache is kept in-tact (which should help improve cache hits) and all
+    textures referenced by models being rendered are (re-)decoded with every
+    frame. To help with tracking all the unique texture references contained in
+    a model a new class TextureRefs has been added.
+
+
+Commit: aba801ebb47993fc64d76a6ce7d4354f2a9a89b7
+Author: Bart Trzynadlowski
+Date:   Thu Feb 23 03:08:57 2012 +0000
+
+    Byte swapped sample ROMs. This should fix the audio distortion that many
+    users noticed. The differences are particularly noticeable in Scud Race and
+    Daytona 2.
+
+Commit: 16e4fcab066245274b3f4fb7c0af551cbf37c525
+Author: Bart Trzynadlowski
+Date:   Thu Feb 23 00:12:46 2012 +0000
+
+    Forgot to update to-do list in previous revision. Added a comment to mark
+    CRender2D::WriteVRAM() as deprecated.
+
+Commit: fcf1d955a9f67957f2819726d0a8b2e4d72d4a03
+Author: Bart Trzynadlowski
+Date:   Wed Feb 22 01:34:42 2012 +0000
+
+    Previous "optimization" contained a mistake and made things worse. Removed
+    unnecessary clear of the bottom layer buffer. Now, if there is no bottom
+    layer, it will not be displayed at all and glClear(GL_COLOR_BUFFER_BIT) is
+    used instead.
+
+Commit: c085be59afcb84c9cb5489c3fc4deffce4e5908f
+Author: Bart Trzynadlowski
+Date:   Mon Feb 20 04:09:11 2012 +0000
+
+    Further optimization/simplification of the 2D renderer's main loop.
+
+Commit: 453df4f5f551bb4e8ef95fa3198083c7180a23ed
+Author: Bart Trzynadlowski
+Date:   Mon Feb 20 03:45:48 2012 +0000
+
+    - Finished cleaning up and optimizing the 2D renderer.
+    - Fixed up color offset register support for new 2D rendering system. Now
+    maintains 2 computed palettes for layers A/A' and B/B'.
+    - Fixed a minor bug in InitPalette(); VRAM was not being typecast properly.
+    - Fixed specular lighting bug that occurred on some OpenGL drivers because
+    integers were not being interpreted as floats in the vertex shader.
+    - Began to update copyright date in some files.
+    - Graphics modules now use the C++-style names for C standard library
+    headers (e.g., stdio.h -> cstdio) consistent with the rest of Supermodel.
+
+Commit: 0257f1f9e86722a236917790d40bcf59cdf25a75
+Author: Bart Trzynadlowski
+Date:   Fri Feb 17 07:45:50 2012 +0000
+
+    Contour processing (discarding of pixels when alpha==0) enabled for A4L4
+    texture formats. Improves smoke and fire in Daytona 2.
+
+Commit: 5709010cb265281659d5e8e554f5b9d8d7c2851a
+Author: Bart Trzynadlowski
+Date:   Tue Feb 14 09:13:36 2012 +0000
+
+    Default SCSP balance set to 0. Was erroneously set at +50%.
+
+Commit: 79d24d403f3757c1983eca6ae39546fbe71dd969
+Author: Bart Trzynadlowski
+Date:   Tue Feb 14 03:28:52 2012 +0000
+
+    - NOTE: In this revision (possibly earlier), I've started to notice some
+    intermittent geometry glitches in Spikeout and slowdown while playing
+    certain characters.
+    - Added multi-texture fragment shader to repo.
+    - Added a multiTexture option (enabled by default) to use multi-texturing to
+    decode textures.
+    - Added some comments regarding timing to the PowerPC execution loop.
+
+Commit: 30130f2bd5d354756bd9d8e4d73b1d22c43e1cdd
+Author: Nik Henson
+Date:   Mon Feb 13 23:51:32 2012 +0000
+
+    Updated fragment shaders' floating point comparisons and also some knock-on
+    changes from SVN revision 246.
+
+
+Commit: 8a4ea649940fdbd4032e67160b179d6667175cf9
+Author: Nik Henson
+Date:   Mon Feb 13 23:37:48 2012 +0000
+
+    Added OSD/Video.h to provide OSD-dependent video functionality.  The static
+    functions in here get called by Model3.cpp from within the render thread so
+    that any OSD related rendering can also be run in parallel for a further
+    speed increase. Updated OSD/SDL/Main.cpp to provide the SDL implementations
+    of the functions in OSD/Video.h.
+
+
+Commit: 84eb017744297c6676ee5315fb14c6e431ae55bc
+Author: Nik Henson
+Date:   Mon Feb 13 21:54:26 2012 +0000
+
+    Added support for multiple texture sheets (with up to one per Model 3
+    texture format) as a rather brute-force way to handle overlapping texture
+    formats in the current 3D engine.  This fixes some corrupt textures in
+    Daytona 2 and Virtua Striker 2 (and possibly other games) and also offers a
+    small speed increase when some scenes load multiple overlapping textures. 
+    This feature only enables itself when a compatible shader script is loaded. 
+    Since none have been checked in yet this means it is currently disabled.
+
+
+Commit: 35a47bc7e3d09904aafd141e8512a3c1f4d1962f
+Author: Bart Trzynadlowski
+Date:   Sat Feb 11 16:40:09 2012 +0000
+
+    Added command line options to force windowed mode and to control GPU
+    multi-threading.
+
+Commit: 1b8740165c2d8f5793f8de4be13be17ddcc693bf
+Author: Bart Trzynadlowski
+Date:   Fri Feb 10 19:53:51 2012 +0000
+
+    Added a wide screen hack that can be enabled with the -'wide-screen'
+    argument or WideScreen in the config file.
+
+Commit: 40a51287dfa2c501afad968135894b7516ef4b7d
+Author: Bart Trzynadlowski
+Date:   Thu Feb 9 17:15:15 2012 +0000
+
+    Tweaked help text slightly.
+
+Commit: 09f9bd81fdf1ce68b0a5bea31adae6fc2985e9c8
+Author: Bart Trzynadlowski
+Date:   Thu Feb 9 17:12:13 2012 +0000
+
+    Fixed left/right stereo channels -- they were reversed by default.
+
+Commit: c5d0cb0d97fa165f12af9785f649436decba6085
+Author: Bart Trzynadlowski
+Date:   Thu Feb 9 07:58:07 2012 +0000
+
+    Added front/rear speaker balance (actually the master/slave SCSP balance).
+    Balance setting is stored in CSoundBoardConfig and can be set on the command
+    line (-balance) or config file (Balance). Valid range is 100 (front speaker
+    volume doubled, rear muted) to -100. The default is 0, both sets at full
+    volume. Balance is applied in the SCSP core before overall sound and music
+    volume settings.
+
+Commit: 6814ef1ed83df7b1dc65f07adaeca481329f9015
+Author: Bart Trzynadlowski
+Date:   Mon Feb 6 02:54:43 2012 +0000
+
+    Added preliminary specular lighting to shaders. The "no spotlight" shader
+    has not yet been updated.
+
+Commit: 9fc0d7b3cc7e97f59fb659141eb5dcad60fdd4e6
+Author: Bart Trzynadlowski
+Date:   Wed Feb 1 18:08:13 2012 +0000
+
+    Updated some comments regarding the VF3 ROM patches. It seems many of them
+    are no longer necessary. The single necessary patch affects timing (note how
+    the warning screen stays up longer when it is removed). This needs to be
+    investigated -- perhaps it can lead to a timing fix for vf3, vs2, and
+    fvipers2?
+
+Commit: 0fcb9686f9efd93568fa87f884f2a2f02a393f39
+Author: Bart Trzynadlowski
+Date:   Fri Jan 27 22:27:38 2012 +0000
+
+    Documented the tile generator.
+
+Commit: 8a8609f3835d3be7fe7e4eeff12f55e0b4512e61
+Author: Bart Trzynadlowski
+Date:   Fri Jan 27 05:52:59 2012 +0000
+
+    - Added specular highlight support to the 3D engine. A shininess parameter
+    is now be passed to the shaders. Does not work correctly and I will save the
+    shaders themselves for a future commit.
+    - Added support for layer priorities. Highly unoptimal! This absolutely
+    needs to be polished up before any release (and properly documented). For
+    now, priorities in the popular games seem to be fixed but not all possible
+    priority settings have been figured out yet.
+
+Commit: c38ec7d5af3f573f29d09897cff45515bd1232d5
+Author: Bart Trzynadlowski
+Date:   Thu Jan 26 02:57:02 2012 +0000
+
+    Removed unused dirty rectangle code.
+
+Commit: e00a372cef26fc7cc2492595ed1591abc0147597
+Author: Bart Trzynadlowski
+Date:   Thu Jan 26 02:49:07 2012 +0000
+
+    Removed unused dirty rectangle code.
+
+Commit: b7980aa5625e049c8f63f70ccd5fe0f98ff4bdd5
+Author: Bart Trzynadlowski
+Date:   Thu Jan 26 02:48:16 2012 +0000
+
+    Removed unused dirty rectangle code.
+
+Commit: 93d68c5bf83378cf88ad63aa2882894b2cfcc78e
+Author: Nik Henson
+Date:   Sun Jan 22 16:33:40 2012 +0000
+
+    Added missing library WbemUuid.lib to VS project linker options
+
+
+Commit: 3315fb463b2c883ea52903bb9a3c71fd613e66d9
+Author: Bart Trzynadlowski
+Date:   Sun Jan 22 01:05:59 2012 +0000
+
+    Small correction to lighting model in shaders. Light intensity is no longer
+    clipped.
+
+Commit: b57ba51e449c6e4ba811eaa7ebf73c9b101ec52c
+Author: Bart Trzynadlowski
+Date:   Wed Jan 18 08:12:23 2012 +0000
+
+    Removed unused (and non-functional) 'stack machine' scene graph traversal.
+
+Commit: 4c7fe2f26602f63ee617b27dc7394e5e3bfe74d6
+Author: Bart Trzynadlowski
+Date:   Wed Jan 18 05:58:11 2012 +0000
+
+    MinGW Makefile now uses cmd prompt commands, not UNIX/msys.
+
+Commit: 1d64fc2c9efa6793cc8600354f76849ea62c16e1
+Author: Bart Trzynadlowski
+Date:   Wed Jan 18 05:28:34 2012 +0000
+
+    Added a MinGW Makefile for users of GCC on Windows.
+
+Commit: dd4a1320b675df3871069be4be5dd313e8dcf65a
+Author: Bart Trzynadlowski
+Date:   Wed Jan 18 05:25:39 2012 +0000
+
+    Removed deprecated, unused Turbo68K stuff.
+
+Commit: 611ef43ba5c959afb4caeea1a3caf20ad22316c5
+Author: Bart Trzynadlowski
+Date:   Wed Jan 18 04:59:42 2012 +0000
+
+    Now compiles with MinGW. Among other things, the use of __uuidof() was
+    removed.
+
+Commit: d1d5175548be0b812212eb9919d77c11b905bbf7
+Author: Nik Henson
+Date:   Mon Jan 16 23:21:14 2012 +0000
+
+    New multi-threaded rendering changes that parallelise graphics rendering and
+    PPC execution in order to increase performance on multi-core machines. New
+    gpuMultiThreaded config option to enable/disable multi-threaded rendering
+    (enabled by default, disabling it reverts to previous behaviour). Other
+    rendering optimisations:
+    - texture uploads now only affect appropriate region in the texture sheet,
+    rather than uploading the whole sheet each time
+    - performance of clearing the model caches has been improved New Alt+O key
+    input added to toggle outputting of frame timings for debugging purposes.
+
+
+Commit: 0835e38b9498f96612037815da373c9f29f05c11
+Author: Nik Henson
+Date:   Mon Jan 16 23:04:37 2012 +0000
+
+    Removed unecessary SDL include
+
+
+Commit: a1a993917a28a052cd1fd4bad911347aa7828b92
+Author: Nik Henson
+Date:   Mon Jan 16 22:15:59 2012 +0000
+
+    Added missing shader source files into VS2008 project (not needed for build,
+    just for reference)
+
+
+Commit: b7242d27e8b023ef432da44bd1961a470a598a99
+Author: Nik Henson
+Date:   Mon Jan 16 22:07:17 2012 +0000
+
+    Added CThread::Sleep && CThread::GetTicks methods
+
+
+Commit: 67036014f887361fba7e3592169de802ff8236c1
+Author: Nik Henson
+Date:   Mon Jan 2 17:37:34 2012 +0000
+
+    Fixed Unix Makefile to link okay on Ubuntu 11.10 (archive libraries needed
+    to be referenced at end of linker options)
+
+
+Commit: 2ece814f4395fcd7801f9215d24413a52af02fb5
+Author: Bart Trzynadlowski
+Date:   Tue Dec 27 19:16:22 2011 +0000
+
+    Assigned new version number: 0.3a-WIP.
+
+Commit: 532eafef555f7625919c206606e8a51ee2c1626b
+Author: Bart Trzynadlowski
+Date:   Mon Dec 26 07:15:32 2011 +0000
+
+    Fixed a bug w/ Read16() -- was not casting to a pointer properly, caused
+    Scud Race to crash.
+
+Commit: bdf11c765f0def0a7614d3450d67615a8a8564f0
+Author: Bart Trzynadlowski
+Date:   Mon Dec 26 06:10:55 2011 +0000
+
+    Preliminary backface culling fix. Matrices which effectively change the
+    polygon winding without changing the Z component of the polygon normal are
+    tested for when appending items to the display list. If necessary, the
+    polygon winding is changed on the fly to ensure visibility is correct. This
+    code desperately needs to be optimized. Note: Not yet thoroughly tested.
+
+Commit: a71af94edb21b1e9897788d28cf1ab93742e1bcb
+Author: Bart Trzynadlowski
+Date:   Fri Dec 23 21:06:45 2011 +0000
+
+    Fixed ROM banking -- appears to fix the sounds in Daytona 2 PE and VON2 but
+    otherwise has not been extensively tested. The high 8MB of the 68K address
+    is treated as a single window into the 16MB sample ROM, and can point either
+    to the low or high 8MB bank.
+
+Commit: 4c3d6e1abf00230d613ed6945e73e8173e808051
+Author: Bart Trzynadlowski
+Date:   Fri Dec 23 21:03:24 2011 +0000
+
+    Fixed a MAGIC_NUMBER comment typo.
+
+Commit: 885d946458caccc4aa88d30c04ecf6380d5276e9
+Author: Nik Henson
+Date:   Fri Dec 23 19:34:50 2011 +0000
+
+    Small bug fix
+
+
+Commit: 68554108ac07ca0812e21e6f943c7c4696bf817f
+Author: Nik Henson
+Date:   Fri Dec 23 12:39:34 2011 +0000
+
+    Small tweak to improve startup time
+
+
+Commit: b9375bb09bfd5e538bb3ac6882244691b6a7fed8
+Author: Nik Henson
+Date:   Fri Dec 23 12:01:31 2011 +0000
+
+    Optimisations to improve performance when running with debugger.  Now runs
+    at about 2/3 speed of full speed of emulator, rather than 1/3 like before.
+
+
+Commit: 2e337459cd6215f81f023c3069eb9a125698c795
+Author: Nik Henson
+Date:   Sun Nov 6 12:11:25 2011 +0000
+
+    Added missing DirectX include and library paths to project
+
+Commit: 622046828cf454c020c042754013f895700d833c
+Author: Nik Henson
+Date:   Sun Nov 6 12:10:57 2011 +0000
+
+    Added quotes around paths in post-build events to allow for spaces in
+    directory names
+
+Commit: a6b31b72c1b5af1afe87808b801321167246f4d7
+Author: Nik Henson
+Date:   Sat Nov 5 21:08:49 2011 +0000
+
+    Fixed incorrect ZLib paths
+
+
+Commit: 8f0e0edbb28215c4715376a79aea525bf0b65cef
+Author: Nik Henson
+Date:   Sat Nov 5 20:59:38 2011 +0000
+
+    Updated comment in DIR.txt (again!)
+
+Commit: 4f7c0381ba3a1f76eecef0ecce2d03be3117ba95
+Author: Nik Henson
+Date:   Sat Nov 5 20:58:31 2011 +0000
+
+    Updated comment in DIR.txt.
+
+
+Commit: 4c269323227bbbf3e9712dc6996c93db3c92971f
+Author: Nik Henson
+Date:   Sat Nov 5 20:55:56 2011 +0000
+
+    Removed sub-directories of Libraries as are created when user unzips source
+    archives, so might be confusing.
+
+
+Commit: 1451f8c81eb0ce7beb547a7a436ec6e14a9fecc4
+Author: Nik Henson
+Date:   Sat Nov 5 20:47:20 2011 +0000
+
+    Added DIR.txt to explain purpose of Libraries directories
+
+
+Commit: fc27908238f47368b1b9c9885063b3aa7109910d
+Author: Nik Henson
+Date:   Sat Nov 5 20:45:45 2011 +0000
+
+    Added place holder directories for third-party libraries (eg ZLib and SDL)
+
+
+Commit: 663a7f919c7c1e2d168abdbb6de29086afc0af87
+Author: Nik Henson
+Date:   Sat Nov 5 20:35:56 2011 +0000
+
+    Changes to Supermodel VS2008 solution to ensure it will now build completely
+    from scratch:
+    - added projects to build third-party libraries ZLib and SDL (expects source
+    code to be present in Libraries directory)
+    - moved Musashi68K into its own directory
+    - tidied up some config options
+
+
+Commit: dfa77e92078d911f99d7425e9c08af7e63ffd1fa
+Author: Nik Henson
+Date:   Tue Nov 1 23:24:37 2011 +0000
+
+    Added support for joystick sliders to input system. Added extra debugging
+    output to calibration input detection routine (activated by pressing Shift).
+
+
+Commit: e431b79f57c257eb066b43a0ebb98f2563b56cb3
+Author: Nik Henson
+Date:   Tue Nov 1 23:16:36 2011 +0000
+
+    Fixed small bug which meant wasn't correctly clearing SCSP structures on
+    initialisation.
+
+
+Commit: a18c26025fcb6b00b09b3050f7c6228926252b4e
+Author: Nik Henson
+Date:   Tue Nov 1 23:13:26 2011 +0000
+
+    Added separate Musashi68K project that compiles and runs m68kmake to build
+    required Musashi68K file. Updated solution so that with above change it will
+    now build Supermodel completely from scratch.
+
+
+Commit: e6fd2e22403c49ccce816ffb3baca7bb2c4af1cf
+Author: Nik Henson
+Date:   Sun Oct 2 20:53:12 2011 +0000
+
+    Added DirectInputConstForceLeftMax and DirectInputConstForceRightMax options
+    to allow different force feedback strengths in each direction. 
+    DirectInputConstForceMax still works as before but these new options will
+    override it for the given direction if they are specified.
+
+
+Commit: 46211fdcbd1a82dc73a95bb220c7b625624655f5
+Author: Bart Trzynadlowski
+Date:   Fri Sep 30 16:48:12 2011 +0000
+
+    Fixed a comment in default ini file.
+
+Commit: 0c4f93897f270515c7c5e81d362c17ba9b13b269
+Author: Nik Henson
+Date:   Sun Sep 25 22:46:58 2011 +0000
+
+    Force feedback fixes in DirectInputSystem.cpp:
+    - Fixed bug which meant right constant force was not being capped to
+    DI_EFFECTS_MAX
+    - Made sure all values are being clamped to sensible ranges
