@@ -23,6 +23,7 @@ Compatibility list MAME style
 |csmasho   |  1  |  H  | joy, 2btn                      |      | Yes  | Yes  | Yes  |                                                     |
 |cspike    |  2  |  H  | joy, 4btn                      |      | Yes  | Yes  | Yes  |                                                     |
 |deathcox  |  2  |  H  | lightgun 16-bit                |      | Yes  | Yes  | Yes  |                                                     |
+|deathcoxo |  2  |  H  | lightgun 16-bit                |      | Yes  | Yes  | Yes  |                                                     |
 |derbyo2k  |  1  |  H  | joy, 5 btn                     | Usa  | Yes  | Yes  | No   | link unemulated                                     |
 |derbyoc   |  1  |  H  | joy, 5 btn                     | Usa  | Yes  | Yes  | No   | link unemulated                                     |
 |derbyoc2  |  1  |  H  | joy, 5 btn                     |      | Yes  | Yes  | Yes  | link unemulated                                     |

@@ -9,11 +9,21 @@
  <body>
   <center><h1><img alt="Mednafen" src="mednafen.png" width="696" height="204"></h1></center>
   <center><h1>Netplay Documentation</h1></center>
-  <center><i>Last updated April 29, 2018<br>Valid as of 1.21.3</i></center>
+  <center><i>Last updated January 14, 2022<br>Valid as of 1.29.0</i></center>
  <p></p>
  <b>Table of Contents:</b>
  <ul><li><a href="#Section_intro">Introduction</a><ul></ul></li><li><a href="#Section_server_setup">Setting up the Server</a><ul></ul></li><li><a href="#Section_using_console">Using Mednafen's netplay console</a><ul></ul></li></ul><hr width="100%">
-<h2><a name="Section_intro">Introduction</a></h2><p></p> (To be written; topics: standalone-server based, potential for losing saved games, save state usage, latency issues, bandwidth usage)
+<h2><a name="Section_intro">Introduction</a></h2><p></p> <p>
+ Mednafen's netplay is standalone-server based, with multiple clients(players) connecting to the same server.  Save states are utilized upon connection, and whenever
+ a player loads a save state on their end, so having decent bandwidth is critical, especially for newer systems with large save states like PS1 and Sega Saturn.
+ Since nonvolatile memories(save RAM, floppy disks, etc.) are preserved in save states, you may want to backup any important save game files before netplaying
+ with the corresponding game(s).  Using a different Mednafen installation, or Mednafen base directory, solely for netplay, is an option as well.  <font color="yellow">Be aware that the utilization of save states does bring about some potential <a href="mednafen.html#Section_security_savestates">security issues</a>.</font>
+ </p>
+
+ <p>
+ Players with lower ping times to the server will have a latency/lag advantage.  To reduce latency, it's recommended to make the setting changes described <a href="mednafen.html#Section_minimize_video_lag">here</a>.  If emulating SNES
+ games, try the alternate <a href="snes_faust.html">snes_faust</a> emulation module, with setting "<a href="snes_faust.html#snes_faust.spex">snes_faust.spex</a>" set to "1".
+ </p>
 <hr width="100%">
 
 <h2><a name="Section_server_setup">Setting up the Server</a></h2><p></p>  <p>
@@ -35,8 +45,8 @@
   <tr><td>Down</td><td>Scroll down.</td></tr>
   <tr><td>Page Up</td><td>Scroll up a page.</td></tr>
   <tr><td>Page Down</td><td>Scroll down a page.</td></tr>
-  <tr><td>Shift + Home</td><td>Scroll to the beginning.</td></tr>
-  <tr><td>Shift + End</td><td>Scroll to the end.</td></tr>
+  <tr><td nowrap>CTRL + Home</td><td>Scroll to the beginning.</td></tr>
+  <tr><td nowrap>CTRL + End</td><td>Scroll to the end.</td></tr>
   </table>
   </p>
   <p>
@@ -45,10 +55,13 @@
   <tr><th>Key:</th><th>Action:</th></tr>
   <tr><td>Left</td><td>Move cursor left.</td></tr>
   <tr><td>Right</td><td>Move cursor right.</td></tr>
-  <tr><td>Home</td><td>Move cursor to the beginning.</td></tr>
-  <tr><td>End</td><td>Move cursor to the end.</td></tr>
+  <tr><td nowrap>Home<td>Move cursor to the beginning.</td></tr>
+  <tr><td nowrap>End<td>Move cursor to the end.</td></tr>
   <tr><td>Backspace</td><td>Remove character to the left of cursor position, and move cursor left.</td></tr>
+  <tr><td nowrap>CTRL + Backspace</td><td>Remove all characters to the left of the cursor position, and move cursor to the beginning.</td></tr>
   <tr><td>Delete</td><td>Remove character at cursor position.</td></tr>
+  <tr><td nowrap>CTRL + Delete</td><td>Remove characters at and after cursor position.</td></tr>
+  <tr><td nowrap>CTRL + V <font size="-1"><i>(or)</i></font><br>SHIFT + Insert</td><td>Paste text from the clipboard.</td></tr>
   <tr><td>Enter</td><td>Process text entered into prompt.</td></tr>
   </table>
   </p>
