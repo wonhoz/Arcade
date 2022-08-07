@@ -1,0 +1,31 @@
+uniform sampler2D OGL2Texture;
+uniform sampler2D OGL2TMU1;
+uniform sampler2D OGL2TMU2;
+
+void main()
+{
+vec4 r1, r2, r3, r4, r5, r6;
+
+r1 = texture2D(OGL2Texture,gl_TexCoord[0].xy);
+r2 = texture2D(OGL2Texture,gl_TexCoord[1].xy);
+r3 = texture2D(OGL2Texture,gl_TexCoord[2].xy);
+r4 = texture2D(OGL2Texture,gl_TexCoord[3].xy);
+
+r5 = abs(r1+r2-r3-r4);
+r6 = abs(r1+r3-r2-r4);
+vec4 gray = vec4(0.299,0.587,0.114,0.0);
+vec4 one = vec4(1.0,1.0,1.0,0.0);
+r5 = min(vec4(dot(r5,gray)+dot(r6,gray)),one);
+
+r6 = (r1+r2+r3+r4)*0.25-r5;
+
+r1 = texture2D(OGL2TMU1,gl_TexCoord[4].xy);
+r2 = texture2D(OGL2TMU2,gl_TexCoord[5].xy);
+
+r1 = max(r1*r6.x,r2*r6.z);
+
+r2 = min(r6*2.0,one);
+
+gl_FragColor = mix(r2,r6,r1);
+}
+

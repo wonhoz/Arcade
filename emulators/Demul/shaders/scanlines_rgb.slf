@@ -1,0 +1,114 @@
+uniform sampler2D OGL2Texture;
+float dot = 0.75;
+
+void main()
+{
+	vec4 rgba = texture2D(OGL2Texture, gl_TexCoord[0].xy);
+//	vec4 r = vec4( rgba.r, 0, 0, 1 );
+//	vec4 g = vec4( 0, rgba.g, 0, 1 );
+	vec4 y = vec4( rgba.r, 0, 0, 1 );
+	vec4 b = vec4( 0, rgba.g, rgba.b, 1 );
+	vec4 n = vec4( 0, 0, 0, 1 );
+	
+	float test1 = fract(gl_FragCoord.x/2);
+	float test2 = fract(gl_FragCoord.y/3);
+	float test3 = fract(gl_FragCoord.x/4);
+	
+	
+	if ( test1 < 0.5 )
+	{
+		if (test3< 0.5)
+		{
+			if (test2>0.666)		gl_FragColor = y;
+			else if (test2>0.333)	gl_FragColor = y*0.9;
+			else					gl_FragColor = y*0.3;
+		}
+		else
+		{
+			if (test2>0.666)		gl_FragColor = y*0.3;
+			else if (test2>0.333)	gl_FragColor = y;
+			else					gl_FragColor = y*0.9;		}
+	}
+	else
+	{
+		if (test3< 0.5)
+		{
+			if (test2>0.666)		gl_FragColor = b;
+			else if (test2>0.333)	gl_FragColor = b*0.9;
+			else					gl_FragColor = b*0.3;
+		}
+		else
+		{
+			if (test2>0.666)		gl_FragColor = b*0.3;
+			else if (test2>0.333)	gl_FragColor = b;
+			else					gl_FragColor = b*0.9;
+		}
+	}
+}
+
+/*********************************************************************
+// 3x3 mode //
+void main()
+{
+	vec4 rgba = texture2D(OGL2Texture, gl_TexCoord[0].xy);
+	
+	float test = fract(gl_FragCoord.x/3);
+	
+	if (test<0.333)			rgba = rgba * vec4( 1.0, dot, dot, 1.0 );
+	else if (test<0.666)	rgba = rgba * vec4( dot, 1.0, dot, 1.0 );
+	else					rgba = rgba * vec4( dot, dot, 1.0, 1.0 );
+
+	
+	test = fract(gl_FragCoord.y/3);
+	
+	if (fract(gl_FragCoord.x/6)<0.5)
+	{				
+		if (test>0.666)		gl_FragColor = rgba;
+		else if(test>0.333)	gl_FragColor = rgba*0.9;
+		else     			gl_FragColor = rgba*0.5;
+	}
+	else
+	{				
+		if (test>0.666)		gl_FragColor = rgba*0.5;
+		else if(test>0.333)	gl_FragColor = rgba;
+		else     			gl_FragColor = rgba*0.9;
+	}
+
+}
+********************************************************************/
+
+
+/*********************************************************************
+// 4x4 mode //
+
+void main()
+{
+	vec4 rgba = texture2D(OGL2Texture, gl_TexCoord[0].xy);
+	
+	float test = fract(gl_FragCoord.x/7);
+	
+	if (test<2/7)			rgba = rgba * vec4( 1.0, dot, dot, 1.0 );
+	else if (test<4/7)		rgba = rgba * vec4( dot, 1.0, dot, 1.0 );
+	else if (test<6/7)		rgba = rgba * vec4( dot, dot, 1.0, 1.0 );
+	else					rgba = rgba / 10;
+
+	
+	test = fract(gl_FragCoord.y/5);
+	
+	if (fract(gl_FragCoord.x/8)<0.5)
+	{				
+		if (test>4/5)		gl_FragColor = rgba;
+//		else if(test>0.5)	gl_FragColor = rgba*0.9;
+//		else if(test>0.25)	gl_FragColor = rgba*0.8;
+		else     			gl_FragColor = rgba*0.5;
+	}
+	else
+	{				
+		if (test>2/5 && test<3/5)		gl_FragColor = rgba;
+//		else if(test>0.5)	gl_FragColor = rgba*0.5;
+//		else if(test>0.25)	gl_FragColor = rgba;
+		else     			gl_FragColor = rgba*0.5;
+	}
+
+}
+********************************************************************/
