@@ -11,6 +11,9 @@ emulators/Demul/Disc Image/
 emulators/Demul/Roms/
 emulators/Demul/scache/
 emulators/Dolphin/Game ISO/
+emulators/EKMAME/artwork/
+emulators/EKMAME/roms/
+emulators/EKMAME/EKMAME64.exe
 emulators/ePSXe/isos/
 emulators/M2/Roms/
 emulators/MAME/.mamepgui/cache/gamelist.cache
@@ -18,10 +21,11 @@ emulators/MAME/artwork/
 emulators/MAME/artwork_/
 emulators/MAME/dats/history.dat
 emulators/MAME/dats/history.db
-emulators/MAME/EKMAME64.exe
 emulators/MAME/flyer/
 emulators/MAME/hash/
 emulators/MAME/history/history.db
+emulators/MAME/mame.exe
+emulators/MAME/mame.sym
 emulators/MAME/mame64.exe
 emulators/MAME/mame64.sym
 emulators/MAME/marquee/
