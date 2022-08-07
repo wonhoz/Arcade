@@ -1,0 +1,14 @@
+// by guest(r) - guest.r@gmail.com
+// license: GNU-GPL
+
+uniform vec4 OGL2Param;
+uniform vec4 OGL2Size;
+
+void main()
+{
+//	float x = (OGL2Size.x/2048.0)*OGL2Param.x;
+//	float y = (OGL2Size.y/1024.0)*OGL2Param.y;
+	
+	gl_Position = ftransform();
+	gl_TexCoord[0] = gl_MultiTexCoord0;
+}

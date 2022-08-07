@@ -1,0 +1,17 @@
+uniform vec4 OGL2Param;
+uniform vec4 OGL2InvSize;
+
+void main()
+{
+gl_Position=gl_ModelViewProjectionMatrix*gl_Vertex;
+
+vec4 temp = vec4(8.0*(2.0+OGL2Param.z));
+		
+gl_TexCoord[0]=gl_MultiTexCoord0+vec4(-0.707,-0.707, 0.0, 0.0)*OGL2InvSize;
+gl_TexCoord[1]=gl_MultiTexCoord0+vec4( 0.707,-0.707, 0.0, 0.0)*OGL2InvSize;
+gl_TexCoord[2]=gl_MultiTexCoord0+vec4(-0.707, 0.707, 0.0, 0.0)*OGL2InvSize;
+gl_TexCoord[3]=gl_MultiTexCoord0+vec4( 0.707, 0.707, 0.0, 0.0)*OGL2InvSize;
+gl_TexCoord[4]=gl_MultiTexCoord1*temp;
+gl_TexCoord[5]=gl_MultiTexCoord2*temp;
+
+}

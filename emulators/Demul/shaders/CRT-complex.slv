@@ -1,0 +1,31 @@
+// by guest(r) - guest.r@gmail.com
+// license: GNU-GPL
+
+uniform vec4 OGL2Param;
+uniform vec4 OGL2Size;
+
+/*
+// static float2 InputSize;
+// static float2 OutputSize;
+
+
+varying vec2 one;
+varying float mod_factor; */
+
+void main()
+{
+    // Do the standard vertex processing.
+    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+
+    // Precalculate a bunch of useful values we'll need in the fragment
+    // shader.
+
+    // Texture coords.
+    gl_TexCoord[0] = gl_MultiTexCoord0;
+
+    // The size of one texel, in texture-coordinates.
+//    one = 1.0 / OGL2Size.xy;
+
+    // Resulting X pixel-coordinate of the pixel we're drawing.
+//    mod_factor =  gl_TexCoord[0].x * 2048.0;
+}
