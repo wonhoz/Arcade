@@ -113,7 +113,7 @@ Shadow of the Colossus (K);완다와 거상 (한글판);Sony PlayStation 2 GZ;Sh
 #Astro Boy Atom (K);우주소년 아톰 (한글판);Sony PlayStation 2 GZ;Astro Boy (USA);2004;SEGA;Action;1;;;;;;;;한국어;;;;;
 #War of the Monsters (K);워 오브 더 몬스터즈 - 괴수대격전 (한글판);Sony PlayStation 2 GZ;War of the Monsters (USA);2003;Capcom;Action;1;;;;;;;;한국어;;;;;
 #Winning Eleven10 Liveware Evolution (K);위닝 일레븐 10 라이브웨어 에볼루션 (한글판);Sony PlayStation 2 GZ;Winning Eleven - Pro Evolution Soccer 2007 (USA);2006;Konami;Sports;2;;;;;;;;한국어;;;;;
-Initial D;이니셜 D - 스페셜 스테이지 (일본판);Sony PlayStation 2 ISO;Initial D (Japan);2003;SEGA;Racing;1;;;;;;;;일본어;;;;;
+Initial D - Special Stage (English v1.2);이니셜 D: 스페셜 스테이지 (영어판);Sony PlayStation 2 ISO;Initial D;2003;SEGA;Racing;1;;;;;;;;영어;;;;;
 Disaster Report (K);절체절명도시 (한글판);Sony PlayStation 2 GZ;Disaster Report (USA);2002;Irem;Adventure;1;;;;;;;;한국어;;;;;
 #Xenosaga Episode 3 Disc 1 (USA)(Undub);제노사가 에피소드 3. Disc 1 (미국판);Sony PlayStation 2 GZ;Xenosaga Episode III - Also sprach Zarathustra (USA) (Disc 1);2006;Monolith Soft;RPG;1;;;;;;;;영어;;;;;
 #Xenosaga Episode 3 Disc 2 (USA)(Undub);제노사가 에피소드 3. Disc 2 (미국판);Sony PlayStation 2 GZ;Xenosaga Episode III - Also sprach Zarathustra (USA) (Disc 2);2006;Monolith Soft;RPG;1;;;;;;;;영어;;;;;
