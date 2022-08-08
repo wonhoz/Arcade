@@ -15,6 +15,7 @@ Metal Gear Acid 2 (Europe);메탈 기어 애시드 2;Sony PlayStation Portable;M
 SOULCALIBUR Broken Destiny;소울 칼리버: 브로큰 데스티니;Sony PlayStation Portable;Soulcalibur - Broken Destiny (USA) (En,Ja,Fr,De,Es,It,Ru);2009;Namco;Fighting;;;;;;;;;영어;;;;;
 #Super Robot Wars AP Kor v2.4 Vocal Edition;슈퍼 로봇대전 A 포터블 (한글판);Sony PlayStation Portable;Super Robot Wars AP Kor v2.4 Vocal Edition (USA);2008;Banpresto;SRPG;;;;;;;;super_robot;한국어;;;;;
 #Suzumiya Haruhi no Yakusoku (K);스즈미야 하루히의 약속 (한글판);Sony PlayStation Portable;Suzumiya Haruhi no Yakusoku (J);2007;Bandai Namco;Adventure;;;;;;;;;한국어;;;;;
+Initial D - Street Stage (USA);이니셜 D: 스트리트 스테이지 (미국판);Sony PlayStation Portable;Initial D - Street Stage (J);2006;Sega;Racing;;;;;;;;;영어;;;;;
 Assassins Creed Bloodlines;어쌔신 크리드: 블러드라인;Sony PlayStation Portable;Assassins Creed Bloodlines (USA);2009;Ubisoft;Action;;;;;;;;;영어;;;;;
 Ikki Tousen - Eloquent Fist (J);일기당천: 엘로퀀트 피스트;Sony PlayStation Portable;Ikki Tousen - Eloquent Fist (J);2008;Marvelous;Arcade;;;;;;;;;일본어;;;;;
 Ikki Tousen - Xross Impact (J);일기당천: 크로스 임팩트;Sony PlayStation Portable;Ikki Tousen - Xross Impact (J);2010;Marvelous;Arcade;;;;;;;;;일본어;;;;;
