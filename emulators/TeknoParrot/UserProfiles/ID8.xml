@@ -2,7 +2,7 @@
 <GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GameName>Initial D: Arcade Stage 8 Infinity</GameName>
   <GameGenre>Racing</GameGenre>
-  <GamePath>D:\attract-v2.6.2-win64\emulators\TeknoParrot\Games\Initial D Arcade Stage 8 Infinity\InitialD8_GLW_RE_SBZZ_redumped_.exe</GamePath>
+  <GamePath>D:\Git\AttractMode\emulators\TeknoParrot\Games\Initial D Arcade Stage 8 Infinity\InitialD8_GLW_RE_SBZZ_redumped_.exe</GamePath>
   <TestMenuParameter>-t</TestMenuParameter>
   <TestMenuIsExecutable>false</TestMenuIsExecutable>
   <ExtraParameters />

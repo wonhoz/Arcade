@@ -2,7 +2,7 @@
 <GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GameName>Raiden IV</GameName>
   <GameGenre>Shoot 'Em Up</GameGenre>
-  <GamePath>D:\attract-v2.6.2-win64\emulators\TeknoParrot\Games\Raiden IV\game.exe</GamePath>
+  <GamePath>D:\Git\AttractMode\emulators\TeknoParrot\Games\Raiden IV\game.exe</GamePath>
   <TestMenuParameter />
   <TestMenuIsExecutable>false</TestMenuIsExecutable>
   <ExtraParameters />

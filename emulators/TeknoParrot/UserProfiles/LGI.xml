@@ -2,7 +2,7 @@
 <GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GameName>Let's Go Island: Lost on the Island of Tropics</GameName>
   <GameGenre>Shooter</GameGenre>
-  <GamePath>D:\attract-v2.6.2-win64\emulators\TeknoParrot\Games\Let's Go Island - Lost on the Island of Tropics\LGI_RingW_F_safe.exe</GamePath>
+  <GamePath>D:\Git\AttractMode\emulators\TeknoParrot\Games\Let's Go Island - Lost on the Island of Tropics\LGI_RingW_F_safe.exe</GamePath>
   <TestMenuParameter>-TestMode</TestMenuParameter>
   <TestMenuIsExecutable>false</TestMenuIsExecutable>
   <ExtraParameters />

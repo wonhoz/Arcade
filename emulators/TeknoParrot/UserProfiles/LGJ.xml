@@ -2,7 +2,7 @@
 <GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GameName>Let's Go Jungle: Lost on the Island of Spice</GameName>
   <GameGenre>Shooter</GameGenre>
-  <GamePath>D:\attract-v2.6.2-win64\emulators\TeknoParrot\Games\Lets go Jungle - Lost Spice\disk0\lgj_final</GamePath>
+  <GamePath>D:\Git\AttractMode\emulators\TeknoParrot\Games\Lets go Jungle - Lost Spice\disk0\lgj_final</GamePath>
   <TestMenuParameter>-t</TestMenuParameter>
   <TestMenuIsExecutable>false</TestMenuIsExecutable>
   <ExtraParameters />
