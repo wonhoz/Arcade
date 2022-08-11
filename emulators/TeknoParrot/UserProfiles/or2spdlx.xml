@@ -61,7 +61,7 @@
     <FieldInformation>
       <CategoryName>General</CategoryName>
       <FieldName>Use Keyboard/Button For Axis</FieldName>
-      <FieldValue>0</FieldValue>
+      <FieldValue>1</FieldValue>
       <FieldType>Bool</FieldType>
       <FieldMin>0</FieldMin>
       <FieldMax>0</FieldMax>
@@ -196,8 +196,19 @@
   <JoystickButtons>
     <JoystickButtons>
       <ButtonName>Test</ButtonName>
+      <DirectInputButton>
+        <Button>57</Button>
+        <IsAxis>false</IsAxis>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsFullAxis>false</IsFullAxis>
+        <PovDirection>0</PovDirection>
+        <IsReverseAxis>false</IsReverseAxis>
+        <JoystickGuid>6f1d2b61-d5a0-11cf-bfc7-444553540000</JoystickGuid>
+      </DirectInputButton>
       <InputMapping>Test</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameDi>Keyboard Button D9</BindNameDi>
+      <BindName>Keyboard Button D9</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -218,8 +229,19 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Service</ButtonName>
+      <DirectInputButton>
+        <Button>58</Button>
+        <IsAxis>false</IsAxis>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsFullAxis>false</IsFullAxis>
+        <PovDirection>0</PovDirection>
+        <IsReverseAxis>false</IsReverseAxis>
+        <JoystickGuid>6f1d2b61-d5a0-11cf-bfc7-444553540000</JoystickGuid>
+      </DirectInputButton>
       <InputMapping>Service1</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameDi>Keyboard Button D0</BindNameDi>
+      <BindName>Keyboard Button D0</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -240,8 +262,19 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Coin 1</ButtonName>
+      <DirectInputButton>
+        <Button>53</Button>
+        <IsAxis>false</IsAxis>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsFullAxis>false</IsFullAxis>
+        <PovDirection>0</PovDirection>
+        <IsReverseAxis>false</IsReverseAxis>
+        <JoystickGuid>6f1d2b61-d5a0-11cf-bfc7-444553540000</JoystickGuid>
+      </DirectInputButton>
       <InputMapping>Coin1</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameDi>Keyboard Button D5</BindNameDi>
+      <BindName>Keyboard Button D5</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -262,8 +295,19 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Coin 2</ButtonName>
+      <DirectInputButton>
+        <Button>54</Button>
+        <IsAxis>false</IsAxis>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsFullAxis>false</IsFullAxis>
+        <PovDirection>0</PovDirection>
+        <IsReverseAxis>false</IsReverseAxis>
+        <JoystickGuid>6f1d2b61-d5a0-11cf-bfc7-444553540000</JoystickGuid>
+      </DirectInputButton>
       <InputMapping>Coin2</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameDi>Keyboard Button D6</BindNameDi>
+      <BindName>Keyboard Button D6</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -284,8 +328,19 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Start</ButtonName>
+      <DirectInputButton>
+        <Button>49</Button>
+        <IsAxis>false</IsAxis>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsFullAxis>false</IsFullAxis>
+        <PovDirection>0</PovDirection>
+        <IsReverseAxis>false</IsReverseAxis>
+        <JoystickGuid>6f1d2b61-d5a0-11cf-bfc7-444553540000</JoystickGuid>
+      </DirectInputButton>
       <InputMapping>P1ButtonStart</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameDi>Keyboard Button D1</BindNameDi>
+      <BindName>Keyboard Button D1</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -328,8 +383,19 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Wheel Axis Left</ButtonName>
+      <DirectInputButton>
+        <Button>154</Button>
+        <IsAxis>false</IsAxis>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsFullAxis>false</IsFullAxis>
+        <PovDirection>0</PovDirection>
+        <IsReverseAxis>false</IsReverseAxis>
+        <JoystickGuid>6f1d2b61-d5a0-11cf-bfc7-444553540000</JoystickGuid>
+      </DirectInputButton>
       <InputMapping>Analog0</InputMapping>
       <AnalogType>Wheel</AnalogType>
+      <BindNameDi>Keyboard Button 107</BindNameDi>
+      <BindName>Keyboard Button 107</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>true</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -350,8 +416,19 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Wheel Axis Right</ButtonName>
+      <DirectInputButton>
+        <Button>155</Button>
+        <IsAxis>false</IsAxis>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsFullAxis>false</IsFullAxis>
+        <PovDirection>0</PovDirection>
+        <IsReverseAxis>false</IsReverseAxis>
+        <JoystickGuid>6f1d2b61-d5a0-11cf-bfc7-444553540000</JoystickGuid>
+      </DirectInputButton>
       <InputMapping>Analog0</InputMapping>
       <AnalogType>Wheel</AnalogType>
+      <BindNameDi>Keyboard Button 108</BindNameDi>
+      <BindName>Keyboard Button 108</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>true</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -372,8 +449,19 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Gas</ButtonName>
+      <DirectInputButton>
+        <Button>152</Button>
+        <IsAxis>false</IsAxis>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsFullAxis>false</IsFullAxis>
+        <PovDirection>0</PovDirection>
+        <IsReverseAxis>false</IsReverseAxis>
+        <JoystickGuid>6f1d2b61-d5a0-11cf-bfc7-444553540000</JoystickGuid>
+      </DirectInputButton>
       <InputMapping>Analog2</InputMapping>
       <AnalogType>Gas</AnalogType>
+      <BindNameDi>Keyboard Button 105</BindNameDi>
+      <BindName>Keyboard Button 105</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -394,8 +482,19 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Brake</ButtonName>
+      <DirectInputButton>
+        <Button>157</Button>
+        <IsAxis>false</IsAxis>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsFullAxis>false</IsFullAxis>
+        <PovDirection>0</PovDirection>
+        <IsReverseAxis>false</IsReverseAxis>
+        <JoystickGuid>6f1d2b61-d5a0-11cf-bfc7-444553540000</JoystickGuid>
+      </DirectInputButton>
       <InputMapping>Analog4</InputMapping>
       <AnalogType>Brake</AnalogType>
+      <BindNameDi>Keyboard Button 110</BindNameDi>
+      <BindName>Keyboard Button 110</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -416,8 +515,19 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>View Change</ButtonName>
+      <DirectInputButton>
+        <Button>63</Button>
+        <IsAxis>false</IsAxis>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsFullAxis>false</IsFullAxis>
+        <PovDirection>0</PovDirection>
+        <IsReverseAxis>false</IsReverseAxis>
+        <JoystickGuid>6f1d2b61-d5a0-11cf-bfc7-444553540000</JoystickGuid>
+      </DirectInputButton>
       <InputMapping>P1ButtonDown</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameDi>Keyboard Button Q</BindNameDi>
+      <BindName>Keyboard Button Q</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -438,8 +548,19 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Gear Shift Up</ButtonName>
+      <DirectInputButton>
+        <Button>65</Button>
+        <IsAxis>false</IsAxis>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsFullAxis>false</IsFullAxis>
+        <PovDirection>0</PovDirection>
+        <IsReverseAxis>false</IsReverseAxis>
+        <JoystickGuid>6f1d2b61-d5a0-11cf-bfc7-444553540000</JoystickGuid>
+      </DirectInputButton>
       <InputMapping>P2ButtonUp</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameDi>Keyboard Button E</BindNameDi>
+      <BindName>Keyboard Button E</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
@@ -460,8 +581,19 @@
     </JoystickButtons>
     <JoystickButtons>
       <ButtonName>Gear Shift Down</ButtonName>
+      <DirectInputButton>
+        <Button>64</Button>
+        <IsAxis>false</IsAxis>
+        <IsAxisMinus>false</IsAxisMinus>
+        <IsFullAxis>false</IsFullAxis>
+        <PovDirection>0</PovDirection>
+        <IsReverseAxis>false</IsReverseAxis>
+        <JoystickGuid>6f1d2b61-d5a0-11cf-bfc7-444553540000</JoystickGuid>
+      </DirectInputButton>
       <InputMapping>P2ButtonDown</InputMapping>
       <AnalogType>None</AnalogType>
+      <BindNameDi>Keyboard Button W</BindNameDi>
+      <BindName>Keyboard Button W</BindName>
       <HideWithDirectInput>false</HideWithDirectInput>
       <HideWithXInput>false</HideWithXInput>
       <HideWithRawInput>false</HideWithRawInput>
