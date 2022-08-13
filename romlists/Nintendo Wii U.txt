@@ -20,7 +20,7 @@
 #gambit;스플래툰;Nintendo Wii U;Splatoon (USA);2015;Nintendo;Action;;;;;;;;;한국어;;;;;
 #pj023;요시 울리 월드;Nintendo Wii U;Yoshi's Woolly World (USA);2015;Good-Feel;Action;;;;;;;;;한국어;;;;;
 #ProjectK;원더풀 101;Nintendo Wii U;Wonderful 101, The (USA);2013;PlatinumGames Inc.;Action;;;;;;;;;영어;;;;;
-#OPU3;원피스 언리미티드 월드 레드;Nintendo Wii U;One Piece Unlimited World Red (USA);2014;Bandai Namco;Action;;;;;;;;;영어;;;;;
+OPU3;원피스 언리미티드 월드 레드;Nintendo Wii U;One Piece Unlimited World Red (USA);2014;Bandai Namco;Action;;;;;;;;;영어;;;;;
 #Kinopio;전진! 키노피오 대장!;Nintendo Wii U;Captain Toad - Treasure Tracker (USA);2014;Nintendo;Action;;;;;;;;;한국어;;;;;
 #spaceTravel;제노블레이드 크로니클스 X;Nintendo Wii U;Xenoblade Chronicles X (USA);2015;Monolith Soft;RPG;;;;;;;;;영어;;;;;
 #ProjectZ;젤다 무쌍;Nintendo Wii U;Hyrule Warriors (USA);2014;Koei Tecmo;Action;;;;;;;;zelda;영어;;;;;
