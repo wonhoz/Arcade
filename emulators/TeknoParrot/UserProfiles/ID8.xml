@@ -38,7 +38,7 @@
     <FieldInformation>
       <CategoryName>General</CategoryName>
       <FieldName>DongleRegion</FieldName>
-      <FieldValue>JAPAN</FieldValue>
+      <FieldValue>EXPORT</FieldValue>
       <FieldType>Dropdown</FieldType>
       <FieldMin>0</FieldMin>
       <FieldMax>0</FieldMax>
@@ -53,7 +53,7 @@
     <FieldInformation>
       <CategoryName>General</CategoryName>
       <FieldName>PcbRegion</FieldName>
-      <FieldValue>JAPAN</FieldValue>
+      <FieldValue>EXPORT</FieldValue>
       <FieldType>Dropdown</FieldType>
       <FieldMin>0</FieldMin>
       <FieldMax>0</FieldMax>
