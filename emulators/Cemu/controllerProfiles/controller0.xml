@@ -21,19 +21,19 @@
 		<mappings>
 			<entry>
 				<mapping>1</mapping>
-				<button>13</button>
-			</entry>
-			<entry>
-				<mapping>2</mapping>
 				<button>12</button>
 			</entry>
 			<entry>
+				<mapping>2</mapping>
+				<button>13</button>
+			</entry>
+			<entry>
 				<mapping>3</mapping>
-				<button>15</button>
+				<button>14</button>
 			</entry>
 			<entry>
 				<mapping>4</mapping>
-				<button>14</button>
+				<button>15</button>
 			</entry>
 			<entry>
 				<mapping>5</mapping>
