@@ -68,7 +68,7 @@ float YFreqResponse = global.yfreqresponse;
 float IFreqResponse = global.ifreqresponse;
 float QFreqResponse = global.qfreqresponse;
 
-float SignalOffset = (global.signaloffset != 0.0) ? float(mod(params.FrameCount, 119)) : global.signaloffset;
+float SignalOffset = (global.signaloffset != 0.0) ? float(mod(params.FrameCount, 2)) : global.signaloffset;
 
 vec4 GetCompositeYIQ(vec2 coord)
 {

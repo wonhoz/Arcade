@@ -1,6 +1,6 @@
 shaders = "3"
 shader0 = "../../crt/shaders/tvout-tweaks.slang"
-shader1 = "../../misc/image-adjustment.slang"
+shader1 = "../../misc/shaders/image-adjustment.slang"
 shader2 = "../../stock.slang"
 
 scale_type_x0 = "viewport"

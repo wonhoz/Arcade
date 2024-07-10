@@ -3,7 +3,7 @@
 /*
    CRT - Guest - Advanced - Fast - Pass1
    
-   Copyright (C) 2018-2021 guest(r) - guest.r@gmail.com
+   Copyright (C) 2018-2022 guest(r) - guest.r@gmail.com
 
    Incorporates many good ideas and suggestions from Dr. Venom.
    I would also like give thanks to many Libretro forums members for continuous feedback, suggestions and caring about the shader.
@@ -30,8 +30,7 @@ layout(push_constant) uniform Push
 	vec4 OriginalSize;
 	vec4 OutputSize;
 	uint FrameCount;
-	float IOS, h_sharp, s_sharp, spike;
-	float prescalex;
+	float IOS, h_sharp, s_sharp, spike, ring;
 } params;
 
 layout(std140, set = 0, binding = 0) uniform UBO
@@ -45,14 +44,15 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter h_sharp "          Horizontal sharpness" 5.20 0.20 15.0 0.10
 #define h_sharp      params.h_sharp     // pixel sharpness
 
-#pragma parameter s_sharp "          Substractive sharpness (1.0 recommended)" 0.50 0.0 1.5 0.10
+#pragma parameter s_sharp "          Substractive sharpness (1.0 recommended)" 0.50 0.0 2.0 0.10
 #define s_sharp      params.s_sharp     // substractive sharpness
+
+#pragma parameter ring "          Substractive sharpness Ringing" 0.0 0.0 3.0 0.05
+#define ring      params.ring     // substractive sharpness ringing
 
 #pragma parameter spike "          Scanline Spike Removal" 1.0 0.0 2.0 0.10
 #define spike params.spike
 
-#pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0  // Joint parameter with linearize pass, values must match
-#define prescalex        params.prescalex     // prescale-x factor
 
 #define COMPAT_TEXTURE(c,d) texture(c,d)
 #define TEX0 vTexCoord
@@ -68,7 +68,7 @@ layout(location = 0) out vec2 vTexCoord;
 void main()
 {
    gl_Position = global.MVP * Position;
-   vTexCoord = TexCoord * 1.000001;
+   vTexCoord = TexCoord * 1.00001;
 }
 
 #pragma stage fragment
@@ -79,9 +79,12 @@ layout(set = 0, binding = 2) uniform sampler2D LinearizePass;
 
 void main()
 {	
-	vec4 SourceSize = params.OriginalSize * vec4(prescalex, 1.0, 1.0/prescalex, 1.0);
+	vec2 prescalex = vec2(textureSize(LinearizePass, 0)) / params.OriginalSize.xy;
+
+	vec4 SourceSize = params.OriginalSize * vec4(prescalex.x, prescalex.y, 1.0/prescalex.x, 1.0/prescalex.y);
 	
 	float intera = COMPAT_TEXTURE(LinearizePass, vec2(0.75,0.25)).a;
+	bool interb  = (intera < 0.5);
 	
 	// Calculating texel coordinates
    
@@ -104,8 +107,9 @@ void main()
 	
 	float zero = exp2(-h_sharp);
 	float sharp1 = s_sharp * zero;
-	
-	float fdivider = min(prescalex, 2.0);
+
+	float idiv = clamp(SourceSize.x / 400.0, 1.0, 2.0);	
+	float fdivider = max(min(prescalex.x, 2.0), idiv*float(interb));
 	
 	float wl3 = (2.0 + fpx)/fdivider;
 	float wl2 = (1.0 + fpx)/fdivider;
@@ -125,8 +129,8 @@ void main()
 
 	float twl3 = max(wl3 - sharp1, 0.0);
 	float twl2 = max(wl2 - sharp1, mix(-0.12, 0.0, 1.0-fp1*fp1));
-	float twl1 = max(wl1 - sharp1, 0.0);
-	float twr1 = max(wr1 - sharp1, 0.0);
+	float twl1 = max(wl1 - sharp1, -0.12);
+	float twr1 = max(wr1 - sharp1, -0.12);
 	float twr2 = max(wr2 - sharp1, mix(-0.12, 0.0, 1.0-fpx*fpx));
 	float twr3 = max(wr3 - sharp1, 0.0);
 	
@@ -146,18 +150,19 @@ void main()
 	
 	color1 = (l3*twl3 + l2*twl2 + l1*twl1 + r1*twr1 + r2*twr2 + r3*twr3)/(twl3+twl2+twl1+twr1+twr2+twr3);
 
-	if (sharp) color1 = clamp(color1, colmin, colmax);
-	float ts = 0.033;
+	if (sharp) color1 = clamp(mix(clamp(color1, colmin, colmax), color1, ring), 0.0, 1.0);
+	float ts = 0.025;
+	vec3 luma = vec3(0.2126, 0.7152, 0.0722);
 	
 	float lm2 = max(max(l2.r,l2.g),l2.b);
 	float lm1 = max(max(l1.r,l1.g),l1.b);
 	float rm1 = max(max(r1.r,r1.g),r1.b);
 	float rm2 = max(max(r2.r,r2.g),r2.b);
 	
-	float swl2 = max(twl2,0.0) * (lm2+ts);
-	float swl1 = twl1 * (lm1+ts);
-	float swr1 = twr1 * (rm1+ts);
-	float swr2 = max(twr2,0.0) * (rm2+ts);
+	float swl2 = max(twl2, 0.0) * (dot(l2,luma) + ts);
+	float swl1 = max(twl1, 0.0) * (dot(l1,luma) + ts);
+	float swr1 = max(twr1, 0.0) * (dot(r1,luma) + ts);
+	float swr2 = max(twr2, 0.0) * (dot(r2,luma) + ts);
 	
 	float fscolor1 = (lm2*swl2 + lm1*swl1 + rm1*swr1 + rm2*swr2)/(swl2+swl1+swr1+swr2);
 	float sresult = clamp(mix(max(max(color1.r,color1.g),color1.b), fscolor1, spike), 0.0, 1.0);

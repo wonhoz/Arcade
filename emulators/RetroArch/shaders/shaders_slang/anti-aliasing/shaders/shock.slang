@@ -3,6 +3,8 @@
 // based on Nvidia's GPU Gems article:
 // https://developer.nvidia.com/gpugems/GPUGems2/gpugems2_chapter27.html
 // slang shader by torridgristle and hunterk
+// This shader needs several iterations for a noticeable deblur effect
+// Nvidia's example uses 5 passes at 0.05 intensity, which seems good
 
 layout(push_constant) uniform Push
 {
@@ -13,7 +15,7 @@ layout(push_constant) uniform Push
 	float shockMagnitude;
 } params;
 
-#pragma parameter shockMagnitude "Shock Magnitude" 0.0 0.0 4.0 0.1
+#pragma parameter shockMagnitude "Shock Magnitude" 0.05 0.0 4.0 0.01
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {

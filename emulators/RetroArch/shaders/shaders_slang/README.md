@@ -110,7 +110,7 @@ we were passing an insane amount of attributes and varyings to deal with this be
 The way the old shader system deals with limits is quite naive.
 There is a hard limit of 8 when referencing other passes and older frames.
 There is no reason why we should have arbitrary limits like these.
-Part of the reason is C where dealing with dynamic memory is more painful than is should be so it was easier to take the lazy way out.
+Part of the reason is C where dealing with dynamic memory is more painful than it should be so it was easier to take the lazy way out.
 
 #### Tacked on format handling
 

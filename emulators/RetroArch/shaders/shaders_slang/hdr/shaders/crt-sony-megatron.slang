@@ -33,7 +33,8 @@ layout(push_constant) uniform Push
    float hcrt_max_nits;
    float hcrt_paper_white_nits;
    float hcrt_expand_gamut;
-   float hcrt_gamma_out;
+   
+   float hcrt_colour_accurate;
 
    float hcrt_lcd_resolution;
    float hcrt_lcd_subpixel;
@@ -78,6 +79,12 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	vec4 OutputSize;
 	uint FrameCount;
 
+   float hcrt_r709_gamma_out;
+   float hcrt_srgb_gamma_out;
+   float hcrt_p3_gamma_out;
+   float hcrt_r709_gamma_cutoff;
+   float hcrt_srgb_gamma_cutoff;
+
    float hcrt_h_size;
    float hcrt_v_size;
    float hcrt_h_cent;
@@ -93,7 +100,12 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define HCRT_MAX_NITS                        params.hcrt_max_nits
 #define HCRT_PAPER_WHITE_NITS                params.hcrt_paper_white_nits
 #define HCRT_EXPAND_GAMUT                    params.hcrt_expand_gamut
-#define HCRT_GAMMA_OUT                       params.hcrt_gamma_out
+#define HCRT_R709_GAMMA_OUT                  global.hcrt_r709_gamma_out
+#define HCRT_SRGB_GAMMA_OUT                  global.hcrt_srgb_gamma_out
+#define HCRT_P3_GAMMA_OUT                    global.hcrt_p3_gamma_out
+#define HCRT_R709_GAMMA_CUTOFF               global.hcrt_r709_gamma_cutoff
+#define HCRT_SRGB_GAMMA_CUTOFF               global.hcrt_srgb_gamma_cutoff
+#define HCRT_COLOUR_ACCURATE                 params.hcrt_colour_accurate
 
 #define HCRT_LCD_RESOLUTION                  params.hcrt_lcd_resolution 
 #define HCRT_LCD_SUBPIXEL                    params.hcrt_lcd_subpixel
@@ -180,234 +192,39 @@ const vec3 kColourMask[3] = { kRedChannel, kGreenChannel, kBlueChannel };
 #define kSlotMask          2
 #define kBlackWhiteMask    3
 
-#define kBGRAxis           2
+#define kBGRAxis           3
 #define kTVLAxis           4
-#define kResolutionAxis    2
+#define kResolutionAxis    3
 
 // APERTURE GRILLE MASKS
 
-#define kMaxApertureGrilleSize       7
-
-#define kMG             { kMagenta, kGreen, kBlack, kBlack, kBlack, kBlack, kBlack }
-#define kGM             { kGreen, kMagenta, kBlack, kBlack, kBlack, kBlack, kBlack }
-
-#define kBGR            { kBlue, kGreen, kRed, kBlack, kBlack, kBlack, kBlack }
-#define kRGB            { kRed, kGreen, kBlue, kBlack, kBlack, kBlack, kBlack }
-
-#define kRGBX           { kRed, kGreen, kBlue, kBlack, kBlack, kBlack, kBlack }
-#define kBGRX           { kBlue, kGreen, kRed, kBlack, kBlack, kBlack, kBlack }
-
-#define kRYCBX          { kRed, kYellow, kCyan, kBlue, kBlack, kBlack, kBlack }
-#define kBCYRX          { kBlue, kCyan, kYellow, kRed, kBlack, kBlack, kBlack }
-
-#define kRRGGBBX        { kRed, kRed, kGreen, kGreen, kBlue, kBlue, kBlack }
-#define kBBGGRRX        { kBlue, kBlue, kGreen, kGreen, kRed, kRed, kBlack }
-
-const float kApertureGrilleMaskSize[kResolutionAxis][kTVLAxis] = { { 7.0f, 4.0f, 3.0f, 2.0f }, { 7.0f, 7.0f, 5.0f, 4.0f } }; //4K: 300 TVL, 600 TVL, 800 TVL, 1000 TVL   8K: 300 TVL, 600 TVL, 800 TVL, 1000 TVL
-
-const uint kApertureGrilleMasks[kResolutionAxis][kTVLAxis][kBGRAxis][kMaxApertureGrilleSize] = {
-   { // 4K
-      { kRRGGBBX, kBBGGRRX },      // 300 TVL
-      { kRGBX, kBGRX },            // 600 TVL
-      { kBGR, kRGB },              // 800 TVL
-      { kMG, kGM }                 // 1000 TVL
-   },
-   { // 8K
-      { kRRGGBBX, kBBGGRRX },      // 300 TVL
-      { kRRGGBBX, kBBGGRRX },      // 600 TVL
-      { kRYCBX, kRYCBX },          // 800 TVL
-      { kRGBX, kBGRX }             // 1000 TVL
-   }
-};
-
-#undef kXXXX
-#undef kMG
-#undef kGM
-#undef kBGR
-#undef kRGB
-#undef kRGBX
-#undef kBGRX
-#undef kRYCBX
-#undef kBCYRX
-#undef kRRGGBBX
-#undef kBBGGRRX
+const float kApertureGrilleMaskSize[kResolutionAxis * kTVLAxis] = { 
+     4.0f, 2.0f, 1.0f, 1.0f ,      // 1080p:   300 TVL, 600 TVL, 800 TVL, 1000 TVL 
+     7.0f, 4.0f, 3.0f, 2.0f ,      // 4K:      300 TVL, 600 TVL, 800 TVL, 1000 TVL   
+    13.0f, 7.0f, 5.0f, 4.0f   };   // 8K:      300 TVL, 600 TVL, 800 TVL, 1000 TVL
 
 // SHADOW MASKS
 
-#define kMaxShadowMaskSizeX     12
-#define kMaxShadowMaskSizeY     8
-
-#define kXXXX              { kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-
-#define kMG                { kMagenta, kGreen, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-#define kGM                { kGreen, kMagenta, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-
-#define kGRRBBG            { kGreen, kRed, kRed, kBlue, kBlue, kGreen, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-#define kBBGGRR            { kBlue, kBlue, kGreen, kGreen, kRed, kRed, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-
-#define kGBBRRG            { kGreen, kBlue, kBlue, kRed, kRed, kGreen, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-#define kRRGGBB            { kRed, kRed, kGreen, kGreen, kBlue, kBlue, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-
-#define kGGRRRRBBBBGG      { kGreen, kGreen, kRed, kRed, kRed, kRed, kBlue, kBlue, kBlue, kBlue, kGreen, kGreen }
-#define kBBBBGGGGRRRR      { kBlue, kBlue, kBlue, kBlue, kGreen, kGreen, kGreen, kGreen, kRed, kRed, kRed, kRed }
-
-#define kGGBBBBRRRRGG      { kGreen, kGreen, kBlue, kBlue, kBlue, kBlue, kRed, kRed, kRed, kRed, kGreen, kGreen }
-#define kRRRRGGGGBBBB      { kRed, kRed, kRed, kRed, kGreen, kGreen, kGreen, kGreen, kBlue, kBlue, kBlue, kBlue }
-
-#define kMG_GM             { kMG, kGM, kXXXX, kXXXX, kXXXX, kXXXX, kXXXX, kXXXX }
-#define kGM_MG             { kGM, kMG, kXXXX, kXXXX, kXXXX, kXXXX, kXXXX, kXXXX }
-
-#define kGRRBBG_GRRBBG_BBGGRR_BBGGRR  { kGRRBBG, kGRRBBG, kBBGGRR, kBBGGRR, kXXXX, kXXXX, kXXXX, kXXXX }
-#define kGBBRRG_GBBRRG_RRGGBB_RRGGBB  { kGBBRRG, kGBBRRG, kRRGGBB, kRRGGBB, kXXXX, kXXXX, kXXXX, kXXXX }
-
-#define kGGRRRRBBBBGG_GGRRRRBBBBGG_GGRRRRBBBBGG_GGRRRRBBBBGG_BBBBGGGGRRRR_BBBBGGGGRRRR_BBBBGGGGRRRR_BBBBGGGGRRRR  { kGGRRRRBBBBGG, kGGRRRRBBBBGG, kGGRRRRBBBBGG, kGGRRRRBBBBGG, kBBBBGGGGRRRR, kBBBBGGGGRRRR, kBBBBGGGGRRRR, kBBBBGGGGRRRR }
-#define kGGBBBBRRRRGG_GGBBBBRRRRGG_GGBBBBRRRRGG_GGBBBBRRRRGG_RRRRGGGGBBBB_RRRRGGGGBBBB_RRRRGGGGBBBB_RRRRGGGGBBBB  { kGGBBBBRRRRGG, kGGBBBBRRRRGG, kGGBBBBRRRRGG, kGGBBBBRRRRGG, kRRRRGGGGBBBB, kRRRRGGGGBBBB, kRRRRGGGGBBBB, kRRRRGGGGBBBB }
-
-const float kShadowMaskSizeX[kResolutionAxis][kTVLAxis] = { { 12.0f, 6.0f, 2.0f, 2.0f }, { 12.0f, 12.0f, 6.0f, 6.0f } }; 
-const float kShadowMaskSizeY[kResolutionAxis][kTVLAxis] = { {  8.0f, 4.0f, 2.0f, 2.0f }, {  8.0f,  8.0f, 4.0f, 4.0f } }; 
-
-const uint kShadowMasks[kResolutionAxis][kTVLAxis][kBGRAxis][kMaxShadowMaskSizeY][kMaxShadowMaskSizeX]  = {
-   { // 4K
-      { kGGRRRRBBBBGG_GGRRRRBBBBGG_GGRRRRBBBBGG_GGRRRRBBBBGG_BBBBGGGGRRRR_BBBBGGGGRRRR_BBBBGGGGRRRR_BBBBGGGGRRRR, 
-        kGGBBBBRRRRGG_GGBBBBRRRRGG_GGBBBBRRRRGG_GGBBBBRRRRGG_RRRRGGGGBBBB_RRRRGGGGBBBB_RRRRGGGGBBBB_RRRRGGGGBBBB },        // 300 TVL
-      { kGRRBBG_GRRBBG_BBGGRR_BBGGRR, kGBBRRG_GBBRRG_RRGGBB_RRGGBB },                                                      // 600 TVL
-      { kMG_GM, kGM_MG },                                                                                                  // 800 TVL
-      { kMG_GM, kGM_MG }                                                                                                   // 1000 TVL
-   },
-   { // 8K
-      { kGGRRRRBBBBGG_GGRRRRBBBBGG_GGRRRRBBBBGG_GGRRRRBBBBGG_BBBBGGGGRRRR_BBBBGGGGRRRR_BBBBGGGGRRRR_BBBBGGGGRRRR, 
-        kGGBBBBRRRRGG_GGBBBBRRRRGG_GGBBBBRRRRGG_GGBBBBRRRRGG_RRRRGGGGBBBB_RRRRGGGGBBBB_RRRRGGGGBBBB_RRRRGGGGBBBB },        // 300 TVL
-      { kGGRRRRBBBBGG_GGRRRRBBBBGG_GGRRRRBBBBGG_GGRRRRBBBBGG_BBBBGGGGRRRR_BBBBGGGGRRRR_BBBBGGGGRRRR_BBBBGGGGRRRR, 
-        kGGBBBBRRRRGG_GGBBBBRRRRGG_GGBBBBRRRRGG_GGBBBBRRRRGG_RRRRGGGGBBBB_RRRRGGGGBBBB_RRRRGGGGBBBB_RRRRGGGGBBBB },        // 600 TVL
-      { kGRRBBG_GRRBBG_BBGGRR_BBGGRR, kGBBRRG_GBBRRG_RRGGBB_RRGGBB },                                                      // 800 TVL
-      { kGRRBBG_GRRBBG_BBGGRR_BBGGRR, kGBBRRG_GBBRRG_RRGGBB_RRGGBB }                                                       // 1000 TVL
-   }
-};
-
-#undef kXXXX
-#undef kMG
-#undef kGM
-#undef kBGR
-#undef kRGB
-#undef kRGBX
-#undef kBGRX
-#undef kRYCBX
-#undef kBCYRX
-#undef kRRGGBBX
-#undef kBBGGRRX
+const float kShadowMaskSizeX[kResolutionAxis * kTVLAxis] = {   6.0f, 2.0f, 1.0f, 1.0f  ,   12.0f, 6.0f, 2.0f, 2.0f  ,   12.0f, 12.0f, 6.0f, 6.0f   }; 
+const float kShadowMaskSizeY[kResolutionAxis * kTVLAxis] = {   4.0f, 2.0f, 1.0f, 1.0f  ,    8.0f, 4.0f, 2.0f, 2.0f  ,    8.0f,  8.0f, 4.0f, 4.0f   }; 
 
 // SLOT MASKS
 
-#define kMaxSlotMaskSize   8
-#define kMaxSlotSizeX      2
-#define kMaxSlotSizeY      6
+const float kSlotMaskSizeX[kResolutionAxis * kTVLAxis] = {   4.0f, 2.0f, 1.0f, 1.0f  ,   7.0f, 4.0f, 3.0f, 2.0f  ,   7.0f, 7.0f, 5.0f, 4.0f   }; //1080p: 300 TVL, 600 TVL, 800 TVL, 1000 TVL   4K: 300 TVL, 600 TVL, 800 TVL, 1000 TVL   8K: 300 TVL, 600 TVL, 800 TVL, 1000 TVL
+const float kSlotMaskSizeY[kResolutionAxis * kTVLAxis] = {   4.0f, 4.0f, 1.0f, 1.0f  ,   8.0f, 6.0f, 4.0f, 4.0f  ,   6.0f, 6.0f, 4.0f, 4.0f   }; //1080p: 300 TVL, 600 TVL, 800 TVL, 1000 TVL   4K: 300 TVL, 600 TVL, 800 TVL, 1000 TVL   8K: 300 TVL, 600 TVL, 800 TVL, 1000 TVL
 
-#define kXXXX     { kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-
-#define kMG       { kMagenta, kGreen, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-#define kGM       { kGreen, kMagenta, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-
-#define kBGR      { kBlue, kGreen, kRed, kBlack, kBlack, kBlack, kBlack, kBlack }
-#define kRGB      { kRed, kGreen, kBlue, kBlack, kBlack, kBlack, kBlack, kBlack }
-
-#define kRGBX     { kRed, kGreen, kBlue, kBlack, kBlack, kBlack, kBlack, kBlack }
-#define kBGRX     { kBlue, kGreen, kRed, kBlack, kBlack, kBlack, kBlack, kBlack }
-
-#define kRYCBX    { kRed, kYellow, kCyan, kBlue, kBlack, kBlack, kBlack, kBlack }
-#define kBCYRX    { kBlue, kCyan, kYellow, kRed, kBlack, kBlack, kBlack, kBlack }
-
-#define kRRGGBBX  { kRed, kRed, kGreen, kGreen, kBlue, kBlue, kBlack, kBlack }
-#define kBBGGRRX  { kBlue, kBlue, kGreen, kGreen, kRed, kRed, kBlack, kBlack }
-
-#define kMGMG_MGXX_MGMG_XXMG   { { kMG, kMG }, { kMG, kXXXX }, { kMG, kMG }, { kXXXX, kMG }, { kXXXX, kXXXX }, { kXXXX, kXXXX } }
-#define kGMGM_GMXX_GMGM_XXGM   { { kGM, kGM }, { kGM, kXXXX }, { kGM, kGM }, { kXXXX, kGM }, { kXXXX, kXXXX }, { kXXXX, kXXXX } }
-
-#define kBGRBGR_BGRXXX_BGRBGR_XXXBGR   { { kBGR, kBGR }, { kBGR, kXXXX }, { kBGR, kBGR }, { kXXXX, kBGR }, { kXXXX, kXXXX }, { kXXXX, kXXXX } }
-#define kRGBRGB_RGBXXX_RGBRGB_XXXRGB   { { kRGB, kRGB }, { kRGB, kXXXX }, { kRGB, kRGB }, { kXXXX, kRGB }, { kXXXX, kXXXX }, { kXXXX, kXXXX } }
-
-#define kRGBXRGBX_RGBXXXXX_RGBXRGBX_XXXXRGBX   { { kRGBX, kRGBX }, { kRGBX, kXXXX }, { kRGBX, kRGBX }, { kXXXX, kRGBX }, { kXXXX, kXXXX }, { kXXXX, kXXXX } }
-#define kBGRXBGRX_BGRXXXXX_BGRXBGRX_XXXXBGRX   { { kBGRX, kBGRX }, { kBGRX, kXXXX }, { kBGRX, kBGRX }, { kXXXX, kBGRX }, { kXXXX, kXXXX }, { kXXXX, kXXXX } }
-
-#define kRYCBXRYCBX_RYCBXXXXX_RYCBXRYCBX_XXXXRYCBX   { { kRYCBX, kRYCBX }, { kRYCBX, kXXXX }, { kRYCBX, kRYCBX }, { kXXXX, kRYCBX }, { kXXXX, kXXXX }, { kXXXX, kXXXX } }
-#define kBCYRXBCYRX_BCYRXXXXX_BCYRXBCYRX_XXXXBCYRX   { { kBCYRX, kBCYRX }, { kBCYRX, kXXXX }, { kBCYRX, kBCYRX }, { kXXXX, kBCYRX }, { kXXXX, kXXXX }, { kXXXX, kXXXX } }
-
-#define kRRGGBBXRRGGBBX_RRGGBBXRRGGBBX_RRGGBBXXXXX_RRGGBBXRRGGBBX_RRGGBBXRRGGBBX_XXXXRRGGBBX   { { kRRGGBBX, kRRGGBBX }, { kRRGGBBX, kRRGGBBX }, { kRRGGBBX, kXXXX }, { kRRGGBBX, kRRGGBBX }, { kRRGGBBX, kRRGGBBX }, { kXXXX, kRRGGBBX } }
-#define kBBGGRRXBBGGRRX_BBGGRRXBBGGRRX_BBGGRRXXXXX_BBGGRRXBBGGRRX_BBGGRRXBBGGRRX_XXXXBBGGRRX   { { kBBGGRRX, kBBGGRRX }, { kBBGGRRX, kBBGGRRX }, { kBBGGRRX, kXXXX }, { kBBGGRRX, kBBGGRRX }, { kBBGGRRX, kBBGGRRX }, { kXXXX, kBBGGRRX } }
-
-const float kSlotMaskSizeX[kResolutionAxis][kTVLAxis] = { { 7.0f, 4.0f, 3.0f, 2.0f }, { 7.0f, 7.0f, 5.0f, 4.0f } }; //4K: 300 TVL, 600 TVL, 800 TVL, 1000 TVL   8K: 300 TVL, 600 TVL, 800 TVL, 1000 TVL
-const float kSlotMaskSizeY[kResolutionAxis][kTVLAxis] = { { 6.0f, 4.0f, 4.0f, 4.0f }, { 6.0f, 6.0f, 4.0f, 4.0f } }; //4K: 300 TVL, 600 TVL, 800 TVL, 1000 TVL   8K: 300 TVL, 600 TVL, 800 TVL, 1000 TVL
-
-const uint kSlotMasks[kResolutionAxis][kTVLAxis][kBGRAxis][kMaxSlotSizeY][kMaxSlotSizeX][kMaxSlotMaskSize] = {
-   { // 4K
-      { kRRGGBBXRRGGBBX_RRGGBBXRRGGBBX_RRGGBBXXXXX_RRGGBBXRRGGBBX_RRGGBBXRRGGBBX_XXXXRRGGBBX, kBBGGRRXBBGGRRX_BBGGRRXBBGGRRX_BBGGRRXXXXX_BBGGRRXBBGGRRX_BBGGRRXBBGGRRX_XXXXBBGGRRX },   // 300 TVL
-      { kRGBXRGBX_RGBXXXXX_RGBXRGBX_XXXXRGBX, kBGRXBGRX_BGRXXXXX_BGRXBGRX_XXXXBGRX },                                       // 600 TVL
-      { kBGRBGR_BGRXXX_BGRBGR_XXXBGR, kRGBRGB_RGBXXX_RGBRGB_XXXRGB },                                                       // 800 TVL
-      { kMGMG_MGXX_MGMG_XXMG, kGMGM_GMXX_GMGM_XXGM }                                                                        // 1000 TVL
-   },
-   { // 8K
-      { kRRGGBBXRRGGBBX_RRGGBBXRRGGBBX_RRGGBBXXXXX_RRGGBBXRRGGBBX_RRGGBBXRRGGBBX_XXXXRRGGBBX, kBBGGRRXBBGGRRX_BBGGRRXBBGGRRX_BBGGRRXXXXX_BBGGRRXBBGGRRX_BBGGRRXBBGGRRX_XXXXBBGGRRX },   // 300 TVL
-      { kRRGGBBXRRGGBBX_RRGGBBXRRGGBBX_RRGGBBXXXXX_RRGGBBXRRGGBBX_RRGGBBXRRGGBBX_XXXXRRGGBBX, kBBGGRRXBBGGRRX_BBGGRRXBBGGRRX_BBGGRRXXXXX_BBGGRRXBBGGRRX_BBGGRRXBBGGRRX_XXXXBBGGRRX },   // 600 TVL
-      { kRYCBXRYCBX_RYCBXXXXX_RYCBXRYCBX_XXXXRYCBX, kBCYRXBCYRX_BCYRXXXXX_BCYRXBCYRX_XXXXBCYRX },                           // 800 TVL
-      { kRGBXRGBX_RGBXXXXX_RGBXRGBX_XXXXRGBX, kBGRXBGRX_BGRXXXXX_BGRXBGRX_XXXXBGRX }                                        // 1000 TVL
-   }
-};
-
-#undef kXXXX
-#undef kMG
-#undef kGM
-#undef kBGR
-#undef kRGB
-#undef kRGBX
-#undef kBGRX
-#undef kRYCBX
-#undef kBCYRX
-#undef kRRGGBBX
-#undef kBBGGRRX
-
-
-// BLACK WHITE MASKS
-
-#define kMaxBlackWhiteSize       14
-
-#define kWX                { kWhite, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-#define kWWX               { kWhite, kWhite, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-#define kWWXX              { kWhite, kWhite, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-#define kWWWWX             { kWhite, kWhite, kWhite, kWhite, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-#define kWWWWWXX           { kWhite, kWhite, kWhite, kWhite, kWhite, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack, kBlack }
-#define kWWWWWWWWWWWXXX    { kWhite, kWhite, kWhite, kWhite, kWhite, kWhite, kWhite, kWhite, kWhite, kWhite, kWhite, kWhite, kWhite, kWhite /*kBlack, kBlack, kBlack*/ }
-
-const float kBlackWhiteMaskSize[kResolutionAxis][kTVLAxis] = { { 7.0f, 4.0f, 3.0f, 2.0f }, { 14.0f, 7.0f, 5.0f, 4.0f } }; //4K: 300 TVL, 600 TVL, 800 TVL, 1000 TVL   8K: 300 TVL, 600 TVL, 800 TVL, 1000 TVL
-
-const uint kBlackWhiteMasks[kResolutionAxis][kTVLAxis][kBGRAxis][kMaxBlackWhiteSize] = {
-   { // 4K
-      { kWWWWWXX, kWWWWWXX },                   // 300 TVL
-      { kWWXX, kWWXX },                         // 600 TVL
-      { kWWX, kWWX },                           // 800 TVL
-      { kWX, kWX }                              // 1000 TVL
-   },
-   { // 8K
-      { kWWWWWWWWWWWXXX, kWWWWWWWWWWWXXX },     // 300 TVL
-      { kWWWWWXX, kWWWWWXX },                   // 600 TVL
-      { kWWWWX, kWWWWX },                       // 800 TVL
-      { kWWXX, kWWXX }                          // 1000 TVL
-   }
-};
-
-#undef kXXXX
-#undef kMG
-#undef kGM
-#undef kBGR
-#undef kRGB
-#undef kRGBX
-#undef kBGRX
-#undef kRYCBX
-#undef kBCYRX
-#undef kRRGGBBX
-#undef kBBGGRRX
 
 #include "include/scanline_generation.h"
-#include "include/hdr10.h"
 #include "include/gamma_correct.h"
+
+#define k1080p     0
+#define k4K        1
+#define k8K        2
+
+#define k300TVL    0
+#define k600TVL    1
+#define k800TVL    2
+#define k1000TVL   3
 
 void main()
 {
@@ -415,53 +232,1360 @@ void main()
    const uint crt_resolution        = uint(HCRT_CRT_RESOLUTION);
    const uint lcd_resolution        = uint(HCRT_LCD_RESOLUTION);
    const uint lcd_subpixel_layout   = uint(HCRT_LCD_SUBPIXEL);
+   const vec2 source_size           = global.SourceSize.xy;
+   const vec2 output_size           = global.OutputSize.xy;
 
    vec2 tex_coord                   = vTexCoord - vec2(0.5f);
    tex_coord                        = tex_coord * vec2(1.0f + (HCRT_PIN_PHASE * tex_coord.y), 1.0f);
    tex_coord                        = tex_coord * vec2(HCRT_H_SIZE, HCRT_V_SIZE);
    tex_coord                        = tex_coord + vec2(0.5f);
-   tex_coord                        = tex_coord + (vec2(HCRT_H_CENT, HCRT_V_CENT) / global.OutputSize.xy); 
+   tex_coord                        = tex_coord + (vec2(HCRT_H_CENT, HCRT_V_CENT) / output_size); 
 
-   const vec2 current_position      = vTexCoord * global.OutputSize.xy;
+   const vec2 current_position      = vTexCoord * output_size;
 
-   uint colour_mask;
+   uint colour_mask = 0;
 
    switch(screen_type)
    {
       case kApertureGrille:
       {
-         uint mask = uint(floor(mod(current_position.x, kApertureGrilleMaskSize[lcd_resolution][crt_resolution])));
+         uint mask = uint(floor(mod(current_position.x, kApertureGrilleMaskSize[(lcd_resolution * kTVLAxis) + crt_resolution])));
 
-         colour_mask = kApertureGrilleMasks[lcd_resolution][crt_resolution][lcd_subpixel_layout][mask];      
+         switch(lcd_resolution)
+         {
+            case k1080p:
+            { 
+               switch(crt_resolution)
+               {
+                  case k300TVL:
+                  { 
+                     #define kRGBX             (kRed  << 0) | (kGreen << 4) | (kBlue  << 8) | (kBlack << 12)  
+                     #define kRBGX             (kRed  << 0) | (kBlue  << 4) | (kGreen << 8) | (kBlack << 12)  
+                     #define kBGRX             (kBlue << 0) | (kGreen << 4) | (kRed   << 8) | (kBlack << 12)  
+                     
+                     const uint rgb_mask[kBGRAxis] = { kRGBX, kRBGX, kBGRX };
+                     colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 4)) & 0xF;   
+                     
+                     #undef kRGBX           
+                     #undef kRBGX           
+                     #undef kBGRX  
+                     
+                     break;
+                  }
+                  case k600TVL:
+                  {
+                     #define kMG               (kMagenta << 0) | (kGreen   << 6)  
+                     #define kYB               (kYellow  << 0) | (kBlue    << 6)
+                     #define kGM               (kGreen   << 0) | (kMagenta << 6)
+                     
+                     const uint rgb_mask[kBGRAxis] = { kMG, kYB, kGM };
+                     colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 6)) & 0x3F;
+
+                     #undef kMG             
+                     #undef kYB             
+                     #undef kGM
+
+                     break;
+                  }
+                  case k800TVL:
+                  {
+                     colour_mask = kWhite;
+
+                     break;
+                  }
+                  case k1000TVL:
+                  {
+                     colour_mask = kWhite;
+
+                     break;
+                  }
+                  default:
+                  {
+                     break;
+                  }                 
+               }
+
+               break;
+            }
+            case k4K:
+            {
+               switch(crt_resolution)
+               {
+                  case k300TVL:
+                  {
+                     #define kRRGGBBX          (kRed  << 0) | (kRed  << 4) | (kGreen << 8) | (kGreen << 12) | (kBlue  << 16) | (kBlue  << 20) | (kBlack << 24)   
+                     #define kRRBBGGX          (kRed  << 0) | (kRed  << 4) | (kBlue  << 8) | (kBlue  << 12) | (kGreen << 16) | (kGreen << 20) | (kBlack << 24)    
+                     #define kBBGGRRX          (kBlue << 0) | (kBlue << 4) | (kGreen << 8) | (kGreen << 12) | (kRed   << 16) | (kRed   << 20) | (kBlack << 24)    
+                     
+                     const uint rgb_mask[kBGRAxis] = {  kRRGGBBX, kRRBBGGX, kBBGGRRX };
+                     colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 4)) & 0xF;  
+                     
+                     #undef kRRGGBBX        
+                     #undef kRRBBGGX       
+                     #undef kBBGGRRX  
+                     
+                     break;
+                  }
+                  case k600TVL:
+                  {
+                     #define kRGBX             (kRed  << 0) | (kGreen << 4) | (kBlue  << 8) | (kBlack << 12)  
+                     #define kRBGX             (kRed  << 0) | (kBlue  << 4) | (kGreen << 8) | (kBlack << 12)  
+                     #define kBGRX             (kBlue << 0) | (kGreen << 4) | (kRed   << 8) | (kBlack << 12)  
+                     
+                     const uint rgb_mask[kBGRAxis] = { kRGBX, kRBGX, kBGRX };
+                     colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 4)) & 0xF;   
+                     
+                     #undef kRGBX           
+                     #undef kRBGX           
+                     #undef kBGRX  
+
+                     break;
+                  }
+                  case k800TVL:
+                  {
+                     #define kBGR              (kBlue  << 0) | (kGreen << 4) | (kRed  << 8) 
+                     #define kGBR              (kGreen << 0) | (kBlue  << 4) | (kRed  << 8)  
+                     #define kRGB              (kRed   << 0) | (kGreen << 4) | (kBlue << 8)  
+                     
+                     const uint rgb_mask[kBGRAxis] = { kBGR, kGBR, kRGB };
+                     colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 4)) & 0xF;   
+
+                     #undef kRGB            
+                     #undef kGBR            
+                     #undef kBGR  
+
+                     break;
+                  }
+                  case k1000TVL:
+                  {                     
+                     #define kMG               (kMagenta << 0) | (kGreen   << 6)  
+                     #define kYB               (kYellow  << 0) | (kBlue    << 6)
+                     #define kGM               (kGreen   << 0) | (kMagenta << 6)
+                     
+                     const uint rgb_mask[kBGRAxis] = { kMG, kYB, kGM };
+                     colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 6)) & 0x3F;
+
+                     #undef kMG             
+                     #undef kYB             
+                     #undef kGM 
+
+                     break;
+                  }
+                  default:
+                  {
+                     break;
+                  }                 
+               }
+
+               break;
+            }
+            case k8K:
+            {
+               switch(crt_resolution)
+               {
+                  case k300TVL:
+                  { 
+                     #define kMaxApertureGrilleSize       13
+                     
+                     #define kRRRRGGGGBBBBX    kRed, kRed, kRed, kRed, kGreen, kGreen, kGreen, kGreen, kBlue, kBlue, kBlue, kBlue, kBlack  
+                     #define kRRRRBBBBGGGGX    kRed, kRed, kRed, kRed, kBlue, kBlue, kBlue, kBlue, kGreen, kGreen, kGreen, kGreen, kBlack  
+                     #define kBBBBGGGGRRRRX    kBlue, kBlue, kBlue, kBlue, kGreen, kGreen, kGreen, kGreen, kRed, kRed, kRed, kRed, kBlack  
+                     
+                     const uint kApertureGrilleMasks8K300TVL[kBGRAxis * kMaxApertureGrilleSize] = 
+                     { 
+                        kRRRRGGGGBBBBX, kRRRRBBBBGGGGX, kBBBBGGGGRRRRX
+                     };
+
+                     colour_mask = kApertureGrilleMasks8K300TVL[(lcd_subpixel_layout * kMaxApertureGrilleSize) + mask];  
+                     
+                     #undef kMaxApertureGrilleSize 
+                     
+                     #undef kRRRRGGGGBBBBX  
+                     #undef kRRRRBBBBGGGGX  
+                     #undef kBBBBGGGGRRRRX      
+                     
+                     break;
+                  }
+                  case k600TVL:
+                  {
+                     #define kRRGGBBX          (kRed  << 0) | (kRed  << 4) | (kGreen << 8) | (kGreen << 12) | (kBlue  << 16) | (kBlue  << 20) | (kBlack << 24)   
+                     #define kRRBBGGX          (kRed  << 0) | (kRed  << 4) | (kBlue  << 8) | (kBlue  << 12) | (kGreen << 16) | (kGreen << 20) | (kBlack << 24)    
+                     #define kBBGGRRX          (kBlue << 0) | (kBlue << 4) | (kGreen << 8) | (kGreen << 12) | (kRed   << 16) | (kRed   << 20) | (kBlack << 24)    
+                     
+                     const uint rgb_mask[kBGRAxis] = { kRRGGBBX, kRRBBGGX, kBBGGRRX };
+
+                     colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 4)) & 0xF;  
+                     
+                     #undef kRRGGBBX        
+                     #undef kRRBBGGX       
+                     #undef kBBGGRRX 
+
+                     break;
+                  }
+                  case k800TVL:
+                  {                     
+                     #define kRYCBX            (kRed  << 0) | (kYellow  << 6) | (kCyan   << 12) | (kBlue  << 18) | (kBlack << 24)  
+                     #define kRMCGX            (kRed  << 0) | (kMagenta << 6) | (kCyan   << 12) | (kGreen << 18) | (kBlack << 24)  
+                     #define kBCYRX            (kBlue << 0) | (kCyan    << 6) | (kYellow << 12) | (kRed   << 18) | (kBlack << 24)  
+                     
+                     const uint rgb_mask[kBGRAxis] = { kRYCBX, kRMCGX, kBCYRX  };
+                     colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 6)) & 0x3F;
+                     
+                     #undef kRYCBX          
+                     #undef kRMCGX          
+                     #undef kBCYRX   
+
+                     break;
+                  }
+                  case k1000TVL:
+                  {
+                     #define kRGBX             (kRed  << 0) | (kGreen << 4) | (kBlue  << 8) | (kBlack << 12)  
+                     #define kRBGX             (kRed  << 0) | (kBlue  << 4) | (kGreen << 8) | (kBlack << 12)  
+                     #define kBGRX             (kBlue << 0) | (kGreen << 4) | (kRed   << 8) | (kBlack << 12)  
+                     
+                     const uint rgb_mask[kBGRAxis] = { kRGBX, kRBGX, kBGRX };
+                     
+                     colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 4)) & 0xF;   
+                     
+                     #undef kRGBX           
+                     #undef kRBGX           
+                     #undef kBGRX      
+
+                     break;
+                  }
+                  default:
+                  {
+                     break;
+                  }                 
+               }
+
+               break;
+            }
+            default:
+            {
+               break;
+            }                 
+         }
 
          break;
       }
       case kShadowMask:
       {
-         uint shadow_y = uint(floor(mod(current_position.y, kShadowMaskSizeY[lcd_resolution][crt_resolution])));
+         uint shadow_y = uint(floor(mod(current_position.y, kShadowMaskSizeY[(lcd_resolution * kTVLAxis) + crt_resolution])));
 
-         uint mask = uint(floor(mod(current_position.x, kShadowMaskSizeX[lcd_resolution][crt_resolution])));
+         uint mask = uint(floor(mod(current_position.x, kShadowMaskSizeX[(lcd_resolution * kTVLAxis) + crt_resolution])));
 
-         colour_mask = kShadowMasks[lcd_resolution][crt_resolution][lcd_subpixel_layout][shadow_y][mask];    
+         switch(lcd_resolution)
+         {
+            case k1080p:
+            { 
+               switch(crt_resolution)
+               {
+                  case k300TVL:
+                  { 
+                     #define kGRRBBG              (kGreen << 0) | (kRed   << 4) | (kRed   << 8) | (kBlue  << 12) | (kBlue  << 16) | (kGreen << 20)
+                     #define kBBGGRR              (kBlue  << 0) | (kBlue  << 4) | (kGreen << 8) | (kGreen << 12) | (kRed   << 16) | (kRed   << 20)
+                     
+                     #define kBRRGGB              (kBlue  << 0) | (kRed   << 4) | (kRed   << 8) | (kGreen << 12) | (kGreen << 16) | (kBlue  << 20)
+                     #define kGGBBRR              (kGreen << 0) | (kGreen << 4) | (kBlue  << 8) | (kBlue  << 12) | (kRed   << 16) | (kRed   << 20)
+                     
+                     #define kGBBRRG              (kGreen << 0) | (kBlue  << 4) | (kBlue  << 8) | (kRed   << 12) | (kRed   << 16) | (kGreen << 20)
+                     #define kRRGGBB              (kRed   << 0) | (kRed   << 4) | (kGreen << 8) | (kGreen << 12) | (kBlue  << 16) | (kBlue  << 20)
+                     
+                     /*
+                        kGRRBBG
+                        kGRRBBG
+                        kBBGGRR
+                        kBBGGRR
+
+                        kBRRGGB
+                        kBRRGGB
+                        kGGBBRR
+                        kGGBBRR
+
+                        kGBBRRG
+                        kGBBRRG
+                        kRRGGBB
+                        kRRGGBB
+                     */
+
+                     const uint rgb_mask[kBGRAxis * 2] = { kGRRBBG, kBBGGRR, kBRRGGB, kGGBBRR, kGBBRRG, kRRGGBB };
+
+                     if(shadow_y < 2)
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 0] >> (mask * 4)) & 0xF;
+                     }
+                     else
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 1] >> (mask * 4)) & 0xF;
+                     }
+                     
+                     #undef kGRRBBG           
+                     #undef kBBGGRR    
+                     
+                     #undef kBRRGGB            
+                     #undef kGGBBRR      
+                     
+                     #undef kGBBRRG            
+                     #undef kRRGGBB   
+                     
+                     break;
+                  }
+                  case k600TVL:
+                  {
+                     #define kMG                  (kMagenta << 0) | (kGreen   << 6)  
+                     #define kGM                  (kGreen   << 0) | (kMagenta << 6)  
+                     
+                     #define kYB                  (kYellow  << 0) | (kBlue    << 6)  
+                     #define kBY                  (kBlue    << 0) | (kYellow  << 6)  
+                     
+                     /*
+                        kMG
+                        kGM  
+                        
+                        kYB
+                        kBY  
+                        
+                        kGM
+                        kMG
+                     */
+
+                     const uint rgb_mask[kBGRAxis * 2] = { kMG, kGM, kYB, kBY, kGM, kMG };
+
+                     if(shadow_y < 1)
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 0] >> (mask * 6)) & 0x3F;
+                     }
+                     else
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 1] >> (mask * 6)) & 0x3F;
+                     }
+
+                     #undef kMG               
+                     #undef kGM    
+                     
+                     #undef kYB                
+                     #undef kBY   
+
+                     break;
+                  }
+                  case k800TVL:
+                  {
+                     colour_mask = kWhite; 
+
+                     break;
+                  }
+                  case k1000TVL:
+                  {
+                     colour_mask = kWhite; 
+
+                     break;
+                  }
+                  default:
+                  {
+                     break;
+                  }                 
+               }
+
+               break;
+            }
+            case k4K:
+            {
+               switch(crt_resolution)
+               {
+                  case k300TVL:
+                  { 
+                     #define kMaxShadowMaskSizeX     12
+                     #define kMaxShadowMaskSizeY     8
+                     
+                     #define kGGRRRRBBBBGG        kGreen, kGreen, kRed, kRed, kRed, kRed, kBlue, kBlue, kBlue, kBlue, kGreen, kGreen  
+                     #define kBBBBGGGGRRRR        kBlue, kBlue, kBlue, kBlue, kGreen, kGreen, kGreen, kGreen, kRed, kRed, kRed, kRed  
+                     
+                     #define kBBRRRRGGGGBB        kBlue, kBlue, kRed, kRed, kRed, kRed, kGreen, kGreen, kGreen, kGreen, kBlue, kBlue  
+                     #define kGGGGBBBBRRRR        kGreen, kGreen, kGreen, kGreen, kBlue, kBlue, kBlue, kBlue, kRed, kRed, kRed, kRed  
+                     
+                     #define kGGBBBBRRRRGG        kGreen, kGreen, kBlue, kBlue, kBlue, kBlue, kRed, kRed, kRed, kRed, kGreen, kGreen  
+                     #define kRRRRGGGGBBBB        kRed, kRed, kRed, kRed, kGreen, kGreen, kGreen, kGreen, kBlue, kBlue, kBlue, kBlue  
+                     
+                     /*
+                        kGGRRRRBBBBGG
+                        kGGRRRRBBBBGG
+                        kGGRRRRBBBBGG
+                        kGGRRRRBBBBGG
+                        kBBBBGGGGRRRR
+                        kBBBBGGGGRRRR
+                        kBBBBGGGGRRRR
+                        kBBBBGGGGRRRR
+
+                        kBBRRRRGGGGBB
+                        kBBRRRRGGGGBB
+                        kBBRRRRGGGGBB
+                        kBBRRRRGGGGBB
+                        kGGGGBBBBRRRR
+                        kGGGGBBBBRRRR
+                        kGGGGBBBBRRRR
+                        kGGGGBBBBRRRR
+
+                        kGGBBBBRRRRGG
+                        kGGBBBBRRRRGG
+                        kGGBBBBRRRRGG
+                        kGGBBBBRRRRGG
+                        kRRRRGGGGBBBB
+                        kRRRRGGGGBBBB
+                        kRRRRGGGGBBBB
+                        kRRRRGGGGBBBB
+                     */
+
+                     if(shadow_y < 4)
+                     {
+                        const uint rgb_mask[kBGRAxis * kMaxShadowMaskSizeX] = { kGGRRRRBBBBGG, kBBRRRRGGGGBB, kGGBBBBRRRRGG };
+                        colour_mask = rgb_mask[(lcd_subpixel_layout * kMaxShadowMaskSizeX) + mask];
+                     }
+                     else
+                     {
+                        const uint rgb_mask[kBGRAxis * kMaxShadowMaskSizeX] = { kBBBBGGGGRRRR, kGGGGBBBBRRRR, kRRRRGGGGBBBB };
+                        colour_mask = rgb_mask[(lcd_subpixel_layout * kMaxShadowMaskSizeX) + mask];
+                     }
+
+                     #undef kMaxShadowMaskSizeX 
+                     #undef kMaxShadowMaskSizeY 
+                     
+                     #undef kGGRRRRBBBBGG      
+                     #undef kBBBBGGGGRRRR   
+                     
+                     #undef kBBRRRRGGGGBB     
+                     #undef kGGGGBBBBRRRR    
+                     
+                     #undef kGGBBBBRRRRGG      
+                     #undef kRRRRGGGGBBBB 
+
+                     break;
+                  }
+                  case k600TVL:
+                  {                     
+                     #define kGRRBBG              (kGreen << 0) | (kRed   << 4) | (kRed   << 8) | (kBlue  << 12) | (kBlue  << 16) | (kGreen << 20)
+                     #define kBBGGRR              (kBlue  << 0) | (kBlue  << 4) | (kGreen << 8) | (kGreen << 12) | (kRed   << 16) | (kRed   << 20)
+                     
+                     #define kBRRGGB              (kBlue  << 0) | (kRed   << 4) | (kRed   << 8) | (kGreen << 12) | (kGreen << 16) | (kBlue  << 20)
+                     #define kGGBBRR              (kGreen << 0) | (kGreen << 4) | (kBlue  << 8) | (kBlue  << 12) | (kRed   << 16) | (kRed   << 20)
+                     
+                     #define kGBBRRG              (kGreen << 0) | (kBlue  << 4) | (kBlue  << 8) | (kRed   << 12) | (kRed   << 16) | (kGreen << 20)
+                     #define kRRGGBB              (kRed   << 0) | (kRed   << 4) | (kGreen << 8) | (kGreen << 12) | (kBlue  << 16) | (kBlue  << 20)
+                     
+                     /*
+                        kGRRBBG
+                        kGRRBBG
+                        kBBGGRR
+                        kBBGGRR
+
+                        kBRRGGB
+                        kBRRGGB
+                        kGGBBRR
+                        kGGBBRR
+
+                        kGBBRRG
+                        kGBBRRG
+                        kRRGGBB
+                        kRRGGBB
+                     */
+
+                     const uint rgb_mask[kBGRAxis * 2] = { kGRRBBG, kBBGGRR, kBRRGGB, kGGBBRR, kGBBRRG, kRRGGBB };
+
+                     if(shadow_y < 2)
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 0] >> (mask * 4)) & 0xF;
+                     }
+                     else
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 1] >> (mask * 4)) & 0xF;
+                     }
+                     
+                     #undef kGRRBBG           
+                     #undef kBBGGRR    
+                     
+                     #undef kBRRGGB            
+                     #undef kGGBBRR      
+                     
+                     #undef kGBBRRG            
+                     #undef kRRGGBB     
+
+                     break;
+                  }
+                  case k800TVL:
+                  {                     
+                     #define kMG                  (kMagenta << 0) | (kGreen   << 6)  
+                     #define kGM                  (kGreen   << 0) | (kMagenta << 6)  
+                     
+                     #define kYB                  (kYellow  << 0) | (kBlue    << 6)  
+                     #define kBY                  (kBlue    << 0) | (kYellow  << 6)  
+                     
+                     /*
+                        kMG
+                        kGM  
+                        
+                        kYB
+                        kBY  
+                        
+                        kGM
+                        kMG
+                     */
+
+                     const uint rgb_mask[kBGRAxis * 2] = { kMG, kGM, kYB, kBY, kGM, kMG };
+
+                     if(shadow_y < 1)
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 0] >> (mask * 6)) & 0x3F;
+                     }
+                     else
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 1] >> (mask * 6)) & 0x3F;
+                     }
+
+                     #undef kMG               
+                     #undef kGM    
+                     
+                     #undef kYB                
+                     #undef kBY  
+
+                     break;
+                  }
+                  case k1000TVL:
+                  {                    
+                     #define kMG                  (kMagenta << 0) | (kGreen   << 6)  
+                     #define kGM                  (kGreen   << 0) | (kMagenta << 6)  
+                     
+                     #define kYB                  (kYellow  << 0) | (kBlue    << 6)  
+                     #define kBY                  (kBlue    << 0) | (kYellow  << 6)  
+                     
+                     /*
+                        kMG
+                        kGM  
+                        
+                        kYB
+                        kBY  
+                        
+                        kGM
+                        kMG
+                     */
+
+                     const uint rgb_mask[kBGRAxis * 2] = { kMG, kGM, kYB, kBY, kGM, kMG };
+
+                     if(shadow_y < 1)
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 0] >> (mask * 6)) & 0x3F;
+                     }
+                     else
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 1] >> (mask * 6)) & 0x3F;
+                     }
+
+                     #undef kMG               
+                     #undef kGM    
+                     
+                     #undef kYB                
+                     #undef kBY  
+
+                     break;
+                  }
+                  default:
+                  {
+                     break;
+                  }                 
+               }
+
+               break;
+            }
+            case k8K:
+            {
+               switch(crt_resolution)
+               {
+                  case k300TVL:
+                  { 
+                     #define kMaxShadowMaskSizeX     12
+                     #define kMaxShadowMaskSizeY     8
+                     
+                     #define kGGRRRRBBBBGG        kGreen, kGreen, kRed, kRed, kRed, kRed, kBlue, kBlue, kBlue, kBlue, kGreen, kGreen  
+                     #define kBBBBGGGGRRRR        kBlue, kBlue, kBlue, kBlue, kGreen, kGreen, kGreen, kGreen, kRed, kRed, kRed, kRed  
+                     
+                     #define kBBRRRRGGGGBB        kBlue, kBlue, kRed, kRed, kRed, kRed, kGreen, kGreen, kGreen, kGreen, kBlue, kBlue  
+                     #define kGGGGBBBBRRRR        kGreen, kGreen, kGreen, kGreen, kBlue, kBlue, kBlue, kBlue, kRed, kRed, kRed, kRed  
+                     
+                     #define kGGBBBBRRRRGG        kGreen, kGreen, kBlue, kBlue, kBlue, kBlue, kRed, kRed, kRed, kRed, kGreen, kGreen  
+                     #define kRRRRGGGGBBBB        kRed, kRed, kRed, kRed, kGreen, kGreen, kGreen, kGreen, kBlue, kBlue, kBlue, kBlue  
+
+                     /*
+                         kGGRRRRBBBBGG
+                         kGGRRRRBBBBGG
+                         kGGRRRRBBBBGG
+                         kGGRRRRBBBBGG
+                         kBBBBGGGGRRRR
+                         kBBBBGGGGRRRR
+                         kBBBBGGGGRRRR
+                         kBBBBGGGGRRRR
+
+                         kBBRRRRGGGGBB
+                         kBBRRRRGGGGBB
+                         kBBRRRRGGGGBB
+                         kBBRRRRGGGGBB
+                         kGGGGBBBBRRRR
+                         kGGGGBBBBRRRR
+                         kGGGGBBBBRRRR
+                         kGGGGBBBBRRRR
+
+                         kGGBBBBRRRRGG
+                         kGGBBBBRRRRGG
+                         kGGBBBBRRRRGG
+                         kGGBBBBRRRRGG
+                         kRRRRGGGGBBBB
+                         kRRRRGGGGBBBB
+                         kRRRRGGGGBBBB
+                         kRRRRGGGGBBBB
+                     */
+
+                     if(shadow_y < 4)
+                     {
+                        const uint rgb_mask[kBGRAxis * kMaxShadowMaskSizeX] = { kGGRRRRBBBBGG, kBBRRRRGGGGBB, kGGBBBBRRRRGG };
+                        colour_mask = rgb_mask[(lcd_subpixel_layout * kMaxShadowMaskSizeX) + mask];
+                     }
+                     else
+                     {
+                        const uint rgb_mask[kBGRAxis * kMaxShadowMaskSizeX] = { kBBBBGGGGRRRR, kGGGGBBBBRRRR, kRRRRGGGGBBBB };
+                        colour_mask = rgb_mask[(lcd_subpixel_layout * kMaxShadowMaskSizeX) + mask];
+                     }
+                     
+                     #undef kMaxShadowMaskSizeX 
+                     #undef kMaxShadowMaskSizeY 
+                     
+                     #undef kGGRRRRBBBBGG      
+                     #undef kBBBBGGGGRRRR      
+                     
+                     #undef kBBRRRRGGGGBB     
+                     #undef kGGGGBBBBRRRR      
+                     
+                     #undef kGGBBBBRRRRGG      
+                     #undef kRRRRGGGGBBBB 
+
+                     break;
+                  }
+                  case k600TVL:
+                  {
+                     #define kMaxShadowMaskSizeX     12
+                     #define kMaxShadowMaskSizeY     8
+                     
+                     #define kGGRRRRBBBBGG        kGreen, kGreen, kRed, kRed, kRed, kRed, kBlue, kBlue, kBlue, kBlue, kGreen, kGreen  
+                     #define kBBBBGGGGRRRR        kBlue, kBlue, kBlue, kBlue, kGreen, kGreen, kGreen, kGreen, kRed, kRed, kRed, kRed  
+                     
+                     #define kBBRRRRGGGGBB        kBlue, kBlue, kRed, kRed, kRed, kRed, kGreen, kGreen, kGreen, kGreen, kBlue, kBlue  
+                     #define kGGGGBBBBRRRR        kGreen, kGreen, kGreen, kGreen, kBlue, kBlue, kBlue, kBlue, kRed, kRed, kRed, kRed  
+                     
+                     #define kGGBBBBRRRRGG        kGreen, kGreen, kBlue, kBlue, kBlue, kBlue, kRed, kRed, kRed, kRed, kGreen, kGreen  
+                     #define kRRRRGGGGBBBB        kRed, kRed, kRed, kRed, kGreen, kGreen, kGreen, kGreen, kBlue, kBlue, kBlue, kBlue  
+                     
+                     /*
+                         kGGRRRRBBBBGG
+                         kGGRRRRBBBBGG
+                         kGGRRRRBBBBGG
+                         kGGRRRRBBBBGG
+                         kBBBBGGGGRRRR
+                         kBBBBGGGGRRRR
+                         kBBBBGGGGRRRR
+                         kBBBBGGGGRRRR
+
+                         kBBRRRRGGGGBB
+                         kBBRRRRGGGGBB
+                         kBBRRRRGGGGBB
+                         kBBRRRRGGGGBB
+                         kGGGGBBBBRRRR
+                         kGGGGBBBBRRRR
+                         kGGGGBBBBRRRR
+                         kGGGGBBBBRRRR
+
+                         kGGBBBBRRRRGG
+                         kGGBBBBRRRRGG
+                         kGGBBBBRRRRGG
+                         kGGBBBBRRRRGG
+                         kRRRRGGGGBBBB
+                         kRRRRGGGGBBBB
+                         kRRRRGGGGBBBB
+                         kRRRRGGGGBBBB
+                     */
+
+                     if(shadow_y < 4)
+                     {
+                        const uint rgb_mask[kBGRAxis * kMaxShadowMaskSizeX] = { kGGRRRRBBBBGG, kBBRRRRGGGGBB, kGGBBBBRRRRGG };
+                        colour_mask = rgb_mask[(lcd_subpixel_layout * kMaxShadowMaskSizeX) + mask];
+                     }
+                     else
+                     {
+                        const uint rgb_mask[kBGRAxis * kMaxShadowMaskSizeX] = { kBBBBGGGGRRRR, kGGGGBBBBRRRR, kRRRRGGGGBBBB };
+                        colour_mask = rgb_mask[(lcd_subpixel_layout * kMaxShadowMaskSizeX) + mask];
+                     }
+                     
+                     #undef kMaxShadowMaskSizeX 
+                     #undef kMaxShadowMaskSizeY 
+                     
+                     #undef kGGRRRRBBBBGG      
+                     #undef kBBBBGGGGRRRR      
+                     
+                     #undef kBBRRRRGGGGBB     
+                     #undef kGGGGBBBBRRRR      
+                     
+                     #undef kGGBBBBRRRRGG      
+                     #undef kRRRRGGGGBBBB
+
+                     break;
+                  }
+                  case k800TVL:
+                  {
+                     #define kGRRBBG              (kGreen << 0) | (kRed   << 4) | (kRed   << 8) | (kBlue  << 12) | (kBlue  << 16) | (kGreen << 20)
+                     #define kBBGGRR              (kBlue  << 0) | (kBlue  << 4) | (kGreen << 8) | (kGreen << 12) | (kRed   << 16) | (kRed   << 20)
+                     
+                     #define kBRRGGB              (kBlue  << 0) | (kRed   << 4) | (kRed   << 8) | (kGreen << 12) | (kGreen << 16) | (kBlue  << 20)
+                     #define kGGBBRR              (kGreen << 0) | (kGreen << 4) | (kBlue  << 8) | (kBlue  << 12) | (kRed   << 16) | (kRed   << 20)
+                     
+                     #define kGBBRRG              (kGreen << 0) | (kBlue  << 4) | (kBlue  << 8) | (kRed   << 12) | (kRed   << 16) | (kGreen << 20)
+                     #define kRRGGBB              (kRed   << 0) | (kRed   << 4) | (kGreen << 8) | (kGreen << 12) | (kBlue  << 16) | (kBlue  << 20)
+                     
+                     /*
+                        kGRRBBG
+                        kGRRBBG
+                        kBBGGRR
+                        kBBGGRR
+
+                        kBRRGGB
+                        kBRRGGB
+                        kGGBBRR
+                        kGGBBRR
+
+                        kGBBRRG
+                        kGBBRRG
+                        kRRGGBB
+                        kRRGGBB
+                     */
+
+                     const uint rgb_mask[kBGRAxis * 2] = { kGRRBBG, kBBGGRR, kBRRGGB, kGGBBRR, kGBBRRG, kRRGGBB };
+
+                     if(shadow_y < 2)
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 0] >> (mask * 4)) & 0xF;
+                     }
+                     else
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 1] >> (mask * 4)) & 0xF;
+                     }
+                     
+                     #undef kGRRBBG           
+                     #undef kBBGGRR    
+                     
+                     #undef kBRRGGB            
+                     #undef kGGBBRR      
+                     
+                     #undef kGBBRRG            
+                     #undef kRRGGBB 
+                     
+                     break;
+                  }
+                  case k1000TVL:
+                  {
+                     #define kGRRBBG              (kGreen << 0) | (kRed   << 4) | (kRed   << 8) | (kBlue  << 12) | (kBlue  << 16) | (kGreen << 20)
+                     #define kBBGGRR              (kBlue  << 0) | (kBlue  << 4) | (kGreen << 8) | (kGreen << 12) | (kRed   << 16) | (kRed   << 20)
+                     
+                     #define kBRRGGB              (kBlue  << 0) | (kRed   << 4) | (kRed   << 8) | (kGreen << 12) | (kGreen << 16) | (kBlue  << 20)
+                     #define kGGBBRR              (kGreen << 0) | (kGreen << 4) | (kBlue  << 8) | (kBlue  << 12) | (kRed   << 16) | (kRed   << 20)
+                     
+                     #define kGBBRRG              (kGreen << 0) | (kBlue  << 4) | (kBlue  << 8) | (kRed   << 12) | (kRed   << 16) | (kGreen << 20)
+                     #define kRRGGBB              (kRed   << 0) | (kRed   << 4) | (kGreen << 8) | (kGreen << 12) | (kBlue  << 16) | (kBlue  << 20)
+                     
+                     /*
+                        kGRRBBG
+                        kGRRBBG
+                        kBBGGRR
+                        kBBGGRR
+
+                        kBRRGGB
+                        kBRRGGB
+                        kGGBBRR
+                        kGGBBRR
+
+                        kGBBRRG
+                        kGBBRRG
+                        kRRGGBB
+                        kRRGGBB
+                     */
+
+                     const uint rgb_mask[kBGRAxis * 2] = { kGRRBBG, kBBGGRR, kBRRGGB, kGGBBRR, kGBBRRG, kRRGGBB };
+
+                     if(shadow_y < 2)
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 0] >> (mask * 4)) & 0xF;
+                     }
+                     else
+                     {
+                         colour_mask = (rgb_mask[(lcd_subpixel_layout * 2) + 1] >> (mask * 4)) & 0xF;
+                     }
+                     
+                     #undef kGRRBBG           
+                     #undef kBBGGRR    
+                     
+                     #undef kBRRGGB            
+                     #undef kGGBBRR      
+                     
+                     #undef kGBBRRG            
+                     #undef kRRGGBB 
+                     
+                     break;
+                  }
+                  default:
+                  {
+                     break;
+                  }                 
+               }
+
+               break;
+            }
+            default:
+            {
+               break;
+            }                 
+         }
 
          break;
       }
       case kSlotMask:
       {
-         uint slot_x = uint(floor(mod(current_position.x / kSlotMaskSizeX[lcd_resolution][crt_resolution], kMaxSlotSizeX)));
-         uint slot_y = uint(floor(mod(current_position.y, kSlotMaskSizeY[lcd_resolution][crt_resolution])));
+         #define kMaxSlotSizeX      2
 
-         uint mask = uint(floor(mod(current_position.x, kSlotMaskSizeX[lcd_resolution][crt_resolution])));
+         uint slot_x = uint(floor(mod(current_position.x / kSlotMaskSizeX[(lcd_resolution * kTVLAxis) + crt_resolution], kMaxSlotSizeX)));
+         uint slot_y = uint(floor(mod(current_position.y, kSlotMaskSizeY[(lcd_resolution * kTVLAxis) + crt_resolution])));
+         
+         uint element = (slot_y * kMaxSlotSizeX) + slot_x;
 
-         colour_mask = kSlotMasks[lcd_resolution][crt_resolution][lcd_subpixel_layout][slot_x][slot_y][mask];
+         uint mask = uint(floor(mod(current_position.x, kSlotMaskSizeX[(lcd_resolution * kTVLAxis) + crt_resolution])));
 
-         break;
-      }
-      case kBlackWhiteMask:
-      {
-         uint mask = uint(floor(mod(current_position.x, kBlackWhiteMaskSize[lcd_resolution][crt_resolution])));
+         switch(lcd_resolution)
+         {
+            case k1080p:
+            { 
+               switch(crt_resolution)
+               {
+                  case k300TVL:
+                  {
+                     #define kRGBX             (kRed  << 0) | (kGreen << 4) | (kBlue  << 8) | (kBlack << 12)  
+                     #define kRBGX             (kRed  << 0) | (kBlue  << 4) | (kGreen << 8) | (kBlack << 12)  
+                     #define kBGRX             (kBlue << 0) | (kGreen << 4) | (kRed   << 8) | (kBlack << 12)  
+                     
+                     /*
+                         kRGBX, kRGBX
+                         kRGBX, kXXXX
+                         kRGBX, kRGBX
+                         kXXXX, kRGBX
 
-         colour_mask = kBlackWhiteMasks[lcd_resolution][crt_resolution][lcd_subpixel_layout][mask];      
+                         kRBGX, kRBGX
+                         kRBGX, kXXXX
+                         kRBGX, kRBGX
+                         kXXXX, kRBGX  
+
+                         kBGRX, kBGRX
+                         kBGRX, kXXXX
+                         kBGRX, kBGRX
+                         kXXXX, kBGRX
+                     */
+
+                     if((element == 3) || (element == 6))
+                     {
+                        colour_mask = kBlack;
+                     }
+                     else
+                     {
+                        const uint rgb_mask[kBGRAxis] = { kRGBX, kRBGX, kBGRX };
+                        colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 4)) & 0xF;   
+                     }
+                     
+                     #undef kRGBX     
+                     #undef kRBGX
+                     #undef kBGRX         
+
+                     break;
+                  }
+                  case k600TVL:
+                  {
+                     #define kMG               (kMagenta << 0) | (kGreen   << 6)  
+                     #define kYB               (kYellow  << 0) | (kBlue    << 6)
+                     #define kGM               (kGreen   << 0) | (kMagenta << 6)
+                     
+                     /*
+                        kMG, kMG
+                        kMG, kXX
+                        kMG, kMG
+                        kXX, kMG
+
+                        kYB, kYB
+                        kYB, kXX
+                        kYB, kYB
+                        kXX, kYB
+
+                        kGM, kGM
+                        kGM, kXX
+                        kGM, kGM
+                        kXX, kGM
+                     */
+
+                     if((element == 3) || (element == 6))
+                     {
+                        colour_mask = kBlack;
+                     }
+                     else
+                     {
+                        const uint rgb_mask[kBGRAxis] = { kMG, kYB, kGM };
+                        colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 6)) & 0x3F;
+                     }
+                   
+                     #undef kMG     
+                     #undef kYB  
+                     #undef kGM        
+
+                     break;
+                  }
+                  case k800TVL:
+                  {
+                     #define kMaxSlotMaskSize   1
+                     #define kMaxSlotSizeY      4
+                     
+                     #define kX          kBlack  
+                     #define kW          kWhite  
+                     
+                     /*
+                        kW, kW
+                        kW, kX
+                        kW, kW
+                        kX, kW
+                     */
+
+                     if((element == 3) || (element == 6))
+                     {
+                        colour_mask = kBlack;
+                     }
+                     else
+                     {
+                        colour_mask = kWhite;
+                     }
+                      
+                     #undef kMaxSlotMaskSize  
+                     #undef kMaxSlotSizeY     
+                     
+                     #undef kX
+                     #undef kW
+
+                     break;
+                  }
+                  case k1000TVL:
+                  {
+                     #define kMaxSlotMaskSize   1
+                     #define kMaxSlotSizeY      4
+                     
+                     #define kX          kBlack  
+                     #define kW          kWhite  
+
+                     /*
+                        kW, kW
+                        kW, kX
+                        kW, kW
+                        kX, kW
+                     */
+
+                     if((element == 3) || (element == 6))
+                     {
+                        colour_mask = kBlack;
+                     }
+                     else
+                     {
+                        colour_mask = kWhite;
+                     }
+                     
+                     #undef kMaxSlotMaskSize  
+                     #undef kMaxSlotSizeY     
+                     
+                     #undef kX  
+                     #undef kW   
+
+                     break;
+                  }
+                  default:
+                  {
+                     break;
+                  }                 
+               }
+
+               break;
+            }
+            case k4K:
+            {
+               switch(crt_resolution)
+               {
+                  case k300TVL:
+                  { 
+                     #define kRRGGBBX          (kRed  << 0) | (kRed  << 4) | (kGreen << 8) | (kGreen << 12) | (kBlue  << 16) | (kBlue  << 20) | (kBlack << 24)   
+                     #define kRRBBGGX          (kRed  << 0) | (kRed  << 4) | (kBlue  << 8) | (kBlue  << 12) | (kGreen << 16) | (kGreen << 20) | (kBlack << 24)    
+                     #define kBBGGRRX          (kBlue << 0) | (kBlue << 4) | (kGreen << 8) | (kGreen << 12) | (kRed   << 16) | (kRed   << 20) | (kBlack << 24)    
+                     
+                     /*
+                         kRRGGBBX, kRRGGBBX
+                         kRRGGBBX, kRRGGBBX
+                         kRRGGBBX, kRRGGBBX
+                         kRRGGBBX, kXXXXXXX
+                         kRRGGBBX, kRRGGBBX
+                         kRRGGBBX, kRRGGBBX
+                         kRRGGBBX, kRRGGBBX
+                         kXXXXXXX, kRRGGBBX
+
+                         kRRBBGGX, kRRBBGGX
+                         kRRBBGGX, kRRBBGGX
+                         kRRBBGGX, kRRBBGGX
+                         kRRBBGGX, kXXXXXXX
+                         kRRBBGGX, kRRBBGGX
+                         kRRBBGGX, kRRBBGGX
+                         kRRBBGGX, kRRBBGGX
+                         kXXXXXXX, kRRBBGGX
+
+                         kBBGGRRX, kBBGGRRX
+                         kBBGGRRX, kBBGGRRX
+                         kBBGGRRX, kBBGGRRX
+                         kBBGGRRX, kXXXXXXX
+                         kBBGGRRX, kBBGGRRX
+                         kBBGGRRX, kBBGGRRX
+                         kBBGGRRX, kBBGGRRX
+                         kXXXXXXX, kBBGGRRX
+                     */
+
+                     if((element == 7) || (element == 14))
+                     {
+                        colour_mask = kBlack;
+                     }
+                     else
+                     {
+                        const uint rgb_mask[kBGRAxis] = {  kRRGGBBX, kRRBBGGX, kBBGGRRX };
+                        colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 4)) & 0xF;  
+                     }
+                     
+                     #undef kRRGGBBX  
+                     #undef kRRBBGGX  
+                     #undef kBBGGRRX 
+                     
+                     break;
+                  }
+                  case k600TVL:
+                  {
+                     #define kRGBX             (kRed  << 0) | (kGreen << 4) | (kBlue  << 8) | (kBlack << 12)  
+                     #define kRBGX             (kRed  << 0) | (kBlue  << 4) | (kGreen << 8) | (kBlack << 12)  
+                     #define kBGRX             (kBlue << 0) | (kGreen << 4) | (kRed   << 8) | (kBlack << 12)  
+                     
+                     /*
+                         kRGBX, kRGBX
+                         kRGBX, kXXXX
+                         kRGBX, kRGBX
+                         kXXXX, kRGBX
+
+                         kRBGX, kRBGX
+                         kRBGX, kXXXX
+                         kRBGX, kRBGX
+                         kXXXX, kRBGX  
+
+                         kBGRX, kBGRX
+                         kBGRX, kXXXX
+                         kBGRX, kBGRX
+                         kXXXX, kBGRX
+                     */
+
+                     if((element == 5) || (element == 10))
+                     {
+                        colour_mask = kBlack;
+                     }
+                     else
+                     {
+                        const uint rgb_mask[kBGRAxis] = { kRGBX, kRBGX, kBGRX };
+                        colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 4)) & 0xF;   
+                     }
+                     
+                     #undef kRGBX     
+                     #undef kRBGX
+                     #undef kBGRX
+
+                     break;
+                  }
+                  case k800TVL:
+                  {
+                     #define kBGR              (kBlue  << 0) | (kGreen << 4) | (kRed  << 8) 
+                     #define kGBR              (kGreen << 0) | (kBlue  << 4) | (kRed  << 8)  
+                     #define kRGB              (kRed   << 0) | (kGreen << 4) | (kBlue << 8)   
+                     
+                     /*
+                        kBGR, kBGR
+                        kBGR, kXXX
+                        kBGR, kBGR
+                        kXXX, kBGR
+                        
+                        kGBR, kGBR
+                        kGBR, kXXX
+                        kGBR, kGBR
+                        kXXX, kGBR
+                        
+                        kRGB, kRGB
+                        kRGB, kXXX
+                        kRGB, kRGB
+                        kXXX, kRGB
+                     */
+
+                     if((element == 3) || (element == 6))
+                     {
+                        colour_mask = kBlack;
+                     }
+                     else
+                     {
+                        const uint rgb_mask[kBGRAxis] = { kBGR, kGBR, kRGB };
+                        colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 4)) & 0xF;  
+                     }  
+                     
+                     #undef kBGR    
+                     #undef kGBR 
+                     #undef kRGB       
+
+                     break;
+                  }
+                  case k1000TVL:
+                  {
+                     #define kMG               (kMagenta << 0) | (kGreen   << 6)  
+                     #define kYB               (kYellow  << 0) | (kBlue    << 6)
+                     #define kGM               (kGreen   << 0) | (kMagenta << 6)
+                     
+                     /*
+                        kMG, kMG
+                        kMG, kXX
+                        kMG, kMG
+                        kXX, kMG
+
+                        kYB, kYB
+                        kYB, kXX
+                        kYB, kYB
+                        kXX, kYB
+
+                        kGM, kGM
+                        kGM, kXX
+                        kGM, kGM
+                        kXX, kGM
+                     */
+
+                     if((element == 3) || (element == 6))
+                     {
+                        colour_mask = kBlack;
+                     }
+                     else
+                     {
+                        const uint rgb_mask[kBGRAxis] = { kMG, kYB, kGM };
+                        colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 6)) & 0x3F;
+                     }
+                   
+                     #undef kMG     
+                     #undef kYB  
+                     #undef kGM        
+
+                     break;
+                  }
+                  default:
+                  {
+                     break;
+                  }                 
+               }
+
+               break;
+            }
+            case k8K:
+            {
+               switch(crt_resolution)
+               {
+                  case k300TVL:
+                  { 
+                     #define kRRGGBBX          (kRed  << 0) | (kRed  << 4) | (kGreen << 8) | (kGreen << 12) | (kBlue  << 16) | (kBlue  << 20) | (kBlack << 24)   
+                     #define kRRBBGGX          (kRed  << 0) | (kRed  << 4) | (kBlue  << 8) | (kBlue  << 12) | (kGreen << 16) | (kGreen << 20) | (kBlack << 24)    
+                     #define kBBGGRRX          (kBlue << 0) | (kBlue << 4) | (kGreen << 8) | (kGreen << 12) | (kRed   << 16) | (kRed   << 20) | (kBlack << 24) 
+                     
+                     /*
+                         kRRGGBBX, kRRGGBBX
+                         kRRGGBBX, kRRGGBBX
+                         kRRGGBBX, kXXXXXXX
+                         kRRGGBBX, kRRGGBBX
+                         kRRGGBBX, kRRGGBBX
+                         kXXXXXXX, kRRGGBBX
+                     
+                         kRRBBGGX, kRRBBGGX
+                         kRRBBGGX, kRRBBGGX
+                         kRRBBGGX, kXXXXXXX
+                         kRRBBGGX, kRRBBGGX
+                         kRRBBGGX, kRRBBGGX
+                         kXXXXXXX, kRRBBGGX
+                     
+                         kBBGGRRX, kBBGGRRX
+                         kBBGGRRX, kBBGGRRX
+                         kBBGGRRX, kXXXXXXX
+                         kBBGGRRX, kBBGGRRX
+                         kBBGGRRX, kBBGGRRX
+                         kXXXXXXX, kBBGGRRX
+                     */
+
+                     if((element == 5) || (element == 10))
+                     {
+                        colour_mask = kBlack;
+                     }
+                     else
+                     {
+                        const uint rgb_mask[kBGRAxis] = {  kRRGGBBX, kRRBBGGX, kBBGGRRX };
+                        colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 4)) & 0xF; 
+                     }   
+                     
+                     #undef kRRGGBBX  
+                     #undef kRRBBGGX  
+                     #undef kBBGGRRX 
+                     
+                     break;
+                  }
+                  case k600TVL:
+                  {
+                     #define kRRGGBBX          (kRed  << 0) | (kRed  << 4) | (kGreen << 8) | (kGreen << 12) | (kBlue  << 16) | (kBlue  << 20) | (kBlack << 24)   
+                     #define kRRBBGGX          (kRed  << 0) | (kRed  << 4) | (kBlue  << 8) | (kBlue  << 12) | (kGreen << 16) | (kGreen << 20) | (kBlack << 24)    
+                     #define kBBGGRRX          (kBlue << 0) | (kBlue << 4) | (kGreen << 8) | (kGreen << 12) | (kRed   << 16) | (kRed   << 20) | (kBlack << 24) 
+                     
+                     /*
+                         kRRGGBBX, kRRGGBBX
+                         kRRGGBBX, kRRGGBBX
+                         kRRGGBBX, kXXXXXXX
+                         kRRGGBBX, kRRGGBBX
+                         kRRGGBBX, kRRGGBBX
+                         kXXXXXXX, kRRGGBBX
+                     
+                         kRRBBGGX, kRRBBGGX
+                         kRRBBGGX, kRRBBGGX
+                         kRRBBGGX, kXXXXXXX
+                         kRRBBGGX, kRRBBGGX
+                         kRRBBGGX, kRRBBGGX
+                         kXXXXXXX, kRRBBGGX
+                     
+                         kBBGGRRX, kBBGGRRX
+                         kBBGGRRX, kBBGGRRX
+                         kBBGGRRX, kXXXXXXX
+                         kBBGGRRX, kBBGGRRX
+                         kBBGGRRX, kBBGGRRX
+                         kXXXXXXX, kBBGGRRX
+                     */
+
+                     if((element == 5) || (element == 10))
+                     {
+                        colour_mask = kBlack;
+                     }
+                     else
+                     {
+                        const uint rgb_mask[kBGRAxis] = {  kRRGGBBX, kRRBBGGX, kBBGGRRX };
+                        colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 4)) & 0xF; 
+                     }
+
+                     #undef kMaxSlotMaskSize   
+                     #undef kMaxSlotSizeY 
+                     
+                     #undef kRRGGBBX  
+                     #undef kRRBBGGX  
+                     #undef kBBGGRRX 
+
+                     break;
+                  }
+                  case k800TVL:
+                  {
+                     #define kRYCBX            (kRed  << 0) | (kYellow  << 6) | (kCyan   << 12) | (kBlue  << 18) | (kBlack << 24)  
+                     #define kRMCGX            (kRed  << 0) | (kMagenta << 6) | (kCyan   << 12) | (kGreen << 18) | (kBlack << 24)  
+                     #define kBCYRX            (kBlue << 0) | (kCyan    << 6) | (kYellow << 12) | (kRed   << 18) | (kBlack << 24)  
+                     
+                     /*
+                        kRYCBX, kRYCBX
+                        kRYCBX, kXXXXX
+                        kRYCBX, kRYCBX
+                        kXXXXX, kRYCBX    
+
+                        kRMCGX, kRMCGX
+                        kRMCGX, kXXXXX
+                        kRMCGX, kRMCGX
+                        kXXXXX, kRMCGX    
+
+                        kBCYRX, kBCYRX
+                        kBCYRX, kXXXXX
+                        kBCYRX, kBCYRX
+                        kXXXXX, kBCYRX    
+                     */
+
+                     if((element == 3) || (element == 6))
+                     {
+                        colour_mask = kBlack;
+                     }
+                     else
+                     {
+                        const uint rgb_mask[kBGRAxis] = { kRYCBX, kRMCGX, kBCYRX  };
+                        colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 6)) & 0x3F;
+                     }
+                     
+                     #undef kRYCBX    
+                     #undef kRMCGX
+                     #undef kBCYRX
+
+                     break;
+                  }
+                  case k1000TVL:
+                  {
+                     #define kRGBX             (kRed  << 0) | (kGreen << 4) | (kBlue  << 8) | (kBlack << 12)  
+                     #define kRBGX             (kRed  << 0) | (kBlue  << 4) | (kGreen << 8) | (kBlack << 12)  
+                     #define kBGRX             (kBlue << 0) | (kGreen << 4) | (kRed   << 8) | (kBlack << 12)  
+                     
+                     /*
+                         kRGBX, kRGBX
+                         kRGBX, kXXXX
+                         kRGBX, kRGBX
+                         kXXXX, kRGBX
+
+                         kRBGX, kRBGX
+                         kRBGX, kXXXX
+                         kRBGX, kRBGX
+                         kXXXX, kRBGX  
+
+                         kBGRX, kBGRX
+                         kBGRX, kXXXX
+                         kBGRX, kBGRX
+                         kXXXX, kBGRX
+                     */
+
+                     if((element == 5) || (element == 10))
+                     {
+                        colour_mask = kBlack;
+                     }
+                     else
+                     {
+                        const uint rgb_mask[kBGRAxis] = { kRGBX, kRBGX, kBGRX };
+                        colour_mask = (rgb_mask[lcd_subpixel_layout] >> (mask * 4)) & 0xF;   
+                     }
+                     
+                     #undef kRGBX     
+                     #undef kRBGX
+                     #undef kBGRX
+
+                     break;
+                  }
+                  default:
+                  {
+                     break;
+                  }                 
+               }
+
+               break;
+            }
+            default:
+            {
+               break;
+            }                 
+         }
 
          break;
       }
@@ -471,7 +1595,7 @@ void main()
       }
    }
 
-   const float scanline_size           = global.OutputSize.y / global.SourceSize.y;
+   const float scanline_size           = output_size.y / source_size.y;
 
    const vec3 horizontal_convergence   = vec3(HCRT_RED_HORIZONTAL_CONVERGENCE, HCRT_GREEN_HORIZONTAL_CONVERGENCE, HCRT_BLUE_HORIZONTAL_CONVERGENCE);
    const vec3 vertical_convergence     = vec3(HCRT_RED_VERTICAL_CONVERGENCE, HCRT_GREEN_VERTICAL_CONVERGENCE, HCRT_BLUE_VERTICAL_CONVERGENCE);
@@ -491,7 +1615,7 @@ void main()
 
       const float scanline_channel_0   = GenerateScanline(  channel_0,
                                                             tex_coord,
-                                                            global.SourceSize.xy, 
+                                                            source_size.xy, 
                                                             scanline_size, 
                                                             horizontal_convergence[channel_0], 
                                                             vertical_convergence[channel_0], 
@@ -510,7 +1634,7 @@ void main()
 
       const float scanline_channel_1   = GenerateScanline(channel_1,
                                                           tex_coord,
-                                                          global.SourceSize.xy, 
+                                                          source_size.xy, 
                                                           scanline_size, 
                                                           horizontal_convergence[channel_1], 
                                                           vertical_convergence[channel_1], 
@@ -529,7 +1653,7 @@ void main()
 
       const float scanline_channel_2   = GenerateScanline(channel_2,
                                                           tex_coord,
-                                                          global.SourceSize.xy, 
+                                                          source_size.xy, 
                                                           scanline_size, 
                                                           horizontal_convergence[channel_2], 
                                                           vertical_convergence[channel_2], 
@@ -542,7 +1666,32 @@ void main()
       scanline_colour += scanline_channel_2 * kColourMask[channel_2];
    }
 
-   const vec3 hdr10 = GammaCorrect(scanline_colour);
+   vec3 transformed_colour;
 
-   FragColor = vec4(hdr10, 1.0f);
+   if(HCRT_COLOUR_ACCURATE >= 1.0f)
+   {
+      if(HCRT_HDR >= 1.0f)
+      {
+         const vec3 rec2020  = scanline_colour * k2020Gamuts[uint(HCRT_EXPAND_GAMUT)];
+         transformed_colour  = rec2020 * (HCRT_PAPER_WHITE_NITS / kMaxNitsFor2084);
+      }
+      else if(HCRT_OUTPUT_COLOUR_SPACE == 2.0f)
+      {
+         transformed_colour = (scanline_colour * k709_to_XYZ) * kXYZ_to_DCIP3; 
+      }
+      else
+      {
+         transformed_colour = scanline_colour;
+      }
+   } 
+   else
+   {      
+      transformed_colour = scanline_colour;
+   }
+
+   vec3 gamma_corrected; 
+   
+   GammaCorrect(transformed_colour, gamma_corrected);
+
+   FragColor = vec4(gamma_corrected, 1.0f);
 }

@@ -1,6 +1,6 @@
 shaders = "5"
 
-shader0 = "../../ntsc/shaders/ntsc-pass1-composite-2phase.slang"
+shader0 = "../../ntsc/shaders/maister/ntsc-pass1-composite-2phase.slang"
 filter_linear0 = "false"
 frame_count_mod0 = "2"
 float_framebuffer0 = "true"
@@ -9,7 +9,7 @@ scale_x0 = "4.000000"
 scale_type_y0 = "source"
 scale_y0 = "1.000000"
 
-shader1 = "../../ntsc/shaders/ntsc-pass2-2phase.slang"
+shader1 = "../../ntsc/shaders/maister/ntsc-pass2-2phase.slang"
 filter_linear1 = "false"
 float_framebuffer1 = "false"
 scale_type_x1 = "source"
@@ -25,10 +25,10 @@ scale_x2 = "1.000000"
 scale_type_y2 = "source"
 scale_y2 = "1.000000"
 
-shader3 = "../../misc/image-adjustment.slang"
+shader3 = "../../misc/shaders/image-adjustment.slang"
 float_framebuffer3 = "false"
 
-shader4 = "../../misc/interlacing.slang"
+shader4 = "../../misc/shaders/interlacing.slang"
 
 parameters = "TVOUT_RESOLUTION;TVOUT_COMPOSITE_CONNECTION;TVOUT_TV_COLOR_LEVELS;target_gamma;monitor_gamma;overscan_percent_x;overscan_percent_y;saturation;contrast;luminance;bright_boost;R;G;B;percent"
 TVOUT_RESOLUTION = "512.000000"

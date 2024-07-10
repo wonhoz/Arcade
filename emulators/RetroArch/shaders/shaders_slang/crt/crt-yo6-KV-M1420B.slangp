@@ -14,8 +14,9 @@ scale_type1 = "absolute"
 scale_x1 = 1684
 scale_y1 = 1329
 
-shader2 = "../windowed/shaders/jinc2.slang"
+shader2 = "../interpolation/shaders/jinc2.slang"
 filter_linear2 = false
+scale_type2 = viewport
 
 textures = TEX_CRT
 TEX_CRT = "shaders/crt-yo6/KV-M1420B.png"

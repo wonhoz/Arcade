@@ -3,7 +3,7 @@
 /*
    Interlacing
    
-   Copyright (C) 2020 guest(r) - guest.r@gmail.com
+   Copyright (C) 2020 - 2023 guest(r) - guest.r@gmail.com
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -33,8 +33,8 @@ layout(push_constant) uniform Push
 	float intres;
 	float iscans;
 	float downsample_levelx;
-	float downsample_levely;	
-	float prescalex;
+	float downsample_levely;
+	float gamma_out;
 } params;
 
 
@@ -44,9 +44,13 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	mat4 MVP;
 } global;
 
+#pragma parameter bogus_gamma "[ GAMMA OPTIONS ]: " 0.0 0.0 0.0 1.0
 
-#pragma parameter GAMMA_INPUT "Gamma Input" 2.0 1.0 5.0 0.05
+#pragma parameter GAMMA_INPUT "          Gamma Input" 2.0 1.0 5.0 0.05
 #define GAMMA_INPUT params.GAMMA_INPUT
+
+#pragma parameter gamma_out "          Gamma out" 1.95 1.0 5.0 0.05
+#define gamma_out    params.gamma_out     // output gamma
 
 #pragma parameter bogus_interlacing "[ INTERLACING OPTIONS ]: " 0.0 0.0 0.0 1.0
 
@@ -56,10 +60,10 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter interm "          Interlace Mode: OFF, Normal 1-3, Interpolation 4-5" 1.0 0.0 5.0 1.0
 #define interm         params.interm     // interlace mode 
 
-#pragma parameter iscan "          Interlacing Scanline Effect" 0.20 0.0 1.0 0.05
+#pragma parameter iscan "          Interlacing Scanline Effect ('Laced brightness)" 0.20 0.0 1.0 0.05
 #define iscan  params.iscan     // interlacing effect scanlining
 
-#pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with main pass, values must match
+#pragma parameter intres "          Internal Resolution Y: 0.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with main pass, values must match
 
 #define intres         params.intres     // interlace resolution
 
@@ -69,10 +73,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter downsample_levely "          Downsampling-Y (High-res content, pre-scalers)" 0.0 0.0 2.0 0.05
 #define downsample_levely         params.downsample_levely     // downsample level
 
-#pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0  // Joint parameter with main pass, values must match
-#define prescalex        params.prescalex     // prescale-x factor
-
-#pragma parameter iscans "          Interlacing (Scanline) Saturation" 0.40 0.0 1.0 0.05
+#pragma parameter iscans "          Interlacing (Scanline) Saturation" 0.25 0.0 1.0 0.05
 #define iscans        params.iscans     // interlace saturation
 
 #pragma stage vertex
@@ -83,13 +84,13 @@ layout(location = 0) out vec2 vTexCoord;
 void main()
 {
    gl_Position = global.MVP * Position;
-   vTexCoord = TexCoord * 1.000001;
+   vTexCoord = TexCoord * 1.00001;
 }
 
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D PrePass;
+layout(set = 0, binding = 2) uniform sampler2D NtscPass;
 
 #define COMPAT_TEXTURE(c,d) texture(c,d)
 
@@ -109,15 +110,15 @@ vec3 fetch_pixel(vec2 coord)
 	vec2 d2 = dx - dy;
 	
 	float sum = 15.0;
-	vec3 result = 3.0*COMPAT_TEXTURE(PrePass, coord     ).rgb + 
-	              2.0*COMPAT_TEXTURE(PrePass, coord + dx).rgb +
-	              2.0*COMPAT_TEXTURE(PrePass, coord - dx).rgb +
-	              2.0*COMPAT_TEXTURE(PrePass, coord + dy).rgb +
-	              2.0*COMPAT_TEXTURE(PrePass, coord - dy).rgb +
-	              COMPAT_TEXTURE(PrePass, coord + d1).rgb +
-	              COMPAT_TEXTURE(PrePass, coord - d1).rgb +
-	              COMPAT_TEXTURE(PrePass, coord + d2).rgb +
-	              COMPAT_TEXTURE(PrePass, coord - d2).rgb;  
+	vec3 result = 3.0*COMPAT_TEXTURE(NtscPass, coord     ).rgb + 
+	              2.0*COMPAT_TEXTURE(NtscPass, coord + dx).rgb +
+	              2.0*COMPAT_TEXTURE(NtscPass, coord - dx).rgb +
+	              2.0*COMPAT_TEXTURE(NtscPass, coord + dy).rgb +
+	              2.0*COMPAT_TEXTURE(NtscPass, coord - dy).rgb +
+	              COMPAT_TEXTURE(NtscPass, coord + d1).rgb +
+	              COMPAT_TEXTURE(NtscPass, coord - d1).rgb +
+	              COMPAT_TEXTURE(NtscPass, coord + d2).rgb +
+	              COMPAT_TEXTURE(NtscPass, coord - d2).rgb;  
 				  
 	return result/sum;
 }
@@ -125,8 +126,8 @@ vec3 fetch_pixel(vec2 coord)
 
 void main()
 {
-	vec3 c1 = COMPAT_TEXTURE(PrePass, vTexCoord).rgb;
-	vec3 c2 = COMPAT_TEXTURE(PrePass, vTexCoord + vec2(0.0, params.OriginalSize.w)).rgb;
+	vec3 c1 = COMPAT_TEXTURE(NtscPass, vTexCoord).rgb;
+	vec3 c2 = COMPAT_TEXTURE(NtscPass, vTexCoord + vec2(0.0, params.OriginalSize.w)).rgb;
 	
 	if ((downsample_levelx + downsample_levely) > 0.025)
 	{
@@ -152,7 +153,7 @@ void main()
 		
 	if (inter <= params.OriginalSize.y/yres_div && interm > 0.5 && intres != 1.0 && intres != 0.5) 
 	{
-		intera = 0.5;
+		intera = 0.25;
 		float line_no  = clamp(floor(mod(params.OriginalSize.y*vTexCoord.y, 2.0)), 0.0, 1.0);
 		float frame_no = clamp(floor(mod(float(params.FrameCount),2.0)), 0.0, 1.0);
 		float ii = abs(line_no-frame_no);
@@ -163,10 +164,9 @@ void main()
 			r = clamp(max(m1*ii, (1.0-iscan)*min(m1,m2)), 0.0, 1.0);
 			c = plant( mix(mix(c1,c2, min(mix(m1, 1.0-m2, min(m1,1.0-m1))/(d+0.00001),1.0)), c1, ii), r);
 			if (interm == 3.0) c = (1.0-0.5*iscan)*mix(c2, c1, ii);
-			intera = 0.0;
 		}
-		if (interm == 4.0) c = plant(mix(c, c*c, 0.5*iscans), max(max(c.r,c.g),c.b));
-		if (interm == 5.0) { c = mix(c2, c1, 0.5); c = plant(mix(c, c*c, 0.5*iscans), max(max(c.r,c.g),c.b));}
+		if (interm == 4.0) { c = plant(mix(c, c*c, 0.5*iscans), max(max(c.r,c.g),c.b)) * (1.0-0.5*iscan); }
+		if (interm == 5.0) { c = mix(c2, c1, 0.5); c = plant(mix(c, c*c, 0.5*iscans), max(max(c.r,c.g),c.b)) * (1.0-0.5*iscan); }
 	}
 	c = pow(c, vec3(gamma_in));
 	

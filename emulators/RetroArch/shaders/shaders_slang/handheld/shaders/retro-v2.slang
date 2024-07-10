@@ -24,10 +24,18 @@
 layout(push_constant) uniform Push
 {
     float RETRO_PIXEL_SIZE;
+    float RETRO_COLOR_BOOST;
+    float RETRO_GAMMA_IN;
+    float RETRO_GAMMA_OUT;
 } param;
 
 // This value must be between 0.0 (totally black) and 1.0 (nearest neighbor)
-#pragma parameter RETRO_PIXEL_SIZE "Retro Pixel Size" 0.84 0.0 1.0 0.01
+#pragma parameter RETRO_PIXEL_SIZE "Retro Pixel Size"   0.84 0.5 1.0 0.01
+#pragma parameter RETRO_COLOR_BOOST "Retro Color Boost" 1.0 1.0 2.0 0.01
+#pragma parameter RETRO_GAMMA_IN "Retro Gamma In"       2.20 1.0 3.0 0.05
+#pragma parameter RETRO_GAMMA_OUT "Retro Gamma LCD"     2.20 1.0 3.0 0.05
+
+#define GAMMA_OUT  (1.0 / param.RETRO_GAMMA_OUT)
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {
@@ -48,7 +56,7 @@ layout(location = 0) out vec2 vTexCoord;
 void main()
 {
     gl_Position = global.MVP * Position;
-    vTexCoord   = TexCoord;
+    vTexCoord   = TexCoord * 1.0001;
 }
 
 #pragma stage fragment
@@ -62,7 +70,7 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 void main()
 {
     // Reading the texel
-    vec3 E = pow(texture(Source, vTexCoord).xyz, vec3(2.4));
+    vec3 E = pow(texture(Source, vTexCoord).xyz, vec3(param.RETRO_GAMMA_IN));
 
     vec2 fp = fract(vTexCoord*global.SourceSize.xy);
     vec2 ps = global.SourceSize.xy * global.OutputSize.zw;
@@ -74,5 +82,5 @@ void main()
     vec3 res = mix(E*(1.04+fp.x*fp.y), E*0.36, max_coord);
 
     // Product interpolation
-    FragColor = vec4(clamp( pow(res, vec3(1.0 / 2.2)), 0.0, 1.0 ), 1.0);
+    FragColor = vec4(clamp( pow(param.RETRO_COLOR_BOOST*res, vec3(GAMMA_OUT)), 0.0, 1.0 ), 1.0);
 }

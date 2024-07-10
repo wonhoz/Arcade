@@ -35,3 +35,4 @@ scale_y3 = "1.000000"
 
 shader4 = "shaders/crt-easymode-halation/crt-easymode-halation.slang"
 filter_linear4 = "true"
+scale_type4 = "viewport"

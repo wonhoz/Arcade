@@ -1,9 +1,9 @@
 shaders = 5
-shader0 = ../ntsc/shaders/ntsc-pass1-composite-3phase.slang
-shader1 = ../ntsc/shaders/ntsc-pass2-3phase.slang
-shader2 = ../ntsc/shaders/ntsc-stock.slang
+shader0 = ../ntsc/shaders/maister/ntsc-pass1-composite-3phase.slang
+shader1 = ../ntsc/shaders/maister/ntsc-pass2-3phase.slang
+shader2 = ../ntsc/shaders/maister/ntsc-stock.slang
 shader3 = shaders/static.slang
-shader4 = ../misc/image-adjustment.slang
+shader4 = ../misc/shaders/image-adjustment.slang
 
 filter_linear0 = false
 filter_linear1 = false
@@ -24,7 +24,7 @@ scale_type_y2 = viewport
 scale2 = 1.0
 
 scale_type3 = source
-scale4 = 1.0
+scale_type4 = source
 
 parameters = "GRAIN_STR;luminance;bright_boost;target_gamma;saturation"
 GRAIN_STR = 6.0

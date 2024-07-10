@@ -4,14 +4,18 @@ layout(push_constant) uniform Push
 {
 	vec4 OutputSize;
 	vec4 SourceSize;
-	float SCALE;
-	float OUT_X;
-	float OUT_Y;
+	vec4 OriginalSize;
+	float video_scale;
+	float border_texture_scale;
+	float border_brightness;
 } params;
 
-#pragma parameter SCALE "Box Scale" 0.6667 0.6667 1.5 0.33333
-#pragma parameter OUT_X "Out X" 1600.0 1600.0 4800.0 8000.0
-#pragma parameter OUT_Y "Out Y" 800.0 800.0 2400.0 400.0
+#pragma parameter video_scale "Video Scale" 3.0 2.0 20.0 1.0
+#pragma parameter border_texture_scale "Border Scale" 4.0 1.0 20.0 0.005
+#pragma parameter border_brightness "Border Brightness" 1.0 0.0 1.0 0.01
+
+vec2 middle	= vec2(0.5, 0.5);
+vec2 border_scale = vec2(3200, 1600) * params.video_scale / params.border_texture_scale;
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {
@@ -27,14 +31,11 @@ layout(location = 1) out vec2 tex_border;
 void main()
 {
 	gl_Position	=	global.MVP * Position;
-	vec2 scale	=	(params.OutputSize.xy * params.SourceSize.zw) / params.SCALE;
-	vec2 middle	=	vec2(0.5, 0.5);
-	vec2 diff	=	TexCoord.xy - middle;
-	vTexCoord	=	middle + diff * scale;
 
-	middle		=	vec2(0.5, 0.5);
-	vec2 dist	=	TexCoord - middle;
-	tex_border	=	middle + dist * params.OutputSize.xy / vec2(params.OUT_X, params.OUT_Y);
+	vTexCoord	=	TexCoord.xy;
+	
+	vec2 diff	=	TexCoord.xy - middle;
+	tex_border	=	middle + diff * params.OutputSize.xy / border_scale;
 }
 
 #pragma stage fragment
@@ -48,5 +49,5 @@ void main()
 {
 	vec4 frame	=	texture(Source, vTexCoord).rgba;
 	vec4 border	=	texture(BORDER, tex_border).rgba;
-	FragColor	=	vec4(mix(frame, border, border.a));
+	FragColor	=	vec4(mix(frame, border * params.border_brightness, border.a));
 }

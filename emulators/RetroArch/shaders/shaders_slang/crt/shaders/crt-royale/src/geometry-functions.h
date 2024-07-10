@@ -679,6 +679,8 @@ float get_border_dim_factor(const float2 video_uv, const float2 geom_aspect)
     const float2 border_penetration =
         max(float2(border_size) - edge_dists, float2(0.0));
     const float penetration_ratio = length(border_penetration)/border_size;
+    if (border_size == 0.0)
+        penetration_ratio = 0.0;
     const float border_escape_ratio = max(1.0 - penetration_ratio, 0.0);
     const float border_dim_factor =
         pow(border_escape_ratio, border_darkness) * max(1.0, border_compress);

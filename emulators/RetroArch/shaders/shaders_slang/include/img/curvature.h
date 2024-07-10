@@ -29,6 +29,19 @@ vec2 tl_warp(vec2 pos)
     return pos*0.5 + 0.5;
 }
 
+/* Curvature by kokoko3k, GPL-3.0 license
+ * w.x and w.y are global warp parameters
+ * protrusion is the rounded shape near the middle
+ * keep protrusion higher than ~0.5 
+*/
+vec2 Warp_koko(vec2 co, vec2 w, float protrusion) {
+    float czoom  = 1 - distance(co, vec2(0.5));
+    czoom        = mix(czoom, czoom * protrusion, czoom);
+    vec2 czoom2d = mix(vec2(1.0), vec2(czoom), w);
+    vec2 coff    = mix( vec2(0.0), vec2(0.625), w);
+    return 0.5 + (co - 0.5) / (coff + czoom2d);
+}
+
 // cgwg's geom
 // license: GPLv2
 
@@ -92,12 +105,14 @@ vec2 bkwtrans(vec2 xy)
 
 vec2 cgwg_warp(vec2 coord)
 {
-    vec3 stretch = max_scale();
+    vec3 stretch = maxscale();
     coord = (coord - vec2(0.5, 0.5))*aspect*stretch.z + stretch.xy;
     
     return (bkwtrans(coord) /
         vec2(1.0, 1.0)/aspect + vec2(0.5, 0.5));
 }
+
+
 
 float corner(vec2 coord)
 {

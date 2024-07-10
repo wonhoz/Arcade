@@ -1,8 +1,9 @@
 shaders = 2
 
 shader0 = shaders/LUT/LUT.slang
-shader1 = ../misc/cmyk-halftone-dot.slang
+shader1 = ../misc/shaders/cmyk-halftone-dot.slang
 filter_linear1 = true
+scale_type0 = viewport
 
 textures = SamplerLUT
 
