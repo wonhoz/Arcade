@@ -13,25 +13,25 @@ emulators/Demul/scache/
 emulators/Dolphin/Game ISO/
 emulators/ePSXe/isos/
 emulators/M2/Roms/
-emulators/MAME/.mamepgui/cache/gamelist.cache
-emulators/MAME/artwork/
-emulators/MAME/artwork_/
-emulators/MAME/dats/history.dat
-emulators/MAME/dats/history.db
-emulators/MAME/EKMAME64.exe
-emulators/MAME/flyer/
-emulators/MAME/hash/
-emulators/MAME/history/history.db
-emulators/MAME/mame64.exe
-emulators/MAME/mame64.sym
-emulators/MAME/marquee/
-emulators/MAME/nvram/
-emulators/MAME/roms/
-emulators/MAME/snap/
-emulators/MAME/title/
-emulators/MAME/video/
-emulators/MAME/wheel/
-emulators/MAME_bak/
+emulators/Mame/.mamepgui/cache/gamelist.cache
+emulators/Mame/artwork/
+emulators/Mame/artwork_/
+emulators/Mame/dats/history.dat
+emulators/Mame/dats/history.db
+emulators/Mame/EKMAME64.exe
+emulators/Mame/flyer/
+emulators/Mame/hash/
+emulators/Mame/history/history.db
+emulators/Mame/mame64*.exe
+emulators/Mame/mame64*.sym
+emulators/Mame/marquee/
+emulators/Mame/nvram/
+emulators/Mame/roms/
+emulators/Mame/snap/
+emulators/Mame/title/
+emulators/Mame/video/
+emulators/Mame/wheel/
+emulators/[Mm]ame_bak/
 emulators/Mednafen/ISO/
 emulators/PCSX2/Game ISO/
 emulators/PCSX2/memcards/Soul Calibur III (K).ps2
