@@ -1,6 +1,6 @@
 # CLAUDE.md — AttractMode 고전게임 실행환경 작업 지침서
 
-이 저장소는 **Attract-Mode v2.6.2 프론트엔드 + 에뮬레이터 + 게임목록/아트웍 설정**을 통째로 담은
+이 저장소는 **Attract-Mode v2.7.0 프론트엔드 + 에뮬레이터 + 게임목록/아트웍 설정**을 통째로 담은
 "실행 가능한 아케이드 캐비닛 환경" 그 자체다. 소스코드 프로젝트가 아니라 **런타임 디렉터리를 버전관리**하는 형태다.
 
 > **작업 규칙**: 이 문서를 먼저 숙지하고 작업한다. 구조·규칙·목록이 바뀌는 작업을 했다면
@@ -13,10 +13,10 @@
 | 항목 | 값 |
 |---|---|
 | 원격 | https://github.com/wonhoz/Arcade (**public**) |
-| 프론트엔드 | Attract-Mode v2.6.2 (Windows, SFML 2.5.1) — `attract.exe` / `attract-console.exe` |
+| 프론트엔드 | Attract-Mode v2.7.0 (Windows, SFML 2.5.1) — `attract.exe` (실행은 `attract.bat`, 4.5절) |
 | 설치 경로 | `D:\AttractMode` (절대경로 의존 있음 → 4.4절) |
 | 추적 파일 | 약 23,700개 / `.git` 약 1.3GB |
-| 현재 브랜치 | `bartop` |
+| 현재 브랜치 | `develop` (공통 작업 브랜치, `main` 기반) |
 | 커밋 메시지 | 한국어. 최근 스타일은 `영역 | 내용` (예: `retroarch | args 에서 -H 제거`) |
 
 ## 2. 브랜치 전략 (중요)
@@ -24,24 +24,37 @@
 `main`은 **공통 베이스**, 나머지는 **하드웨어/캐비닛별 배포 브랜치**다. 브랜치를 지우지 말 것.
 
 ```
-main ──┬─> bartop                  (바탑 캐비닛, 현재 작업 브랜치)
+main ──┬─> develop                 ★ 공통 작업 브랜치 (여기서 작업 → main 병합 → 각 장비로 전파)
+       ├─> bartop                  (바탑 캐비닛 = 실제 구동 장비)
+       ├─> develop-bartop          (bartop 기반 작업분. develop 으로 체리픽 완료)
        ├─> Compact                 (50GB 축소판)
        ├─> desktop / desktop-ASUS-TUF / desktop-MSI-Sword /
        │   desktop-MSI-Sword-DriveWheel / desktop-keyboard(-git)
        ├─> NESiCAxLive / bartop-NESiCAxLive
-       └─> develop*, update*, mame*, retroarch*, fbneo, malio  (작업/실험용)
+       └─> update*, mame*, retroarch*, fbneo, malio  (작업/실험용)
 ```
 
-- 공통 변경 → `main`에 반영 → 각 장비 브랜치에서 `git merge main` (`Merge branch 'main' into bartop`).
-- 장비 전용 변경(레이아웃 해상도, 입력맵, 롬 구성)은 해당 브랜치에만 둔다.
-  현재 `bartop`은 `main` 대비 **94 커밋 앞서 있고**, `main`에는 미반영 커밋이 없다(= `main`은 완전히 머지됨).
-- `main`↔`bartop` 실제 차이: `layouts/NEVATO/*`(캐비닛 아트/vewlix 레이아웃), `layouts/Mega-Display Advanced/scripts/scanline.nut`, `scraper/@/overview/*`.
+- **모든 장비에 적용될 변경은 `develop`(= `main` 기반)에서 한다.**
+  장비 브랜치에서 작업하면 그 브랜치의 장비 전용 변경과 뒤섞여 다른 장비로 옮기기 어려워진다.
+  실제로 이 저장소는 `bartop`에서 작업한 20커밋을 `develop`으로 체리픽해 옮긴 이력이 있다.
+- 흐름: `develop`에서 작업 → `main`에 병합 → 각 장비 브랜치에서 `git merge main`.
+- 장비 전용 변경(레이아웃 해상도, 입력맵, 롬 구성)은 해당 장비 브랜치에만 둔다.
+- `main`↔`bartop` 실제 차이(113개 파일): `layouts/NEVATO/*`(캐비닛 아트/vewlix 레이아웃),
+  `layouts/Console Box/*`, `layouts/Mega-Display Advanced/{layout.nut, scripts/*}`,
+  `scraper/@/overview/*`, 각 에뮬레이터의 입력·화면 설정(`emulators/*/`), `intro/*`.
+
+> ⚠️ **`main`에 아직 안 올라간 장비 브랜치 수정이 있다.**
+> `bartop`의 `retroarch | args 에서 -H 제거`(`a089eb42`)가 `main`에 미반영이라,
+> `main`/`develop`의 `emulators/RetroArch FinalBurn Neo.cfg`에는 아직 `-H`가 남아 있다.
+> 장비 브랜치에서 고친 **공통 성격의 수정**은 이렇게 누락되기 쉬우니,
+> `git log main..<장비브랜치> -- <공통파일>`로 주기적으로 확인한다.
 
 ## 3. 디렉터리 구조
 
 ```
 D:\AttractMode\
-├─ attract.exe / attract-console.exe   프론트엔드 본체 (각 39MB, 추적됨)
+├─ attract.exe                          프론트엔드 본체 (38MB, 추적됨) — 2.7.0부터 콘솔 서브시스템
+├─ attract.bat                          ★ 실행 런처 (--logfile 로 last_run.log 복원, 4.5절)
 ├─ attract.cfg                         ★ 메인 설정: display / sound / input_map / general / layout_config
 ├─ attract-NESiCAxLive.cfg             (사장된 외부 유입 설정 — 5.5절 참고)
 ├─ attract.am                          런타임 상태(마지막 선택/레이아웃). 실행할 때마다 변함
@@ -69,8 +82,10 @@ D:\AttractMode\
 ├─ sounds\ shaders\ language\          효과음/셰이더/UI 번역(kr 사용)
 ├─ tools\validate.ps1                  ★ 설정 무결성 검증 스크립트 (7절)
 ├─ docs\                               ASSETS.md(자산 정책) / ISSUES.md(과제 목록)
-├─ stats\<Display>\                    플레이 통계 (track_usage yes, 로컬 생성물)
+├─ stats\<Emulator>\                   플레이 통계 (track_usage yes, 로컬 생성물)
+│                                      ★ 2.7.0에서 romlist명 → Emulator명 기준으로 바뀜
 └─ last_run.log                        ★ 마지막 실행 로그 — 문제 진단의 1순위 (gitignored)
+                                       ※ 2.7.0은 attract.bat 으로 실행해야 생성됨 (4.5절)
 ```
 
 ## 4. 핵심 데이터 흐름
@@ -159,11 +174,14 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
   Nintendo 64/GameCube/Wii/Wii U, SEGA Saturn, SEGA Dreamcast, MAME Adult.
 - 레이아웃 배정: 아케이드 → `NEVATO`, 콘솔 → `Console Box`, NESiCAxLive → `NXL HD`,
   디스플레이 선택 메뉴 → `Mega-Display Advanced` (`menu_layout`).
-- `general`: `language kr`, `default_font NanumBarunGothicBold`, `font_path fonts;fonts/NXL HD`,
-  `startup_mode displays_menu`, `screen_saver_timeout 600`, `track_usage yes`.
+- `general`: `language kr`, `default_font SUIT-Regular`, `font_path fonts;fonts/NXL HD`,
+  `startup_mode displays_menu`, `screen_saver_timeout 600`, `track_usage yes`,
+  `hide_console yes`(2.7.0에서 필수 — 4.5절).
 - 입력맵은 키보드 + Joy0/Joy1 2인용 조이스틱 병행. 종료는 `Escape+LShift`,
   게임 중 종료는 각 emulator cfg의 `exit_hotkey`(Escape 또는 Button6+Button7).
 - **`plugin` 섹션 없음** → `plugins/` 디렉터리는 현재 전부 비활성 상태.
+- 2.7.0에서 `general`에 `group_clones` 키가 추가됐다(클론을 한 항목으로 묶음). 미설정 = `no`.
+  이 저장소는 `CloneOf` 필드를 거의 안 쓰므로 켤 이유가 없다. **제거된 설정 키는 없다.**
 
 ### 4.4 절대경로 의존
 
@@ -171,6 +189,39 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
   `emulators/Mame/mame.ini:11`의 `rompath`에 **`f:\attractmode\emulators\PSXmame\roms`** 라는
   타 드라이브 절대경로가 남아 있다(현재 무효).
 - `attract-NESiCAxLive.cfg`는 `Y:\Frontend\...` 경로를 참조하는 외부 환경 설정이다.
+
+### 4.5 실행 방법 — ⚠️ 2.7.0에서 바뀐 부분
+
+**`attract.exe`를 직접 실행하지 말고 `attract.bat`으로 실행한다.**
+
+2.7.0부터 윈도우 배포본은 `attract-console.exe`를 없애고 `attract.exe` 하나를
+**콘솔 서브시스템(WINDOWS_CUI)** 으로 빌드한다(2.6.2는 GUI 서브시스템 + 별도 콘솔판 2벌).
+그 결과 소스의 아래 분기가 죽어서 **기본 로그 파일이 만들어지지 않는다**.
+
+```cpp
+// main.cpp
+#if defined(SFML_SYSTEM_WINDOWS) && !defined(WINDOWS_CONSOLE)
+    log_file = feSettings.get_config_dir() + "last_run.log";   // ← 2.7.0에선 컴파일 제외
+#endif
+```
+
+| | 2.6.2 | 2.7.0 (그대로 두면) | 2.7.0 (`attract.bat`) |
+|---|---|---|---|
+| `last_run.log` | 자동 생성 | **안 생김**(stdout으로 감) | 생성됨 |
+| 콘솔 창 | 안 뜸 | **검은 창이 뜸** | 안 뜸 |
+
+대응은 두 가지를 같이 쓴다.
+
+1. `attract.bat` — `attract.exe --logfile "%~dp0last_run.log"` 로 로그를 되살린다.
+2. `attract.cfg`의 `hide_console yes` — 콘솔 창을 숨긴다.
+   이 설정은 소스에서 `#ifdef WINDOWS_CONSOLE` 안에 있어 **2.6.2에선 무시되던 값**이고,
+   2.7.0에서 비로소 동작한다.
+
+> 배치파일 함정: `cd /d "%~dp0"` 는 `%~dp0`가 `\`로 끝나므로 닫는 따옴표가 이스케이프되어 깨진다.
+> `attract.bat`은 `cd /d "%~dp0."` 로 쓴다.
+
+캐비닛 자동 시작(바로가기·시작프로그램)도 `attract.exe`가 아니라 `attract.bat`을 가리켜야 한다.
+
 
 ## 5. 자주 하는 작업 레시피
 
@@ -180,7 +231,7 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
    Emulator 필드는 반드시 `emulators/*.cfg` 파일명과 일치.
 3. 아트웍을 `menu-art/<system>/{flyer,marquee,video,wheel}/<Name>.<ext>`에 배치
    (MAME 계열은 `emulators/Mame/{flyer,marquee,video,wheel}`). **아트웍은 git 추적 안 됨.**
-4. `attract.exe` 실행 → `last_run.log` 확인.
+4. `attract.bat` 실행 → `last_run.log` 확인. (`attract.exe`를 직접 실행하면 로그가 안 남는다 → 4.5절)
 5. 커밋: `romlists | <목록>에 <게임> 추가` 형태.
 
 ### 5.2 에뮬레이터 추가/수정
@@ -200,8 +251,8 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
   폰트를 새로 넣으면서 폴더를 추가했다면 `attract.cfg`의 `font_path`도 같이 늘려야 한다.
 
 > ⚠️ **폰트를 찾을 수 있게 만들면 한글이 깨질 수 있다.**
-> Attract-Mode 2.6.2에는 **글리프 단위 폴백이 없다.** 폰트를 못 찾으면 `default_font`
-> (`NanumBarunGothicBold`)로 통째로 폴백하지만, 찾으면 그 폰트만 쓴다.
+> Attract-Mode에는 **글리프 단위 폴백이 없다.**(2.7.0 확인) 폰트를 못 찾으면 `default_font`
+> (`SUIT-Regular`)로 통째로 폴백하지만, 찾으면 그 폰트만 쓴다.
 > 그래서 라틴 전용 폰트가 `font_path`에 들어오는 순간 한글이 두부로 바뀐다.
 > 실제로 `font_path` 확장 직후 NXL HD에서 이 일이 났다(`docs/ISSUES.md` S3-6 참고).
 >
@@ -225,7 +276,7 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 > **글꼴을 바꿀 때는 한글 지원 여부만이 아니라 실제 표시될 문자 집합 전체를 검사한다.**
 > `SUIT` 계열에는 `：`(U+FF1A 전각 콜론)가 없어서, `rss()`의 URL에 섞여 있던 전각 콜론을
 > 반각으로 고치고 나서야 쓸 수 있었다. 문장부호 하나 때문에 깨진다.
-- 수정 후 반드시 `attract.exe` 실행하고 `last_run.log`에 `AN ERROR HAS OCCURED`가 없는지 확인.
+- 수정 후 반드시 `attract.bat` 실행하고 `last_run.log`에 `AN ERROR HAS OCCURED`가 없는지 확인.
 
 > ⚠️ **예외 줄을 지울 때는 그 아래 코드가 새로 살아난다.**
 > Squirrel 예외는 그 스크립트의 **나머지 전체를 중단**시킨다. 그래서 오랫동안 예외를 던져 온
@@ -240,6 +291,52 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
   `layout blueprint` / `romlist Nesicagui` 등 이 저장소에 없는 것을 참조한다. 참고용 화석.
 - `default-*.cfg`, `emulators/script/`, `loader/`, `modules/` — AM 벤더 원본.
 - `License.txt`, `Readme.txt`, `Layouts.txt`, `Compile.txt`, `Changelog.txt` — AM 공식 문서.
+
+### 5.6 Attract-Mode 본체 업그레이드
+
+배포본은 "AM 벤더 원본"만 덮어쓰고, 이 저장소가 직접 만든 것은 절대 덮지 않는다.
+공식 zip(`attract-vX.Y.Z-win64.zip`)을 임시 폴더에 풀고 **해시로 비교**해서 실제로 다른 파일만 반영한다.
+
+```powershell
+$ext = "<압축 푼 경로>"; $repo = "D:\AttractMode"
+Get-ChildItem -Recurse -File $ext | ForEach-Object {
+  $rel = $_.FullName.Substring($ext.Length+1); $r = Join-Path $repo $rel
+  if (Test-Path -LiteralPath $r) {
+    if ((Get-FileHash $_.FullName -Algorithm MD5).Hash -ne (Get-FileHash $r -Algorithm MD5).Hash) { "다름  $rel" }
+  } else { "없음  $rel" }
+}
+```
+
+**덮어쓸 것** — `attract.exe`, `Changelog.txt`, `Compile.txt`, `Layouts.txt`, `Readme.txt`,
+`License.txt`, `default-*.cfg`, `language/*`, `modules/*`, `emulators/script/*`, `loader/*`, `shaders/*`
+
+**덮지 말 것**
+- `menu-art/` — 로컬 커스텀 아트웍(gitignore). 배포본의 `menu-art/wheel/exit.png`로 덮으면 아이콘이 바뀐다.
+- `plugins/` 중 이 저장소가 손댄 것(`RocketLauncher/plugin.nut`) — 어차피 `plugin` 섹션이 없어 비활성.
+- 배포본의 기본 레이아웃(`Basic`/`Cools`/`Grid`/`Orbit`/`Attrac-Man`/`Sample Animate`/`Verticools`)과
+  `romlists/mame/*.tag` — 이 저장소는 의도적으로 갖고 있지 않다. 추가하면 쓰지도 않는 항목만 늘어난다.
+
+**업그레이드 전 반드시 확인할 것** (2.6.2→2.7.0 실측 기준, 소스 tarball 2벌을 받아 diff)
+
+| 확인 대상 | 방법 | 2.7.0 결과 |
+|---|---|---|
+| `general` 설정 키 증감 | `fe_settings.cpp`의 `configSettingStrings[]` diff | `group_clones` 추가만, 제거 없음 |
+| emulator/display/filter 설정 키 | `fe_info.cpp` 키 테이블 diff | 변화 없음 |
+| Squirrel API 증감 | `fe_vm.cpp`의 `_SC("...")` 목록 diff | **증감 0** (레이아웃 무수정 동작) |
+| romlist `#` 주석 규칙 | `fe_util.cpp`의 `tmp_setting[0] != '#'` | 동일 |
+| `.tag` 탐색 경로 | `fe_romlist.cpp` | 리팩터링만, 동작 동일 |
+| 입력맵/종료 핫키 | `fe_input.cpp` `diff -w` | 공백만 |
+| 폰트 탐색 | `fe_settings.cpp` | 변경은 `#ifdef USE_FONTCONFIG`(리눅스 전용) 안. 윈도우 무관 |
+| DLL 의존성 | PE import 문자열 비교 | 동일 |
+| **PE 서브시스템** | 아래 스니펫 | **GUI(2) → 콘솔(3)로 바뀜 → 4.5절 대응 필요** |
+
+```powershell
+$fs=[IO.File]::OpenRead("D:\AttractMode\attract.exe"); $br=New-Object IO.BinaryReader $fs
+$fs.Position=0x3C; $pe=$br.ReadInt32(); $fs.Position=$pe+0x5C; $br.ReadUInt16()  # 2=GUI, 3=콘솔
+```
+
+마지막으로 `attract.bat` 실행 → `last_run.log`에 오류 없는지 → `tools\validate.ps1` 순으로 확인한다.
+
 
 ## 6. 버전관리 규칙
 
@@ -257,6 +354,8 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 - `core.autocrlf=true`이고 `.gitattributes`가 없다. 다른 설정의 PC에서 작업하면 전체 줄바꿈 diff가 난다.
 - `attract.am`은 추적 중인데 실행할 때마다 내용이 바뀔 수 있다(런타임 상태 파일).
 - `stats/`는 무시 목록에 없다. 플레이 통계가 쌓이면 미추적 파일로 나타난다.
+  2.7.0부터 저장 경로가 `stats/<romlist명>/` → `stats/<Emulator명>/` 로 바뀌어서,
+  기존 `stats/Capcom/`·`stats/Zinc/` 같은 폴더는 더 이상 읽히지 않는다(플레이 횟수만 0으로 초기화됨).
 
 ## 7. 검증 및 문제 진단
 
@@ -277,6 +376,7 @@ romlist 필드 수·중복·BOM, Emulator/layout/romlist 상호 참조, executab
 ### 7.2 진단 순서
 
 1. **`last_run.log`를 먼저 읽는다.** 레이아웃 스크립트 에러, cfg 파싱 경고, 롬 로딩 결과가 전부 여기 남는다.
+   로그가 갱신돼 있지 않다면 `attract.exe`를 직접 실행한 것이다 — **`attract.bat`으로 다시 실행한다**(4.5절).
 2. cfg 파싱 경고(`Unrecognized "emulator" setting of "..."`) → 해당 파일의 **UTF-8 BOM** 의심.
 3. 게임이 목록에 안 보임 → romlist에서 `#`으로 비활성화됐는지, 필터 규칙에 걸렸는지 확인.
 4. 게임이 실행 안 됨 → `emulators/<Emulator>.cfg`의 `executable`/`rompath`/`romext`와 실제 파일 대조.

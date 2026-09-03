@@ -1,12 +1,12 @@
 # 개선 과제 / 알려진 문제 (심각도순)
 
-최초 점검 2026-09-02 · 최종 갱신 2026-09-03 · 브랜치 `bartop`
+최초 점검 2026-09-02 · 최종 갱신 2026-09-03 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
 근거: `attract.cfg`, `emulators/*.cfg`, `romlists/*`, `last_run.log`, `mame64 -verifyroms`, git 메타데이터 실측
 
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1` 로 자동화되어 있다.
 
-**진행 현황** — 처리 8건 / 미해결 12건 · 재분류 1건
+**진행 현황** — 처리 11건 / 미해결 12건 · 재분류 1건
 
 ---
 
@@ -41,9 +41,11 @@ BIOS와 게임 롬은 재배포가 금지된 저작물이다. DMCA 테이크다�
 ### - [ ] 2. 저장소가 1.3GB, 에뮬레이터 바이너리 전량이 git에 들어 있음
 
 - `.git` 1.3GB / 추적 파일 23,700개.
-- 최대 단일 파일: `attract.exe`, `attract-console.exe` 각 **39MB(동일 내용을 2벌)**,
-  `emulators/RetroArch/assets/sounds/BGM.wav` 25MB, `emulators/Mame/icons/icons.zip` 24MB,
-  `emulators/Mame/dats/mameinfo.dat` 18MB …
+- 최대 단일 파일: `attract.exe` **38MB**, `emulators/RetroArch/assets/sounds/BGM.wav` 25MB,
+  `emulators/Mame/icons/icons.zip` 24MB, `emulators/Mame/dats/mameinfo.dat` 18MB …
+  - 2.7.0 업그레이드로 `attract-console.exe`(39MB)가 사라져 **작업 트리에서 39MB가 줄었지만,
+    히스토리에는 그대로 남아 있어 `.git` 크기는 줄지 않는다.** 오히려 새 `attract.exe` 38MB가 더 쌓였다.
+    → 근본 해결은 아래 "조치"의 히스토리 재작성뿐이라는 점이 이번 업그레이드로 재확인됐다.
 - 결과: 클론/브랜치 전환/머지가 매우 느리고, 에뮬레이터 업데이트 때마다 수백 MB가 히스토리에 쌓인다
   (실제로 `MAME 업데이트`, `PPSSPP 업데이트` 같은 커밋이 반복돼 있음).
 
@@ -63,8 +65,8 @@ BIOS와 게임 롬은 재배포가 금지된 저작물이다. DMCA 테이크다�
 
 > **⚠️ 이 수정에서 배운 것 — Squirrel 예외는 그 스크립트의 나머지를 통째로 중단시킨다.**
 >
-> 최초 수정(`7158afb7`)에서 예외 줄만 지웠더니 상단 Overview 텍스트가 왼쪽으로 밀려
-> 사이드바 아트 뒤로 숨는 **회귀가 발생했다**(`271aa237`에서 수정).
+> 최초 수정에서 예외 줄만 지웠더니 상단 Overview 텍스트가 왼쪽으로 밀려
+> 사이드바 아트 뒤로 숨는 **회귀가 발생했다**.
 >
 > 원인은 예외 줄 아래의 `uct.align = Align.Left` … `uct.font` 6줄이
 > **애초에 한 번도 실행된 적이 없었다**는 데 있다. 예외가 그 지점에서 스크립트를
@@ -107,8 +109,8 @@ cps3 6개(레드 어스, 스파3 3부작, 조조 2종)는 어떤 필터에도 �
 
 > **⚠️ 이 수정에서 배운 것 — 폰트를 찾을 수 있게 만들면 한글이 깨진다.**
 >
-> `font_path`를 넓히자 NXL HD 화면의 한글이 전부 두부로 깨지는 **회귀가 발생했다**(`a9cb81ad`에서 수정).
-> **Attract-Mode 2.6.2에는 글리프 단위 폴백이 없다.** 폰트를 못 찾으면 `default_font`로
+> `font_path`를 넓히자 NXL HD 화면의 한글이 전부 두부로 깨지는 **회귀가 발생했다**.
+> **Attract-Mode에는 글리프 단위 폴백이 없다.**(2.7.0에서도 동일 — 윈도우 폰트 탐색 코드 무변경) 폰트를 못 찾으면 `default_font`로
 > 통째로 폴백하지만, 찾으면 그 폰트만 쓴다. 즉 **"폰트가 로드되지 않아서" 한글이 멀쩡했던 것**이다.
 >
 > 글리프 실측 결과:
@@ -125,8 +127,8 @@ cps3 6개(레드 어스, 스파3 3부작, 조조 2종)는 어떤 필터에도 �
 > `[AltTitle]`, `"FREE PLAY"`)는 테마 글꼴을 유지해 NESiCAxLive 특유의 외형을 살렸다.
 > 유지한 폰트들이 실제 표시할 문자열을 전부 커버하는 것도 확인했다.
 >
-> 한글 글꼴은 처음에 `NanumBarunGothicBold`(= `default_font`, 회귀 전과 동일한 모습)로 두었다가
-> NESiCAxLive의 각진 느낌에 맞춰 **`SUIT-Regular`**(기하학적 산세리프)로 바꿨다(`6c5e0b7a`).
+> 한글 글꼴은 처음에 `NanumBarunGothicBold`로 두었다가
+> NESiCAxLive의 각진 느낌에 맞춰 **`SUIT-Regular`**(기하학적 산세리프)로 바꿨다.
 > 이때 **SUIT 계열에 `：`(U+FF1A, 전각 콜론) 글리프가 없다**는 것이 걸림돌이었다.
 > `rss()`의 URL 8곳이 `http：//`처럼 전각 콜론으로 적혀 있었기 때문이다
 > (원본 테마를 일본어 IME로 편집하며 들어간 오타). 반각 `:`로 교정해 표기도 바로잡고 사용을 열었다.
@@ -329,17 +331,23 @@ MAME이 롬을 찾을 때마다 없는 경로를 한 번씩 더 확인하게 되
 `emulators/Mame/hiscore/`, `emulators/Mame/mame64 - 복사본*`(8번) 등이
 쌓이면 `git status`가 지저분해진다.
 
-### - [ ] 19. `RetroArch FinalBurn Neo.cfg`의 `%file` 인자
+### - [ ] 19. `RetroArch FinalBurn Neo.cfg`의 `%file` · `-H` 인자 + 브랜치 간 불일치
+
+이 브랜치(`main` 계열)의 값과 `bartop`의 값이 다르다.
 
 ```
-args  %file -L cores/fbneo_libretro.dll "[romfilename]"
+main / develop :  args  %file -H -L cores/fbneo_libretro.dll "[romfilename]"
+bartop         :  args  %file    -L cores/fbneo_libretro.dll "[romfilename]"
 ```
 
 `%file`은 **AM의 치환 토큰도 아니고 RetroArch의 옵션도 아니다.** 그대로 RetroArch에 전달된다.
 RetroArch가 마지막 위치 인자를 콘텐츠로 잡기 때문에 결과적으로 동작하는 것으로 보인다.
-직전 커밋(`a089eb42`)에서 같은 줄의 `-H`가 제거된 이력이 있는 것으로 보아 시행착오의 잔재로 추정된다.
+`-H` 역시 RetroArch의 문서화된 옵션이 아니며, `bartop`에서 `a089eb42`
+(`retroarch | args 에서 -H 제거`)로 이미 제거됐다 — **그 수정이 `main`에 반영되지 않았다.**
 
-→ 제거 후 NESiCAxLive 한글패치 게임 몇 개로 재검증 권장. 지금 당장 깨지지는 않으므로 우선순위는 낮다.
+→ `bartop`의 `-H` 제거를 `main`으로 올릴지 먼저 정한다(공통 성격의 수정이므로 올리는 것이 맞다).
+   그 뒤 `%file`도 제거하고 NESiCAxLive 한글패치 게임 몇 개로 재검증한다.
+   지금 당장 깨지지는 않으므로 우선순위는 낮다.
 
 ### - [ ] 20. 정지한 원격 브랜치 16개
 
@@ -393,3 +401,41 @@ S1의 히스토리 정리를 먼저 끝낸 뒤 진행할 것.
 
 클론 → 에뮬레이터 코어 → BIOS → 롬/아트웍 배치 → `validate.ps1` 점검 → 실행의 6단계와
 시스템별 `rompath` 실제 위치 표, 장비별 브랜치 표, 조작키 표를 정리했다.
+
+### - [x] D. Attract-Mode 2.6.2 → 2.7.0 업그레이드 — **완료**
+
+공식 `attract-v2.7.0-win64.zip`을 받아 **해시 비교로 실제 다른 파일만** 반영했다
+(배포본 217개 중 동일 131 / 다름 17 / 저장소에 없음 69).
+
+**반영** — `attract.exe`(38MB), `Changelog.txt`, `Compile.txt`, `language/*`(10개, `Group Clones` 문자열 추가),
+`modules/animate.nut`, `emulators/script/mame_init.nut`
+**미반영(의도적)** — `menu-art/wheel/exit.png`(로컬 커스텀), `plugins/RocketLauncher/plugin.nut`(저장소가 수정한 것),
+배포본 기본 레이아웃 7종·`romlists/mame/*.tag`(이 저장소는 원래 안 씀)
+
+**사전 호환성 검증** (2.6.2/2.7.0 소스 tarball diff — 절차는 [`../CLAUDE.md`](../CLAUDE.md) 5.6절)
+
+| 항목 | 결과 |
+|---|---|
+| Squirrel API(`fe_vm.cpp`) 증감 | **0** — 커스텀 레이아웃 4종 무수정 동작 |
+| emulator/display/filter 설정 키 | 변화 없음 — cfg 37개·display 21개 그대로 파싱 |
+| `general` 설정 키 | `group_clones` 추가만, **제거 없음** |
+| romlist `#` 비활성 규칙 | 동일 (비활성 545건 유지) |
+| `.tag` 즐겨찾기 경로 | 리팩터링만, 동작 동일 |
+| 입력맵·`exit_hotkey` | `diff -w` 결과 공백뿐 |
+| 폰트 탐색 | 변경분이 전부 `#ifdef USE_FONTCONFIG`(리눅스) 안 → **한글 폰트 대응 영향 없음** |
+| DLL 의존성 | 동일 (새 런타임 요구 없음) |
+
+**실기 검증** — 인트로 영상(FFmpeg) 재생, 디스플레이 21개 순회, `NXL HD`/`NEVATO`/`Mega-Display Advanced`
+로드, 한글 제목·장르·언어·RSS 문장 정상 출력, 스냅 비디오/휠 아트웍 정상. `last_run.log` 오류 0건,
+`validate.ps1` FAIL 0건.
+
+**부작용 2건과 대응** — 상세는 [`../CLAUDE.md`](../CLAUDE.md) 4.5절
+
+1. **`attract.exe`가 GUI → 콘솔 서브시스템으로 바뀜**(upstream이 `attract-console.exe`를 흡수).
+   그 결과 `last_run.log`가 더 이상 자동 생성되지 않고, 실행할 때 검은 콘솔 창이 뜬다.
+   → `attract.bat`(`--logfile`) 추가 + `attract.cfg`의 `hide_console`를 `no` → `yes`로.
+   → 시작프로그램·바탕화면 바로가기 2개도 `attract.bat`을 가리키도록 변경(최소화 실행).
+      *(저장소 밖 파일이라 클론한 다른 장비에서는 각자 다시 잡아줘야 한다.)*
+2. **플레이 통계 경로가 `stats/<romlist명>/` → `stats/<Emulator명>/` 로 변경**.
+   기존 `stats/Capcom/`·`stats/Zinc/` 등은 더 이상 읽히지 않아 플레이 횟수가 0으로 보인다.
+   집계용 데이터라 실행에는 영향 없음. 되살리려면 폴더명을 Emulator 이름으로 바꿔야 한다.
