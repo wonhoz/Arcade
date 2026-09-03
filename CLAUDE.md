@@ -258,6 +258,10 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 ### 5.3 새 디스플레이 추가
 - `attract.cfg`에 `display` 블록 (`layout`, `romlist`, `in_cycle`, `in_menu`, `filter All`, `filter Favourites`).
 - `romlists/<이름>.txt` 생성(헤더 포함), `scraper/@/overview/<이름 소문자>.txt`에 한국어 설명 작성.
+- **마스코트(캐릭터) 이미지**: `NEVATO` · `Console Box` 는 `select_character = "By Display"` 라서
+  화면 우측 캐릭터를 **`layouts/<레이아웃>/character/<디스플레이 이름>.png`** 에서 찾는다.
+  emulator cfg 의 `artwork character` 와는 **무관하다**(그쪽은 `By Game` 일 때만 쓰인다).
+  없으면 오류 없이 그 자리만 비어 보인다. `tools/validate.ps1` 이 누락을 경고한다.
 - 디스플레이 메뉴 아트웍은 `menu-art/system|marquee|snap|wheel`(로컬 전용).
 
 ### 5.4 레이아웃 수정
