@@ -1,73 +1,94 @@
 # Changelog #
 
-## Commits from v2.6.1 to v2.6.2
+## Commits from v2.6.2 to v2.7.0
 
-### Andrew Mickelson (20 commits)
+### Andrew Mickelson (51 commits)
 
-* Update to version 2.6.2
-* [linux] fixed window mode strech, fixed crash with no xinerama
-* Issue #678 - Fix for search bug submitted by Yaron2019
-* Reset the internal path cache when images/videos are scraped
-* Switched background image loading off by default, fixed bugs
-* Fix compile for certain libavutil versions, fixed compiler warnings
-* Issue #179 - Added background image loading, image caching
-* Don't present user with config options that are unsupported on their system
-* [drm] Eliminated need for 'attract-drm-helper'
-* Separate FeWindow from the underlying sf::RenderWindow
-* Added ability to clear any default shaders that are presently loaded
-* Updated swf code to release its sf::Context when swf no longer in use
-* Issue #605 - fix for titles that contain semicolons ";"
-* [Windows] Issue #610 - Fixed loading defailt config with unicode path
-* Issue #614 - fix back to back transitions (startupmode=display_menu)
-* [linux][drm] added attract-drm-helper for non-root launching in drm
-* [linux] Added support for running with DRM/KMS instead of X11
-* Changes to avoid initializing OpenGL at global scope before main()
-* Issue #602 - fix last artwork being shown when file is missing
-* Cache artwork paths
+* Update to version 2.7.0
+* [MacOS X] work on github action to build Mac package on release
+* Various fixes for font handling / font and language selection
+* Update extlibs/nowide to v.11.2.0
+* Retired the Reflect and Particle Animation layouts from the main project
+* Removed deprecated libavresample
+* Fix incorrect bounds check
+* Fixes for filters based on playcount, playtime, file availability - correctly update filter list after playing a game if list is sorted   on playcount or playtime, including by repositioning current selection   if necessary - switch statistics to be kept per game and emulator instead of per game   and romlist - added lazier loading of play stats, only load them if/when necessary
+* Small fixes for attracman and orbit layouts
+* Update stb_image to 2.28
+* Fix for github workflow
+* Update to expat 2.5.0
+* Fixed aspect ratio on filter grid and grid layouts
+* Added default background for Orbit layout
+* Updates to Attrac-Man and Orbit sample layouts
+* Fix display of some videos after last commit
+* Remove mamedb scraper source (dead URL)
+* Issue #720 - Try to fix video crashing
+* [Linux] Issue #713 - Fix compile on Ubuntu Bionic
+* Issue #717 - plugged some memory leaks
+* Small fix to last commit
+* [linux] added missing error handling for X11 window initialization
+* release.yml update
+* Messing round with release.yml
+* update release.yml
+* Update release.yml
+* Update release.yml
+* Update release.yml
+* added release.yml
+* Use standard c++11 threads and mutexes
+* Start using c++11, update makefile to use CPPFLAGS,CXXFLAGS
+* Update ci.yml
+* update ci.yml
+* Syntax of ci.yml
+* Add ci.yml
+* Update stb_image.h to 2.27
+* [linux] keep full screen as the default window mode on linux
+* Fix NO_SWF=1 compile, lazy init image loader thread
+* Remove swf dependency from fe_base
+* [linux] Change _WM_STATE flags set in 'Fillscreen' mode on X11
+* Use backward-cpp for a stack trace if we crash
+* Fixed Back button behaviour when 'groups clones' is on
+* Added "Group Clones" feature, which groups all clones in one list entry
+* Fix various errors/issues detected by cppcheck
+* Update nowide to version 11.1.3
+* Fix compile with NO_SWF=1
+* Update to miniz 2.2.0
+* Update to expat 2.2.6
+* Only use const AVCodec where AVFORMAT version >= 59.0.100
+* [windows] removed attract-console.exe from the windows package
+* Update src/media.cpp to use modern FFmpeg API
 
-### arzoo1 (1 commits)
+### cmitu (1 commits)
 
-* Update LEDBlinky.nut
+* makefile: add back the additional CXX flags
+* Fix build with USE_DRM=1
 
-### Chase Cobb (1 commits)
+### Cristi Mitrana (1 commits)
 
-* Adding mmal support for Pi 4 (#618)
+* Fix build with USE_DRM=1
 
-### CommanderCoder (1 commits)
+### Darrell Blake (1 commits)
 
-* Generating a Romlist on Mac was causing problems because it added 'pause_hotkey' with the marquee path to the emulator config file. (#615)
+* Fix for cross-platform mxe build.
 
-### Keil Miller Jr (4 commits)
+### Davide Cavalca (2 commits)
 
-* Minor edits
-* Added Shuffle module
-* Added MAME tags
-* Added core module
+* Fix string out of bounds access issue
+* Fix build issue with recent ffmpeg
 
-### Ken Luo (1 commits)
+### Matthew Barnes (2 commits)
 
-* Add Traditional Chinese translation
+* Run exit_command at end of main()
+* Fix exit codes for some command-line options
 
-### michaelem (1 commits)
+### Michael.S.G (6 commits)
 
-* Document all Alignments available in ListBox (#609)
+* Ignore EOF on do_flush
+* Resolve Lintian warnings
+* Resolve Lintian description warning
+* Define Debian format 3.0 (native)
+* Change libavresample-dev to libswresample-dev
+* Include  libxrandr-dev in Build-Depends
 
-### Radek Dutkiewicz (13 commits)
+### spilinek (2 commits)
 
-* Fixed crash on PI4
-* Fixed travis error and updated Compile.md
-* Fixed FPS graph not hiding on pressing the hotkey
-* ScreenRefreshRate cont.
-* ScreenRefreshRate cont.
-* Added 2 new properties for surfaces + FPSMonitor optimization
-* ScreenRefreshRate cont.
-* Temporary debug logs
-* Reimplemented ScreenRefreshRate
-* Added ScreenRefreshRate global variable
-* FPS Monitor Fix
-* Added Power Saving toggle
-* Fixed frame delay on nested surfaces
-
-### Willems Davy (1 commits)
-
-* mmal hw video decoding error detection and reverting to software if error occured (#627)
+* Support roms in subdirectories
+* Fix video related crashes
