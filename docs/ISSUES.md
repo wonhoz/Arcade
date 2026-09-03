@@ -1,12 +1,12 @@
 # 개선 과제 / 알려진 문제 (심각도순)
 
-최초 점검 2026-09-02 · 최종 갱신 2026-09-03 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
+최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
 근거: `attract.cfg`, `emulators/*.cfg`, `romlists/*`, `last_run.log`, `mame64 -verifyroms`, git 메타데이터 실측
 
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1` 로 자동화되어 있다.
 
-**진행 현황** — 처리 12건 / 미해결 11건 · 재분류 1건
+**진행 현황** — 처리 12건 / 미해결 11건 · 재분류 1건 · 개선 포인트 8건
 
 ---
 
@@ -18,14 +18,17 @@
 
 | 대상 | 경로 | 규모 |
 |---|---|---|
-| PS2 BIOS (Sony 펌웨어) | `emulators/PCSX2/bios/SCPH-*` | **94개 / 153MB** |
-| PS1 BIOS | `emulators/ePSXe/bios/{SCPH1001.BIN, scph5500.bin, …}` | 5개 |
-| SEGA Saturn / PC-FX BIOS | `emulators/Mednafen/firmware/{sega_101.bin, mpr-17933.bin, pcfx.rom, fx-scsi.rom}` | 4개 |
+| PS2 BIOS (Sony 펌웨어) | `emulators/PCSX2/bios/SCPH-*` | **94개 / 152.5MB** |
+| PS1 BIOS | `emulators/ePSXe/bios/{SCPH1001.BIN, scph5500.bin, …}` | 6개 / 2.5MB |
+| SEGA Saturn / PC-FX BIOS | `emulators/Mednafen/firmware/{sega_101.bin, mpr-17933.bin, pcfx.rom, fx-scsi.rom}` | 6개 / 3.9MB |
 | 상용 SNES 롬 | `emulators/Mednafen/Roms/SNES/*.zip` (Clock Tower, The Firemen, taekwonk) | 3개 |
 | 에뮬레이터 실행 바이너리 전량 | `emulators/*/*.exe`, `*.dll` | 다수 |
 
 BIOS와 게임 롬은 재배포가 금지된 저작물이다. DMCA 테이크다운 및 계정 제재 대상.
 `.gitignore`가 롬 폴더는 막고 있지만 **`bios/`·`firmware/` 폴더는 막지 않아** 빠져나갔다.
+
+2026-09-03 재검수: 네 경로 전부 여전히 `git check-ignore` 에 걸리지 않는다. **합계 109개 / 162MB.**
+원격은 여전히 `"private": false`.
 
 **조치 (권장 순서)**
 1. 즉시 저장소를 **private로 전환** (임시 차단).
@@ -38,14 +41,25 @@ BIOS와 게임 롬은 재배포가 금지된 저작물이다. DMCA 테이크다�
 
 ## S2 — 높음
 
-### - [ ] 2. 저장소가 1.3GB, 에뮬레이터 바이너리 전량이 git에 들어 있음
+### - [ ] 2. 저장소가 1.2GB, 에뮬레이터 바이너리 전량이 git에 들어 있음
 
-- `.git` 1.3GB / 추적 파일 23,700개.
-- 최대 단일 파일: `attract.exe` **38MB**, `emulators/RetroArch/assets/sounds/BGM.wav` 25MB,
-  `emulators/Mame/icons/icons.zip` 24MB, `emulators/Mame/dats/mameinfo.dat` 18MB …
-  - 2.7.0 업그레이드로 `attract-console.exe`(39MB)가 사라져 **작업 트리에서 39MB가 줄었지만,
-    히스토리에는 그대로 남아 있어 `.git` 크기는 줄지 않는다.** 오히려 새 `attract.exe` 38MB가 더 쌓였다.
-    → 근본 해결은 아래 "조치"의 히스토리 재작성뿐이라는 점이 이번 업그레이드로 재확인됐다.
+- `.git` **1.2GB** / 추적 파일 **23,711개 · 1.71GB** (2026-09-03 실측)
+- 히스토리 상 가장 큰 blob:
+
+  | 크기 | 파일 |
+  |---|---|
+  | 43.0MB | `emulators/fbneo/fbneo.exe` |
+  | 38.0 / 36.3 / 32.2MB | `attract.exe` **3세대** |
+  | 38.0 / 34.4MB | `attract-console.exe` 2세대 |
+  | 23.8MB | `emulators/RetroArch/assets/sounds/BGM.wav` |
+  | 23.1MB | `emulators/Mame/icons/icons.zip` |
+  | 19.0MB | `emulators/Cemu/Cemu.exe` |
+  | 18.5MB | `emulators/Mednafen/mednafen.exe` |
+
+  같은 실행파일의 여러 세대가 그대로 쌓여 있는 게 핵심이다.
+  2.7.0 업그레이드로 `attract-console.exe`가 작업 트리에서 사라졌지만 **히스토리에는 2세대가 남아 있고**,
+  새 `attract.exe` 38MB가 오히려 더 쌓였다.
+  → 근본 해결은 아래 "조치"의 히스토리 재작성뿐이라는 점이 이번 업그레이드로 재확인됐다.
 - 결과: 클론/브랜치 전환/머지가 매우 느리고, 에뮬레이터 업데이트 때마다 수백 MB가 히스토리에 쌓인다
   (실제로 `MAME 업데이트`, `PPSSPP 업데이트` 같은 커밋이 반복돼 있음).
 
@@ -146,13 +160,14 @@ cps3 6개(레드 어스, 스파3 3부작, 조조 2종)는 어떤 필터에도 �
 `scraper/@/overview/`에 `taito type x.txt`, `teknoparrot.txt` 추가.
 display 21개 전부 설명문을 갖췄다(검증 스크립트가 상시 확인).
 
-### - [ ] 8. 미추적 대용량 파일 408MB 방치
+### - [ ] 8. 미추적 대용량 파일 389MB 방치
 
 ```
-emulators/Mame/mame64 - 복사본 (2).exe   266MB
-emulators/Mame/mame64 - 복사본 (2).sym   142MB
+emulators/Mame/mame64 - 복사본 (2).exe   253.9MB
+emulators/Mame/mame64 - 복사본 (2).sym   135.5MB
 ```
 `.gitignore`가 `mame64.exe`/`mame64.sym`만 막고 있어 **복사본은 `git status`에 계속 뜬다.**
+세션마다 `git status`에 노이즈로 뜨는 것이 확인된다.
 → 삭제하거나 `.gitignore`에 `emulators/[Mm]ame/mame64*` 패턴 추가. (18번과 함께 처리 권장)
 
 ### - [x] 9. 활성 목록인데 실제 롬이 없는 항목 — **처리 완료**
@@ -211,11 +226,19 @@ rompath  roms\           ->  roms\korean\
 35행  Tekken ;철권 태그 토너먼트 2    ;Nintendo Wii U
 ```
 
-Windows는 대소문자를 구분하지 않으므로 **두 게임이 같은 아트웍 파일과 같은 즐겨찾기 항목을 공유**한다
-(`menu-art/.../tekken.png` ↔ `Tekken.png`). 화면에는 둘 중 하나의 아트웍만 나온다.
+전체 목록을 통틀면 하나 더 있다 — `Contra`(TeknoParrot) vs `contra`(MAME Vertical).
 
-→ Wii U 쪽 Name을 `Tekken Tag Tournament 2` 등으로 바꾸고 롬 폴더·아트웍 파일명을 함께 맞추는 것이 정석.
-롬 폴더(`emulators/Cemu/Roms/`) 이름까지 건드려야 해서 아직 처리하지 않았다.
+**재검수 결과, 지금 당장 깨지는 것은 없다.** 두 쌍 모두 `artwork` 경로가 시스템별로 갈라져 있고
+(`menu-art\nintendo wii u\` vs `menu-art\zinc\`+`emulators\mame\`,
+`menu-art\TeknoParrot\` vs `emulators\mame\`), 2.7.0부터 통계도 `stats/<Emulator>/`로 갈린다.
+최초 보고의 "같은 아트웍을 공유한다"는 서술은 경로를 확인하지 않은 추정이었다.
+
+남는 위험은 둘이다.
+- **Linux/macOS에서 클론하면** 파일시스템이 대소문자를 구분해 아트웍 탐색 결과가 달라진다(18-a와 같은 뿌리).
+- 나중에 아트웍을 한 폴더로 합치거나 `artwork` 경로를 공유하게 바꾸면 그때 바로 충돌한다.
+
+→ 우선순위 낮음. 정리한다면 Wii U 쪽 Name을 `Tekken Tag Tournament 2`로 바꾸고
+롬 폴더(`emulators/Cemu/Roms/`)·아트웍 파일명을 함께 맞춘다.
 
 ---
 
@@ -324,7 +347,19 @@ MAME이 롬을 찾을 때마다 없는 경로를 한 번씩 더 확인하게 되
 **(c) 런타임 상태 파일이 추적되고 있음**
 `attract.am`(마지막 선택 상태)은 프론트엔드를 띄울 때마다 내용이 바뀔 수 있다.
 `emulators/Mame/cfg/*.cfg`(게임별 입력 설정)도 게임을 실행할 때마다 갱신된다.
-→ 커밋할 것과 아닌 것을 구분해 `.gitignore`에 반영.
+
+2026-09-03 재검수에서 **RetroArch 쪽도 같은 문제**임을 확인했다. 아래 5개가 추적 중이고,
+게임을 한 번 실행하는 것만으로 diff가 생긴다(실제로 이번 검증 중 `content_history.lpl`,
+`content_image_history.lpl`이 변경되어 되돌려야 했다).
+
+```
+emulators/RetroArch/content_history.lpl        emulators/RetroArch/content_music_history.lpl
+emulators/RetroArch/content_image_history.lpl  emulators/RetroArch/content_video_history.lpl
+emulators/RetroArch/retroarch.cfg              ← 이건 설정이라 추적이 맞다
+```
+
+→ `content_*.lpl` 4개는 `.gitignore` + `git rm --cached`. `attract.am`도 같이.
+`stats/`는 무시 목록에도 없어 미추적 상태로 계속 노출된다.
 
 **(d) 무시 목록에 빠진 산출물**
 `stats/`(플레이 통계, `track_usage yes`), `emulators/Mame/data/history.db`,
@@ -379,7 +414,8 @@ RetroArch 내장 스크린샷(F8)으로 한글 패치가 적용된 화면 확인
 
 > 참고: RetroArch 창은 GL 풀스크린이라 GDI `CopyFromScreen`으로는 검은 화면만 잡힌다.
 > 실제 화면 확인은 **RetroArch 내장 스크린샷(F8)** 을 써야 한다.
-> `patched/avsp.zip`은 이 FBNeo 버전과 롬셋이 맞지 않아 별개로 에러가 난다(9번과 별건, 미해결).
+> 검증 도중 `patched/avsp.zip`이 FBNeo 롬셋 불일치 에러를 냈으나, `avsp`는 `Capcom.txt`에서
+> **MAME**로 실행되는 항목이라 FBNeo 경로와 무관하다. 문제 아님.
 
 ### - [ ] 20. 정지한 원격 브랜치 16개
 
@@ -471,3 +507,67 @@ S1의 히스토리 정리를 먼저 끝낸 뒤 진행할 것.
 2. **플레이 통계 경로가 `stats/<romlist명>/` → `stats/<Emulator명>/` 로 변경**.
    기존 `stats/Capcom/`·`stats/Zinc/` 등은 더 이상 읽히지 않아 플레이 횟수가 0으로 보인다.
    집계용 데이터라 실행에는 영향 없음. 되살리려면 폴더명을 Emulator 이름으로 바꿔야 한다.
+
+---
+
+## 개선 포인트 (문제는 아니지만 하면 좋은 것)
+
+2026-09-03 전체 재검수에서 함께 정리했다. 위의 S1~S4가 "고쳐야 할 것"이라면, 아래는 "하면 나아지는 것"이다.
+
+### E1. 한글패치 롬 48개가 목록에 없다 — 가장 효과가 큰 항목
+
+`emulators/RetroArch/system/fbneo/patched/`에 롬 **58개**가 있는데
+`romlists`가 쓰는 건 **10개**뿐이다(ddsomj, ddtodj, dino, ffight, hook, knightsj, kodj, leaguemn, punisherj, wofj).
+
+나머지 48개 중 리전/클론을 빼면 **목록에 아예 없는 게임이 10여 종** 있다.
+
+```
+captcomm(캡틴 코만도)  csclub(캡콤 스포츠 클럽)  daimakai(대마계촌)  ghouls(고스트 앤 고블린)
+gunbird(건버드)  megaman(록맨)  samuraia  sngkace(전국 에이스)  strider(스트라이더 비룡)
+tengai  uccops(언더커버 캅스)
+```
+
+→ `romlists/NESiCAxLive.txt`에 21필드 맞춰 추가하면 한글로 즐길 수 있는 게임이 두 배가 된다.
+아트웍(`menu-art`)만 챙기면 되고 롬은 이미 있다. **비용 대비 효과가 가장 좋다.**
+
+### E2. `tools/validate.ps1`을 pre-commit 훅으로
+
+지금은 사람이 기억해서 돌려야 한다. `.git/hooks/pre-commit`에서 호출하면
+romlist 21필드 위반·BOM·상호 참조 깨짐을 커밋 시점에 막을 수 있다.
+훅은 클론에 따라오지 않으므로 `tools/install-hooks.ps1` 같은 설치 스크립트를 함께 두는 게 좋다.
+
+### E3. 바로가기 교체를 스크립트로
+
+2.7.0 전환 때 각 장비에서 바로가기·시작프로그램을 `attract.exe` → `attract.bat`으로
+**수동으로** 바꿔야 했다(저장소 밖 파일이라 머지로 따라가지 않는다).
+`tools/setup-shortcuts.ps1`로 만들어 두면 새 장비 설치와 이번 같은 전환이 재현 가능해진다.
+
+### E4. 즐겨찾기(`.tag`)가 주력 목록에 없다
+
+`.tag` 12개가 있지만 **NESiCAxLive, SEGA MODEL 2/3, Taito Type X, TeknoParrot,
+Nintendo 64, Nintendo Wii U, SEGA Saturn, MAME Adult**에는 없다.
+디스플레이마다 `filter Favourites`는 정의돼 있으므로 빈 필터가 노출된다.
+→ 쓰지 않는다면 해당 디스플레이의 `filter Favourites`를 빼고, 쓴다면 즐겨찾기를 채운다.
+
+### E5. 2.7.0의 `group_clones` 검토
+
+활성 1,079건 중 **248건(23%)** 이 `CloneOf`를 갖고 있다. 켜면 목록이 눈에 띄게 짧아진다.
+다만 이 저장소는 클론마다 한글 번역명을 따로 붙인 경우가 있어 **대표 1건만 남으면 그 이름이 사라진다.**
+→ 켜기 전에 `CloneOf`가 있는 248건의 `Title`이 부모와 같은지 먼저 확인할 것.
+
+### E6. `Compact` 브랜치의 구조 정합화
+
+최상위가 `AttractMode/` 하위로 한 단계 들어가 있어 `main`과 머지하면 **5,834건 충돌**이 난다.
+사실상 별개 저장소다. 2022-06에서 멈춰 있고 `main` 대비 251커밋 뒤처져 있다.
+→ 구조를 맞춰 재구성하든지, 역할이 끝났으면 태그로 보존하고 브랜치는 정리한다.
+
+### E7. "새 장비 브랜치 추가" 절차가 문서에 없다
+
+[`../README.md`](../README.md)에는 *기존* 장비 설치 절차만 있다.
+브랜치 생성 → 장비 전용 설정 조정 → `main` 병합 루프까지의 절차를 적어 두면
+장비가 늘어날 때 이번처럼 헤매지 않는다.
+
+### E8. 아트웍 추적 범위 결정 (보류 중)
+
+[`ASSETS.md`](ASSETS.md) 1안 = **실사용 휠만 약 118MB**. 클론 직후에도 게임 선택 화면이 제 모습으로 보인다.
+저장소 크기에 직결되므로 **S1·S2의 히스토리 정리를 끝낸 뒤** 판단할 것.
