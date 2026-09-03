@@ -6,7 +6,7 @@
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1` 로 자동화되어 있다.
 
-**진행 현황** — 처리 12건 / 미해결 11건 · 재분류 1건 · 개선 포인트 8건
+**진행 현황** — 처리 16건 / 미해결 7건 · 재분류 1건 · 개선 포인트 8건
 
 ---
 
@@ -217,7 +217,7 @@ rompath  roms\           ->  roms\korean\
 → **삭제하면 안 되는 예약 정의**다. 검증 스크립트도 이 경우를 FAIL이 아닌
 `WARN [emulator] rompath 없음 (롬 미설치이거나 예약 정의)`로 다룬다.
 
-### - [ ] 12. 대소문자만 다른 `Name` 충돌 — 검증 스크립트가 새로 발견
+### - [x] 12. 대소문자만 다른 `Name` 충돌 — **처리 완료**
 
 `romlists/NESiCAxLive.txt`
 
@@ -237,8 +237,26 @@ rompath  roms\           ->  roms\korean\
 - **Linux/macOS에서 클론하면** 파일시스템이 대소문자를 구분해 아트웍 탐색 결과가 달라진다(18-a와 같은 뿌리).
 - 나중에 아트웍을 한 폴더로 합치거나 `artwork` 경로를 공유하게 바꾸면 그때 바로 충돌한다.
 
-→ 우선순위 낮음. 정리한다면 Wii U 쪽 Name을 `Tekken Tag Tournament 2`로 바꾸고
-롬 폴더(`emulators/Cemu/Roms/`)·아트웍 파일명을 함께 맞춘다.
+**조치 완료** — 같은 목록 안에 있던 `NESiCAxLive.txt` 쪽을 정리했다.
+
+```
+romlists/NESiCAxLive.txt   Tekken -> Tekken Tag Tournament 2
+romlists/Nintendo Wii U.txt  Tekken -> Tekken Tag Tournament 2
+emulators/Cemu/Roms/Tekken -> emulators/Cemu/Roms/Tekken Tag Tournament 2
+```
+
+아트웍은 손대지 않았다. `menu-art/nintendo wii u/`에 `Tekken.*`이 아예 없고
+`Tekken Tag Tournament 2 - Wii U Edition (USA).*`만 있는 것으로 보아
+AM 이 Name 이 아니라 **CloneOf(4번 필드)로 아트웍을 찾고 있었기 때문**이다.
+`Sony PlayStation.tag`의 `Tekken`은 PS1 항목이라 무관하다.
+
+> ⚠️ **다른 장비에서도 롬 폴더를 바꿔야 한다.**
+> `emulators/Cemu/Roms/`는 `.gitignore` 대상이라 이 rename 이 머지로 따라가지 않는다.
+> 안 바꾼 장비에서는 `validate.ps1`이 롬 없음으로 잡아준다.
+
+`Contra`(TeknoParrot) vs `contra`(MAME)는 그대로 뒀다. 서로 다른 romlist 이고
+아트웍 경로도 `menu-art/TeknoParrot/` vs `emulators/Mame/`로 완전히 갈려 있어
+같은 디렉터리에서 마주칠 일이 없다.
 
 ---
 
