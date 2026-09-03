@@ -67,6 +67,7 @@ git branch Compact archive/Compact           # 되살리기
 
 ```
 D:\AttractMode\
+├─ .+필독.txt                           ★ 각 장비에서 반드시 해야 할 것 (git 으로 안 따라오는 작업)
 ├─ attract.exe                          프론트엔드 본체 (38MB, 추적됨) — 2.7.0부터 콘솔 서브시스템
 ├─ attract.bat                          ★ 실행 런처 (--logfile 로 last_run.log 복원, 4.5절)
 ├─ attract.cfg                         ★ 메인 설정: display / sound / input_map / general / layout_config
