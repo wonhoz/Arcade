@@ -6,7 +6,7 @@
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1` 로 자동화되어 있다.
 
-**진행 현황** — 처리 19건 / 미해결 4건 · 재분류 1건 · 개선 포인트 8건
+**진행 현황** — 처리 **19건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 2건 · 개선 포인트 8건
 
 > **보류 (우선순위 낮춤, 별도 지시 전까지 대기)** — S1 공개 저장소의 BIOS·롬, S2 `.git` 1.2GB.
 > 둘 다 히스토리 재작성이 필요하고 되돌리기 어렵다.
@@ -322,9 +322,11 @@ Attract-Mode의 romlist는 21개 필드가 **고정된 의미**를 갖는 포맷
 2. (최소) 지금처럼 두되 **[`../CLAUDE.md`](../CLAUDE.md) 4.1절의 표를 반드시 보고
    같은 파일의 기존 줄을 복사해서 추가**한다. ← 현재 채택 중
 
-### - [ ] 14. 비활성(`#`) 항목이 존재하지 않는 에뮬레이터 16종을 참조
+### - [~] 14. 비활성(`#`) 항목이 존재하지 않는 에뮬레이터 16종을 참조 — **경고에서 참고로 재분류**
 
-`tools/validate.ps1`이 WARN 34건으로 잡아낸다. **전부 `#`으로 꺼져 있어 실행에는 영향이 없다.**
+**전부 `#`으로 꺼져 있어 실행에는 영향이 없다.** 비활성 행이 없는 에뮬레이터를 가리키는 것은
+정의상 무해한데, 한 건씩 경고로 찍으면 34줄이 깔려 진짜 신호를 덮었다.
+그래서 `validate.ps1`을 고쳐 **`참고` 한 줄로 집계**하도록 했다. 데이터 자체는 그대로 둔다.
 되살리려면 대응하는 `emulators/<이름>.cfg`부터 만들어야 한다는 뜻이다.
 
 | romlist | 참조하는 없는 에뮬레이터 | 건수 |
@@ -342,7 +344,7 @@ Attract-Mode의 romlist는 21개 필드가 **고정된 의미**를 갖는 포맷
 `SEGA Saturn`(정의는 `SEGA Saturn CUE/CCD/TOC` 3개로 쪼개져 있음)과
 `Nintendo Wii U Name_Name`(치환 토큰이 이름에 섞여 들어간 오타)은 명백한 실수 흔적이다.
 
-### - [ ] 15. 아무 목록도 참조하지 않는 에뮬레이터 cfg 2개
+### - [x] 15. 아무 목록도 참조하지 않는 에뮬레이터 cfg 2개 — **처리 완료 (17번에서 함께)**
 
 - `Taito Type X Samurai Shodown - Edge of Destiny.cfg` → `emulators\Taito Type X\Samurai Shodown - Edge of Destiny\game.exe`
 - `Taito Type X Spica Adventure.cfg` → `emulators\Taito Type X\Spica Adventure\typex_loader.exe`
@@ -355,7 +357,7 @@ Attract-Mode의 romlist는 21개 필드가 **고정된 의미**를 갖는 포맷
 → 게임을 복구하고 이름을 통일하든지, cfg를 정리하든지 결정 필요.
 지금은 참조가 없어 실행에 영향이 없으므로 검증 스크립트도 WARN으로만 다룬다.
 
-### - [ ] 16. `emulators/Mame/mame.ini:11`에 무효한 절대경로
+### - [x] 16. `emulators/Mame/mame.ini`에 무효한 절대경로 — **처리 완료**
 
 ```
 rompath  "roms;roms\Arcade;…;f:\attractmode\emulators\PSXmame\roms;roms\Console\neocd"
@@ -398,7 +400,21 @@ MAME이 롬을 찾을 때마다 없는 경로를 한 번씩 더 확인하게 되
 
 결과: 에뮬레이터 정의 37 → 35, **`validate.ps1` FAIL 0 / WARN 0** (활성 게임 1,079개 변화 없음).
 
-### - [ ] 18. git 위생
+### - [x] 18. git 위생 — **처리 완료**
+
+네 가지를 전부 처리했다. 상세는 각 커밋 메시지 참고.
+
+| | 내용 | 조치 |
+|---|---|---|
+| (a) | `.gitignore` 가 `core.ignorecase` 에만 의존 | 실제 폴더명(`Mame`)으로 교정. `core.ignorecase=false` 로 17경로 차단 확인 |
+| (b) | `.gitattributes` 부재 | 현재 저장 상태를 그대로 못 박아 신설. **재정규화 0건** |
+| (c) | 런타임 상태 파일 추적 | 추적은 유지하고 `tools/reset-runtime.ps1` 로 정리 가능하게 함 |
+| (d) | 무시 목록에 빠진 산출물 | `mame64*` 패턴으로 확장. `stats/` 등은 reset-runtime 이 삭제 |
+
+아래는 처리 당시의 원래 기록이다.
+
+---
+
 
 **(a) `.gitignore`가 대소문자 무시 설정에 의존**
 규칙은 `emulators/MAME/roms/`처럼 적혀 있는데 실제 폴더는 `emulators/Mame`다.
