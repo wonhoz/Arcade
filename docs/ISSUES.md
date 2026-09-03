@@ -1,12 +1,12 @@
 # 개선 과제 / 알려진 문제 (심각도순)
 
-최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
+최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 시각 자산 재스크리닝 2026-09-03 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
 근거: `attract.cfg`, `emulators/*.cfg`, `romlists/*`, `last_run.log`, `mame64 -verifyroms`, git 메타데이터 실측
 
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1` 로 자동화되어 있다.
 
-**진행 현황** — 처리 19건 / 미해결 4건 · 재분류 1건 · 개선 포인트 8건
+**진행 현황** — 처리 **25건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
 
 > **보류 (우선순위 낮춤, 별도 지시 전까지 대기)** — S1 공개 저장소의 BIOS·롬, S2 `.git` 1.2GB.
 > 둘 다 히스토리 재작성이 필요하고 되돌리기 어렵다.
@@ -322,9 +322,11 @@ Attract-Mode의 romlist는 21개 필드가 **고정된 의미**를 갖는 포맷
 2. (최소) 지금처럼 두되 **[`../CLAUDE.md`](../CLAUDE.md) 4.1절의 표를 반드시 보고
    같은 파일의 기존 줄을 복사해서 추가**한다. ← 현재 채택 중
 
-### - [ ] 14. 비활성(`#`) 항목이 존재하지 않는 에뮬레이터 16종을 참조
+### - [~] 14. 비활성(`#`) 항목이 존재하지 않는 에뮬레이터 16종을 참조 — **경고에서 참고로 재분류**
 
-`tools/validate.ps1`이 WARN 34건으로 잡아낸다. **전부 `#`으로 꺼져 있어 실행에는 영향이 없다.**
+**전부 `#`으로 꺼져 있어 실행에는 영향이 없다.** 비활성 행이 없는 에뮬레이터를 가리키는 것은
+정의상 무해한데, 한 건씩 경고로 찍으면 34줄이 깔려 진짜 신호를 덮었다.
+그래서 `validate.ps1`을 고쳐 **`참고` 한 줄로 집계**하도록 했다. 데이터 자체는 그대로 둔다.
 되살리려면 대응하는 `emulators/<이름>.cfg`부터 만들어야 한다는 뜻이다.
 
 | romlist | 참조하는 없는 에뮬레이터 | 건수 |
@@ -342,7 +344,7 @@ Attract-Mode의 romlist는 21개 필드가 **고정된 의미**를 갖는 포맷
 `SEGA Saturn`(정의는 `SEGA Saturn CUE/CCD/TOC` 3개로 쪼개져 있음)과
 `Nintendo Wii U Name_Name`(치환 토큰이 이름에 섞여 들어간 오타)은 명백한 실수 흔적이다.
 
-### - [ ] 15. 아무 목록도 참조하지 않는 에뮬레이터 cfg 2개
+### - [x] 15. 아무 목록도 참조하지 않는 에뮬레이터 cfg 2개 — **처리 완료 (17번에서 함께)**
 
 - `Taito Type X Samurai Shodown - Edge of Destiny.cfg` → `emulators\Taito Type X\Samurai Shodown - Edge of Destiny\game.exe`
 - `Taito Type X Spica Adventure.cfg` → `emulators\Taito Type X\Spica Adventure\typex_loader.exe`
@@ -355,7 +357,7 @@ Attract-Mode의 romlist는 21개 필드가 **고정된 의미**를 갖는 포맷
 → 게임을 복구하고 이름을 통일하든지, cfg를 정리하든지 결정 필요.
 지금은 참조가 없어 실행에 영향이 없으므로 검증 스크립트도 WARN으로만 다룬다.
 
-### - [ ] 16. `emulators/Mame/mame.ini:11`에 무효한 절대경로
+### - [x] 16. `emulators/Mame/mame.ini`에 무효한 절대경로 — **처리 완료**
 
 ```
 rompath  "roms;roms\Arcade;…;f:\attractmode\emulators\PSXmame\roms;roms\Console\neocd"
@@ -398,7 +400,21 @@ MAME이 롬을 찾을 때마다 없는 경로를 한 번씩 더 확인하게 되
 
 결과: 에뮬레이터 정의 37 → 35, **`validate.ps1` FAIL 0 / WARN 0** (활성 게임 1,079개 변화 없음).
 
-### - [ ] 18. git 위생
+### - [x] 18. git 위생 — **처리 완료**
+
+네 가지를 전부 처리했다. 상세는 각 커밋 메시지 참고.
+
+| | 내용 | 조치 |
+|---|---|---|
+| (a) | `.gitignore` 가 `core.ignorecase` 에만 의존 | 실제 폴더명(`Mame`)으로 교정. `core.ignorecase=false` 로 17경로 차단 확인 |
+| (b) | `.gitattributes` 부재 | 현재 저장 상태를 그대로 못 박아 신설. **재정규화 0건** |
+| (c) | 런타임 상태 파일 추적 | 추적은 유지하고 `tools/reset-runtime.ps1` 로 정리 가능하게 함 |
+| (d) | 무시 목록에 빠진 산출물 | `mame64*` 패턴으로 확장. `stats/` 등은 reset-runtime 이 삭제 |
+
+아래는 처리 당시의 원래 기록이다.
+
+---
+
 
 **(a) `.gitignore`가 대소문자 무시 설정에 의존**
 규칙은 `emulators/MAME/roms/`처럼 적혀 있는데 실제 폴더는 `emulators/Mame`다.
@@ -538,6 +554,66 @@ git branch Compact archive/Compact      # 되살리기
 S1·S2의 히스토리 재작성 대상이 **22개 → 7개**로 줄어 작업량이 크게 준다.
 ---
 
+
+## S5 — 시각 자산 재스크리닝 (2026-09-03)
+
+> 텍스트 설정만이 아니라 **화면에 실제로 뜨는 그림·영상**까지 훑어서 나온 항목들이다.
+> 대부분 오류를 내지 않고 조용히 빈 자리로만 나타나던 것이라 로그로는 잡히지 않았다.
+
+### - [x] 21. `tools/reset-runtime.ps1`이 git 추적 중인 파일을 지웠다 — **처리 완료**
+
+`-Clean` 이 `emulators/Mame/cheat/output.{json,xml}` 을 산출물로 보고 지웠다. 추적 중인 파일이라
+실행하면 그대로 삭제 diff 가 났다. 삭제 후보를 `git ls-files` 로 걸러 추적 중이면 건너뛰게 고쳤다.
+
+### - [x] 22. 디스플레이 마스코트 3종 누락 — **처리 완료 (21/21)**
+
+`NEVATO` · `Console Box` 레이아웃은 `layouts/<레이아웃>/character/<디스플레이>.png` 를 화면 우측에
+띄운다. `select_character = "By Display"` 라 emulator cfg 의 `artwork character` 와는 무관하다.
+TeknoParrot · Taito Type X · MAME Adult 세 개가 없어 그 자리가 빈 채로 보였다.
+저장소 안의 flyer 를 480×760 으로 채움-크롭해 채웠고, **`validate.ps1`에 누락 검사를 추가**했다.
+
+### - [x] 23. PSP 박스 이미지가 17건 전부 안 떴다 — **처리 완료**
+
+`Sony PlayStation Portable.cfg` 의 `artwork cartridge` 가 `menu-art\...\cartridge` 만 봤는데
+그 폴더가 비어 있었다. 실제 박스 이미지는 `flyer` 에 17개 전부 있었다.
+`cartridge;flyer` 폴백을 추가해 17/17 표시된다.
+
+### - [x] 24. NESiCAxLive 4건이 flyer 를 못 찾았다 — **처리 완료**
+
+`ddtodj` · `knightsj` · `kodj` · `punisherj`. AM 은 `Name → CloneOf → AltRomname → AltTitle`
+순으로 아트웍을 찾는데 `CloneOf` 가 비어 있었다. 부모(`ddtod`·`knights`·`kod`·`punisher`)를
+채워 부모 flyer 를 물려받게 했다. 12번 항목과 같은 원인이다.
+
+### - [x] 25. 시계 스크립트의 죽은 `am.png` 참조 — **처리 완료**
+
+`Mega-Display(-Advanced)/scripts/clock.nut` 이 존재하지 않는 `am.png` 로 이미지 객체를 만들었다.
+좌표도 시계(`flx*0.865~0.915`)와 무관한 화면 좌중앙(`flx*0.513`)이었고, 무엇보다 시계가
+**24시간 표기**라 AM/PM 표시 자체가 성립하지 않았다. 지우고 이유를 주석으로 남겼다.
+구버전 `Mega-Display` 에는 3번 항목에서 고친 `clock.msg` 예외도 그대로 남아 있어 함께 정리했다.
+
+### - [x] 26. `Taito Type X The BishiBashi.cfg` 의 `rompath` 가 경로를 두 번 겹쳤다 — **처리 완료**
+
+`rompath` 는 **executable 디렉터리 기준**이다. `executable` 이 이미
+`emulators\Taito Type X\The BishiBashi\` 안에 있는데 `rompath` 도
+`emulators\Taito Type X\` 라서 그 둘이 이어 붙었다. `.` 로 고쳤다.
+
+고치고 나니 이번엔 롬 존재 검사가 FAIL 을 냈다 — 이쪽이 진짜 원인이었다.
+이 정의는 `args` 가 비어 있는 **런처형**(executable 이 게임을 고정)이라 AM 이 롬 경로를 넘기지
+않는다. `args` 에 치환 토큰이 없으면 롬 존재를 따지지 않도록 `validate.ps1` 을 고쳤다.
+
+### - [~] 27. ~~시작 화면 상단의 marquee 와 `[Overview]` 가 좌표가 같다~~ — **오진, 재분류**
+
+`Mega-Display Advanced` 에서 두 객체가 정확히 같은 자리(`flx*0.19, fly*0.012`)에 있다.
+겹침 사고로 봤으나 실측해 보니 **서로 배타적인 레이어**였다.
+
+| | marquee (`snap.nut`) | `[Overview]` (`arcade_name.nut`) |
+|---|---|---|
+| 디스플레이 21개 | `menu-art\marquee` 에 이미지 **0/21** → 안 그려짐 | `scraper\@\overview\*.txt` **21개** → 이게 보임 |
+| 종료(exit) 항목 | `menu-art\marquee\exit.png` → 이게 보임 | `scraper\@exit\overview` 비어 있음 → 빈 문자열 |
+
+`layout.nut` 의 `do_nut` 순서가 `snap`(26행) → `arcade_name`(32행) 이라 텍스트가 항상 위에 온다.
+**둘 중 하나를 지우거나 옮기면 안 된다.** 전제가 깨지는 경우(디스플레이용 marquee 를 넣거나
+`@exit` 에 overview 를 쓰는 것)만 조심하면 되고, 그 내용을 `snap.nut` 주석에 남겼다.
 ## 개선 제안
 
 ### - [x] A. 무결성 검증 스크립트 — **완료: `tools/validate.ps1`**
