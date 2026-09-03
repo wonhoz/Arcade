@@ -127,7 +127,23 @@ function Get-Changed([string[]]$Paths) {
 }
 
 function Get-Junk([string[]]$Paths) {
-    @($Paths | Where-Object { Test-Path -LiteralPath $_ })
+    # 존재하면서 "git 이 추적하지 않는" 것만 삭제 대상으로 삼는다.
+    #
+    # 이 확인이 없으면 추적 중인 파일까지 지워버린다.
+    # 실제로 emulators/Mame/cheat/output.{json,xml} 이 추적 중인데도 삭제된 적이 있다.
+    # 산출물이라고 생각한 경로가 실제로는 커밋돼 있을 수 있으므로 반드시 확인한다.
+    $out = @()
+    foreach ($p in $Paths) {
+        if (-not (Test-Path -LiteralPath $p)) { continue }
+        # 경로 하위에 추적 파일이 하나라도 있으면 건드리지 않는다
+        $tracked = & git ls-files -- $p 2>$null
+        if ($tracked) {
+            Write-Host ("  건너뜀(추적 중): {0}" -f $p) -ForegroundColor DarkYellow
+            continue
+        }
+        $out += $p
+    }
+    @($out)
 }
 
 function Show-Group([string]$Title, [string[]]$Items, [string]$Color) {
