@@ -376,8 +376,15 @@ emulators/RetroArch/content_image_history.lpl  emulators/RetroArch/content_video
 emulators/RetroArch/retroarch.cfg              ← 이건 설정이라 추적이 맞다
 ```
 
-→ `content_*.lpl` 4개는 `.gitignore` + `git rm --cached`. `attract.am`도 같이.
-`stats/`는 무시 목록에도 없어 미추적 상태로 계속 노출된다.
+**조치 — 추적은 유지하고 초기화 스크립트를 만들었다.**
+
+런타임 파일을 추적하는 것은 실수가 아니라 의도다. 입력 설정이 꼬이거나 에뮬레이터가
+이상해졌을 때 "커밋된 정상 상태"로 되돌리기 위해서다. 그래서 `.gitignore` 로 빼는 대신
+`tools/reset-runtime.ps1` 로 한 번에 정리할 수 있게 했다([`../CLAUDE.md`](../CLAUDE.md) 7.3절).
+
+설정 / 세이브 / 산출물 세 갈래로 나눠 다루는 것이 핵심이다.
+세이브(메모리카드·NVRAM·스테이트)를 설정과 같이 되돌리면 게임 진행이 날아가므로
+`-Saves` 를 따로 붙여야만 손대도록 했다. 인자 없이 실행하면 목록만 보여준다.
 
 **(d) 무시 목록에 빠진 산출물**
 `stats/`(플레이 통계, `track_usage yes`), `emulators/Mame/data/history.db`,

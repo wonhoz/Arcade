@@ -153,4 +153,7 @@ attract.bat             실행 (이걸 쓰세요)
 3. 게임을 추가하거나 설정을 고쳤으면 `tools\validate.ps1` 실행
 4. 구조·규칙이 바뀌었으면 [`CLAUDE.md`](CLAUDE.md)와 [`docs/ISSUES.md`](docs/ISSUES.md)를 같은 커밋에서 갱신
 
+게임을 실행하면 입력 설정·세이브 같은 런타임 파일이 바뀌어 `git status` 가 지저분해집니다.
+`tools\reset-runtime.ps1` 로 한 번에 정리할 수 있습니다(인자 없이 실행하면 목록만 보여줍니다).
+
 자세한 절차는 [`CLAUDE.md`](CLAUDE.md)의 "자주 하는 작업 레시피"에 있습니다.

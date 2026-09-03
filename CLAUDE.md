@@ -87,7 +87,8 @@ D:\AttractMode\
 ├─ menu-art\                           시스템별 아트웍 (**.gitignore — 로컬 전용**)
 ├─ fonts\                              폰트. font_path = "fonts;fonts/NXL HD"
 ├─ sounds\ shaders\ language\          효과음/셰이더/UI 번역(kr 사용)
-├─ tools\validate.ps1                  ★ 설정 무결성 검증 스크립트 (7절)
+├─ tools\validate.ps1                  ★ 설정 무결성 검증 스크립트 (7.1절)
+├─ tools\reset-runtime.ps1             ★ 런타임 파일 초기화 스크립트 (7.3절)
 ├─ docs\                               ASSETS.md(자산 정책) / ISSUES.md(과제 목록)
 ├─ stats\<Emulator>\                   플레이 통계 (track_usage yes, 로컬 생성물)
 │                                      ★ 2.7.0에서 romlist명 → Emulator명 기준으로 바뀜
@@ -399,6 +400,32 @@ romlist 필드 수·중복·BOM, Emulator/layout/romlist 상호 참조, executab
 4. 게임이 실행 안 됨 → `emulators/<Emulator>.cfg`의 `executable`/`rompath`/`romext`와 실제 파일 대조.
 5. 아트웍이 안 나옴 → `artwork` 경로(AM 루트 기준)와 파일명(= romlist Name)이 일치하는지 확인.
 
+
+### 7.3 런타임 파일 초기화
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1            # 보기만 (기본)
+powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1 -Config -Clean
+powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1 -All -Force
+```
+
+**이 저장소는 런타임 상태 파일을 일부러 추적한다.** 입력 설정이 꼬이거나 에뮬레이터가
+이상해졌을 때 "커밋된 정상 상태"로 되돌리기 위해서다. 대신 게임을 한 번 실행하는 것만으로
+`git status`가 지저분해지므로, 이 스크립트로 한 번에 정리한다.
+
+파일을 세 갈래로 나눠 다룬다. **세이브를 설정과 섞지 않는 것이 핵심이다.**
+
+| 갈래 | 대상 | 되돌리면 |
+|---|---|---|
+| **설정** | `attract.am`, `Mame\cfg`(게임별 입력·딥스위치), `Mame\ui.ini`, `RetroArch\retroarch.cfg`·`content_*.lpl`, `PCSX2\inis`, `M2\CFG`, `Project64\Config`, `TeknoParrot\UserProfiles`, `Demul\*.ini`, `PPSSPP\...\SYSTEM` | 잃는 것 없음 |
+| **세이브** | `Mame\{nvram,memcard,diff,sta}`, `PCSX2\{memcards,sstates}`, `ePSXe\{memcards,sstates}`, `Project64\Save`, `SuperModel\{NVRAM,Saves}`, `Demul\nvram`, `RetroArch\{saves,states}` | **게임 진행이 사라진다** |
+| **산출물** | `last_run.log`, `script.nv`, `stats\`, `Mame\hiscore`, `Mame\data\history.db`, `Mame\cheat\output.*`, `RetroArch\screenshots` | 미추적이라 삭제 |
+
+- 인자 없이 실행하면 **아무것도 건드리지 않고 목록만** 보여준다.
+- 평소 정리는 `-Config -Clean`이면 충분하다. `-Saves`는 게임 진행이 날아가니 의식적으로 붙인다.
+- `-Force`를 빼면 실행 전에 한 번 물어본다.
+- 되돌리기는 `git checkout --`이므로 **커밋되지 않은 의도적 수정도 함께 날아간다.**
+  런타임 파일을 일부러 고쳤다면 먼저 커밋할 것.
 ## 8. 관련 문서
 
 | 문서 | 내용 |
