@@ -1,51 +1,68 @@
 # 개선 과제 / 알려진 문제 (심각도순)
 
-최초 점검 2026-09-02 · 최종 갱신 2026-09-03 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
+최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
 근거: `attract.cfg`, `emulators/*.cfg`, `romlists/*`, `last_run.log`, `mame64 -verifyroms`, git 메타데이터 실측
 
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1` 로 자동화되어 있다.
 
-**진행 현황** — 처리 12건 / 미해결 11건 · 재분류 1건
+**진행 현황** — 처리 19건 / 미해결 4건 · 재분류 1건 · 개선 포인트 8건
+
+> **보류 (우선순위 낮춤, 별도 지시 전까지 대기)** — S1 공개 저장소의 BIOS·롬, S2 `.git` 1.2GB.
+> 둘 다 히스토리 재작성이 필요하고 되돌리기 어렵다.
 
 ---
 
-## S1 — 치명적 (법적 위험)
+## S1 — 치명적 (법적 위험) · ⏸ 보류
 
-### - [ ] 1. 공개 저장소에 상용 BIOS·게임 롬이 커밋되어 있음
+### - [~] 1. 공개 저장소에 상용 BIOS·게임 롬이 커밋되어 있음 — ⏸ **보류**
 
 원격 `https://github.com/wonhoz/Arcade`는 **공개(public)** 저장소인데 다음이 추적되고 있다.
 
 | 대상 | 경로 | 규모 |
 |---|---|---|
-| PS2 BIOS (Sony 펌웨어) | `emulators/PCSX2/bios/SCPH-*` | **94개 / 153MB** |
-| PS1 BIOS | `emulators/ePSXe/bios/{SCPH1001.BIN, scph5500.bin, …}` | 5개 |
-| SEGA Saturn / PC-FX BIOS | `emulators/Mednafen/firmware/{sega_101.bin, mpr-17933.bin, pcfx.rom, fx-scsi.rom}` | 4개 |
+| PS2 BIOS (Sony 펌웨어) | `emulators/PCSX2/bios/SCPH-*` | **94개 / 152.5MB** |
+| PS1 BIOS | `emulators/ePSXe/bios/{SCPH1001.BIN, scph5500.bin, …}` | 6개 / 2.5MB |
+| SEGA Saturn / PC-FX BIOS | `emulators/Mednafen/firmware/{sega_101.bin, mpr-17933.bin, pcfx.rom, fx-scsi.rom}` | 6개 / 3.9MB |
 | 상용 SNES 롬 | `emulators/Mednafen/Roms/SNES/*.zip` (Clock Tower, The Firemen, taekwonk) | 3개 |
 | 에뮬레이터 실행 바이너리 전량 | `emulators/*/*.exe`, `*.dll` | 다수 |
 
 BIOS와 게임 롬은 재배포가 금지된 저작물이다. DMCA 테이크다운 및 계정 제재 대상.
 `.gitignore`가 롬 폴더는 막고 있지만 **`bios/`·`firmware/` 폴더는 막지 않아** 빠져나갔다.
 
+2026-09-03 재검수: 네 경로 전부 여전히 `git check-ignore` 에 걸리지 않는다. **합계 109개 / 162MB.**
+원격은 여전히 `"private": false`.
+
 **조치 (권장 순서)**
 1. 즉시 저장소를 **private로 전환** (임시 차단).
 2. `.gitignore`에 `emulators/PCSX2/bios/`, `emulators/ePSXe/bios/`, `emulators/Mednafen/firmware/`, `emulators/Mednafen/Roms/` 추가.
-3. `git filter-repo`로 히스토리에서 제거 후 force push. — 25개 브랜치 전부를 재작성하므로
+3. `git filter-repo`로 히스토리에서 제거 후 force push. — 브랜치 7개를 재작성하므로(20번에서 22 → 7로 정리)
    **작업 전 전체 백업 필수**이며, 부수효과로 2번(저장소 크기) 문제도 크게 완화된다.
 4. BIOS/롬은 저장소 밖(외장/NAS)에 두고 배포 절차로 복사 — [`ASSETS.md`](ASSETS.md), [`../README.md`](../README.md) 참고.
 
 ---
 
-## S2 — 높음
+## S2 — 높음 · ⏸ 보류 (2번만)
 
-### - [ ] 2. 저장소가 1.3GB, 에뮬레이터 바이너리 전량이 git에 들어 있음
+### - [~] 2. 저장소가 1.2GB, 에뮬레이터 바이너리 전량이 git에 들어 있음 — ⏸ **보류**
 
-- `.git` 1.3GB / 추적 파일 23,700개.
-- 최대 단일 파일: `attract.exe` **38MB**, `emulators/RetroArch/assets/sounds/BGM.wav` 25MB,
-  `emulators/Mame/icons/icons.zip` 24MB, `emulators/Mame/dats/mameinfo.dat` 18MB …
-  - 2.7.0 업그레이드로 `attract-console.exe`(39MB)가 사라져 **작업 트리에서 39MB가 줄었지만,
-    히스토리에는 그대로 남아 있어 `.git` 크기는 줄지 않는다.** 오히려 새 `attract.exe` 38MB가 더 쌓였다.
-    → 근본 해결은 아래 "조치"의 히스토리 재작성뿐이라는 점이 이번 업그레이드로 재확인됐다.
+- `.git` **1.2GB** / 추적 파일 **23,711개 · 1.71GB** (2026-09-03 실측)
+- 히스토리 상 가장 큰 blob:
+
+  | 크기 | 파일 |
+  |---|---|
+  | 43.0MB | `emulators/fbneo/fbneo.exe` |
+  | 38.0 / 36.3 / 32.2MB | `attract.exe` **3세대** |
+  | 38.0 / 34.4MB | `attract-console.exe` 2세대 |
+  | 23.8MB | `emulators/RetroArch/assets/sounds/BGM.wav` |
+  | 23.1MB | `emulators/Mame/icons/icons.zip` |
+  | 19.0MB | `emulators/Cemu/Cemu.exe` |
+  | 18.5MB | `emulators/Mednafen/mednafen.exe` |
+
+  같은 실행파일의 여러 세대가 그대로 쌓여 있는 게 핵심이다.
+  2.7.0 업그레이드로 `attract-console.exe`가 작업 트리에서 사라졌지만 **히스토리에는 2세대가 남아 있고**,
+  새 `attract.exe` 38MB가 오히려 더 쌓였다.
+  → 근본 해결은 아래 "조치"의 히스토리 재작성뿐이라는 점이 이번 업그레이드로 재확인됐다.
 - 결과: 클론/브랜치 전환/머지가 매우 느리고, 에뮬레이터 업데이트 때마다 수백 MB가 히스토리에 쌓인다
   (실제로 `MAME 업데이트`, `PPSSPP 업데이트` 같은 커밋이 반복돼 있음).
 
@@ -146,14 +163,43 @@ cps3 6개(레드 어스, 스파3 3부작, 조조 2종)는 어떤 필터에도 �
 `scraper/@/overview/`에 `taito type x.txt`, `teknoparrot.txt` 추가.
 display 21개 전부 설명문을 갖췄다(검증 스크립트가 상시 확인).
 
-### - [ ] 8. 미추적 대용량 파일 408MB 방치
+### - [x] 8. 미추적 대용량 파일 389MB — **처리 완료 (지우지 않고 정리)**
+
+`mame64 - 복사본 (2).exe/.sym` 389MB 가 `git status` 에 계속 떠 있었다.
+지우기 전에 정체부터 확인했더니 **쓰레기가 아니라 의도적인 폴백**이었다.
+
+| 파일 | MAME 버전 | 날짜 |
+|---|---|---|
+| `mame64.exe` | **0.246** | 2022-07 |
+| `mame64 - 복사본 (2).exe` | **0.220** | 2020-04 |
+
+MAME 롬셋은 버전에 민감해서 신버전에서 안 되는 롬이 구버전에서 되는 경우가 있다.
+실제로 그런 것이 하나 있었다.
 
 ```
-emulators/Mame/mame64 - 복사본 (2).exe   266MB
-emulators/Mame/mame64 - 복사본 (2).sym   142MB
+                0.246                          0.220
+raycris   1 romsets found, 0 were OK.    1 romsets found, 1 were OK.
 ```
-`.gitignore`가 `mame64.exe`/`mame64.sym`만 막고 있어 **복사본은 `git status`에 계속 뜬다.**
-→ 삭제하거나 `.gitignore`에 `emulators/[Mm]ame/mame64*` 패턴 추가. (18번과 함께 처리 권장)
+
+`raycris`(레이크라이시스)는 9번에서 "CHD 만 있고 프로그램 롬 없음"으로 비활성 처리했는데,
+**0.220 에서는 정상 검증된다.** 나머지 5개(secretag, simpsons4pa, cleopatr, elandore, ptblank)는
+양쪽 다 romset not found 라 진짜 없는 롬이다.
+
+**조치** — 삭제하지 않고 정체가 드러나는 이름으로 바꾸고 무시 규칙을 넓혔다.
+
+```
+mame64 - 복사본 (2).exe  ->  mame64-0.220.exe
+mame64 - 복사본 (2).sym  ->  mame64-0.220.sym
+.gitignore : emulators/Mame/mame64.exe -> emulators/Mame/mame64*.exe (sym 도 동일)
+```
+
+MAME 루트에 그대로 두었으므로 기존 `mame.ini`·`hash`·`roms` 를 공유해 바로 실행된다
+(rename 후 `-version` 확인 완료). `git status` 노이즈도 사라졌다.
+
+> **raycris 를 되살리려면** `emulators/MAME 0.220.cfg` 를 만들어 executable 을
+> `mame64-0.220` 으로 두고 romlist 의 Emulator 를 바꾸면 된다. 다만 이 바이너리는
+> `.gitignore` 대상이라 **다른 장비에는 없을 수 있고**, 없는 장비에서는 실행이 깨진다.
+> 그래서 지금은 비활성 유지하고 선택지만 남겨둔다.
 
 ### - [x] 9. 활성 목록인데 실제 롬이 없는 항목 — **처리 완료**
 
@@ -202,7 +248,7 @@ rompath  roms\           ->  roms\korean\
 → **삭제하면 안 되는 예약 정의**다. 검증 스크립트도 이 경우를 FAIL이 아닌
 `WARN [emulator] rompath 없음 (롬 미설치이거나 예약 정의)`로 다룬다.
 
-### - [ ] 12. 대소문자만 다른 `Name` 충돌 — 검증 스크립트가 새로 발견
+### - [x] 12. 대소문자만 다른 `Name` 충돌 — **처리 완료**
 
 `romlists/NESiCAxLive.txt`
 
@@ -211,11 +257,37 @@ rompath  roms\           ->  roms\korean\
 35행  Tekken ;철권 태그 토너먼트 2    ;Nintendo Wii U
 ```
 
-Windows는 대소문자를 구분하지 않으므로 **두 게임이 같은 아트웍 파일과 같은 즐겨찾기 항목을 공유**한다
-(`menu-art/.../tekken.png` ↔ `Tekken.png`). 화면에는 둘 중 하나의 아트웍만 나온다.
+전체 목록을 통틀면 하나 더 있다 — `Contra`(TeknoParrot) vs `contra`(MAME Vertical).
 
-→ Wii U 쪽 Name을 `Tekken Tag Tournament 2` 등으로 바꾸고 롬 폴더·아트웍 파일명을 함께 맞추는 것이 정석.
-롬 폴더(`emulators/Cemu/Roms/`) 이름까지 건드려야 해서 아직 처리하지 않았다.
+**재검수 결과, 지금 당장 깨지는 것은 없다.** 두 쌍 모두 `artwork` 경로가 시스템별로 갈라져 있고
+(`menu-art\nintendo wii u\` vs `menu-art\zinc\`+`emulators\mame\`,
+`menu-art\TeknoParrot\` vs `emulators\mame\`), 2.7.0부터 통계도 `stats/<Emulator>/`로 갈린다.
+최초 보고의 "같은 아트웍을 공유한다"는 서술은 경로를 확인하지 않은 추정이었다.
+
+남는 위험은 둘이다.
+- **Linux/macOS에서 클론하면** 파일시스템이 대소문자를 구분해 아트웍 탐색 결과가 달라진다(18-a와 같은 뿌리).
+- 나중에 아트웍을 한 폴더로 합치거나 `artwork` 경로를 공유하게 바꾸면 그때 바로 충돌한다.
+
+**조치 완료** — 같은 목록 안에 있던 `NESiCAxLive.txt` 쪽을 정리했다.
+
+```
+romlists/NESiCAxLive.txt   Tekken -> Tekken Tag Tournament 2
+romlists/Nintendo Wii U.txt  Tekken -> Tekken Tag Tournament 2
+emulators/Cemu/Roms/Tekken -> emulators/Cemu/Roms/Tekken Tag Tournament 2
+```
+
+아트웍은 손대지 않았다. `menu-art/nintendo wii u/`에 `Tekken.*`이 아예 없고
+`Tekken Tag Tournament 2 - Wii U Edition (USA).*`만 있는 것으로 보아
+AM 이 Name 이 아니라 **CloneOf(4번 필드)로 아트웍을 찾고 있었기 때문**이다.
+`Sony PlayStation.tag`의 `Tekken`은 PS1 항목이라 무관하다.
+
+> ⚠️ **다른 장비에서도 롬 폴더를 바꿔야 한다.**
+> `emulators/Cemu/Roms/`는 `.gitignore` 대상이라 이 rename 이 머지로 따라가지 않는다.
+> 안 바꾼 장비에서는 `validate.ps1`이 롬 없음으로 잡아준다.
+
+`Contra`(TeknoParrot) vs `contra`(MAME)는 그대로 뒀다. 서로 다른 romlist 이고
+아트웍 경로도 `menu-art/TeknoParrot/` vs `emulators/Mame/`로 완전히 갈려 있어
+같은 디렉터리에서 마주칠 일이 없다.
 
 ---
 
@@ -295,7 +367,7 @@ MAME이 롬을 찾을 때마다 없는 경로를 한 번씩 더 확인하게 되
 
 → `..\PSXmame\roms` 같은 상대경로로 바꾸거나 제거. 다른 `.ini`에도 절대경로가 없는지 함께 확인.
 
-### - [ ] 17. 연결되지 않은 채 남아 있는 자산들
+### - [x] 17. 연결되지 않은 채 남아 있는 자산들
 
 | 대상 | 상태 | 판단 |
 |---|---|---|
@@ -306,7 +378,25 @@ MAME이 롬을 찾을 때마다 없는 경로를 한 번씩 더 확인하게 되
 | `intro/intro_16x9.mp4` | `intro_config` 섹션이 없어 기본값(`intro.mp4`)만 재생 | 16:9 전용 인트로를 쓰려면 설정 필요 |
 | `loader/` (hyperspin, mala, mamewah, attract_xml) | AM 기본 임포터. 사용 이력 없음 | 벤더 원본, 그대로 둠 |
 
-→ 보존/삭제를 한 번 정하고 [`../CLAUDE.md`](../CLAUDE.md) 5.5절에 반영한다. 현재는 "참고용"으로 기재해 둔 상태.
+**조치 완료 (2026-09-03)** — 지우기 전에 하나씩 "정말 로드될 수 없는가"를 확인했다.
+
+**기준: AM이 스스로 선택할 수 있으면 남기고, 이름을 바꾸지 않으면 절대 로드될 수 없는 것만 지운다.**
+
+| 대상 | 결정 | 근거 |
+|---|---|---|
+| `screensaver-NESiCAxLive/` (31개) | **제거** | AM은 `screensaver/` 폴더만 읽는다 |
+| `plugins-NESiCAxLive/` (2개) | **제거** | AM 플러그인 UI는 `plugins/`만 스캔. 게다가 `plugins/` 원본과 내용이 달라 동기화도 안 돼 있었다 |
+| `attract-NESiCAxLive.cfg` | **제거** | AM은 `attract.cfg`만 읽는다 |
+| `emulators/Taito Type X Samurai Shodown - Edge of Destiny.cfg`<br>`emulators/Taito Type X Spica Adventure.cfg` | **제거** | 게임 폴더도 `.7z`도 없고 어떤 romlist도 참조 안 함. `validate.ps1`의 남은 WARN 2건이 이것이었다 |
+| `plugins/` (벤더 16 + 저장소 추가 2) | **보존** | AM 설정 메뉴에서 켜면 바로 쓸 수 있는 정상 자산 |
+| `layouts/Mega-Display` | **보존** | 미참조지만 AM 레이아웃 메뉴에서 선택 가능한 예비 테마 |
+| `intro/intro_16x9.mp4` | **보존** | `intro.nut`의 `video_16x9` 설정으로 쓸 수 있다 |
+| `loader/` | **보존** | AM 벤더 원본 |
+
+제거분은 **`archive/unused-assets-2026-09-03` 태그**에 보존했다.
+되살리려면 `git checkout archive/unused-assets-2026-09-03 -- <경로>`.
+
+결과: 에뮬레이터 정의 37 → 35, **`validate.ps1` FAIL 0 / WARN 0** (활성 게임 1,079개 변화 없음).
 
 ### - [ ] 18. git 위생
 
@@ -324,7 +414,26 @@ MAME이 롬을 찾을 때마다 없는 경로를 한 번씩 더 확인하게 되
 **(c) 런타임 상태 파일이 추적되고 있음**
 `attract.am`(마지막 선택 상태)은 프론트엔드를 띄울 때마다 내용이 바뀔 수 있다.
 `emulators/Mame/cfg/*.cfg`(게임별 입력 설정)도 게임을 실행할 때마다 갱신된다.
-→ 커밋할 것과 아닌 것을 구분해 `.gitignore`에 반영.
+
+2026-09-03 재검수에서 **RetroArch 쪽도 같은 문제**임을 확인했다. 아래 5개가 추적 중이고,
+게임을 한 번 실행하는 것만으로 diff가 생긴다(실제로 이번 검증 중 `content_history.lpl`,
+`content_image_history.lpl`이 변경되어 되돌려야 했다).
+
+```
+emulators/RetroArch/content_history.lpl        emulators/RetroArch/content_music_history.lpl
+emulators/RetroArch/content_image_history.lpl  emulators/RetroArch/content_video_history.lpl
+emulators/RetroArch/retroarch.cfg              ← 이건 설정이라 추적이 맞다
+```
+
+**조치 — 추적은 유지하고 초기화 스크립트를 만들었다.**
+
+런타임 파일을 추적하는 것은 실수가 아니라 의도다. 입력 설정이 꼬이거나 에뮬레이터가
+이상해졌을 때 "커밋된 정상 상태"로 되돌리기 위해서다. 그래서 `.gitignore` 로 빼는 대신
+`tools/reset-runtime.ps1` 로 한 번에 정리할 수 있게 했다([`../CLAUDE.md`](../CLAUDE.md) 7.3절).
+
+설정 / 세이브 / 산출물 세 갈래로 나눠 다루는 것이 핵심이다.
+세이브(메모리카드·NVRAM·스테이트)를 설정과 같이 되돌리면 게임 진행이 날아가므로
+`-Saves` 를 따로 붙여야만 손대도록 했다. 인자 없이 실행하면 목록만 보여준다.
 
 **(d) 무시 목록에 빠진 산출물**
 `stats/`(플레이 통계, `track_usage yes`), `emulators/Mame/data/history.db`,
@@ -379,27 +488,54 @@ RetroArch 내장 스크린샷(F8)으로 한글 패치가 적용된 화면 확인
 
 > 참고: RetroArch 창은 GL 풀스크린이라 GDI `CopyFromScreen`으로는 검은 화면만 잡힌다.
 > 실제 화면 확인은 **RetroArch 내장 스크린샷(F8)** 을 써야 한다.
-> `patched/avsp.zip`은 이 FBNeo 버전과 롬셋이 맞지 않아 별개로 에러가 난다(9번과 별건, 미해결).
+> 검증 도중 `patched/avsp.zip`이 FBNeo 롬셋 불일치 에러를 냈으나, `avsp`는 `Capcom.txt`에서
+> **MAME**로 실행되는 항목이라 FBNeo 경로와 무관하다. 문제 아님.
 
-### - [ ] 20. 정지한 원격 브랜치 16개
+### - [x] 20. 정지한 원격 브랜치 정리 — **처리 완료**
 
-원격 브랜치 25개 중 **16개가 2022년 이후 갱신이 없다.** 그중 절반은 이미 `main`에 병합돼 있다.
+원격 브랜치 **22개 중 15개가 2022년 이후 갱신이 없었다.** 전부 정리해 **7개**만 남겼다.
 
-**병합 완료 — 삭제해도 내용 손실 없음 (8개)**
-`NESiCAxLive`, `develop`, `develop-layouts`, `develop-replace`, `malio`, `mame`, `retroarch`, `update`
+```
+남은 브랜치   main  develop  bartop  desktop
+              desktop-ASUS-TUF  desktop-MSI-Sword  desktop-MSI-Sword-DriveWheel
+```
 
-**미병합 — 삭제 전 태그 보존 권장 (8개)**
-`Compact`(50GB 축소판), `bartop-NESiCAxLive`, `desktop-keyboard`, `desktop-keyboard-git`,
-`develop-prev`, `fbneo`, `mame-failed`, `update-failed`
-— 이름에서 보이듯 `*-failed` 둘은 실패한 시도의 기록이다.
+**병합 완료 — 내용이 이미 `main`에 있어 그냥 삭제 (6개)**
+`NESiCAxLive`, `develop-layouts`, `malio`, `mame`, `retroarch`, `update`
 
-**현재 살아 있는 브랜치 (9개)**
-`main`, `bartop`, `desktop`, `desktop-ASUS-TUF`, `desktop-MSI-Sword`,
-`desktop-MSI-Sword-DriveWheel`, `retroarch-update` 등
+**미병합 — `archive/<이름>` 태그로 보존 후 삭제 (9개)**
 
-→ 병합 완료분은 삭제, 미병합분은 `git tag archive/<이름> <브랜치>` 후 삭제.
-브랜치 수가 줄면 S1의 히스토리 재작성도 훨씬 수월해진다.
+| 브랜치 | 고유 커밋 | 비고 |
+|---|---|---|
+| `bartop-NESiCAxLive` | 66 | NESiCAxLive 전용 바탑 구성 |
+| `desktop-keyboard-git` | 14 | 키보드 조작 데스크톱 |
+| `desktop-keyboard` | 11 | 〃 |
+| `develop-prev` | 2 | 이전 develop |
+| `fbneo` | 2 | |
+| `update-failed` | 2 | 실패한 시도의 기록 |
+| `Compact` | 1 | 50GB 축소판 (디렉터리 구조가 다름 — E6 참고) |
+| `mame-failed` | 1 | 실패한 시도의 기록 |
+| `retroarch-update` | 1 | 2024-07, 유일하게 2022년이 아니었다 |
 
+**안전 절차** — 순서가 중요하다.
+
+1. 미병합 9개에 `archive/*` 태그 생성 (고유 커밋 목록을 태그 메시지에 기록)
+2. **태그를 먼저 push** — 이걸 안 하면 브랜치 삭제 순간 원격에서 커밋이 도달 불가가 된다
+3. 삭제 대상 15개가 *전부* "main 에 포함" 또는 "archive 태그 = 동일 커밋"인지 기계적으로 확인 (15/15)
+4. 그다음 브랜치 삭제 → `git fetch --prune`
+
+**되살리기**
+
+```bash
+git tag -l 'archive/*'                  # 아카이브 목록
+git tag -n20 archive/Compact            # 그 브랜치가 무엇이었는지 (고유 커밋 포함)
+git branch Compact archive/Compact      # 되살리기
+```
+
+> `Compact` · `desktop-keyboard` · `desktop-keyboard-git` 는 [`../README.md`](../README.md)의
+> 장비 목록에 있던 브랜치다. 지웠지만 태그로 온전히 남아 있으니 필요하면 위 명령으로 복구한다.
+
+S1·S2의 히스토리 재작성 대상이 **22개 → 7개**로 줄어 작업량이 크게 준다.
 ---
 
 ## 개선 제안
@@ -418,7 +554,16 @@ executable·rompath·artwork 경로, 활성 항목의 실제 롬 존재, `.tag` 
 MAME 계열은 `mame.ini`의 rompath가 실제 탐색을 담당한다는 점, CHD가 폴더 단위로 놓인다는 점,
 Dreamcast/Wii U가 게임별 하위폴더 구조라는 점을 모두 반영했다.
 
-**현재 상태: FAIL 0건 / WARN 59건** (WARN은 미설치 자산·비활성 항목이 대부분)
+**출력은 FAIL / WARN / 환경 / 참고 네 단계로 나눈다.**
+처음에는 미설치 자산까지 전부 WARN 이라 59건이 상수처럼 깔려 새 경고가 묻혔다.
+장비마다 다른 것(`환경`)과 알고도 둔 것(`참고`)을 분리해 **WARN 의 기대값을 0으로** 만들었다.
+
+| 단계 | 현재 | 내용 |
+|---|---|---|
+| FAIL | 0건 | — |
+| WARN | **2건** | 미참조 에뮬레이터 정의 2개 (17번에서 처리) |
+| 환경 | 22건 | 아트웍 17 + 롬·실행파일 5. 이 장비에 없는 자산 |
+| 참고 | 1줄 | 비활성 행 34건이 정의 없는 에뮬레이터 16종 참조 |
 
 ### - [x] B. 아트웍 버전관리 정책 — **완료: [`ASSETS.md`](ASSETS.md)**
 
@@ -471,3 +616,67 @@ S1의 히스토리 정리를 먼저 끝낸 뒤 진행할 것.
 2. **플레이 통계 경로가 `stats/<romlist명>/` → `stats/<Emulator명>/` 로 변경**.
    기존 `stats/Capcom/`·`stats/Zinc/` 등은 더 이상 읽히지 않아 플레이 횟수가 0으로 보인다.
    집계용 데이터라 실행에는 영향 없음. 되살리려면 폴더명을 Emulator 이름으로 바꿔야 한다.
+
+---
+
+## 개선 포인트 (문제는 아니지만 하면 좋은 것)
+
+2026-09-03 전체 재검수에서 함께 정리했다. 위의 S1~S4가 "고쳐야 할 것"이라면, 아래는 "하면 나아지는 것"이다.
+
+### E1. 한글패치 롬 48개가 목록에 없다 — 가장 효과가 큰 항목
+
+`emulators/RetroArch/system/fbneo/patched/`에 롬 **58개**가 있는데
+`romlists`가 쓰는 건 **10개**뿐이다(ddsomj, ddtodj, dino, ffight, hook, knightsj, kodj, leaguemn, punisherj, wofj).
+
+나머지 48개 중 리전/클론을 빼면 **목록에 아예 없는 게임이 10여 종** 있다.
+
+```
+captcomm(캡틴 코만도)  csclub(캡콤 스포츠 클럽)  daimakai(대마계촌)  ghouls(고스트 앤 고블린)
+gunbird(건버드)  megaman(록맨)  samuraia  sngkace(전국 에이스)  strider(스트라이더 비룡)
+tengai  uccops(언더커버 캅스)
+```
+
+→ `romlists/NESiCAxLive.txt`에 21필드 맞춰 추가하면 한글로 즐길 수 있는 게임이 두 배가 된다.
+아트웍(`menu-art`)만 챙기면 되고 롬은 이미 있다. **비용 대비 효과가 가장 좋다.**
+
+### E2. `tools/validate.ps1`을 pre-commit 훅으로
+
+지금은 사람이 기억해서 돌려야 한다. `.git/hooks/pre-commit`에서 호출하면
+romlist 21필드 위반·BOM·상호 참조 깨짐을 커밋 시점에 막을 수 있다.
+훅은 클론에 따라오지 않으므로 `tools/install-hooks.ps1` 같은 설치 스크립트를 함께 두는 게 좋다.
+
+### E3. 바로가기 교체를 스크립트로
+
+2.7.0 전환 때 각 장비에서 바로가기·시작프로그램을 `attract.exe` → `attract.bat`으로
+**수동으로** 바꿔야 했다(저장소 밖 파일이라 머지로 따라가지 않는다).
+`tools/setup-shortcuts.ps1`로 만들어 두면 새 장비 설치와 이번 같은 전환이 재현 가능해진다.
+
+### E4. 즐겨찾기(`.tag`)가 주력 목록에 없다
+
+`.tag` 12개가 있지만 **NESiCAxLive, SEGA MODEL 2/3, Taito Type X, TeknoParrot,
+Nintendo 64, Nintendo Wii U, SEGA Saturn, MAME Adult**에는 없다.
+디스플레이마다 `filter Favourites`는 정의돼 있으므로 빈 필터가 노출된다.
+→ 쓰지 않는다면 해당 디스플레이의 `filter Favourites`를 빼고, 쓴다면 즐겨찾기를 채운다.
+
+### E5. 2.7.0의 `group_clones` 검토
+
+활성 1,079건 중 **248건(23%)** 이 `CloneOf`를 갖고 있다. 켜면 목록이 눈에 띄게 짧아진다.
+다만 이 저장소는 클론마다 한글 번역명을 따로 붙인 경우가 있어 **대표 1건만 남으면 그 이름이 사라진다.**
+→ 켜기 전에 `CloneOf`가 있는 248건의 `Title`이 부모와 같은지 먼저 확인할 것.
+
+### E6. `Compact` 브랜치의 구조 정합화
+
+최상위가 `AttractMode/` 하위로 한 단계 들어가 있어 `main`과 머지하면 **5,834건 충돌**이 난다.
+사실상 별개 저장소다. 2022-06에서 멈춰 있고 `main` 대비 251커밋 뒤처져 있다.
+→ 구조를 맞춰 재구성하든지, 역할이 끝났으면 태그로 보존하고 브랜치는 정리한다.
+
+### E7. "새 장비 브랜치 추가" 절차가 문서에 없다
+
+[`../README.md`](../README.md)에는 *기존* 장비 설치 절차만 있다.
+브랜치 생성 → 장비 전용 설정 조정 → `main` 병합 루프까지의 절차를 적어 두면
+장비가 늘어날 때 이번처럼 헤매지 않는다.
+
+### E8. 아트웍 추적 범위 결정 (보류 중)
+
+[`ASSETS.md`](ASSETS.md) 1안 = **실사용 휠만 약 118MB**. 클론 직후에도 게임 선택 화면이 제 모습으로 보인다.
+저장소 크기에 직결되므로 **S1·S2의 히스토리 정리를 끝낸 뒤** 판단할 것.
