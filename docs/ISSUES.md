@@ -364,7 +364,7 @@ MAME이 롬을 찾을 때마다 없는 경로를 한 번씩 더 확인하게 되
 
 → `..\PSXmame\roms` 같은 상대경로로 바꾸거나 제거. 다른 `.ini`에도 절대경로가 없는지 함께 확인.
 
-### - [ ] 17. 연결되지 않은 채 남아 있는 자산들
+### - [x] 17. 연결되지 않은 채 남아 있는 자산들
 
 | 대상 | 상태 | 판단 |
 |---|---|---|
@@ -375,7 +375,25 @@ MAME이 롬을 찾을 때마다 없는 경로를 한 번씩 더 확인하게 되
 | `intro/intro_16x9.mp4` | `intro_config` 섹션이 없어 기본값(`intro.mp4`)만 재생 | 16:9 전용 인트로를 쓰려면 설정 필요 |
 | `loader/` (hyperspin, mala, mamewah, attract_xml) | AM 기본 임포터. 사용 이력 없음 | 벤더 원본, 그대로 둠 |
 
-→ 보존/삭제를 한 번 정하고 [`../CLAUDE.md`](../CLAUDE.md) 5.5절에 반영한다. 현재는 "참고용"으로 기재해 둔 상태.
+**조치 완료 (2026-09-03)** — 지우기 전에 하나씩 "정말 로드될 수 없는가"를 확인했다.
+
+**기준: AM이 스스로 선택할 수 있으면 남기고, 이름을 바꾸지 않으면 절대 로드될 수 없는 것만 지운다.**
+
+| 대상 | 결정 | 근거 |
+|---|---|---|
+| `screensaver-NESiCAxLive/` (31개) | **제거** | AM은 `screensaver/` 폴더만 읽는다 |
+| `plugins-NESiCAxLive/` (2개) | **제거** | AM 플러그인 UI는 `plugins/`만 스캔. 게다가 `plugins/` 원본과 내용이 달라 동기화도 안 돼 있었다 |
+| `attract-NESiCAxLive.cfg` | **제거** | AM은 `attract.cfg`만 읽는다 |
+| `emulators/Taito Type X Samurai Shodown - Edge of Destiny.cfg`<br>`emulators/Taito Type X Spica Adventure.cfg` | **제거** | 게임 폴더도 `.7z`도 없고 어떤 romlist도 참조 안 함. `validate.ps1`의 남은 WARN 2건이 이것이었다 |
+| `plugins/` (벤더 16 + 저장소 추가 2) | **보존** | AM 설정 메뉴에서 켜면 바로 쓸 수 있는 정상 자산 |
+| `layouts/Mega-Display` | **보존** | 미참조지만 AM 레이아웃 메뉴에서 선택 가능한 예비 테마 |
+| `intro/intro_16x9.mp4` | **보존** | `intro.nut`의 `video_16x9` 설정으로 쓸 수 있다 |
+| `loader/` | **보존** | AM 벤더 원본 |
+
+제거분은 **`archive/unused-assets-2026-09-03` 태그**에 보존했다.
+되살리려면 `git checkout archive/unused-assets-2026-09-03 -- <경로>`.
+
+결과: 에뮬레이터 정의 37 → 35, **`validate.ps1` FAIL 0 / WARN 0** (활성 게임 1,079개 변화 없음).
 
 ### - [ ] 18. git 위생
 
