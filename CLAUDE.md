@@ -25,13 +25,20 @@
 
 ```
 main ──┬─> develop                 ★ 공통 작업 브랜치 (여기서 작업 → main 병합 → 각 장비로 전파)
-       ├─> bartop                  (바탑 캐비닛 = 실제 구동 장비)
-       ├─> develop-bartop          (bartop 기반 작업분. develop 으로 체리픽 완료)
-       ├─> Compact                 (50GB 축소판)
-       ├─> desktop / desktop-ASUS-TUF / desktop-MSI-Sword /
-       │   desktop-MSI-Sword-DriveWheel / desktop-keyboard(-git)
-       ├─> NESiCAxLive / bartop-NESiCAxLive
-       └─> update*, mame*, retroarch*, fbneo, malio  (작업/실험용)
+       ├─> bartop                  바탑 캐비닛 (실제 구동 장비)
+       ├─> desktop
+       ├─> desktop-ASUS-TUF
+       ├─> desktop-MSI-Sword
+       └─> desktop-MSI-Sword-DriveWheel
+```
+
+**브랜치는 7개뿐이다.** 2026-09-03에 2022년에 멈춰 있던 15개를 정리했다(20번 참고).
+지워진 것은 전부 `archive/*` 태그로 남아 있으므로 언제든 되살릴 수 있다.
+
+```bash
+git tag -l 'archive/*'                       # 아카이브 목록
+git tag -n20 archive/Compact                 # 그 브랜치가 뭐였는지
+git branch Compact archive/Compact           # 되살리기
 ```
 
 - **모든 장비에 적용될 변경은 `develop`(= `main` 기반)에서 한다.**
@@ -63,11 +70,10 @@ D:\AttractMode\
 ├─ attract.exe                          프론트엔드 본체 (38MB, 추적됨) — 2.7.0부터 콘솔 서브시스템
 ├─ attract.bat                          ★ 실행 런처 (--logfile 로 last_run.log 복원, 4.5절)
 ├─ attract.cfg                         ★ 메인 설정: display / sound / input_map / general / layout_config
-├─ attract-NESiCAxLive.cfg             (사장된 외부 유입 설정 — 5.5절 참고)
 ├─ attract.am                          런타임 상태(마지막 선택/레이아웃). 실행할 때마다 변함
 ├─ default-{display,emulator,filter}.cfg  AM 기본 템플릿(수정 금지)
 ├─ emulators\
-│   ├─ *.cfg                           ★ 에뮬레이터 정의 37개 (= romlist의 Emulator 필드 값)
+│   ├─ *.cfg                           ★ 에뮬레이터 정의 35개 (= romlist의 Emulator 필드 값)
 │   ├─ Mame\ Demul\ M2\ SuperModel\ PCSX2\ ePSXe\ PPSSPP\ Dolphin\
 │   │  Project64\ Project64_v1.7\ Cemu\ Mednafen\ RetroArch\ PSXMAME\
 │   │  TeknoParrot\ "Taito Type X"\ "PC Game"\      실제 에뮬레이터 바이너리
@@ -77,9 +83,8 @@ D:\AttractMode\
 │   └─ <Display>.tag                   즐겨찾기(Favourite) 목록 — 한 줄에 romlist의 Name
 ├─ layouts\                            테마: NEVATO / Console Box / NXL HD / Mega-Display(-Advanced)
 ├─ modules\                            AM 공용 Squirrel 모듈 (animate, conveyor, objects/scrollingtext …)
-├─ plugins\ plugins-NESiCAxLive\       플러그인 (**현재 attract.cfg에 활성화된 것 없음**)
+├─ plugins\                            플러그인 (**현재 attract.cfg에 활성화된 것 없음**)
 ├─ screensaver\                        기본 스크린세이버 (`screensaver.nut`) — 600초 후 동작
-├─ screensaver-NESiCAxLive\            NXL용 변형 (현재 미연결)
 ├─ intro\                              시작 인트로 (`intro.nut` + `intro.mp4`, `intro_16x9.mp4`)
 ├─ loader\                             타 프론트엔드 목록 임포터(hyperspin/mala/mamewah/attract_xml)
 ├─ scraper\@\overview\<display>.txt    ★ 디스플레이 메뉴에 뜨는 시스템 설명문 (한국어)
@@ -87,7 +92,8 @@ D:\AttractMode\
 ├─ menu-art\                           시스템별 아트웍 (**.gitignore — 로컬 전용**)
 ├─ fonts\                              폰트. font_path = "fonts;fonts/NXL HD"
 ├─ sounds\ shaders\ language\          효과음/셰이더/UI 번역(kr 사용)
-├─ tools\validate.ps1                  ★ 설정 무결성 검증 스크립트 (7절)
+├─ tools\validate.ps1                  ★ 설정 무결성 검증 스크립트 (7.1절)
+├─ tools\reset-runtime.ps1             ★ 런타임 파일 초기화 스크립트 (7.3절)
 ├─ docs\                               ASSETS.md(자산 정책) / ISSUES.md(과제 목록)
 ├─ stats\<Emulator>\                   플레이 통계 (track_usage yes, 로컬 생성물)
 │                                      ★ 2.7.0에서 romlist명 → Emulator명 기준으로 바뀜
@@ -159,7 +165,7 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 - **MAME 계열은 `mame.ini`의 `rompath`가 실제 롬 탐색을 담당**하므로, cfg의 `rompath`는
   주로 목록 생성/`[romfilename]` 치환용이다. (`emulators/Mame/mame.ini:11` 참고)
 
-**에뮬레이터 정의 목록 (37개)**
+**에뮬레이터 정의 목록 (35개)**
 
 | 계열 | cfg |
 |---|---|
@@ -195,7 +201,8 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 - `attract.cfg`의 `Config:` 경로는 실행 시 결정되므로 무관하지만,
   `emulators/Mame/mame.ini:11`의 `rompath`에 **`f:\attractmode\emulators\PSXmame\roms`** 라는
   타 드라이브 절대경로가 남아 있다(현재 무효).
-- `attract-NESiCAxLive.cfg`는 `Y:\Frontend\...` 경로를 참조하는 외부 환경 설정이다.
+- `attract-NESiCAxLive.cfg`(`Y:\Frontend\...` 참조)는 2026-09-03에 제거했다.
+  `archive/unused-assets-2026-09-03` 태그에 보존돼 있다.
 
 ### 4.5 실행 방법 — ⚠️ 2.7.0에서 바뀐 부분
 
@@ -294,9 +301,24 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 > **예외 줄 아래 문장을 먼저 읽고, 그것이 실행돼도 되는 코드인지 판단한 뒤 지운다.**
 
 ### 5.5 손대지 말아야 할 것
-- `attract-NESiCAxLive.cfg` — AM v2.2.1 시절 타 환경(`Y:\Frontend`)에서 유입된 설정.
-  `layout blueprint` / `romlist Nesicagui` 등 이 저장소에 없는 것을 참조한다. 참고용 화석.
-- `default-*.cfg`, `emulators/script/`, `loader/`, `modules/` — AM 벤더 원본.
+- `default-*.cfg`, `emulators/script/`, `loader/`, `modules/`, `plugins/` — AM 벤더 원본.
+  `plugins/`는 `attract.cfg`에 `plugin` 섹션이 없어 전부 비활성이지만, AM 설정 메뉴에서
+  켤 수 있는 정상 자산이라 지우지 않는다.
+- `layouts/Mega-Display` — 어떤 display도 쓰지 않지만 AM 레이아웃 메뉴에서 선택 가능한 예비 테마다.
+
+> **미연결 자산을 정리한 이력** — 2026-09-03에 아래를 제거하고
+> `archive/unused-assets-2026-09-03` 태그에 보존했다.
+> 되살리려면 `git checkout archive/unused-assets-2026-09-03 -- <경로>`.
+>
+> | 대상 | 왜 지웠나 |
+> |---|---|
+> | `screensaver-NESiCAxLive/` (31개) | AM은 `screensaver/`만 읽는다. 폴더명을 바꾸지 않는 한 로드 불가 |
+> | `plugins-NESiCAxLive/` (2개) | AM 플러그인 UI는 `plugins/`만 스캔한다 |
+> | `attract-NESiCAxLive.cfg` | AM은 `attract.cfg`만 읽는다. v2.2.1 시절 `Y:\Frontend` 화석 |
+> | `emulators/Taito Type X {Samurai Shodown - Edge of Destiny, Spica Adventure}.cfg` | 게임 미설치 + 어떤 romlist도 미참조 |
+>
+> **기준**: AM이 스스로 선택할 수 있는 것(레이아웃·플러그인)은 남기고,
+> **이름을 바꾸지 않으면 절대 로드될 수 없는 것**만 지웠다.
 - `License.txt`, `Readme.txt`, `Layouts.txt`, `Compile.txt`, `Changelog.txt` — AM 공식 문서.
 
 ### 5.6 Attract-Mode 본체 업그레이드
@@ -376,9 +398,19 @@ powershell -ExecutionPolicy Bypass -File tools\validate.ps1
 
 romlist 필드 수·중복·BOM, Emulator/layout/romlist 상호 참조, executable·rompath·artwork 경로,
 활성 항목의 실제 롬 존재, `.tag` 대조까지 한 번에 점검한다.
-`FAIL`은 반드시 고치고, `WARN`은 대부분 미설치 자산이나 비활성 항목이라 정상이다.
 
-`.gitignore` 대상(롬·아트웍)은 장비마다 다르므로 **WARN 개수는 장비마다 다른 게 정상**이다.
+결과는 성격에 따라 **네 단계**로 나온다. 이 구분이 핵심이다.
+
+| 단계 | 뜻 | 기대값 |
+|---|---|---|
+| `FAIL` | 저장소가 깨진 상태. 종료 코드 1 | **0** |
+| `WARN` | 저장소 차원의 문제. **모든 장비에서 똑같이 나온다** | **0** |
+| `환경` | 롬·아트웍·게임 미설치. `.gitignore` 대상이라 장비마다 다르다 | 0이 아닌 게 정상 |
+| `참고` | 알고 있고 그대로 두기로 한 것(비활성 `#` 행이 참조하는 미정의 에뮬레이터 등) | — |
+
+**`WARN`이 0이 아니면 고쳐야 한다.** 예전에는 미설치 자산까지 전부 WARN 이라
+59건이 상수처럼 깔려 새 경고가 묻혔다. `-Quiet` 는 `환경`·`참고`를 숨기고
+`WARN`/`FAIL`만 보여주므로 커밋 전 점검에 쓰기 좋다.
 
 ### 7.2 진단 순서
 
@@ -389,6 +421,32 @@ romlist 필드 수·중복·BOM, Emulator/layout/romlist 상호 참조, executab
 4. 게임이 실행 안 됨 → `emulators/<Emulator>.cfg`의 `executable`/`rompath`/`romext`와 실제 파일 대조.
 5. 아트웍이 안 나옴 → `artwork` 경로(AM 루트 기준)와 파일명(= romlist Name)이 일치하는지 확인.
 
+
+### 7.3 런타임 파일 초기화
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1            # 보기만 (기본)
+powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1 -Config -Clean
+powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1 -All -Force
+```
+
+**이 저장소는 런타임 상태 파일을 일부러 추적한다.** 입력 설정이 꼬이거나 에뮬레이터가
+이상해졌을 때 "커밋된 정상 상태"로 되돌리기 위해서다. 대신 게임을 한 번 실행하는 것만으로
+`git status`가 지저분해지므로, 이 스크립트로 한 번에 정리한다.
+
+파일을 세 갈래로 나눠 다룬다. **세이브를 설정과 섞지 않는 것이 핵심이다.**
+
+| 갈래 | 대상 | 되돌리면 |
+|---|---|---|
+| **설정** | `attract.am`, `Mame\cfg`(게임별 입력·딥스위치), `Mame\ui.ini`, `RetroArch\retroarch.cfg`·`content_*.lpl`, `PCSX2\inis`, `M2\CFG`, `Project64\Config`, `TeknoParrot\UserProfiles`, `Demul\*.ini`, `PPSSPP\...\SYSTEM` | 잃는 것 없음 |
+| **세이브** | `Mame\{nvram,memcard,diff,sta}`, `PCSX2\{memcards,sstates}`, `ePSXe\{memcards,sstates}`, `Project64\Save`, `SuperModel\{NVRAM,Saves}`, `Demul\nvram`, `RetroArch\{saves,states}` | **게임 진행이 사라진다** |
+| **산출물** | `last_run.log`, `script.nv`, `stats\`, `Mame\hiscore`, `Mame\data\history.db`, `Mame\cheat\output.*`, `RetroArch\screenshots` | 미추적이라 삭제 |
+
+- 인자 없이 실행하면 **아무것도 건드리지 않고 목록만** 보여준다.
+- 평소 정리는 `-Config -Clean`이면 충분하다. `-Saves`는 게임 진행이 날아가니 의식적으로 붙인다.
+- `-Force`를 빼면 실행 전에 한 번 물어본다.
+- 되돌리기는 `git checkout --`이므로 **커밋되지 않은 의도적 수정도 함께 날아간다.**
+  런타임 파일을 일부러 고쳤다면 먼저 커밋할 것.
 ## 8. 관련 문서
 
 | 문서 | 내용 |
