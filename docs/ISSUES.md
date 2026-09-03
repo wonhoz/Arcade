@@ -160,15 +160,43 @@ cps3 6개(레드 어스, 스파3 3부작, 조조 2종)는 어떤 필터에도 �
 `scraper/@/overview/`에 `taito type x.txt`, `teknoparrot.txt` 추가.
 display 21개 전부 설명문을 갖췄다(검증 스크립트가 상시 확인).
 
-### - [ ] 8. 미추적 대용량 파일 389MB 방치
+### - [x] 8. 미추적 대용량 파일 389MB — **처리 완료 (지우지 않고 정리)**
+
+`mame64 - 복사본 (2).exe/.sym` 389MB 가 `git status` 에 계속 떠 있었다.
+지우기 전에 정체부터 확인했더니 **쓰레기가 아니라 의도적인 폴백**이었다.
+
+| 파일 | MAME 버전 | 날짜 |
+|---|---|---|
+| `mame64.exe` | **0.246** | 2022-07 |
+| `mame64 - 복사본 (2).exe` | **0.220** | 2020-04 |
+
+MAME 롬셋은 버전에 민감해서 신버전에서 안 되는 롬이 구버전에서 되는 경우가 있다.
+실제로 그런 것이 하나 있었다.
 
 ```
-emulators/Mame/mame64 - 복사본 (2).exe   253.9MB
-emulators/Mame/mame64 - 복사본 (2).sym   135.5MB
+                0.246                          0.220
+raycris   1 romsets found, 0 were OK.    1 romsets found, 1 were OK.
 ```
-`.gitignore`가 `mame64.exe`/`mame64.sym`만 막고 있어 **복사본은 `git status`에 계속 뜬다.**
-세션마다 `git status`에 노이즈로 뜨는 것이 확인된다.
-→ 삭제하거나 `.gitignore`에 `emulators/[Mm]ame/mame64*` 패턴 추가. (18번과 함께 처리 권장)
+
+`raycris`(레이크라이시스)는 9번에서 "CHD 만 있고 프로그램 롬 없음"으로 비활성 처리했는데,
+**0.220 에서는 정상 검증된다.** 나머지 5개(secretag, simpsons4pa, cleopatr, elandore, ptblank)는
+양쪽 다 romset not found 라 진짜 없는 롬이다.
+
+**조치** — 삭제하지 않고 정체가 드러나는 이름으로 바꾸고 무시 규칙을 넓혔다.
+
+```
+mame64 - 복사본 (2).exe  ->  mame64-0.220.exe
+mame64 - 복사본 (2).sym  ->  mame64-0.220.sym
+.gitignore : emulators/Mame/mame64.exe -> emulators/Mame/mame64*.exe (sym 도 동일)
+```
+
+MAME 루트에 그대로 두었으므로 기존 `mame.ini`·`hash`·`roms` 를 공유해 바로 실행된다
+(rename 후 `-version` 확인 완료). `git status` 노이즈도 사라졌다.
+
+> **raycris 를 되살리려면** `emulators/MAME 0.220.cfg` 를 만들어 executable 을
+> `mame64-0.220` 으로 두고 romlist 의 Emulator 를 바꾸면 된다. 다만 이 바이너리는
+> `.gitignore` 대상이라 **다른 장비에는 없을 수 있고**, 없는 장비에서는 실행이 깨진다.
+> 그래서 지금은 비활성 유지하고 선택지만 남겨둔다.
 
 ### - [x] 9. 활성 목록인데 실제 롬이 없는 항목 — **처리 완료**
 
