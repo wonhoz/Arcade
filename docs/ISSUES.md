@@ -1,12 +1,12 @@
 # 개선 과제 / 알려진 문제 (심각도순)
 
-최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
+최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 시각 자산 재스크리닝 2026-09-03 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
 근거: `attract.cfg`, `emulators/*.cfg`, `romlists/*`, `last_run.log`, `mame64 -verifyroms`, git 메타데이터 실측
 
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1` 로 자동화되어 있다.
 
-**진행 현황** — 처리 **19건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 2건 · 개선 포인트 8건
+**진행 현황** — 처리 **25건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
 
 > **보류 (우선순위 낮춤, 별도 지시 전까지 대기)** — S1 공개 저장소의 BIOS·롬, S2 `.git` 1.2GB.
 > 둘 다 히스토리 재작성이 필요하고 되돌리기 어렵다.
@@ -554,6 +554,66 @@ git branch Compact archive/Compact      # 되살리기
 S1·S2의 히스토리 재작성 대상이 **22개 → 7개**로 줄어 작업량이 크게 준다.
 ---
 
+
+## S5 — 시각 자산 재스크리닝 (2026-09-03)
+
+> 텍스트 설정만이 아니라 **화면에 실제로 뜨는 그림·영상**까지 훑어서 나온 항목들이다.
+> 대부분 오류를 내지 않고 조용히 빈 자리로만 나타나던 것이라 로그로는 잡히지 않았다.
+
+### - [x] 21. `tools/reset-runtime.ps1`이 git 추적 중인 파일을 지웠다 — **처리 완료**
+
+`-Clean` 이 `emulators/Mame/cheat/output.{json,xml}` 을 산출물로 보고 지웠다. 추적 중인 파일이라
+실행하면 그대로 삭제 diff 가 났다. 삭제 후보를 `git ls-files` 로 걸러 추적 중이면 건너뛰게 고쳤다.
+
+### - [x] 22. 디스플레이 마스코트 3종 누락 — **처리 완료 (21/21)**
+
+`NEVATO` · `Console Box` 레이아웃은 `layouts/<레이아웃>/character/<디스플레이>.png` 를 화면 우측에
+띄운다. `select_character = "By Display"` 라 emulator cfg 의 `artwork character` 와는 무관하다.
+TeknoParrot · Taito Type X · MAME Adult 세 개가 없어 그 자리가 빈 채로 보였다.
+저장소 안의 flyer 를 480×760 으로 채움-크롭해 채웠고, **`validate.ps1`에 누락 검사를 추가**했다.
+
+### - [x] 23. PSP 박스 이미지가 17건 전부 안 떴다 — **처리 완료**
+
+`Sony PlayStation Portable.cfg` 의 `artwork cartridge` 가 `menu-art\...\cartridge` 만 봤는데
+그 폴더가 비어 있었다. 실제 박스 이미지는 `flyer` 에 17개 전부 있었다.
+`cartridge;flyer` 폴백을 추가해 17/17 표시된다.
+
+### - [x] 24. NESiCAxLive 4건이 flyer 를 못 찾았다 — **처리 완료**
+
+`ddtodj` · `knightsj` · `kodj` · `punisherj`. AM 은 `Name → CloneOf → AltRomname → AltTitle`
+순으로 아트웍을 찾는데 `CloneOf` 가 비어 있었다. 부모(`ddtod`·`knights`·`kod`·`punisher`)를
+채워 부모 flyer 를 물려받게 했다. 12번 항목과 같은 원인이다.
+
+### - [x] 25. 시계 스크립트의 죽은 `am.png` 참조 — **처리 완료**
+
+`Mega-Display(-Advanced)/scripts/clock.nut` 이 존재하지 않는 `am.png` 로 이미지 객체를 만들었다.
+좌표도 시계(`flx*0.865~0.915`)와 무관한 화면 좌중앙(`flx*0.513`)이었고, 무엇보다 시계가
+**24시간 표기**라 AM/PM 표시 자체가 성립하지 않았다. 지우고 이유를 주석으로 남겼다.
+구버전 `Mega-Display` 에는 3번 항목에서 고친 `clock.msg` 예외도 그대로 남아 있어 함께 정리했다.
+
+### - [x] 26. `Taito Type X The BishiBashi.cfg` 의 `rompath` 가 경로를 두 번 겹쳤다 — **처리 완료**
+
+`rompath` 는 **executable 디렉터리 기준**이다. `executable` 이 이미
+`emulators\Taito Type X\The BishiBashi\` 안에 있는데 `rompath` 도
+`emulators\Taito Type X\` 라서 그 둘이 이어 붙었다. `.` 로 고쳤다.
+
+고치고 나니 이번엔 롬 존재 검사가 FAIL 을 냈다 — 이쪽이 진짜 원인이었다.
+이 정의는 `args` 가 비어 있는 **런처형**(executable 이 게임을 고정)이라 AM 이 롬 경로를 넘기지
+않는다. `args` 에 치환 토큰이 없으면 롬 존재를 따지지 않도록 `validate.ps1` 을 고쳤다.
+
+### - [~] 27. ~~시작 화면 상단의 marquee 와 `[Overview]` 가 좌표가 같다~~ — **오진, 재분류**
+
+`Mega-Display Advanced` 에서 두 객체가 정확히 같은 자리(`flx*0.19, fly*0.012`)에 있다.
+겹침 사고로 봤으나 실측해 보니 **서로 배타적인 레이어**였다.
+
+| | marquee (`snap.nut`) | `[Overview]` (`arcade_name.nut`) |
+|---|---|---|
+| 디스플레이 21개 | `menu-art\marquee` 에 이미지 **0/21** → 안 그려짐 | `scraper\@\overview\*.txt` **21개** → 이게 보임 |
+| 종료(exit) 항목 | `menu-art\marquee\exit.png` → 이게 보임 | `scraper\@exit\overview` 비어 있음 → 빈 문자열 |
+
+`layout.nut` 의 `do_nut` 순서가 `snap`(26행) → `arcade_name`(32행) 이라 텍스트가 항상 위에 온다.
+**둘 중 하나를 지우거나 옮기면 안 된다.** 전제가 깨지는 경우(디스플레이용 marquee 를 넣거나
+`@exit` 에 overview 를 쓰는 것)만 조심하면 되고, 그 내용을 `snap.nut` 주석에 남겼다.
 ## 개선 제안
 
 ### - [x] A. 무결성 검증 스크립트 — **완료: `tools/validate.ps1`**
