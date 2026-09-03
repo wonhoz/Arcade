@@ -132,6 +132,17 @@ foreach ($d in $displays) {
     if (-not (Test-Path -LiteralPath $overview)) {
         Add-Warn 'overview' "[$($d.Name)] 디스플레이 메뉴 설명문 없음 -> scraper\@\overview\$($d.Name.ToLower()).txt"
     }
+
+    # 디스플레이 마스코트
+    #   NEVATO / Console Box 는 select_character = "By Display" 일 때
+    #   character\[DisplayName].png 를 그린다. 없으면 화면 우측이 조용히 빈다
+    #   (오류가 안 나서 눈치채기 어렵다). 480x760 알파 PNG 가 규격이다.
+    if ($d.Layout -eq 'NEVATO' -or $d.Layout -eq 'Console Box') {
+        $mascot = Join-Path $Root ("layouts\{0}\character\{1}.png" -f $d.Layout, $d.Name)
+        if (-not (Test-Path -LiteralPath $mascot)) {
+            Add-Warn 'mascot' "[$($d.Name)] 마스코트 없음 -> layouts\$($d.Layout)\character\$($d.Name).png (화면 우측이 빈 채로 보임)"
+        }
+    }
 }
 
 # layouts\ 안에 .nut 없는 폴더 (레이아웃 선택 목록에 깨진 항목으로 노출됨)
