@@ -44,8 +44,17 @@ git checkout bartop        # 장비에 맞는 브랜치 선택 (아래 표 참�
 | `main` | 공통 베이스 (직접 실행용이 아님) |
 | `develop` | 공통 작업 브랜치 — 모든 장비에 적용될 변경은 여기서 (직접 실행용이 아님) |
 | `bartop` | 바탑 캐비닛 |
-| `desktop`, `desktop-ASUS-TUF`, `desktop-MSI-Sword`, `desktop-MSI-Sword-DriveWheel`, `desktop-keyboard` | 데스크톱 각 사양 |
-| `Compact` | 50GB 축소판 |
+| `desktop`, `desktop-ASUS-TUF`, `desktop-MSI-Sword`, `desktop-MSI-Sword-DriveWheel` | 데스크톱 각 사양 |
+
+> 2026-09-03에 2022년부터 멈춰 있던 브랜치 15개를 정리했습니다.
+> `Compact`(50GB 축소판), `desktop-keyboard`, `desktop-keyboard-git` 도 여기 포함됩니다.
+> **전부 `archive/*` 태그로 남아 있어 언제든 되살릴 수 있습니다.**
+>
+> ```powershell
+> git tag -l 'archive/*'                  # 아카이브 목록
+> git tag -n20 archive/Compact            # 그 브랜치가 무엇이었는지
+> git branch Compact archive/Compact      # 되살리기
+> ```
 
 ### 2. 에뮬레이터 실행 파일 / 코어
 

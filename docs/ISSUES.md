@@ -6,13 +6,16 @@
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1` 로 자동화되어 있다.
 
-**진행 현황** — 처리 16건 / 미해결 7건 · 재분류 1건 · 개선 포인트 8건
+**진행 현황** — 처리 19건 / 미해결 4건 · 재분류 1건 · 개선 포인트 8건
+
+> **보류 (우선순위 낮춤, 별도 지시 전까지 대기)** — S1 공개 저장소의 BIOS·롬, S2 `.git` 1.2GB.
+> 둘 다 히스토리 재작성이 필요하고 되돌리기 어렵다.
 
 ---
 
-## S1 — 치명적 (법적 위험)
+## S1 — 치명적 (법적 위험) · ⏸ 보류
 
-### - [ ] 1. 공개 저장소에 상용 BIOS·게임 롬이 커밋되어 있음
+### - [~] 1. 공개 저장소에 상용 BIOS·게임 롬이 커밋되어 있음 — ⏸ **보류**
 
 원격 `https://github.com/wonhoz/Arcade`는 **공개(public)** 저장소인데 다음이 추적되고 있다.
 
@@ -33,15 +36,15 @@ BIOS와 게임 롬은 재배포가 금지된 저작물이다. DMCA 테이크다�
 **조치 (권장 순서)**
 1. 즉시 저장소를 **private로 전환** (임시 차단).
 2. `.gitignore`에 `emulators/PCSX2/bios/`, `emulators/ePSXe/bios/`, `emulators/Mednafen/firmware/`, `emulators/Mednafen/Roms/` 추가.
-3. `git filter-repo`로 히스토리에서 제거 후 force push. — 25개 브랜치 전부를 재작성하므로
+3. `git filter-repo`로 히스토리에서 제거 후 force push. — 브랜치 7개를 재작성하므로(20번에서 22 → 7로 정리)
    **작업 전 전체 백업 필수**이며, 부수효과로 2번(저장소 크기) 문제도 크게 완화된다.
 4. BIOS/롬은 저장소 밖(외장/NAS)에 두고 배포 절차로 복사 — [`ASSETS.md`](ASSETS.md), [`../README.md`](../README.md) 참고.
 
 ---
 
-## S2 — 높음
+## S2 — 높음 · ⏸ 보류 (2번만)
 
-### - [ ] 2. 저장소가 1.2GB, 에뮬레이터 바이너리 전량이 git에 들어 있음
+### - [~] 2. 저장소가 1.2GB, 에뮬레이터 바이너리 전량이 git에 들어 있음 — ⏸ **보류**
 
 - `.git` **1.2GB** / 추적 파일 **23,711개 · 1.71GB** (2026-09-03 실측)
 - 히스토리 상 가장 큰 blob:
@@ -488,25 +491,51 @@ RetroArch 내장 스크린샷(F8)으로 한글 패치가 적용된 화면 확인
 > 검증 도중 `patched/avsp.zip`이 FBNeo 롬셋 불일치 에러를 냈으나, `avsp`는 `Capcom.txt`에서
 > **MAME**로 실행되는 항목이라 FBNeo 경로와 무관하다. 문제 아님.
 
-### - [ ] 20. 정지한 원격 브랜치 16개
+### - [x] 20. 정지한 원격 브랜치 정리 — **처리 완료**
 
-원격 브랜치 25개 중 **16개가 2022년 이후 갱신이 없다.** 그중 절반은 이미 `main`에 병합돼 있다.
+원격 브랜치 **22개 중 15개가 2022년 이후 갱신이 없었다.** 전부 정리해 **7개**만 남겼다.
 
-**병합 완료 — 삭제해도 내용 손실 없음 (8개)**
-`NESiCAxLive`, `develop`, `develop-layouts`, `develop-replace`, `malio`, `mame`, `retroarch`, `update`
+```
+남은 브랜치   main  develop  bartop  desktop
+              desktop-ASUS-TUF  desktop-MSI-Sword  desktop-MSI-Sword-DriveWheel
+```
 
-**미병합 — 삭제 전 태그 보존 권장 (8개)**
-`Compact`(50GB 축소판), `bartop-NESiCAxLive`, `desktop-keyboard`, `desktop-keyboard-git`,
-`develop-prev`, `fbneo`, `mame-failed`, `update-failed`
-— 이름에서 보이듯 `*-failed` 둘은 실패한 시도의 기록이다.
+**병합 완료 — 내용이 이미 `main`에 있어 그냥 삭제 (6개)**
+`NESiCAxLive`, `develop-layouts`, `malio`, `mame`, `retroarch`, `update`
 
-**현재 살아 있는 브랜치 (9개)**
-`main`, `bartop`, `desktop`, `desktop-ASUS-TUF`, `desktop-MSI-Sword`,
-`desktop-MSI-Sword-DriveWheel`, `retroarch-update` 등
+**미병합 — `archive/<이름>` 태그로 보존 후 삭제 (9개)**
 
-→ 병합 완료분은 삭제, 미병합분은 `git tag archive/<이름> <브랜치>` 후 삭제.
-브랜치 수가 줄면 S1의 히스토리 재작성도 훨씬 수월해진다.
+| 브랜치 | 고유 커밋 | 비고 |
+|---|---|---|
+| `bartop-NESiCAxLive` | 66 | NESiCAxLive 전용 바탑 구성 |
+| `desktop-keyboard-git` | 14 | 키보드 조작 데스크톱 |
+| `desktop-keyboard` | 11 | 〃 |
+| `develop-prev` | 2 | 이전 develop |
+| `fbneo` | 2 | |
+| `update-failed` | 2 | 실패한 시도의 기록 |
+| `Compact` | 1 | 50GB 축소판 (디렉터리 구조가 다름 — E6 참고) |
+| `mame-failed` | 1 | 실패한 시도의 기록 |
+| `retroarch-update` | 1 | 2024-07, 유일하게 2022년이 아니었다 |
 
+**안전 절차** — 순서가 중요하다.
+
+1. 미병합 9개에 `archive/*` 태그 생성 (고유 커밋 목록을 태그 메시지에 기록)
+2. **태그를 먼저 push** — 이걸 안 하면 브랜치 삭제 순간 원격에서 커밋이 도달 불가가 된다
+3. 삭제 대상 15개가 *전부* "main 에 포함" 또는 "archive 태그 = 동일 커밋"인지 기계적으로 확인 (15/15)
+4. 그다음 브랜치 삭제 → `git fetch --prune`
+
+**되살리기**
+
+```bash
+git tag -l 'archive/*'                  # 아카이브 목록
+git tag -n20 archive/Compact            # 그 브랜치가 무엇이었는지 (고유 커밋 포함)
+git branch Compact archive/Compact      # 되살리기
+```
+
+> `Compact` · `desktop-keyboard` · `desktop-keyboard-git` 는 [`../README.md`](../README.md)의
+> 장비 목록에 있던 브랜치다. 지웠지만 태그로 온전히 남아 있으니 필요하면 위 명령으로 복구한다.
+
+S1·S2의 히스토리 재작성 대상이 **22개 → 7개**로 줄어 작업량이 크게 준다.
 ---
 
 ## 개선 제안

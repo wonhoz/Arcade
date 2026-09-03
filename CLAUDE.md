@@ -25,13 +25,20 @@
 
 ```
 main ──┬─> develop                 ★ 공통 작업 브랜치 (여기서 작업 → main 병합 → 각 장비로 전파)
-       ├─> bartop                  (바탑 캐비닛 = 실제 구동 장비)
-       ├─> develop-bartop          (bartop 기반 작업분. develop 으로 체리픽 완료)
-       ├─> Compact                 (50GB 축소판)
-       ├─> desktop / desktop-ASUS-TUF / desktop-MSI-Sword /
-       │   desktop-MSI-Sword-DriveWheel / desktop-keyboard(-git)
-       ├─> NESiCAxLive / bartop-NESiCAxLive
-       └─> update*, mame*, retroarch*, fbneo, malio  (작업/실험용)
+       ├─> bartop                  바탑 캐비닛 (실제 구동 장비)
+       ├─> desktop
+       ├─> desktop-ASUS-TUF
+       ├─> desktop-MSI-Sword
+       └─> desktop-MSI-Sword-DriveWheel
+```
+
+**브랜치는 7개뿐이다.** 2026-09-03에 2022년에 멈춰 있던 15개를 정리했다(20번 참고).
+지워진 것은 전부 `archive/*` 태그로 남아 있으므로 언제든 되살릴 수 있다.
+
+```bash
+git tag -l 'archive/*'                       # 아카이브 목록
+git tag -n20 archive/Compact                 # 그 브랜치가 뭐였는지
+git branch Compact archive/Compact           # 되살리기
 ```
 
 - **모든 장비에 적용될 변경은 `develop`(= `main` 기반)에서 한다.**
