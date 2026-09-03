@@ -31,11 +31,20 @@ if (-not (Test-Path -LiteralPath (Join-Path $Root 'attract.cfg'))) {
 Set-Location -LiteralPath $Root
 
 $BOM = [char]0xFEFF
+# FAIL 저장소가 깨진 상태. 반드시 고쳐야 한다.
+# WARN 저장소 차원의 문제. 모든 장비에서 똑같이 나온다. 기대값은 0.
+# 환경 롬·아트웍·게임 미설치처럼 장비마다 다른 것. 0 이 아닌 게 정상이다.
+# 참고 알고 있고 그대로 두기로 한 것(비활성 항목이 참조하는 미정의 에뮬레이터 등).
 $script:Fails = New-Object System.Collections.ArrayList
 $script:Warns = New-Object System.Collections.ArrayList
+$script:Envs  = New-Object System.Collections.ArrayList
+$script:Notes = New-Object System.Collections.ArrayList
+$script:ParkedEmu = @{}
 
 function Add-Fail([string]$Area, [string]$Message) { [void]$script:Fails.Add([pscustomobject]@{ Area = $Area; Message = $Message }) }
 function Add-Warn([string]$Area, [string]$Message) { [void]$script:Warns.Add([pscustomobject]@{ Area = $Area; Message = $Message }) }
+function Add-Env( [string]$Area, [string]$Message) { [void]$script:Envs.Add( [pscustomobject]@{ Area = $Area; Message = $Message }) }
+function Add-Note([string]$Message)                { [void]$script:Notes.Add($Message) }
 
 function Test-Bom([string]$Path) {
     $fs = [System.IO.File]::OpenRead($Path)
@@ -144,7 +153,7 @@ foreach ($name in ($emulators.Keys | Sort-Object)) {
         }
         if (-not $found) {
             if ($referenced.ContainsKey($name)) { Add-Fail 'emulator' "[$name] executable 없음 -> $exe" }
-            else { Add-Warn 'emulator' "[$name] executable 없음 -> $exe (참조하는 romlist 가 없어 실행에는 영향 없음)" }
+            else { Add-Env 'emulator' "[$name] executable 없음 -> $exe (참조하는 romlist 가 없어 실행에는 영향 없음)" }
         }
         $base = Split-Path $exe -Parent
     }
@@ -152,7 +161,7 @@ foreach ($name in ($emulators.Keys | Sort-Object)) {
     if ($cfg['rompath']) {
         $romDir = Join-Path $base $cfg['rompath']
         if (-not (Test-Path -LiteralPath $romDir)) {
-            Add-Warn 'emulator' "[$name] rompath 없음 -> $romDir (롬 미설치이거나 예약 정의)"
+            Add-Env 'emulator' "[$name] rompath 없음 -> $romDir (롬 미설치이거나 예약 정의)"
         }
     }
     # artwork 경로는 AM 루트 기준
@@ -164,7 +173,8 @@ foreach ($name in ($emulators.Keys | Sort-Object)) {
             $p = $p.Trim()
             if (-not $p) { continue }
             if (-not (Test-Path -LiteralPath $p)) {
-                Add-Warn 'artwork' "[$name] $label 아트웍 경로 없음 -> $p"
+                # menu-art\ 는 .gitignore 대상이라 장비마다 보유 범위가 다르다
+                Add-Env 'artwork' "[$name] $label 아트웍 경로 없음 -> $p"
             }
         }
     }
@@ -216,7 +226,9 @@ foreach ($rf in (Get-ChildItem -LiteralPath (Join-Path $Root 'romlists') -Filter
 
         if (-not $emulators.ContainsKey($emuName)) {
             if ($disabled) {
-                Add-Warn 'romlist' "$listName : $lineNo 행(비활성) 에뮬레이터 '$emuName' 정의 없음"
+                # 비활성(#) 행이 없는 에뮬레이터를 가리키는 것은 정의상 무해하다.
+                # 한 건씩 경고하면 수십 건이 깔려 진짜 신호가 묻히므로 집계만 한다.
+                $script:ParkedEmu[$emuName] = 1 + ($script:ParkedEmu[$emuName] -as [int])
             } else {
                 Add-Fail 'romlist' "$listName : $lineNo 행 에뮬레이터 '$emuName' 정의 없음"
             }
@@ -291,13 +303,36 @@ foreach ($name in ($emulators.Keys | Sort-Object)) {
     }
 }
 
+# 비활성 행이 참조하는 미정의 에뮬레이터 집계
+if ($script:ParkedEmu.Count -gt 0) {
+    $rows  = ($script:ParkedEmu.Values | Measure-Object -Sum).Sum
+    $names = ($script:ParkedEmu.Keys | Sort-Object) -join ', '
+    Add-Note ("비활성(#) 행 {0}건이 정의 없는 에뮬레이터 {1}종을 참조합니다 (비활성이라 무해)" -f $rows, $script:ParkedEmu.Count)
+    Add-Note ("  -> $names")
+}
+
 # ---------------------------------------------------------------- 결과
 Write-Host ("활성 게임 항목 {0}개" -f $totalActive)
 Write-Host ("=" * 72)
 
-if (-not $Quiet -and $script:Warns.Count -gt 0) {
+# 장비마다 다른 것 — 0 이 아닌 게 정상
+if (-not $Quiet -and $script:Envs.Count -gt 0) {
     Write-Host ""
-    Write-Host ("WARN  {0}건" -f $script:Warns.Count) -ForegroundColor Yellow
+    Write-Host ("환경  {0}건   (롬·아트웍·게임 미설치. 장비마다 다르며 저장소 문제가 아님)" -f $script:Envs.Count) -ForegroundColor DarkGray
+    foreach ($e in $script:Envs) { Write-Host ("  [{0}] {1}" -f $e.Area, $e.Message) -ForegroundColor DarkGray }
+}
+
+# 알고 있고 그대로 두기로 한 것
+if (-not $Quiet -and $script:Notes.Count -gt 0) {
+    Write-Host ""
+    Write-Host "참고" -ForegroundColor DarkCyan
+    foreach ($n in $script:Notes) { Write-Host ("  $n") -ForegroundColor DarkCyan }
+}
+
+# 저장소 차원의 문제 — 기대값 0
+if ($script:Warns.Count -gt 0) {
+    Write-Host ""
+    Write-Host ("WARN  {0}건   (저장소 차원. 모든 장비에서 동일하게 나오며 기대값은 0)" -f $script:Warns.Count) -ForegroundColor Yellow
     foreach ($w in $script:Warns) { Write-Host ("  [{0}] {1}" -f $w.Area, $w.Message) -ForegroundColor DarkYellow }
 }
 
@@ -310,6 +345,7 @@ if ($script:Fails.Count -gt 0) {
 }
 
 Write-Host ""
-Write-Host "오류 없음" -ForegroundColor Green
+if ($script:Warns.Count -eq 0) { Write-Host "오류 없음" -ForegroundColor Green }
+else { Write-Host ("오류 없음 (WARN {0}건은 확인 필요)" -f $script:Warns.Count) -ForegroundColor Green }
 Write-Host ""
 exit 0

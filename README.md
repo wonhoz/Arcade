@@ -8,7 +8,7 @@ Attract-Mode 프론트엔드와 에뮬레이터, 게임 목록·아트웍 설정
 |---|---|
 | 프론트엔드 | Attract-Mode v2.7.0 (Windows / SFML 2.5.1) |
 | 디스플레이 | 21개 (MAME, Capcom, SNK Neo Geo, SEGA MODEL 2/3, NAOMI, Atomiswave, Taito Type X, TeknoParrot, Zinc, NESiCAxLive, PS1/PS2/PSP, N64, GameCube, Wii, Wii U, Saturn, Dreamcast, MAME Adult) |
-| 에뮬레이터 정의 | 37개 |
+| 에뮬레이터 정의 | 35개 |
 | 게임 항목 | 활성 1,079개 (비활성 포함 1,624개) |
 | UI 언어 | 한국어 |
 
@@ -44,8 +44,17 @@ git checkout bartop        # 장비에 맞는 브랜치 선택 (아래 표 참�
 | `main` | 공통 베이스 (직접 실행용이 아님) |
 | `develop` | 공통 작업 브랜치 — 모든 장비에 적용될 변경은 여기서 (직접 실행용이 아님) |
 | `bartop` | 바탑 캐비닛 |
-| `desktop`, `desktop-ASUS-TUF`, `desktop-MSI-Sword`, `desktop-MSI-Sword-DriveWheel`, `desktop-keyboard` | 데스크톱 각 사양 |
-| `Compact` | 50GB 축소판 |
+| `desktop`, `desktop-ASUS-TUF`, `desktop-MSI-Sword`, `desktop-MSI-Sword-DriveWheel` | 데스크톱 각 사양 |
+
+> 2026-09-03에 2022년부터 멈춰 있던 브랜치 15개를 정리했습니다.
+> `Compact`(50GB 축소판), `desktop-keyboard`, `desktop-keyboard-git` 도 여기 포함됩니다.
+> **전부 `archive/*` 태그로 남아 있어 언제든 되살릴 수 있습니다.**
+>
+> ```powershell
+> git tag -l 'archive/*'                  # 아카이브 목록
+> git tag -n20 archive/Compact            # 그 브랜치가 무엇이었는지
+> git branch Compact archive/Compact      # 되살리기
+> ```
 
 ### 2. 에뮬레이터 실행 파일 / 코어
 
@@ -99,8 +108,17 @@ menu-art\                                      아트웍 (약 6.5GB, 없어도 �
 powershell -ExecutionPolicy Bypass -File tools\validate.ps1
 ```
 
-설정과 실제 파일이 어긋난 곳을 잡아줍니다. `FAIL`이 0이면 실행 가능한 상태입니다
-(`WARN`은 대부분 미설치 자산·비활성 항목이라 정상입니다).
+설정과 실제 파일이 어긋난 곳을 잡아줍니다. 결과는 네 단계로 나옵니다.
+
+| 단계 | 뜻 |
+|---|---|
+| `FAIL` | 저장소가 깨진 상태 — 반드시 고쳐야 합니다 |
+| `WARN` | 저장소 차원의 문제 — 모든 장비에서 똑같이 나오며 기대값은 0입니다 |
+| `환경` | 롬·아트웍·게임 미설치 — **장비마다 다르며 정상입니다** |
+| `참고` | 알고 있고 그대로 두기로 한 것 |
+
+`FAIL`과 `WARN`이 0이면 실행 가능한 상태입니다.
+`환경`은 아직 옮기지 않은 롬·아트웍을 알려주므로 설치 중에는 체크리스트로 쓸 수 있습니다.
 
 ### 6. 실행
 
@@ -143,5 +161,8 @@ attract.bat             실행 (이걸 쓰세요)
 2. 장비 전용 변경(레이아웃, 입력맵, 롬 구성)은 해당 브랜치에만
 3. 게임을 추가하거나 설정을 고쳤으면 `tools\validate.ps1` 실행
 4. 구조·규칙이 바뀌었으면 [`CLAUDE.md`](CLAUDE.md)와 [`docs/ISSUES.md`](docs/ISSUES.md)를 같은 커밋에서 갱신
+
+게임을 실행하면 입력 설정·세이브 같은 런타임 파일이 바뀌어 `git status` 가 지저분해집니다.
+`tools\reset-runtime.ps1` 로 한 번에 정리할 수 있습니다(인자 없이 실행하면 목록만 보여줍니다).
 
 자세한 절차는 [`CLAUDE.md`](CLAUDE.md)의 "자주 하는 작업 레시피"에 있습니다.
