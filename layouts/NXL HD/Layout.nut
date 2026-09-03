@@ -880,8 +880,9 @@ if (my_config["aspect_ratio"] == "No")
 
 	// add game title to top
 	gridc.child_t = fe.add_text( "[Title]", 0, fe.layout.height / -72 , fe.layout.width ,fe.layout.height / 16  );
-	gridc.child_t.font = "futureforces";
+	gridc.child_t.font = "SUIT-Regular";	// [Title] = 한국어 게임명. futureforces 는 한글 글리프 없음
 	gridc.child_t.charsize=30;
+	gridc.child_t.style = Style.Bold;	// SUIT 계열은 Regular 밖에 없어 제목이 얇게 나온다 - 합성 볼드로 보정
 	gridc.child_t.align=Align.BottomCentre;
 
 	// add top layout overlay
@@ -946,7 +947,7 @@ if (my_config["aspect_ratio"] == "No")
 
 	// add the filter name text 
 	local sorting = fe.add_text( "[FilterName]", 0, fe.layout.height / 1.618, fe.layout.width, fe.layout.height / 36 )
-	sorting.font = "Squares Bold Free";
+	sorting.font = "Squares Bold Free";	// [FilterName] - attract.cfg 의 필터명(현재 All/Favourites). 필터명을 한글로 바꾸면 여기도 SUIT-Regular 로 바꿀 것
 	sorting.align = Align.Left
 
 	//add the game entry info 
@@ -961,7 +962,7 @@ if (my_config["aspect_ratio"] == "No")
 
 	// add the genre to the infobox
 	gridc.wbts_t = fadeitems2.add_text( "[!genre]", fe.layout.width / 2.306 - 30, fe.layout.height / 2.938, fe.layout.width ,fe.layout.height / 32.7  );
-	gridc.wbts_t.font = "Squares Bold Free";
+	gridc.wbts_t.font = "SUIT-Regular";	// [!genre] = genre() 가 "액션/아케이드/격투" 로 변환. Squares 는 한글 글리프 없음
 	
 	// add the year to the infobox
 	gridc.wbfs_t = fadeitems2.add_text( "[Year]", fe.layout.width / 2.306 - 30, fe.layout.height / 2.482, fe.layout.width ,fe.layout.height / 32.7  );
@@ -969,7 +970,7 @@ if (my_config["aspect_ratio"] == "No")
 
 	// add the game rotation to the infobox
 	gridc.wbcs_t = fadeitems2.add_text( "[Rotation]", fe.layout.width / 2.306 - 30, fe.layout.height / 2.087, fe.layout.width ,fe.layout.height / 32.7  );
-	gridc.wbcs_t.font = "Squares Bold Free";
+	gridc.wbcs_t.font = "SUIT-Regular";	// [Rotation] = 이 저장소에선 언어(한국어/영어/일본어). Squares 는 한글 글리프 없음
 
 	// add the button controls picture to the infobox
 	gridc.bt_t = fadeitems2.add_image("[!buttons]", fe.layout.width / 1.122 - 30, fe.layout.height / 1.92, fe.layout.height / 7.2, fe.layout.height / 7.2);
@@ -991,7 +992,7 @@ if (my_config["aspect_ratio"] == "No")
 	gridc.frameg.zorder=103;
 		
     gridc.jap_rss = fe.add_text( "[!rss]", 0, fe.layout.height / 1.045  - 58, fe.layout.width ,fe.layout.height / 30 );
-	gridc.jap_rss.font = "MSMINCHO";
+	gridc.jap_rss.font = "SUIT-Regular";	// [!rss] = rss() 가 한국어 문장 반환. MSMINCHO 는 일본어 폰트라 한글 글리프 없음
 	gridc.jap_rss.style = Style.Bold
 
 	
@@ -1058,17 +1059,17 @@ if (my_config["aspect_ratio"] == "No")
 	// Dynamically change the Manufacturer rss text
 	function rss(offset)
 	{
-		local result = "개발 및 프로듀스: Unknown / 게임 정보는 http：//Attractmode.org 사이트를 참고해주세요.";
+		local result = "개발 및 프로듀스: Unknown / 게임 정보는 http://Attractmode.org 사이트를 참고해주세요.";
 		local cat = " " + fe.game_info(Info.Manufacturer, offset);
 		local supported = {
 			//filename : [ match1, match2 ]
-			"개발 및 프로듀스: ARC SYSTEM WORKS / 게임 정보는 http：/arcsystemworksu.com/ 사이트를 참고해주세요.": [ "Arc System Works" ],
+			"개발 및 프로듀스: ARC SYSTEM WORKS / 게임 정보는 http:/arcsystemworksu.com/ 사이트를 참고해주세요.": [ "Arc System Works" ],
 			"개발 및 프로듀스: CAVE Co., ltd. / 게임 정보는 https://www.cave.co.jp/en/ 사이트를 참고해주세요.": [ "Cave" ],
 			"개발 및 프로듀스: EXAMU / 게임 정보는 https://www.examu.co.jp/ 사이트를 참고해주세요.": [ "Examu" ],
-			"개발 및 프로듀스: TAITO CORP. / 게임 정보는 http：//Nesica.net/ 사이트를 참고해주세요.": [ "Taito" ],
-			"개발 및 프로듀스: BOUKEN/YOTSUBANE / 게임 정보는 http：//www.taito.com 사이트를 참고해주세요.": [ "Yotsubane" ],
-			"개발 및 프로듀스: ATLUS / 게임 정보는 http：//atlus.com/ 사이트를 참고해주세요.": [ "Atlus" ],
-			"개발 및 프로듀스: SKONEC / 게임 정보는 http：//www.skonec.com 사이트를 참고해주세요.": [ "Skonec" ],
+			"개발 및 프로듀스: TAITO CORP. / 게임 정보는 http://Nesica.net/ 사이트를 참고해주세요.": [ "Taito" ],
+			"개발 및 프로듀스: BOUKEN/YOTSUBANE / 게임 정보는 http://www.taito.com 사이트를 참고해주세요.": [ "Yotsubane" ],
+			"개발 및 프로듀스: ATLUS / 게임 정보는 http://atlus.com/ 사이트를 참고해주세요.": [ "Atlus" ],
+			"개발 및 프로듀스: SKONEC / 게임 정보는 http://www.skonec.com 사이트를 참고해주세요.": [ "Skonec" ],
 			"개발 및 프로듀스: SUCCESS / 게임 정보는 https://www.success-corp.co.jp/ 사이트를 참고해주세요.": [ "shooter", "shmup" ],
 			"개발 및 프로듀스: CAPCOM / 게임 정보는 www.capcom.co.jp/ 사이트를 참고해주세요.": [ "Capcom" ],
 			"개발 및 프로듀스: TREASURE inc. / 게임 정보는 http://www.treasure-inc.co.jp/ 사이트를 참고해주세요.": [ "Treasure" ],
@@ -1087,8 +1088,8 @@ if (my_config["aspect_ratio"] == "No")
 			"개발 및 프로듀스: eigoMANGA / 게임 정보는 http://www.eigomanga.com/ 사이트를 참고해주세요.": [ "eigoMANGA" ],
 			"개발 및 프로듀스: Flat / 게임 정보는 http://exceedseries.com 사이트를 참고해주세요.": [ "Flat" ],
 			"개발 및 프로듀스: French Bread / 게임 정보는 http://www13.plala.or.jp/french/ 사이트를 참고해주세요.": [ "French Bread" ],
-			"개발 및 프로듀스: Frontier Aja / 게임 정보는 http：//aja-games.com 사이트를 참고해주세요.": [ "Frontier Aja" ],
-			"개발 및 프로듀스: nrf / 게임 정보는 http：//aja-games.com 사이트를 참고해주세요.": [ "nrf" ],
+			"개발 및 프로듀스: Frontier Aja / 게임 정보는 http://aja-games.com 사이트를 참고해주세요.": [ "Frontier Aja" ],
+			"개발 및 프로듀스: nrf / 게임 정보는 http://aja-games.com 사이트를 참고해주세요.": [ "nrf" ],
 			"개발 및 프로듀스: PROJECT ATSUKI / 게임 정보는 http://www.fightabase.com/compMain.aspx?id=802 사이트를 참고해주세요.": [ "PROJECT ATSUKI" ],
 			"개발 및 프로듀스: Type moon / 게임 정보는 http://www.typemoon.org/ 사이트를 참고해주세요.": [ "Type moon" ],
 			"개발 및 프로듀스: rocking andiod / 게임 정보는 http://www.rockinandroid.com/ 사이트를 참고해주세요.": [ "rocking andiod" ],
@@ -1228,7 +1229,7 @@ free2.align = Align.Right
 	overlay_lb.charsize  = 35;
 	overlay_lb.set_rgb( 128, 128, 128 );
 	overlay_lb.sel_style = Style.Bold;
-	overlay_lb.font = "Squares Bold Free";
+	overlay_lb.font = "SUIT-Regular";	// AM 오버레이 메뉴 = language kr 이라 항목이 한국어. Squares 는 한글 글리프 없음
 	overlay_lb.set_sel_rgb( 255, 255, 255 );
 	overlay_lb.set_selbg_rgb( 80, 180 , 230);
 	

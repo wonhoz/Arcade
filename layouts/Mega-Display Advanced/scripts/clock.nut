@@ -14,7 +14,6 @@ clockb.charsize = 36;
 function update_clock( ttime ){
   local now = date();
   clockb.msg = format("%02d", now.hour) + ":" + format("%02d", now.min );
-  clock.msg = format("%02d", now.hour) + ":" + format("%02d", now.min );
 }
   fe.add_ticks_callback( this, "update_clock" );
 //******clock END*******************************************
