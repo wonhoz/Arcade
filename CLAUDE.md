@@ -43,11 +43,18 @@ main ──┬─> develop                 ★ 공통 작업 브랜치 (여기�
   `layouts/Console Box/*`, `layouts/Mega-Display Advanced/{layout.nut, scripts/*}`,
   `scraper/@/overview/*`, 각 에뮬레이터의 입력·화면 설정(`emulators/*/`), `intro/*`.
 
-> ⚠️ **`main`에 아직 안 올라간 장비 브랜치 수정이 있다.**
-> `bartop`의 `retroarch | args 에서 -H 제거`(`a089eb42`)가 `main`에 미반영이라,
-> `main`/`develop`의 `emulators/RetroArch FinalBurn Neo.cfg`에는 아직 `-H`가 남아 있다.
-> 장비 브랜치에서 고친 **공통 성격의 수정**은 이렇게 누락되기 쉬우니,
-> `git log main..<장비브랜치> -- <공통파일>`로 주기적으로 확인한다.
+> ⚠️ **장비 브랜치에서만 고친 공통 수정은 `main`에서 누락되기 쉽다.**
+> 실제로 `bartop`의 `retroarch | args 에서 -H 제거`(`a089eb42`)가 `main`에 2년간 미반영이었다
+> (`develop`에 반영 완료 — `docs/ISSUES.md` 19번). 주기적으로 이렇게 확인한다.
+>
+> ```bash
+> for b in bartop Compact desktop desktop-ASUS-TUF desktop-MSI-Sword; do
+>   echo "== $b"; git log --oneline main..$b -- 'emulators/*.cfg' attract.cfg romlists/ tools/ docs/
+> done
+> ```
+>
+> 장비별 해상도·입력맵이 아니라 **에뮬레이터 인자·롬 목록·문서**를 건드린 커밋이 나오면
+> 공통 수정일 가능성이 높으니 `develop`으로 옮긴다.
 
 ## 3. 디렉터리 구조
 

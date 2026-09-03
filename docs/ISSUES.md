@@ -6,7 +6,7 @@
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1` 로 자동화되어 있다.
 
-**진행 현황** — 처리 11건 / 미해결 12건 · 재분류 1건
+**진행 현황** — 처리 12건 / 미해결 11건 · 재분류 1건
 
 ---
 
@@ -331,23 +331,55 @@ MAME이 롬을 찾을 때마다 없는 경로를 한 번씩 더 확인하게 되
 `emulators/Mame/hiscore/`, `emulators/Mame/mame64 - 복사본*`(8번) 등이
 쌓이면 `git status`가 지저분해진다.
 
-### - [ ] 19. `RetroArch FinalBurn Neo.cfg`의 `%file` · `-H` 인자 + 브랜치 간 불일치
-
-이 브랜치(`main` 계열)의 값과 `bartop`의 값이 다르다.
+### - [x] 19. `RetroArch FinalBurn Neo.cfg`의 `%file` · `-H` 인자 — **처리 완료**
 
 ```
-main / develop :  args  %file -H -L cores/fbneo_libretro.dll "[romfilename]"
-bartop         :  args  %file    -L cores/fbneo_libretro.dll "[romfilename]"
+변경 전(develop) :  args  %file -H -L cores/fbneo_libretro.dll "[romfilename]"
+변경 전(bartop)  :  args  %file    -L cores/fbneo_libretro.dll "[romfilename]"
+변경 후          :  args           -L cores/fbneo_libretro.dll "[romfilename]"
 ```
 
-`%file`은 **AM의 치환 토큰도 아니고 RetroArch의 옵션도 아니다.** 그대로 RetroArch에 전달된다.
-RetroArch가 마지막 위치 인자를 콘텐츠로 잡기 때문에 결과적으로 동작하는 것으로 보인다.
-`-H` 역시 RetroArch의 문서화된 옵션이 아니며, `bartop`에서 `a089eb42`
-(`retroarch | args 에서 -H 제거`)로 이미 제거됐다 — **그 수정이 `main`에 반영되지 않았다.**
+둘 다 **RetroArch 1.10.3 실기 A/B로 원인을 확인**했다(`retroarch --help`, `--verbose --log-file`,
+`Get-NetTCPConnection`, RetroArch 내장 스크린샷).
 
-→ `bartop`의 `-H` 제거를 `main`으로 올릴지 먼저 정한다(공통 성격의 수정이므로 올리는 것이 맞다).
-   그 뒤 `%file`도 제거하고 NESiCAxLive 한글패치 게임 몇 개로 재검증한다.
-   지금 당장 깨지지는 않으므로 우선순위는 낮다.
+**`-H` = 넷플레이 호스트 모드.** RetroArch의 정식 옵션이다.
+
+```
+-H, --host          Host netplay as user 1.
+-C, --connect=HOST  Connect to netplay server as user 2.
+    --port=PORT     Port used to netplay. Default is 55435.
+```
+
+게임을 실행할 때마다 넷플레이 서버가 뜬다. 실측으로 확인한 것:
+
+| | `-H` 있음 | `-H` 없음 |
+|---|---|---|
+| TCP LISTEN | `:::55435` | 없음 |
+| UDP 바인드 | `0.0.0.0:55435` | 없음 |
+| 로그 | `[Netplay] 1 플레이어로 입장했습니다`<br>`[Netplay] 넷플레이 포트 매핑 성공: <공인IP>:55435` | 없음 |
+
+**UPnP로 공유기에 포트포워딩까지 걸어 공인 IP에 55435를 연다.** 오락실 캐비닛에는 불필요하고,
+`-C`가 "user 2로 접속"인 데서 보듯 2P 슬롯을 원격 클라이언트용으로 잡는 구조라
+2인용 로컬 플레이와도 상충한다. `bartop`에서 2년 전 `a089eb42`로 제거한 이유로 보인다.
+
+**`%file` = 첫 번째 위치 인자로 잡혀 콘텐츠 경로가 된다.** RetroArch 사용법은
+`retroarch [OPTIONS]... [FILE]`이고 위치 인자 중 **첫 번째**를 콘텐츠로 쓴다.
+`%file`이 앞에 있으면 뒤의 실제 롬 경로가 무시된다 — 즉 **게임이 아예 로드되지 않았다.**
+
+| `args` | FBNeo 롬 탐색 로그 | 화면 |
+|---|---|---|
+| `%file -L core rom` | 없음 (0줄) | `FBNeo Error: Romset is unknown.` |
+| `-L core rom` | `Patched romset found at …\patched\dino` 외 45줄 | 정상 구동 |
+
+`%file`은 AM의 치환 토큰도 RetroArch의 옵션도 아니다. 시행착오의 잔재로 보인다.
+
+**검증** — 수정 후 AM에서 NESiCAxLive → `leaguemn`(닌자 베이스볼 배트맨) 실행,
+ROM 15개 로드 + 부모 롬셋 `nbbatman` 탐색 성공, GL/XAudio2/입력 초기화 완료, 에러 0건,
+RetroArch 내장 스크린샷(F8)으로 한글 패치가 적용된 화면 확인. LISTEN 포트 없음.
+
+> 참고: RetroArch 창은 GL 풀스크린이라 GDI `CopyFromScreen`으로는 검은 화면만 잡힌다.
+> 실제 화면 확인은 **RetroArch 내장 스크린샷(F8)** 을 써야 한다.
+> `patched/avsp.zip`은 이 FBNeo 버전과 롬셋이 맞지 않아 별개로 에러가 난다(9번과 별건, 미해결).
 
 ### - [ ] 20. 정지한 원격 브랜치 16개
 
