@@ -17,6 +17,9 @@
 [CmdletBinding()]
 param([string]$Root, [string]$Section)
 $ErrorActionPreference = 'Continue'
+# git prints UTF-8 (commit messages) and the glyph section prints non-ASCII characters;
+# under the default OEM code page both come out as mojibake (seen 2026-09-04, 4th audit).
+try { [Console]::OutputEncoding = [Text.Encoding]::UTF8 } catch { }
 if (-not $Root) { $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..\..')).Path }
 if (-not (Test-Path -LiteralPath (Join-Path $Root 'attract.cfg'))) { Write-Error "attract.cfg not found under $Root"; exit 1 }
 Set-Location -LiteralPath $Root
@@ -50,6 +53,11 @@ function AllNutText([string]$dir) {
 # ---------------------------------------------------------------- 1. layout file references
 if (Want 'layout') {
     Hdr "layout: literal media/nut/module references that do not exist"
+    # Literal names that are option placeholders, not assets the layout ships: NEVATO's
+    # marquee_type == "my-own" branch loads my-own-marquee.jpg that the USER is told to supply.
+    # Reported as INFO with the layout_config value so the reader can judge in one glance
+    # (this was a hand-checked false positive in the 3rd and 4th audits).
+    $placeholders = @{ 'my-own-marquee.jpg' = 'marquee_type' }
     $n = 0
     foreach ($ld in Get-ChildItem -LiteralPath "$Root\layouts" -Directory) {
         foreach ($f in Get-ChildItem -LiteralPath $ld.FullName -Filter *.nut -Recurse -File) {
@@ -62,7 +70,14 @@ if (Want 'layout') {
                     if ($p -match '\[' -or $p.Length -lt 6) { continue }
                     # string-concat fragment like  "..." + m + "button.png"
                     if ($line -match ('\+\s*"' + [regex]::Escape($p))) { continue }
-                    if (-not (Test-Path -LiteralPath (Join-Path $ld.FullName ($p -replace '/', '\')))) { "ISSUE  missing file   [${rel}:$ln]  $p"; $n++ }
+                    if (Test-Path -LiteralPath (Join-Path $ld.FullName ($p -replace '/', '\'))) { continue }
+                    $leaf = Split-Path $p -Leaf
+                    if ($placeholders.ContainsKey($leaf)) {
+                        $key = $placeholders[$leaf]; $cur = '(no layout_config)'
+                        if ($layoutCfg.ContainsKey($ld.Name) -and $layoutCfg[$ld.Name].ContainsKey($key)) { $cur = $layoutCfg[$ld.Name][$key] }
+                        "INFO   option placeholder [${rel}:$ln]  $p   (user-supplied file for $key; current $key = $cur)"; continue
+                    }
+                    "ISSUE  missing file   [${rel}:$ln]  $p"; $n++
                 }
                 foreach ($m in [regex]::Matches($line, 'do_nut\s*\(\s*"([^"]+)"')) {
                     $p = $m.Groups[1].Value
@@ -138,7 +153,14 @@ if (Want 'dispimg') {
 
 # ---------------------------------------------------------------- 3. mascot spec (480x760, cut-out with alpha)
 if (Want 'mascot') {
-    Hdr "mascot: 480x760 RGBA cut-out check (alpha sampled every 4px; edge = outer 8px)"
+    Hdr "mascot: 480x760 RGBA cut-out check (alpha sampled every 4px; edge = outer 8px; cut = outermost opaque row/col as % of subject extent)"
+    # "cut": a cut-out whose subject ends on a straight line (a flyer crop, a knee-level crop)
+    # still passes the transparency test. Measure the outermost opaque row and column: on a
+    # natural silhouette (feet, hair tips) they hold a few % of the subject's width/height;
+    # 20%+ means the subject was sliced. Calibrated 2026-09-04 on 20 mascots: 0-11% normal,
+    # MAME Adult 27% (flyer group shot cut below the waist), sammy atomiswave 71% (knee crop).
+    # NEVATO draws the 480x760 canvas at y = 0.156*height, so even a cut on the canvas edge is
+    # ~150px above the screen bottom at 1080p and shows.
     Add-Type -AssemblyName System.Drawing
     foreach ($lay in @('NEVATO', 'Console Box')) {
         $d = Join-Path $Root "layouts\$lay\character"
@@ -146,9 +168,12 @@ if (Want 'mascot') {
         foreach ($f in Get-ChildItem -LiteralPath $d -Filter *.png | Sort-Object Name) {
             try { $bmp = New-Object System.Drawing.Bitmap $f.FullName } catch { "ISSUE  unreadable $lay\$($f.Name)"; continue }
             $w = $bmp.Width; $h = $bmp.Height; $tot = 0; $tr = 0; $edge = 0; $etr = 0
+            # rows/cols: alpha SUM per sampled row/column (not a pixel count), so a faded edge
+            # (fade-edge.ps1) reads as a low value while a hard cut keeps ~255 per pixel.
+            $rows = New-Object int[] $h; $cols = New-Object int[] $w
             for ($y = 0; $y -lt $h; $y += 4) {
                 for ($x = 0; $x -lt $w; $x += 4) {
-                    $a = $bmp.GetPixel($x, $y).A; $tot++; if ($a -lt 16) { $tr++ }
+                    $a = $bmp.GetPixel($x, $y).A; $tot++; if ($a -lt 16) { $tr++ } else { $rows[$y] += $a; $cols[$x] += $a }
                     if ($x -lt 8 -or $y -lt 8 -or $x -ge $w - 8 -or $y -ge $h - 8) { $edge++; if ($a -lt 16) { $etr++ } }
                 }
             }
@@ -159,8 +184,24 @@ if (Want 'mascot') {
             if ($tp -lt 20) { $why += "opaque poster, not a cut-out" }
             elseif ($ep -lt 60) { $why += "edges not transparent" }
             if ($f.Length -gt 600KB) { $why += "$([math]::Round($f.Length/1KB))KB (peers 200-430KB)" }
+            $cut = ''
+            if ($tp -ge 20) {
+                $t = 0; while ($t -lt $h -and $rows[$t] -eq 0) { $t += 4 }; $b = $h - 4; while ($b -ge 0 -and $rows[$b] -eq 0) { $b -= 4 }
+                $l = 0; while ($l -lt $w -and $cols[$l] -eq 0) { $l += 4 }; $r = $w - 4; while ($r -ge 0 -and $cols[$r] -eq 0) { $r -= 4 }
+                if ($b -gt $t -and $r -gt $l) {
+                    $bw = ($r - $l) / 4 + 1; $bh = ($b - $t) / 4 + 1
+                    # % of the subject's extent that is (alpha-weighted) opaque on its outermost row/column
+                    $pct = @{ top = 100 * $rows[$t] / 255 / $bw; bottom = 100 * $rows[$b] / 255 / $bw; left = 100 * $cols[$l] / 255 / $bh; right = 100 * $cols[$r] / 255 / $bh }
+                    $worst = ($pct.GetEnumerator() | Sort-Object Value -Descending | Select-Object -First 1)
+                    $cut = "cut {0,3:N0}%" -f $worst.Value
+                    if ($worst.Value -ge 20) {
+                        $where = "y=$b"; if ($worst.Key -in 'left', 'right') { $where = "x=$r"; if ($worst.Key -eq 'left') { $where = "x=$l" } } elseif ($worst.Key -eq 'top') { $where = "y=$t" }
+                        $why += "subject sliced flat at $($worst.Key) ($([math]::Round($worst.Value))% of its extent ends on one line, $where)"
+                    }
+                }
+            }
             $tag = 'OK    '; if ($why.Count) { $tag = 'ISSUE ' }
-            "{0} {1,-12} {2,-32} {3,4}x{4,-4} transp {5,5:N1}%  edge {6,5:N1}%  {7}" -f $tag, $lay, $f.Name, $w, $h, $tp, $ep, ($why -join '; ')
+            "{0} {1,-12} {2,-32} {3,4}x{4,-4} transp {5,5:N1}%  edge {6,5:N1}%  {7}  {8}" -f $tag, $lay, $f.Name, $w, $h, $tp, $ep, $cut, ($why -join '; ')
         }
     }
 }
@@ -181,10 +222,22 @@ if (Want 'dupes') {
     $tot = 0; $groups = 0
     foreach ($k in $h.Keys) { $g = $h[$k]; if ($g.Count -gt 1) { $groups++; $tot += ($g.Count - 1) * $g[0].Len } }
     "INFO   $groups duplicate groups, $([math]::Round($tot/1MB)) MB redundant"
+    # NEVATO and Console Box hold their static assets as byte-identical pairs ON PURPOSE
+    # (CLAUDE.md 5.4, ISSUES 35: the drift check below is the guard). A pair whose only
+    # difference is the layout name is therefore INFO; anything else (a third copy, another
+    # layout, an unrelated path) stays ISSUE.
+    $byDesign = 0
     foreach ($k in ($h.Keys | Sort-Object { -$h[$_][0].Len })) {
         $g = $h[$k]; if ($g.Count -le 1) { continue }
-        "ISSUE  x$($g.Count)  $([math]::Round($g[0].Len/1KB))KB  " + (($g | ForEach-Object { $_.Rel }) -join '  |  ')
+        $tag = 'ISSUE '
+        if ($g.Count -eq 2) {
+            $stems = @($g | ForEach-Object { $_.Rel -replace '^layouts/(NEVATO|Console Box)/', '' } | Sort-Object -Unique)
+            $lays  = @($g | ForEach-Object { if ($_.Rel -match '^layouts/(NEVATO|Console Box)/') { $Matches[1] } } | Sort-Object -Unique)
+            if ($stems.Count -eq 1 -and $lays.Count -eq 2) { $tag = 'INFO  '; $byDesign++ }
+        }
+        "$tag x$($g.Count)  $([math]::Round($g[0].Len/1KB))KB  " + (($g | ForEach-Object { $_.Rel }) -join '  |  ')
     }
+    if ($byDesign) { "INFO   $byDesign of the groups are NEVATO <-> Console Box pairs kept identical by design (CLAUDE.md 5.4)" }
 
     Hdr "dupes: same relative path in NEVATO and Console Box but DIFFERENT content (the two layouts drifting apart)"
     # The two layouts share their layout-static assets byte-for-byte. A file that exists in both
@@ -290,8 +343,8 @@ if (Want 'glyph') {
     }
     Cover "$Root\fonts\$df.ttf" $titles "all romlist Titles vs default_font $df (fallback path)"
     Cover "$Root\fonts\$df.ttf" ([Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes("$Root\language\kr.msg"))) "language/kr.msg vs $df"
-    if (Test-Path -LiteralPath "$Root\layouts\NXL HD\Layout.nut") {
-        $nxl = [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes("$Root\layouts\NXL HD\Layout.nut"))
+    if (Test-Path -LiteralPath "$Root\layouts\NXL HD\layout.nut") {
+        $nxl = [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes("$Root\layouts\NXL HD\layout.nut"))
         $hs = [char]0xAC00; $he = [char]0xD7A3   # Hangul syllable range, built from code points to keep this file ASCII
         $lits = ([regex]::Matches($nxl, ('"([^"]*[' + $hs + '-' + $he + '][^"]*)"')) | ForEach-Object { $_.Groups[1].Value }) -join ''
         Cover "$Root\fonts\SUIT-Regular.ttf" $lits "NXL HD Korean literals (genre/rss) vs SUIT-Regular"
@@ -352,6 +405,18 @@ if (Want 'case') {
         }
     }
     if ($n -eq 0) { "OK     .gitignore case matches" }
+
+    Hdr "case: layouts/<name>/layout.nut spelled exactly (AM opens 'layout.nut' literally; Linux/macOS clones are case-sensitive)"
+    # Found by hand in the 4th audit: layouts/NXL HD/Layout.nut (capital L) is tracked that way in git.
+    # Windows opens it; a case-sensitive filesystem does not, and the NESiCAxLive display would have no layout.
+    $n = 0
+    foreach ($ld in Get-ChildItem -LiteralPath "$Root\layouts" -Directory) {
+        $exact = Get-ChildItem -LiteralPath $ld.FullName -File | Where-Object { $_.Name -ceq 'layout.nut' }
+        if ($exact) { continue }
+        $loose = Get-ChildItem -LiteralPath $ld.FullName -File | Where-Object { $_.Name -ieq 'layout.nut' } | Select-Object -First 1
+        if ($loose) { "ISSUE  layouts\$($ld.Name)\$($loose.Name)  is not spelled 'layout.nut' (git tracks it as '$($loose.Name)')"; $n++ }
+    }
+    if ($n -eq 0) { "OK     every layout.nut is lower-case" }
 }
 
 # ---------------------------------------------------------------- 9. branch propagation
