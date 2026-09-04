@@ -732,7 +732,11 @@ CLAUDE.md 5.4 에 "두 레이아웃의 공용 폴더는 항상 같은 내용을 
 background/*.mp4, listbox/*.png, character/*.png). 문제는 용량이 아니라 **어긋남** — 이번 마스코트 3장도
 양쪽에 따로 넣었고, `system/nintendo wii u (2).png` 는 Console Box 에만 있다.
 
-### - [ ] 36. 폰트 함정 두 곳 — 지금은 안전, 한 줄만 바꾸면 두부
+### - [x] 36. 폰트 함정 두 곳 — 지금은 안전, 한 줄만 바꾸면 두부 — **처리 완료 (문서화 + 감시)**
+
+**조치 (2026-09-04)**: 지금 화면은 정상이라 데이터·폰트는 건드리지 않았다(`뱀프½`는 원제 *Vamp ½* 표기).
+CLAUDE.md 5.4 의 폰트 함정 목록에 두 경우를 적었고, `audit.ps1 -Section glyph` 가 overview·romlist Title·kr.msg·
+NXL HD 한글 리터럴을 실제 그리는 폰트와 대조해 빠진 글리프를 `ISSUE` 로 낸다.
 
 표시 텍스트 전체 ↔ 그리는 폰트의 글리프를 대조했다. overview 21개 · kr.msg · NXL HD 한글 리터럴 · romlist Title ↔ `font.ttf` 전부 OK.
 - `MAME.txt:245` `뱀프½` 의 ½(U+00BD)이 `default_font` **SUIT-Regular 에 없다.** `select_font` 를 SUIT 로 바꾸거나 폰트 폴백이 나면 깨진다.

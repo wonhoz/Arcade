@@ -304,6 +304,15 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 > **글꼴을 바꿀 때는 한글 지원 여부만이 아니라 실제 표시될 문자 집합 전체를 검사한다.**
 > `SUIT` 계열에는 `：`(U+FF1A 전각 콜론)가 없어서, `rss()`의 URL에 섞여 있던 전각 콜론을
 > 반각으로 고치고 나서야 쓸 수 있었다. 문장부호 하나 때문에 깨진다.
+>
+> 지금은 안전하지만 한 줄만 바꾸면 깨지는 곳 두 군데(`docs/ISSUES.md` 36번):
+> - `romlists/MAME.txt`의 `뱀프½` — `½`(U+00BD)가 `default_font`인 `SUIT-Regular`에 **없다**.
+>   NEVATO·Console Box가 `select_font = Font`(`fonts/font.ttf`, ½ 있음)라 지금은 보이지만,
+>   `select_font`를 SUIT로 바꾸거나 폰트 폴백이 일어나면 두부가 된다.
+> - NEVATO의 LCD 텍스트(`digital-7 (italic)`, 라틴·숫자만)가 `[FilterName]`을 표시한다.
+>   `attract.cfg`의 필터 이름(All, Favourites, Fighting …)을 **한글로 바꾸는 순간** 두부가 된다.
+>
+> 표시 텍스트 ↔ 폰트 글리프 대조는 `.claude\skills\arcade-audit\scripts\audit.ps1 -Section glyph`가 한다.
 - 수정 후 반드시 `attract.bat` 실행하고 `last_run.log`에 `AN ERROR HAS OCCURED`가 없는지 확인.
 
 > ⚠️ **예외 줄을 지울 때는 그 아래 코드가 새로 살아난다.**
