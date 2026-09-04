@@ -86,7 +86,8 @@ D:\AttractMode\
 ├─ modules\                            AM 공용 Squirrel 모듈 (animate, conveyor, objects/scrollingtext …)
 ├─ plugins\                            플러그인 (**현재 attract.cfg에 활성화된 것 없음**)
 ├─ screensaver\                        기본 스크린세이버 (`screensaver.nut`) — 600초 후 동작
-├─ intro\                              시작 인트로 (`intro.nut` + `intro.mp4`, `intro_16x9.mp4`)
+├─ intro\                              시작 인트로 (`intro.nut` + `intro.mp4`(16:9), `intro_4x3.mp4`)
+│                                      ※ 9:16·3:4 영상은 없음 → 세로 모니터에선 인트로가 조용히 생략된다
 ├─ loader\                             타 프론트엔드 목록 임포터(hyperspin/mala/mamewah/attract_xml)
 ├─ scraper\@\overview\<display>.txt    ★ 디스플레이 메뉴에 뜨는 시스템 설명문 (한국어)
 ├─ scraper\@exit\overview\             종료 항목 설명문
@@ -386,9 +387,12 @@ $fs.Position=0x3C; $pe=$br.ReadInt32(); $fs.Position=$pe+0x5C; $br.ReadUInt16() 
 즉 **이 저장소를 클론하는 것만으로는 실행되지 않는다.** 롬·코어·아트웍은 별도로 옮겨야 한다.
 
 주의 사항:
-- `core.ignorecase=true`(Windows)에 의존한다. `.gitignore`는 `emulators/MAME/...`로 적혀 있지만
-  실제 폴더는 `emulators/Mame`다. Linux/macOS에서 클론하면 무시 규칙이 깨진다.
-- `core.autocrlf=true`이고 `.gitattributes`가 없다. 다른 설정의 PC에서 작업하면 전체 줄바꿈 diff가 난다.
+- `.gitignore`의 경로 대소문자는 2026-09-03에 실제 폴더명(`emulators/Mame` 등)과 맞췄다(불일치 0건).
+  다만 **아트웍·레이아웃 자산은 여전히 Windows의 대소문자 무시에 기대고 있다**
+  (`assets/buttons/1button.png` ↔ 실제 `1Button.png`, `menu-art/wheel/MAME.png` ↔ `mame.png`).
+  Linux/macOS에서 클론하면 버튼 아이콘과 메뉴 아트가 사라진다.
+- 줄바꿈은 `.gitattributes`(2026-09-03 신설)가 고정한다 — 저장소 LF, 작업트리 OS 기본, `*.bat`만 CRLF 강제.
+  `core.autocrlf` 설정이 다른 PC에서도 전체 줄바꿈 diff가 나지 않는다.
 - `attract.am`은 추적 중인데 실행할 때마다 내용이 바뀔 수 있다(런타임 상태 파일).
 - `stats/`는 무시 목록에 없다. 플레이 통계가 쌓이면 미추적 파일로 나타난다.
   2.7.0부터 저장 경로가 `stats/<romlist명>/` → `stats/<Emulator명>/` 로 바뀌어서,
