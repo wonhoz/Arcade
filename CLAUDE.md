@@ -44,7 +44,22 @@ git branch Compact archive/Compact           # 되살리기
 - **모든 장비에 적용될 변경은 `develop`(= `main` 기반)에서 한다.**
   장비 브랜치에서 작업하면 그 브랜치의 장비 전용 변경과 뒤섞여 다른 장비로 옮기기 어려워진다.
   실제로 이 저장소는 `bartop`에서 작업한 20커밋을 `develop`으로 체리픽해 옮긴 이력이 있다.
-- 흐름: `develop`에서 작업 → `main`에 병합 → 각 장비 브랜치에서 `git merge main`.
+- 흐름: `develop`에서 작업 → `main`에 병합 → **장비 브랜치 5개 전부**에 `git merge main` → `develop`을 `main`에 동기화.
+- **"bartop에 반영해 달라"는 요청은 장비 브랜치 5개 전부에 반영하라는 뜻이다.** (2026-09-04 사용자 지시)
+  `bartop`만 병합하고 나머지를 두면 그 순간부터 장비마다 다른 코드를 돌리게 되고,
+  2번의 "장비 브랜치에 갇힌 공통 수정" 같은 어긋남이 다시 생긴다. 한 번에 다 한다.
+
+  ```bash
+  git push origin develop
+  git checkout main && git merge --no-ff develop && git push origin main
+  for b in bartop desktop desktop-ASUS-TUF desktop-MSI-Sword desktop-MSI-Sword-DriveWheel; do
+    git checkout -B $b origin/$b && git merge main -m "Merge branch 'main' into $b" \
+      && powershell -ExecutionPolicy Bypass -File tools/validate.ps1 -Quiet && git push origin $b
+  done
+  git checkout develop && git merge --ff-only main && git push origin develop
+  ```
+  각 장비 브랜치에서 병합 직후 `validate.ps1`을 돌린다 — 장비 전용 설정과 공통 변경이 충돌하지 않았는지 보는 유일한 자리다.
+  `gh`가 없으면 위처럼 로컬에서 `--no-ff`로 병합한다(PR 머지와 같은 모양).
 - 장비 전용 변경(레이아웃 해상도, 입력맵, 롬 구성)은 해당 장비 브랜치에만 둔다.
 - `main`↔`bartop` 실제 차이(113개 파일): `layouts/NEVATO/*`(캐비닛 아트/vewlix 레이아웃),
   `layouts/Console Box/*`, `layouts/Mega-Display Advanced/{layout.nut, scripts/*}`,
