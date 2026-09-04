@@ -15,7 +15,7 @@
 | 원격 | https://github.com/wonhoz/Arcade (**public**) |
 | 프론트엔드 | Attract-Mode v2.7.0 (Windows, SFML 2.5.1) — `attract.exe` (실행은 `attract.bat`, 4.5절) |
 | 설치 경로 | `D:\AttractMode` (절대경로 의존 있음 → 4.4절) |
-| 추적 파일 | 약 23,700개 / `.git` 약 1.3GB |
+| 추적 파일 | 23,554개 / `.git` 1.2GB (size-pack 1.17GiB, 2026-09-04 실측 — `docs/ISSUES.md` 2번과 같은 수치) |
 | 현재 브랜치 | `develop` (공통 작업 브랜치, `main` 기반) |
 | 커밋 메시지 | 한국어. 최근 스타일은 `영역 | 내용` (예: `retroarch | args 에서 -H 제거`) |
 
@@ -118,6 +118,7 @@ D:\AttractMode\
 ├─ sounds\ shaders\ language\          효과음/셰이더/UI 번역(kr 사용)
 ├─ tools\validate.ps1                  ★ 설정 무결성 검증 스크립트 (7.1절)
 ├─ tools\reset-runtime.ps1             ★ 런타임 파일 초기화 스크립트 (7.3절)
+├─ tools\smoke-run.ps1                 ★ 실행 점검 — 지정 디스플레이·레이아웃으로 AM 을 띄워 로그 확인 (7.4절)
 ├─ docs\                               ASSETS.md(자산 정책) / ISSUES.md(과제 목록)
 ├─ stats\<Emulator>\                   플레이 통계 (track_usage yes, 로컬 생성물)
 │                                      ★ 2.7.0에서 romlist명 → Emulator명 기준으로 바뀜
@@ -288,8 +289,13 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
   **규격은 480×760, 투명 배경 위 컷아웃**이다 — 불투명 플라이어를 잘라 넣으면 리스트 박스 위에
   포스터 블록이 얹힌다(`docs/ISSUES.md` 28번). `tools/validate.ps1` 이 누락과 규격(크기·알파 비율)을 경고한다.
   **새 마스코트를 만들 때**: 흰/단색 배경의 원화(공식 아트, 전단)를 구해
-  `.claude\skills\arcade-audit\scripts\cutout.ps1 <in> <out> [-Mode white|light] [-Erase "x,y,w,h;…"]` 로
+  `.claude\skills\arcade-audit\scripts\cutout.ps1 <in> <out> [-Mode white|light] [-Erase "x,y,w,h;…"] [-HoleTol 14 -HoleDark 20]` 로
   배경을 떼어내면 480×760 알파 PNG 가 나온다. GDI+ 가 못 여는 JPEG 는 `img-to-png.ps1` 로 먼저 변환.
+  **머리카락·팔 사이처럼 피사체에 둘러싸인 흰 영역은 가장자리 플러드필이 못 닿는다** — `-HoleTol` 을 주면 둘레가 먹선인 고립 영역만 추가로
+  지운다(둘레 조건 없이 지우면 흰 옷의 하이라이트까지 뚫린다, `docs/ISSUES.md` 42번). 머리카락처럼 둘레가 먹선이 아닌 곳이 남으면
+  `-Debug <png>` 로 후보를 초록/빨강으로 확인하고 `-HoleBox "x,y,w,h"`(원본 픽셀)로 그 영역만 조건을 면제한다. 결과는 반드시 배경색을 깔고 확대해서 본다.
+  **피사체가 직선으로 끝나는 소재**(전단 크롭, 무릎 컷)밖에 없으면 `fade-edge.ps1 <in> <out> -Bottom 90` 으로
+  그 변을 알파 페이드시킨다 — 절단선이 화면 중간에 뜨는 것보다 낫다(`docs/ISSUES.md` 37·38번). `audit.ps1 -Section mascot` 이 직선 컷을 잡는다.
   소재가 열려 있는 곳: fightersgeneration.com(격투 캐릭터 공식 아트), flyers.arcade-museum.com(전단).
   Spriters Resource·Fandom·pngwing 류는 Cloudflare 가 스크립트 접근을 막는다.
 - 디스플레이 메뉴 아트웍은 `menu-art/system|marquee|snap|wheel`(로컬 전용).
@@ -340,6 +346,7 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 >
 > 표시 텍스트 ↔ 폰트 글리프 대조는 `.claude\skills\arcade-audit\scripts\audit.ps1 -Section glyph`가 한다.
 - 수정 후 반드시 `attract.bat` 실행하고 `last_run.log`에 `AN ERROR HAS OCCURED`가 없는지 확인.
+  고친 레이아웃만 골라 띄우려면 `tools\smoke-run.ps1 -Display <디스플레이> [-LayoutFile layout_vewlix_white] [-Layout Mega-Display]`(7.4절).
 
 > ⚠️ **예외 줄을 지울 때는 그 아래 코드가 새로 살아난다.**
 > Squirrel 예외는 그 스크립트의 **나머지 전체를 중단**시킨다. 그래서 오랫동안 예외를 던져 온
@@ -444,6 +451,9 @@ $fs.Position=0x3C; $pe=$br.ReadInt32(); $fs.Position=$pe+0x5C; $br.ReadUInt16() 
   다만 **아트웍·레이아웃 자산은 여전히 Windows의 대소문자 무시에 기대고 있다**
   (`assets/buttons/1button.png` ↔ 실제 `1Button.png`, `menu-art/wheel/MAME.png` ↔ `mame.png`).
   Linux/macOS에서 클론하면 버튼 아이콘과 메뉴 아트가 사라진다.
+  `layouts/NXL HD/Layout.nut`(대문자 L)은 그보다 심해서 레이아웃 자체가 안 열리는 문제라 2026-09-04에 `layout.nut`으로
+  개명했다(`docs/ISSUES.md` 40번). 대소문자만 바꾸는 개명은 `git mv`를 임시 이름 경유로 두 번 한다.
+  `audit.ps1 -Section case`가 `layouts/<name>/layout.nut` 철자를 감시한다.
 - 줄바꿈은 `.gitattributes`(2026-09-03 신설)가 고정한다 — 저장소 LF, 작업트리 OS 기본, `*.bat`만 CRLF 강제.
   `core.autocrlf` 설정이 다른 PC에서도 전체 줄바꿈 diff가 나지 않는다.
 - `attract.am`은 추적 중인데 실행할 때마다 내용이 바뀔 수 있다(런타임 상태 파일).
@@ -492,10 +502,10 @@ powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\aud
 |---|---|
 | `layout` | `.nut`의 리터럴 이미지·`do_nut`·`load_module` 대상 존재, 로드 불가 위치의 layout*.nut, 어디서도 안 부르는 .nut |
 | `dispimg` | `character/ system/ wheel/[DisplayName]` 디스플레이별 존재, 이름이 안 맞는 죽은 복사본 |
-| `mascot` | 480×760·알파 컷아웃 여부(투명 비율) |
-| `dupes` | NEVATO↔Console Box 공용 폴더 어긋남, 참조 없는 배경 변형, 바이트 동일 중복 |
+| `mascot` | 480×760·알파 컷아웃 여부(투명 비율), **피사체가 직선으로 잘렸는지**(최외곽 불투명 행/열이 피사체 폭의 20% 이상) |
+| `dupes` | NEVATO↔Console Box 공용 폴더 어긋남, 참조 없는 배경 변형, 바이트 동일 중복(두 레이아웃의 의도된 쌍은 INFO) |
 | `fonts` · `glyph` | 참조 폰트 해석 가능 여부, **표시 텍스트 ↔ 폰트 글리프** |
-| `cfg` · `case` | 값 끝 공백, 형제 cfg 일치, `layout_config` 값, romlist·.gitignore 대소문자 |
+| `cfg` · `case` | 값 끝 공백, 형제 cfg 일치, `layout_config` 값, romlist·.gitignore 대소문자, `layout.nut` 철자 |
 | `branch` · `video` · `junk` | 장비 브랜치 전파, mp4 해상도·비트레이트, `(2)`·`bak/`·`.psd`·추적된 런타임 산출물 |
 
 출력 태그는 `ISSUE`(보고) / `OK`(측정했고 이상 없음) / `INFO`. 읽기 전용이다.
@@ -506,6 +516,7 @@ ISSUES "완료" 재검증 → 아티팩트 갱신까지 절차 전체를 따른�
 
 1. **`last_run.log`를 먼저 읽는다.** 레이아웃 스크립트 에러, cfg 파싱 경고, 롬 로딩 결과가 전부 여기 남는다.
    로그가 갱신돼 있지 않다면 `attract.exe`를 직접 실행한 것이다 — **`attract.bat`으로 다시 실행한다**(4.5절).
+   특정 디스플레이·레이아웃만 골라 띄우고 싶으면 `tools\smoke-run.ps1`(7.4절) — 저장소의 `attract.am`을 건드리지 않는다.
 2. cfg 파싱 경고(`Unrecognized "emulator" setting of "..."`) → 해당 파일의 **UTF-8 BOM** 의심.
 3. 게임이 목록에 안 보임 → romlist에서 `#`으로 비활성화됐는지, 필터 규칙에 걸렸는지 확인.
 4. 게임이 실행 안 됨 → `emulators/<Emulator>.cfg`의 `executable`/`rompath`/`romext`와 실제 파일 대조.
@@ -537,6 +548,25 @@ powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1 -All -Force
 - `-Force`를 빼면 실행 전에 한 번 물어본다.
 - 되돌리기는 `git checkout --`이므로 **커밋되지 않은 의도적 수정도 함께 날아간다.**
   런타임 파일을 일부러 고쳤다면 먼저 커밋할 것.
+### 7.4 실행 점검 — 레이아웃 수정 뒤 캐비닛 없이 로그 보기
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\smoke-run.ps1 -Display "Taito Type X"                 # 그 디스플레이로 바로 시작
+powershell -ExecutionPolicy Bypass -File tools\smoke-run.ps1 -Display MAME -LayoutFile layout_vewlix_white   # L키 변형 지정
+powershell -ExecutionPolicy Bypass -File tools\smoke-run.ps1 -Display MAME -Layout Mega-Display      # 레이아웃을 임시로 바꿔 로드
+powershell -ExecutionPolicy Bypass -File tools\smoke-run.ps1 -All                                    # NEVATO·Console Box·NXL HD·Mega-Display 4종
+```
+
+**정적 검증(validate·audit)은 Squirrel 런타임 오류를 못 본다.** 3차 재점검의 수정 9건이 하루 동안 실행 확인 없이 남아 있었던 것이
+`docs/ISSUES.md` 39번이다. 이 스크립트는 `%TEMP%\attractmode-smoke-run\`에 저장소 폴더들을 **정션으로 연결한 격리 설정 디렉터리**를 만들고
+`attract.cfg`·`attract.am` 사본만 고쳐 `attract.exe --config`로 띄운다. 그래서 저장소의 `attract.am`이 바뀌지 않고 `git status`가 더러워지지 않는다.
+
+- `attract.am` 0행이 현재 디스플레이 인덱스(= `attract.cfg`의 `display` 순서), **(인덱스+1)행**이 그 디스플레이의 상태로 `…;<레이아웃 파일>;0;`에
+  L키로 고른 `layout_vewlix_*` 이름이 들어간다. `-LayoutFile`이 그 자리를 쓴다.
+- 지정한 초(기본 20) 동안 **화면을 AM이 차지한다.** 창 모드는 480×320이라 NEVATO가 지원하지 않는 종횡비(1.5)가 되어 쓰지 않는다.
+- 로그에 `AN ERROR HAS OCCURED`·`Script Error`가 있으면 종료 코드 1과 함께 그 부분을 출력한다.
+- 이 PC의 모니터 종횡비로만 검증된다(5:4 데스크톱에서는 NEVATO의 `5x4` 분기). 16:9 캐비닛 분기는 캐비닛에서 봐야 한다.
+
 ## 8. 관련 문서
 
 | 문서 | 내용 |
@@ -551,6 +581,6 @@ powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1 -All -Force
 ### 미해결 중 가장 큰 것
 
 - **S1**: 공개 저장소에 PS2/PS1/새턴 BIOS와 상용 롬이 커밋되어 있다 (저작권 위험).
-- **S2**: `.git`이 1.3GB. 에뮬레이터 바이너리 전량이 추적 중이다.
+- **S2**: `.git`이 1.2GB. 에뮬레이터 바이너리 전량이 추적 중이다.
 
-둘 다 히스토리 재작성이 필요하고 25개 브랜치 전부에 영향을 주므로, **손대기 전에 전체 백업**한다.
+둘 다 히스토리 재작성이 필요하고 브랜치 7개와 `archive/*` 태그 11개 전부에 영향을 주므로, **손대기 전에 전체 백업**한다.
