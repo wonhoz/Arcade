@@ -118,6 +118,7 @@ D:\AttractMode\
 ├─ sounds\ shaders\ language\          효과음/셰이더/UI 번역(kr 사용)
 ├─ tools\validate.ps1                  ★ 설정 무결성 검증 스크립트 (7.1절)
 ├─ tools\reset-runtime.ps1             ★ 런타임 파일 초기화 스크립트 (7.3절)
+├─ tools\smoke-run.ps1                 ★ 실행 점검 — 지정 디스플레이·레이아웃으로 AM 을 띄워 로그 확인 (7.4절)
 ├─ docs\                               ASSETS.md(자산 정책) / ISSUES.md(과제 목록)
 ├─ stats\<Emulator>\                   플레이 통계 (track_usage yes, 로컬 생성물)
 │                                      ★ 2.7.0에서 romlist명 → Emulator명 기준으로 바뀜
@@ -342,6 +343,7 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 >
 > 표시 텍스트 ↔ 폰트 글리프 대조는 `.claude\skills\arcade-audit\scripts\audit.ps1 -Section glyph`가 한다.
 - 수정 후 반드시 `attract.bat` 실행하고 `last_run.log`에 `AN ERROR HAS OCCURED`가 없는지 확인.
+  고친 레이아웃만 골라 띄우려면 `tools\smoke-run.ps1 -Display <디스플레이> [-LayoutFile layout_vewlix_white] [-Layout Mega-Display]`(7.4절).
 
 > ⚠️ **예외 줄을 지울 때는 그 아래 코드가 새로 살아난다.**
 > Squirrel 예외는 그 스크립트의 **나머지 전체를 중단**시킨다. 그래서 오랫동안 예외를 던져 온
@@ -508,6 +510,7 @@ ISSUES "완료" 재검증 → 아티팩트 갱신까지 절차 전체를 따른�
 
 1. **`last_run.log`를 먼저 읽는다.** 레이아웃 스크립트 에러, cfg 파싱 경고, 롬 로딩 결과가 전부 여기 남는다.
    로그가 갱신돼 있지 않다면 `attract.exe`를 직접 실행한 것이다 — **`attract.bat`으로 다시 실행한다**(4.5절).
+   특정 디스플레이·레이아웃만 골라 띄우고 싶으면 `tools\smoke-run.ps1`(7.4절) — 저장소의 `attract.am`을 건드리지 않는다.
 2. cfg 파싱 경고(`Unrecognized "emulator" setting of "..."`) → 해당 파일의 **UTF-8 BOM** 의심.
 3. 게임이 목록에 안 보임 → romlist에서 `#`으로 비활성화됐는지, 필터 규칙에 걸렸는지 확인.
 4. 게임이 실행 안 됨 → `emulators/<Emulator>.cfg`의 `executable`/`rompath`/`romext`와 실제 파일 대조.
@@ -539,6 +542,25 @@ powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1 -All -Force
 - `-Force`를 빼면 실행 전에 한 번 물어본다.
 - 되돌리기는 `git checkout --`이므로 **커밋되지 않은 의도적 수정도 함께 날아간다.**
   런타임 파일을 일부러 고쳤다면 먼저 커밋할 것.
+### 7.4 실행 점검 — 레이아웃 수정 뒤 캐비닛 없이 로그 보기
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\smoke-run.ps1 -Display "Taito Type X"                 # 그 디스플레이로 바로 시작
+powershell -ExecutionPolicy Bypass -File tools\smoke-run.ps1 -Display MAME -LayoutFile layout_vewlix_white   # L키 변형 지정
+powershell -ExecutionPolicy Bypass -File tools\smoke-run.ps1 -Display MAME -Layout Mega-Display      # 레이아웃을 임시로 바꿔 로드
+powershell -ExecutionPolicy Bypass -File tools\smoke-run.ps1 -All                                    # NEVATO·Console Box·NXL HD·Mega-Display 4종
+```
+
+**정적 검증(validate·audit)은 Squirrel 런타임 오류를 못 본다.** 3차 재점검의 수정 9건이 하루 동안 실행 확인 없이 남아 있었던 것이
+`docs/ISSUES.md` 39번이다. 이 스크립트는 `%TEMP%\attractmode-smoke-run\`에 저장소 폴더들을 **정션으로 연결한 격리 설정 디렉터리**를 만들고
+`attract.cfg`·`attract.am` 사본만 고쳐 `attract.exe --config`로 띄운다. 그래서 저장소의 `attract.am`이 바뀌지 않고 `git status`가 더러워지지 않는다.
+
+- `attract.am` 0행이 현재 디스플레이 인덱스(= `attract.cfg`의 `display` 순서), **(인덱스+1)행**이 그 디스플레이의 상태로 `…;<레이아웃 파일>;0;`에
+  L키로 고른 `layout_vewlix_*` 이름이 들어간다. `-LayoutFile`이 그 자리를 쓴다.
+- 지정한 초(기본 20) 동안 **화면을 AM이 차지한다.** 창 모드는 480×320이라 NEVATO가 지원하지 않는 종횡비(1.5)가 되어 쓰지 않는다.
+- 로그에 `AN ERROR HAS OCCURED`·`Script Error`가 있으면 종료 코드 1과 함께 그 부분을 출력한다.
+- 이 PC의 모니터 종횡비로만 검증된다(5:4 데스크톱에서는 NEVATO의 `5x4` 분기). 16:9 캐비닛 분기는 캐비닛에서 봐야 한다.
+
 ## 8. 관련 문서
 
 | 문서 | 내용 |

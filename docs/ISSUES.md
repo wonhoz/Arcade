@@ -780,7 +780,20 @@ NXL HD 한글 리터럴을 실제 그리는 폰트와 대조해 빠진 글리프
 `layout.nut:762` 가 캔버스를 `0.15625*flh` 에 480×760 고정 크기로 그리므로 1080p 에서 캔버스 바닥은 화면 바닥보다 151px 위 — 절단선이 보일 수 있다.
 fightersgeneration 의 켄시로 원화 10장 중 전신은 저해상도 3D 렌더(274×600) 하나뿐이라 현재의 2D 원화를 유지하는 편이 낫다.
 
-### - [ ] 39. 3차 처리분 28·29·30 이 캐비닛에서 실행 확인되지 않았다
+### - [x] 39. 3차 처리분 28·29·30 이 캐비닛에서 실행 확인되지 않았다 — **처리 완료 (이 PC에서 실행, 오류 0)**
+
+**조치 (2026-09-04)**: `tools/smoke-run.ps1` 을 만들어 실행했다 — `%TEMP%` 에 저장소 폴더를 정션으로 연결한 격리 설정 디렉터리를 만들고
+`attract.cfg`·`attract.am` 사본만 고쳐 `attract.exe --config` 로 지정 디스플레이·레이아웃을 20초 띄운 뒤 로그를 본다(CLAUDE.md 7.4).
+
+| 실행 | 로드된 레이아웃 | 결과 |
+|---|---|---|
+| Taito Type X (NEVATO, 28번 마스코트) | `NEVATO/layout.nut` | 오류 0 |
+| Taito Type X + `layout_vewlix_white` (30번 배경) | `NEVATO/layout_vewlix_white.nut` | 오류 0 |
+| Taito Type X 의 layout 을 Mega-Display 로 (29번) | `Mega-Display/layout.nut` — sidebar·wheel2 처음 실행 | 오류 0 |
+| `-All`: MAME · Sony PlayStation · NESiCAxLive · Mega-Display | NEVATO · Console Box · NXL HD · Mega-Display | 4/4 오류 0 |
+
+한계: 이 PC 는 5:4 모니터라 NEVATO 의 `5x4` 분기가 돌았다(`using settings[5x4]…`). 16:9 캐비닛 분기는 bartop 에서 한 번 더 봐야 한다.
+처음 시도한 창 모드는 480×320(종횡비 1.5)이 되어 NEVATO 가 `res_x` 예외를 냈다 — 스크립트는 전체화면으로만 돈다.
 
 `last_run.log`(16:34) 에는 NESiCAxLive 와 디스플레이 메뉴만 세 번 로드된 기록뿐이다. NEVATO(마스코트 28 · white 배경 30)도 Mega-Display(29)도 한 번도 열리지 않았다.
 29번은 처음 실행되는 코드를 살리는 수정이라(S2-3 전례) 실행해야 안다.
