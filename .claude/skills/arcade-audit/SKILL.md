@@ -25,7 +25,8 @@ description: AttractMode 저장소 주기 재점검. 지정 커밋(또는 마지
     Cloudflare 로 막힌 곳(curl·WebFetch 모두): Spriters Resource, Fandom 위키, pngwing/pngegg/cleanpng, MobyGames.
   - **마스코트 컷아웃 도구** — `scripts/cutout.ps1 <in> <out> [-Mode white|light] [-Tol 40] [-Erase "x,y,w,h;…"] [-Crop "x,y,w,h"] [-HoleTol 14 -HoleDark 20]`.
     `-HoleTol` 은 피사체에 둘러싸여 플러드필이 못 닿는 흰 영역(머리카락·팔 사이)을 추가로 지운다 — 둘레의 `-HoleDark`% 이상이 먹선일 때만(흰 옷 하이라이트 보호).
-    결과는 마젠타 같은 배경을 깔고 2배 확대해 머리카락·손 주변을 반드시 본다(ISSUES 42).
+    남는 곳이 있으면 `-Debug <png>` 로 후보를 초록(제거)/빨강(거부)으로 보고, `-HoleBox "x,y,w,h"`(원본 픽셀)로 그 영역만 둘레 조건을 면제한다.
+    결과는 마젠타 같은 배경을 깔고 2배 확대해 머리카락·손 주변을 반드시 본다(ISSUES 42). 도움 스크립트: 확대는 `zoom.ps1`, 후보 비교는 `sheet.ps1`(스크래치에 있음, 필요하면 재작성).
     가장자리에서 플러드필로 배경을 떼고 480×760 투명 캔버스에 맞춘다. `light` 모드는 연한 그라데이션(분홍·회색)까지 배경으로 본다.
     선화 외곽선이 있는 애니 그림에 잘 맞는다. GDI+ 가 "매개 변수가 잘못되었습니다"로 못 여는 JPEG 는 `scripts/img-to-png.ps1` 로 먼저 변환.
     bash 에서 경로를 넘길 때 `"$SW\web\$in"` 처럼 쓰면 `\$` 가 이스케이프돼 깨진다 — 슬래시(`$SW/web/$in`)로 쓴다.

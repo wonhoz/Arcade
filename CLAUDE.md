@@ -292,7 +292,8 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
   `.claude\skills\arcade-audit\scripts\cutout.ps1 <in> <out> [-Mode white|light] [-Erase "x,y,w,h;…"] [-HoleTol 14 -HoleDark 20]` 로
   배경을 떼어내면 480×760 알파 PNG 가 나온다. GDI+ 가 못 여는 JPEG 는 `img-to-png.ps1` 로 먼저 변환.
   **머리카락·팔 사이처럼 피사체에 둘러싸인 흰 영역은 가장자리 플러드필이 못 닿는다** — `-HoleTol` 을 주면 둘레가 먹선인 고립 영역만 추가로
-  지운다(둘레 조건 없이 지우면 흰 옷의 하이라이트까지 뚫린다, `docs/ISSUES.md` 42번). 결과는 반드시 배경색을 깔고 확대해서 본다.
+  지운다(둘레 조건 없이 지우면 흰 옷의 하이라이트까지 뚫린다, `docs/ISSUES.md` 42번). 머리카락처럼 둘레가 먹선이 아닌 곳이 남으면
+  `-Debug <png>` 로 후보를 초록/빨강으로 확인하고 `-HoleBox "x,y,w,h"`(원본 픽셀)로 그 영역만 조건을 면제한다. 결과는 반드시 배경색을 깔고 확대해서 본다.
   **피사체가 직선으로 끝나는 소재**(전단 크롭, 무릎 컷)밖에 없으면 `fade-edge.ps1 <in> <out> -Bottom 90` 으로
   그 변을 알파 페이드시킨다 — 절단선이 화면 중간에 뜨는 것보다 낫다(`docs/ISSUES.md` 37·38번). `audit.ps1 -Section mascot` 이 직선 컷을 잡는다.
   소재가 열려 있는 곳: fightersgeneration.com(격투 캐릭터 공식 아트), flyers.arcade-museum.com(전단).
