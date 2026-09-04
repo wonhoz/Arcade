@@ -452,6 +452,30 @@ romlist 필드 수·중복·BOM, Emulator/layout/romlist 상호 참조, executab
 59건이 상수처럼 깔려 새 경고가 묻혔다. `-Quiet` 는 `환경`·`참고`를 숨기고
 `WARN`/`FAIL`만 보여주므로 커밋 전 점검에 쓰기 좋다.
 
+#### validate.ps1 이 못 보는 것 — 주기 재점검 스킬 `/arcade-audit`
+
+`validate.ps1`은 **설정 파일의 상호 참조**를 본다. 레이아웃 스크립트 내부, 이미지의 규격(알파·크기),
+폰트 글리프, 두 레이아웃의 어긋남 같은 것은 보지 않는다. 그쪽은 저장소 안 스킬이 맡는다.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\audit.ps1            # 11개 섹션 전부
+powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\audit.ps1 -Section mascot   # 하나만
+```
+
+| 섹션 | 보는 것 |
+|---|---|
+| `layout` | `.nut`의 리터럴 이미지·`do_nut`·`load_module` 대상 존재, 로드 불가 위치의 layout*.nut, 어디서도 안 부르는 .nut |
+| `dispimg` | `character/ system/ wheel/[DisplayName]` 디스플레이별 존재, 이름이 안 맞는 죽은 복사본 |
+| `mascot` | 480×760·알파 컷아웃 여부(투명 비율) |
+| `dupes` | NEVATO↔Console Box 공용 폴더 어긋남, 참조 없는 배경 변형, 바이트 동일 중복 |
+| `fonts` · `glyph` | 참조 폰트 해석 가능 여부, **표시 텍스트 ↔ 폰트 글리프** |
+| `cfg` · `case` | 값 끝 공백, 형제 cfg 일치, `layout_config` 값, romlist·.gitignore 대소문자 |
+| `branch` · `video` · `junk` | 장비 브랜치 전파, mp4 해상도·비트레이트, `(2)`·`bak/`·`.psd`·추적된 런타임 산출물 |
+
+출력 태그는 `ISSUE`(보고) / `OK`(측정했고 이상 없음) / `INFO`. 읽기 전용이다.
+Claude Code에서 `/arcade-audit <커밋…>`을 부르면 diff 정독 → validate → audit → 이미지 직접 열기 →
+ISSUES "완료" 재검증 → 아티팩트 갱신까지 절차 전체를 따른다(`.claude/skills/arcade-audit/SKILL.md`).
+
 ### 7.2 진단 순서
 
 1. **`last_run.log`를 먼저 읽는다.** 레이아웃 스크립트 에러, cfg 파싱 경고, 롬 로딩 결과가 전부 여기 남는다.
