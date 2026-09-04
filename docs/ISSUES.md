@@ -623,11 +623,20 @@ TeknoParrot · Taito Type X · MAME Adult 세 개가 없어 그 자리가 빈 �
 > S5 의 "처리 완료" 7건 중 **22번·25번은 완료가 아니었다.** 점검 절차는 `/arcade-audit` 스킬
 > (`.claude/skills/arcade-audit/`)로 고정했고, 결과 아티팩트는 「AttractMode 재점검」에 갱신했다.
 
-### - [x] 28. 마스코트 2종이 컷아웃이 아니라 불투명 포스터 — Taito Type X · MAME Adult — **처리 완료 (임시 소재)**
+### - [x] 28. 마스코트 2종이 컷아웃이 아니라 불투명 포스터 — Taito Type X · MAME Adult — **처리 완료**
 
-**조치 (2026-09-04)**: 두 장을 **투명 480×760 캔버스에 게임 로고를 얹은 컷아웃**으로 교체했다
-(`menu-art/Taito Type X/wheel/SamuraiSpiritsSen.png`, `emulators/Mame/wheel/hotdebut.png` — 알파 있는 소재 중 이 시스템 것).
-캐릭터 원화가 아니라 **로고 임시본**이므로, 배경 제거된 캐릭터 소재가 생기면 갈아 끼울 것.
+**1차 조치 (2026-09-04)**: 두 장을 투명 480×760 캔버스에 게임 로고를 얹은 임시본으로 교체했다.
+
+**2차 조치 (2026-09-04, 웹 소재로 교체)**: 웹에서 원화를 받아 배경을 제거한 캐릭터 컷아웃으로 갈아 끼웠다.
+
+| 디스플레이 | 소재 | 출처 | 처리 |
+|---|---|---|---|
+| Taito Type X | 하오마루 전신 공식 일러스트 (사무라이 스피리츠 섬, 키타 센리) | `fightersgeneration.com/np7/char/sen/haoh-sen.jpg` (775×1000, 흰 배경) | 흰 배경 플러드필 제거 → 464×624 |
+| MAME Adult | 갈스 패닉 S2 전단 앞면의 로고+캐릭터 5명 | `flyers.arcade-museum.com/videogame-flyers/1/gals-panic-s2-01468-01.jpg` (850×858) | 연분홍 그라데이션을 "밝고 분홍 계열" 규칙으로 제거, KANEKO 로고·말풍선·문구 사각형 지움 → 464×506 |
+
+투명 픽셀 67.6% / 56.1%, 가장자리 투명 100% (`audit.ps1 -Section mascot` 실측). 도구는 `.claude/skills/arcade-audit/scripts/cutout.ps1`(C# 가속 플러드필 컷아웃)과
+`img-to-png.ps1`(GDI+ 가 못 여는 CMYK/프로그레시브 JPEG 를 WIC 로 변환)로 스킬에 동봉했다.
+Spriters Resource · Fandom · pngwing 류는 Cloudflare 가 curl/WebFetch 를 막아 못 썼고, fightersgeneration 과 Arcade Flyer Archive 는 열려 있다.
 `validate.ps1` 에 `Test-MascotSpec` 을 추가해 크기와 **알파 비율(투명 20% 미만 = 포스터)** 을 검사한다 — 옛 포스터는 WARN 으로 잡히고 새 파일은 통과한다.
 이 검사가 `sony playstation portable.png` 가 **380×760** 인 것도 잡아냈다(21종 중 유일한 규격 외 크기). 리샘플링 없이 좌우 50px 씩 투명 패딩해 480×760 으로 맞췄다.
 
