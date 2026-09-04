@@ -61,3 +61,6 @@ emulators_update/
 menu-art/
 last_run.log
 script.nv
+emulators/Mame/cheat/output.json
+emulators/Mame/cheat/output.xml
+stats/
