@@ -15,7 +15,7 @@
 | 원격 | https://github.com/wonhoz/Arcade (**public**) |
 | 프론트엔드 | Attract-Mode v2.7.0 (Windows, SFML 2.5.1) — `attract.exe` (실행은 `attract.bat`, 4.5절) |
 | 설치 경로 | `D:\AttractMode` (절대경로 의존 있음 → 4.4절) |
-| 추적 파일 | 약 23,700개 / `.git` 약 1.3GB |
+| 추적 파일 | 23,554개 / `.git` 1.2GB (size-pack 1.17GiB, 2026-09-04 실측 — `docs/ISSUES.md` 2번과 같은 수치) |
 | 현재 브랜치 | `develop` (공통 작업 브랜치, `main` 기반) |
 | 커밋 메시지 | 한국어. 최근 스타일은 `영역 | 내용` (예: `retroarch | args 에서 -H 제거`) |
 
@@ -578,6 +578,6 @@ powershell -ExecutionPolicy Bypass -File tools\smoke-run.ps1 -All               
 ### 미해결 중 가장 큰 것
 
 - **S1**: 공개 저장소에 PS2/PS1/새턴 BIOS와 상용 롬이 커밋되어 있다 (저작권 위험).
-- **S2**: `.git`이 1.3GB. 에뮬레이터 바이너리 전량이 추적 중이다.
+- **S2**: `.git`이 1.2GB. 에뮬레이터 바이너리 전량이 추적 중이다.
 
-둘 다 히스토리 재작성이 필요하고 25개 브랜치 전부에 영향을 주므로, **손대기 전에 전체 백업**한다.
+둘 다 히스토리 재작성이 필요하고 브랜치 7개와 `archive/*` 태그 11개 전부에 영향을 주므로, **손대기 전에 전체 백업**한다.
