@@ -51,14 +51,14 @@ powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\aud
 
 | 섹션 | 보는 것 | 왜 validate.ps1 이 못 잡나 |
 |---|---|---|
-| `layout` | `.nut` 의 리터럴 이미지/영상/셰이더 참조 · `do_nut`/`load_module` 대상 존재 · 로드 불가 위치의 layout*.nut · 어디서도 안 부르는 .nut | 레이아웃 내부는 검사 안 함. `do_nut` 대상 부재는 Squirrel 예외 → 그 아래 전부 미실행 |
+| `layout` | `.nut` 의 리터럴 이미지/영상/셰이더 참조(옵션 자리표시자 `my-own-marquee.jpg` 는 INFO 로 분리) · `do_nut`/`load_module` 대상 존재 · 로드 불가 위치의 layout*.nut · 어디서도 안 부르는 .nut | 레이아웃 내부는 검사 안 함. `do_nut` 대상 부재는 Squirrel 예외 → 그 아래 전부 미실행 |
 | `dispimg` | `character/ system/ wheel/[DisplayName]` 21개 디스플레이별 존재 · 디스플레이 이름과 안 맞는 죽은 복사본 | 마스코트 존재만 봄 |
-| `mascot` | 480×760 · 알파 컷아웃 여부(투명 비율·가장자리 투명) · 파일 크기 이상치 | 존재만 봄. **불투명 플라이어를 잘라 넣어도 통과** |
-| `dupes` | NEVATO↔Console Box 바이트 동일 미디어 · 참조 없는 `background/{1280,1920,2xScale}` | — |
+| `mascot` | 480×760 · 알파 컷아웃 여부(투명 비율·가장자리 투명) · **피사체가 직선으로 잘렸는지**(최외곽 불투명 행/열이 피사체 폭의 20% 이상) · 파일 크기 이상치 | 존재만 봄. **불투명 플라이어를 잘라 넣어도 통과** |
+| `dupes` | 바이트 동일 미디어(NEVATO↔Console Box 쌍은 정책상 의도된 것이라 INFO, 그 외는 ISSUE) · 두 레이아웃 공용 폴더 드리프트 · 참조 없는 `background/{1280,1920,2xScale}` | — |
 | `fonts` | 참조 폰트 해석 가능 여부 · font_path 안의 미사용 폰트 · font_path 밖 폰트 파일 | — |
 | `glyph` | 실제 표시 텍스트(overview·romlist Title·kr.msg·NXL HD 한글 리터럴) ↔ 그 텍스트를 그리는 폰트의 글리프 | AM 은 글리프 폴백이 없다(CLAUDE.md 5.4) |
 | `cfg` | artwork 경로 후행 공백 · 형제 cfg(CUE/CCD/PBP…) artwork 블록 일치 · 어떤 라벨이 실제 그려지는지 결정하는 layout_config 값 | validate 는 `Trim()` 해서 후행 공백을 영원히 못 본다 |
-| `case` | attract.cfg romlist 이름 ↔ 파일명 **대소문자 정확** 일치 · .gitignore 경로 대소문자 | Windows 가 가려 줌 |
+| `case` | attract.cfg romlist 이름 ↔ 파일명 **대소문자 정확** 일치 · .gitignore 경로 대소문자 · `layouts/<name>/layout.nut` 철자(NXL HD 의 `Layout.nut`) | Windows 가 가려 줌 |
 | `branch` | 장비 브랜치 5개 behind main = 0 · 장비 브랜치에만 있는 공통성 커밋 | — |
 | `video` | 추적 mp4 해상도/길이/비트레이트(ffprobe 없이 tkhd 파싱) · intro.nut 이 가리키는 영상 존재 | — |
 | `junk` | 자체 자산 영역의 `(2)`·`bak/`·`.psd`·`Thumbs.db` · 추적 중인 런타임 산출물 | — |

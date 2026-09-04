@@ -290,6 +290,8 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
   **새 마스코트를 만들 때**: 흰/단색 배경의 원화(공식 아트, 전단)를 구해
   `.claude\skills\arcade-audit\scripts\cutout.ps1 <in> <out> [-Mode white|light] [-Erase "x,y,w,h;…"]` 로
   배경을 떼어내면 480×760 알파 PNG 가 나온다. GDI+ 가 못 여는 JPEG 는 `img-to-png.ps1` 로 먼저 변환.
+  **피사체가 직선으로 끝나는 소재**(전단 크롭, 무릎 컷)밖에 없으면 `fade-edge.ps1 <in> <out> -Bottom 90` 으로
+  그 변을 알파 페이드시킨다 — 절단선이 화면 중간에 뜨는 것보다 낫다(`docs/ISSUES.md` 37·38번). `audit.ps1 -Section mascot` 이 직선 컷을 잡는다.
   소재가 열려 있는 곳: fightersgeneration.com(격투 캐릭터 공식 아트), flyers.arcade-museum.com(전단).
   Spriters Resource·Fandom·pngwing 류는 Cloudflare 가 스크립트 접근을 막는다.
 - 디스플레이 메뉴 아트웍은 `menu-art/system|marquee|snap|wheel`(로컬 전용).
@@ -492,10 +494,10 @@ powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\aud
 |---|---|
 | `layout` | `.nut`의 리터럴 이미지·`do_nut`·`load_module` 대상 존재, 로드 불가 위치의 layout*.nut, 어디서도 안 부르는 .nut |
 | `dispimg` | `character/ system/ wheel/[DisplayName]` 디스플레이별 존재, 이름이 안 맞는 죽은 복사본 |
-| `mascot` | 480×760·알파 컷아웃 여부(투명 비율) |
-| `dupes` | NEVATO↔Console Box 공용 폴더 어긋남, 참조 없는 배경 변형, 바이트 동일 중복 |
+| `mascot` | 480×760·알파 컷아웃 여부(투명 비율), **피사체가 직선으로 잘렸는지**(최외곽 불투명 행/열이 피사체 폭의 20% 이상) |
+| `dupes` | NEVATO↔Console Box 공용 폴더 어긋남, 참조 없는 배경 변형, 바이트 동일 중복(두 레이아웃의 의도된 쌍은 INFO) |
 | `fonts` · `glyph` | 참조 폰트 해석 가능 여부, **표시 텍스트 ↔ 폰트 글리프** |
-| `cfg` · `case` | 값 끝 공백, 형제 cfg 일치, `layout_config` 값, romlist·.gitignore 대소문자 |
+| `cfg` · `case` | 값 끝 공백, 형제 cfg 일치, `layout_config` 값, romlist·.gitignore 대소문자, `layout.nut` 철자 |
 | `branch` · `video` · `junk` | 장비 브랜치 전파, mp4 해상도·비트레이트, `(2)`·`bak/`·`.psd`·추적된 런타임 산출물 |
 
 출력 태그는 `ISSUE`(보고) / `OK`(측정했고 이상 없음) / `INFO`. 읽기 전용이다.

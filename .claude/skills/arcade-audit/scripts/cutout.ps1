@@ -1,8 +1,8 @@
-# cutout3: like cutout2 but (a) background rule can be a loose "light / pinkish" classifier
-# instead of distance-from-corner-colour, so soft radial gradients go too, and (b) rectangles
+# cutout.ps1: flood-fill background removal -> 480x760 alpha PNG mascot. Background rule can be a loose "light / pinkish" classifier
+# (-Mode light) instead of distance-from-corner-colour (-Mode white), so soft radial gradients go too, and rectangles
 # in SOURCE pixel space can be forced transparent (logos, speech bubbles, captions).
 # Dark line-art outlines keep the flood fill out of the subject.
-#   cutout3.ps1 <in> <out> [-Mode white|light] [-Tol 40] [-Soft 18] [-Pad 8] [-Erase "x,y,w,h;x,y,w,h"] [-Crop "x,y,w,h"]
+#   cutout.ps1 <in> <out> [-Mode white|light] [-Tol 40] [-Soft 18] [-Pad 8] [-Erase "x,y,w,h;x,y,w,h"] [-Crop "x,y,w,h"]
 param([string]$In, [string]$Out, [string]$Mode = 'white', [int]$Tol = 40, [int]$Soft = 18, [int]$Pad = 8, [string]$Erase = '', [string]$Crop = '')
 Add-Type -AssemblyName System.Drawing
 Add-Type -ReferencedAssemblies System.Drawing -TypeDefinition @"
