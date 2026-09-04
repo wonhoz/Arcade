@@ -6,9 +6,9 @@
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1` 로 자동화되어 있다.
 
-**진행 현황** — 처리 **41건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
+**진행 현황** — 처리 **43건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
-42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것)
+42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일)
 
 > **보류 (우선순위 낮춤, 별도 지시 전까지 대기)** — S1 공개 저장소의 BIOS·롬, S2 `.git` 1.2GB.
 > 둘 다 히스토리 재작성이 필요하고 되돌리기 어렵다.
@@ -846,6 +846,112 @@ ISSUES 2번의 수치를 같은 값으로 갱신하고, 머리말의 "로고 임
 `cutout.ps1 -HoleTol 14 -HoleDark 35` 로 뽑아 311×744 on 480×760, 투명 64.3%, 가장자리 100%, 직선 컷 15%(두 발이 같은 줄에 닿는 자연스러운 값).
 후보 13장을 시트로 비교했다 — 모리건(Night Warriors 원화)은 수채 스케치풍이라 다른 마스코트의 셀 화풍과 어긋나고, 펠리시아·포켓걸 전단은 화질 또는 구도가 미달.
 SNK Neo Geo 마스코트는 이오리라 같은 시리즈 캐릭터가 겹치지 않는다.
+
+### - [x] 44. MAME 계열 실행 시 확인 창(저작권 고지·롬 경고)이 매번 떠서 게임이 바로 시작되지 않는다 — **처리 완료**
+
+사용자 지적(2026-09-04). PSXMAME 로 게임을 고르면 확인 창 두 개가 차례로 떠서 조이스틱을 좌→우로 흔들거나 `OK` 를 쳐야 넘어갔다.
+
+| 화면 | 내용 | 근원 |
+|---|---|---|
+| 1 | `Usage of emulators in conjunction with ROMs you don't own is forbidden…` | `ui.c` `disclaimer_string()` |
+| 2 | `One or more ROMs/CHDs for this game are incorrect… / The video·sound emulation isn't 100% accurate.` | `ui.c` `warnings_string()` |
+
+**원인** — PSXMAME 의 `mame.exe` 는 **MAME 0.139 계열**이고, `-showusage` 로 확인한 지원 옵션은 `-skip_gameinfo` 하나뿐이다
+(`-skip_disclaimer`·`-skip_warnings` 는 이 버전에 없다). `ui_display_startup_screens()` 는 세 화면을 이렇게 켠다.
+
+```c
+int show_gameinfo = !options_get_bool(..., OPTION_SKIP_GAMEINFO);
+int show_warnings = TRUE;                 /* 끌 수 있는 옵션이 없다 */
+if (!first_time || (str > 0 && str < 60*5) || 빈드라이버 || 디버거)
+    show_gameinfo = show_warnings = show_disclaimer = FALSE;
+```
+
+`show_disclaimer` 는 호출부(`machine.c`)에서 `!settingsloaded` 로 들어오므로 `cfg/<게임>.cfg` 가 있으면 1번 화면은 사라지지만,
+2번 화면은 드라이버 플래그(`GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND`)와 롬 체크섬 경고에서 나오는 것이라 **설정으로는 끌 수 없다.**
+
+PSXMAME 은 여기에 자체 개조를 넣어 뒀다 — **`use_gpu_plugin` 이 켜져 있으면 세 화면을 전부 건너뛴다.**
+그런데 실제 구동 장비(`bartop`)의 `emulators/PSXMAME/mame.ini` 는 `use_gpu_plugin 0` 이라(`develop` 은 1) 그 우회로가 닫혀 있었다.
+렌더러를 통째로 바꾸는 설정이라 이쪽을 켜는 것은 답이 아니다.
+
+**조치 (2026-09-04)** — `emulators/PSXMAME/mame.exe` 를 **1바이트 패치**했다.
+
+```
+파일 오프셋 0x1039C1 (VA 0x005045C1)   74 -> EB     ; je 0x5045D1  ->  jmp 0x5045D1
+```
+
+`ui_display_startup_screens()` 안의 `if (!first_time || …)` 분기를 **무조건 성립**으로 바꿔,
+`show_disclaimer`·`show_warnings`·`show_gameinfo` 를 0 으로 두는 블록(0x5045D1)으로 항상 들어가게 한 것이다.
+`use_gpu_plugin 1` 일 때 PSXMAME 자신이 타는 것과 **같은 코드 경로**라 새로 도는 코드가 없다.
+
+검증: `mame.exe tekken -nouse_gpu_plugin`(= 캐비닛과 같은 조건)으로 띄워 확인 창 없이 데모 화면까지 바로 들어가는 것을 화면 캡처로 확인했다.
+분기 양쪽(0x5045D1 의 0 대입 3개, 0x504865 의 `show_warnings=1`)을 디스어셈블로 대조해 대상 함수가 맞는지도 확인했다.
+
+> ⚠️ **`emulators/PSXMAME/mame.exe` 를 교체하면 이 패치가 사라진다.** 재적용 절차는 [`../CLAUDE.md`](../CLAUDE.md) 4.6절.
+
+같은 맥락으로 `emulators/MAME Adult.cfg` 만 `args` 에 `-skip_gameinfo` 가 빠져 있어 정보 화면이 떴다 — 다른 MAME 계열 5개와 맞췄다.
+`emulators/Mame` 의 MAME 0.246 은 경고 화면 억제가 UI 옵션 `skip_warnings`(0.226+)인데, 같은 폴더의 `EKMAME64.exe` 가 0.212 라
+공용 `ui.ini` 에 넣으면 EKMAME 쪽에서 미지원 옵션이 된다. 그래서 건드리지 않았다(0.246 은 같은 경고를 일정 기간 다시 띄우지 않는 로직을 자체적으로 갖고 있다).
+
+### - [x] 45. PSXMAME 격투게임의 버튼이 캐비닛 6버튼 배열과 어긋난다 — **처리 완료**
+
+사용자 지시(2026-09-04). 철권류는 MAME 공장 기본값(`P1 Button1~4` = 조이스틱 버튼 1~4, 즉 **아랫줄부터**)이라
+캐비닛의 윗줄/아랫줄 배열과 맞지 않았다.
+
+**기준** — MAME UI 가 표시하는 `Joy 1 3` 은 **0-base**(DirectInput 이 알려 준 버튼 이름)이고
+cfg 에 쓰는 `JOYCODE_1_BUTTONn` 은 **1-base**다. 스크린샷의 `Joy 1 0` 이 MAME 기본값 `JOYCODE_1_BUTTON1` 인 것으로 대조 확인했다.
+
+| MAME 포트 | 6버튼 게임 | 4버튼 게임 |
+|---|---|---|
+| `BUTTON1` · `BUTTON2` · `BUTTON3` | 조이스틱 `BUTTON4` · `BUTTON5` · `BUTTON6` (윗줄) | 조이스틱 `BUTTON4` · `BUTTON5` (윗줄 왼쪽 2개) |
+| `BUTTON4` · `BUTTON5` · `BUTTON6` | 조이스틱 `BUTTON1` · `BUTTON2` · `BUTTON3` (아랫줄) | 조이스틱 `BUTTON1` · `BUTTON2` (아랫줄 왼쪽 2개) |
+
+**함정** — MAME 의 게임별 cfg 는 `<port>` 를 **`type` 만으로 찾지 않는다.** `inptport.c` `load_game_config()` 는
+`field->type == type && field->player == player && field->mask == mask && (field->defvalue & mask) == (defvalue & mask)`
+가 전부 맞아야 적용하고, 하나라도 틀리면 **오류 없이 조용히 무시**한다.
+그래서 `mask`/`defvalue` 를 드라이버에서 정확히 가져와야 한다(`tag` 는 없으면 전 포트를 훑으므로 생략하는 편이 안전하다).
+
+**조치 (2026-09-04)** — `emulators/PSXMAME/cfg/` 에 게임별 cfg **20개**를 만들었다(신규 9 · 갱신 11).
+기존 파일에 있던 UTF-8 BOM 은 뺐다(MAME 자신이 쓰는 형식과 같게). 3버튼 게임의 cfg 는 손대지 않았다.
+
+**1차 조치의 오류 (2026-09-04, 사용자 재보고 "tekken·tekken2 반영 안 됨")**
+mask 를 **MAME 0.139 mainline 드라이버 소스에서 읽어** 넣은 것이 문제였다.
+PSXMAME 은 0.139 기반이지만 **드라이버가 개조돼 있어 값이 다르다.**
+namcos12·zn6b 는 우연히 mainline 과 같아서 tekken3·tektagt 는 동작했고,
+namcos11 계열만 전부 어긋나 조용히 무시되고 있었다.
+
+게다가 **검증 자체가 잘못돼 있었다.** "ESC 로 정상 종료 후 다시 써 낸 cfg 에 포트가 남아 있으면 성공"으로 판정했는데,
+매칭이 0건이면 MAME 가 파일을 아예 다시 쓰지 않고 **내 파일이 그대로 남는** 경우가 있어 그것을 성공으로 오독했다.
+**MAME 가 써 낸 파일에는 `tag="…"` 가 붙는다** — 이 유무를 먼저 봐야 한다.
+
+**2차 조치 (2026-09-04)** — mask 를 추정하지 않고 **바이너리에서 직접 실측**했다.
+후보 mask(1·2·4·…·32768 × `defvalue` = mask/0)를 전부 써 넣은 탐침 cfg 로 게임을 띄우고 ESC 로 종료하면,
+MAME 가 다시 써 낸 파일에 **실제로 매칭된 것만** `tag`·`mask`·`defvalue` 와 함께 남는다.
+
+| 포트군 | 게임 | P1 BUTTON1~6 `mask`/`defvalue` (실측) |
+|---|---|---|
+| `namcos11` / tekken 계열 | tekken, tekken2, primglex | 4096/0, 8192/0, 4096/0, 8192/0 |
+| `namcos11` / souledge | souledge | 4096/0, 8192/0, 16384/0, 4096/0 |
+| `namcos12` | tekken3, tektagt, ehrgeiz, mrdrillr, fgtlayer | 16/16, 32/32, 64/64, 2/2, 4/4, 8/8 |
+| `zn.c` / `zn6b` | ts2, starglad, sfex, sfexp, sfex2, sfex2p, rvschool, jgakuen, plsmaswd, techromnu, bldyror2 | 16/16, 32/32, 64/64, 16/16, 32/32, 64/64 |
+
+(P2 는 namcos12 만 다르다 — BUTTON1~3 이 4096/8192/16384, BUTTON4~6 이 32/64/128.)
+
+실측으로 바뀐 것은 **namcos11 4종뿐**이고, 나머지는 재생성해도 1차와 동일했다.
+tekken·tekken2·primglex·souledge 를 실제로 띄워 `tag=` 가 붙은 재기록 파일로 8개 포트 전부 적용을 확인했다.
+
+**실측 범위** — 개발 PC 에는 롬이 일부만 있어(`.gitignore` 대상) 20종 중 11종만 실행·실측했다.
+
+| 상태 | 게임 |
+|---|---|
+| 실측 완료 | tekken, tekken2, primglex, souledge, tekken3, tektagt, ehrgeiz, mrdrillr, fgtlayer, ts2, starglad |
+| 미실측 (롬 불완전 / 실행 시 ACCESS VIOLATION) | sfex, sfexp, sfex2, sfex2p, rvschool, jgakuen, plsmaswd, techromnu, bldyror2 — 전부 `zn6b` |
+
+미실측 9종은 전부 `zn.c` 의 **같은 `zn6b` 포트셋**을 쓰고, 같은 포트셋을 쓰는 ts2·starglad 두 종이
+서로 다른 보드(coh1000c)에서 동일한 값(16/32/64 × 2줄, `defvalue` = `mask`)으로 실측됐다.
+그래도 **캐비닛에서 스트리트 파이터 EX 계열 한 종은 직접 눌러 확인하는 것이 좋다.**
+
+> **여기서 얻은 교훈**: 실측 스크립트가 MAME 창에 ESC 를 보낼 때 **게임이 조기 종료돼 있으면 그 ESC 가
+> 터미널로 들어간다**(Claude Code 에서는 중단 키다). 포그라운드 창의 PID 가 대상 프로세스와 같을 때만 보낼 것.
 
 ---
 
