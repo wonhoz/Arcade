@@ -30,7 +30,10 @@ fe.do_nut("scripts/reload.nut");
 fe.do_nut("scripts/loading.nut");
 fe.do_nut("scripts/arcade_name.nut");
 fe.do_nut("scripts/whitebar.nut");
-fe.do_nut("scripts/fade.nut");
+// fe.do_nut("scripts/fade.nut") 는 지웠다. 이 레이아웃의 scripts/ 에는 fade.nut 이 없어
+// (Mega-Display Advanced 에만 있다) 여기서 Squirrel 예외가 나고, 그 아래 sidebar.nut 과
+// wheel2.nut 이 한 번도 실행되지 않았다. fade.nut 이 정의하는 FadeArt 클래스는 두 레이아웃
+// 어디에서도 쓰이지 않으므로 파일을 복사하는 대신 호출을 없앴다. (docs/ISSUES.md 29번)
 fe.do_nut("scripts/sidebar.nut");
 fe.do_nut("scripts/wheel2.nut");
 
