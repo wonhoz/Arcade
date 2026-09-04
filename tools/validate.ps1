@@ -55,6 +55,31 @@ function Test-Bom([string]$Path) {
     } finally { $fs.Dispose() }
 }
 
+# 마스코트 PNG 규격 검사. 위반 사유 문자열을 돌려주고, 규격에 맞으면 $null.
+#   규격: 480x760, 투명 배경 위 컷아웃. 알파를 4px 간격으로 샘플링해
+#   투명(alpha<16) 비율이 20% 미만이면 "불투명 포스터"로 본다
+#   (실측: 정상 컷아웃 19종은 44~80%, 포스터 2종은 0.0% 였다).
+Add-Type -AssemblyName System.Drawing
+function Test-MascotSpec([string]$Path) {
+    try { $bmp = New-Object System.Drawing.Bitmap $Path } catch { return "PNG 를 열 수 없음" }
+    try {
+        $w = $bmp.Width; $h = $bmp.Height
+        $total = 0; $clear = 0
+        for ($y = 0; $y -lt $h; $y += 4) {
+            for ($x = 0; $x -lt $w; $x += 4) {
+                $total++
+                if ($bmp.GetPixel($x, $y).A -lt 16) { $clear++ }
+            }
+        }
+    } finally { $bmp.Dispose() }
+    $why = @()
+    if ($w -ne 480 -or $h -ne 760) { $why += "크기 ${w}x${h} (480x760 이어야 함)" }
+    $pct = [math]::Round(100 * $clear / $total, 1)
+    if ($pct -lt 20) { $why += "투명 픽셀 $pct% - 컷아웃이 아니라 불투명 포스터" }
+    if ($why.Count) { return ($why -join ', ') }
+    return $null
+}
+
 # AM 설정 파일(attract.cfg / emulators\*.cfg) 파서.
 # 들여쓰기 없는 줄 = 키, 들여쓴 줄 = 직전 키의 하위 항목.
 function Read-AmConfig([string]$Path) {
@@ -137,10 +162,17 @@ foreach ($d in $displays) {
     #   NEVATO / Console Box 는 select_character = "By Display" 일 때
     #   character\[DisplayName].png 를 그린다. 없으면 화면 우측이 조용히 빈다
     #   (오류가 안 나서 눈치채기 어렵다). 480x760 알파 PNG 가 규격이다.
+    #
+    #   존재만 보면 안 된다 — 불투명 플라이어를 480x760 으로 잘라 넣어도 통과하고,
+    #   화면에는 리스트 박스 위에 직사각형 포스터가 얹힌다 (ISSUES 28번).
+    #   그래서 알파를 실측한다: 투명 픽셀이 20% 미만이면 컷아웃이 아니다.
     if ($d.Layout -eq 'NEVATO' -or $d.Layout -eq 'Console Box') {
         $mascot = Join-Path $Root ("layouts\{0}\character\{1}.png" -f $d.Layout, $d.Name)
         if (-not (Test-Path -LiteralPath $mascot)) {
             Add-Warn 'mascot' "[$($d.Name)] 마스코트 없음 -> layouts\$($d.Layout)\character\$($d.Name).png (화면 우측이 빈 채로 보임)"
+        } else {
+            $spec = Test-MascotSpec $mascot
+            if ($spec) { Add-Warn 'mascot' "[$($d.Name)] 마스코트 규격 위반 -> layouts\$($d.Layout)\character\$($d.Name).png ($spec)" }
         }
     }
 }

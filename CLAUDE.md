@@ -261,7 +261,10 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 - **마스코트(캐릭터) 이미지**: `NEVATO` · `Console Box` 는 `select_character = "By Display"` 라서
   화면 우측 캐릭터를 **`layouts/<레이아웃>/character/<디스플레이 이름>.png`** 에서 찾는다.
   emulator cfg 의 `artwork character` 와는 **무관하다**(그쪽은 `By Game` 일 때만 쓰인다).
-  없으면 오류 없이 그 자리만 비어 보인다. `tools/validate.ps1` 이 누락을 경고한다.
+  없으면 오류 없이 그 자리만 비어 보인다.
+  **규격은 480×760, 투명 배경 위 컷아웃**이다 — 불투명 플라이어를 잘라 넣으면 리스트 박스 위에
+  포스터 블록이 얹힌다(`docs/ISSUES.md` 28번). `tools/validate.ps1` 이 누락과 규격(크기·알파 비율)을 경고한다.
+  Taito Type X · MAME Adult 는 캐릭터 소재가 없어 **게임 로고를 얹은 임시본**이다.
 - 디스플레이 메뉴 아트웍은 `menu-art/system|marquee|snap|wheel`(로컬 전용).
 
 ### 5.4 레이아웃 수정

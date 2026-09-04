@@ -622,7 +622,13 @@ TeknoParrot · Taito Type X · MAME Adult 세 개가 없어 그 자리가 빈 �
 > S5 의 "처리 완료" 7건 중 **22번·25번은 완료가 아니었다.** 점검 절차는 `/arcade-audit` 스킬
 > (`.claude/skills/arcade-audit/`)로 고정했고, 결과 아티팩트는 「AttractMode 재점검」에 갱신했다.
 
-### - [ ] 28. 마스코트 2종이 컷아웃이 아니라 불투명 포스터 — Taito Type X · MAME Adult
+### - [x] 28. 마스코트 2종이 컷아웃이 아니라 불투명 포스터 — Taito Type X · MAME Adult — **처리 완료 (임시 소재)**
+
+**조치 (2026-09-04)**: 두 장을 **투명 480×760 캔버스에 게임 로고를 얹은 컷아웃**으로 교체했다
+(`menu-art/Taito Type X/wheel/SamuraiSpiritsSen.png`, `emulators/Mame/wheel/hotdebut.png` — 알파 있는 소재 중 이 시스템 것).
+캐릭터 원화가 아니라 **로고 임시본**이므로, 배경 제거된 캐릭터 소재가 생기면 갈아 끼울 것.
+`validate.ps1` 에 `Test-MascotSpec` 을 추가해 크기와 **알파 비율(투명 20% 미만 = 포스터)** 을 검사한다 — 옛 포스터는 WARN 으로 잡히고 새 파일은 통과한다.
+이 검사가 `sony playstation portable.png` 가 **380×760** 인 것도 잡아냈다(21종 중 유일한 규격 외 크기). 리샘플링 없이 좌우 50px 씩 투명 패딩해 480×760 으로 맞췄다.
 
 22번에서 "flyer 를 480×760 으로 채움-크롭"해 넣은 3장 중 2장이 규격 위반이다.
 기존 19종은 전부 **투명 배경 위 캐릭터 컷아웃**인데, 이 둘은 알파를 4px 간격으로 실측하면 **투명 0.0%**
