@@ -400,16 +400,33 @@ PSXMAME 자신이 `use_gpu_plugin` 이 켜져 있을 때 타는 것과 **같은 
 
 > ⚠️ **`type` 만 맞으면 되는 게 아니다.** `inptport.c` `load_game_config()` 는
 > `type` · `player` · **`mask`** · **`defvalue`** 가 전부 맞아야 적용하고,
-> 하나라도 틀리면 **오류 없이 조용히 무시**한다. `mask`/`defvalue` 는 드라이버 소스의
-> `PORT_BIT( <mask>, IP_ACTIVE_LOW, IPT_BUTTONn )` 에서 가져온다(`IP_ACTIVE_LOW` 면 `defvalue` = `mask`).
-> `tag` 는 생략하면 전 포트를 훑으므로 **빼는 편이 안전하다**(드라이버가 바뀌어도 안 깨진다).
+> 하나라도 틀리면 **오류 없이 조용히 무시**한다.
+
+> ⚠️⚠️ **`mask`/`defvalue` 를 드라이버 소스에서 "읽어서" 정하지 말 것.**
+> PSXMAME 은 MAME 0.139 기반이지만 **드라이버가 개조돼 있어 mainline 소스와 값이 다르다.**
+> 실제로 namcos11 계열(tekken·tekken2·primglex·souledge)은 mainline 이 `mask=0x10 defvalue=0x10` 인데
+> 이 빌드는 **`mask=4096 defvalue=0`** 이다(namcos12·zn6b 는 우연히 일치). 소스를 믿고 넣으면 조용히 무시된다.
+
+**mask 는 바이너리에서 직접 알아낸다** — 후보 mask 를 전부 써 넣고 게임을 띄운 뒤 ESC 로 정상 종료하면,
+MAME 가 다시 써 낸 cfg 에 **실제로 매칭된 것만** 남는다.
+
+```
+<port type="P1_BUTTON1" mask="1"     defvalue="1">…</port>   ┐ 1,2,4,8,…,32768 을
+<port type="P1_BUTTON1" mask="1"     defvalue="0">…</port>   │ defvalue = mask / 0
+<port type="P1_BUTTON1" mask="2"     defvalue="2">…</port>   ┘ 두 가지로 전부 나열
+…  (P1/P2 × BUTTON1~6)
+```
 
 - **버튼 번호는 두 체계가 다르다.** MAME UI 가 보여 주는 `Joy 1 3` 은 **0-base**(DirectInput 이 준 이름),
   cfg 에 쓰는 `JOYCODE_1_BUTTONn` 은 **1-base**다. 즉 UI 의 `Joy 1 3` = `JOYCODE_1_BUTTON4`.
-- 4버튼/6버튼 구분은 `mame.exe -listxml <게임>` 의 `<input buttons="…">` 로 본다.
-- 파일은 **UTF-8 BOM 없이** 저장한다(MAME 자신이 쓰는 형식).
+- 4버튼/6버튼 구분도 위 실측으로 정한다(`-listxml` 의 `buttons=` 는 드라이버가 공용 포트셋을 쓰면 실제와 다를 수 있다).
+- `tag` 는 생략하면 전 포트를 훑으므로 **빼는 편이 안전하다**. 파일은 **UTF-8 BOM 없이** 저장한다.
 - **검증법**: 게임을 띄우고 ESC 로 정상 종료하면 MAME 가 그 cfg 를 다시 쓴다.
-  **다시 쓴 파일에 내 `<port>` 가 그대로 남아 있으면 매칭 성공**이고, 빠졌으면 mask 가 틀린 것이다.
+  > 🚨 **다시 썼는지를 먼저 확인해야 한다.** MAME 가 써 낸 파일에는 **`tag="…"` 가 붙는다.**
+  > `tag=` 가 없으면 그건 그냥 **내 파일이 그대로 남은 것**이지 성공이 아니다 —
+  > 이걸 성공으로 오독해서 틀린 mask 를 장비까지 올린 적이 있다(`docs/ISSUES.md` 45번).
+  > `tag=` 가 있고 그 안의 `JOYCODE` 가 내 값과 같아야 적용된 것이다.
+
   (프로세스를 강제 종료하면 `cfg/default.cfg` 가 0바이트로 잘릴 수 있으니 ESC 로 끝낼 것.)
 
 현재 PSXMAME 은 격투게임 20종에 캐비닛 배열(윗줄 = 조이스틱 4·5·6, 아랫줄 = 1·2·3)을 적용해 뒀다
