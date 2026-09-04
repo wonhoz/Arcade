@@ -366,7 +366,9 @@ if (Want 'branch') {
     Hdr "branch: non-merge commits on device branches touching shared files (candidates to port to develop)"
     $any = $false
     foreach ($b in @('bartop', 'desktop', 'desktop-ASUS-TUF', 'desktop-MSI-Sword', 'desktop-MSI-Sword-DriveWheel')) {
-        $c = git log --oneline --no-merges "origin/main..origin/$b" -- 'emulators/*.cfg' attract.cfg romlists/ tools/ docs/ 2>$null
+        # --cherry-pick --right-only drops commits whose patch already exists in main under another
+        # hash (the bartop -> develop cherry-picks of 2022); without it every one of them is listed.
+        $c = git log --oneline --no-merges --cherry-pick --right-only "origin/main...origin/$b" -- 'emulators/*.cfg' attract.cfg romlists/ tools/ docs/ 2>$null
         if ($c) { $any = $true; "ISSUE  $b"; $c | ForEach-Object { "         $_" } }
     }
     if (-not $any) { "OK     nothing shared-looking stranded on a device branch" }
