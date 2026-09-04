@@ -637,7 +637,11 @@ TeknoParrot · Taito Type X · MAME Adult 세 개가 없어 그 자리가 빈 �
 `character_alpha 255` 라 리스트 박스 위에 직사각형 포스터가 통째로 얹힌다.
 **개수(21/21)로 완료 판정한 것이 원인** — `validate.ps1` 의 마스코트 검사도 존재만 본다.
 
-### - [ ] 29. `layouts/Mega-Display/layout.nut:33` 이 없는 `scripts/fade.nut` 을 부른다
+### - [x] 29. `layouts/Mega-Display/layout.nut:33` 이 없는 `scripts/fade.nut` 을 부른다 — **처리 완료**
+
+**조치 (2026-09-04)**: `do_nut("scripts/fade.nut")` 호출을 지우고 이유를 주석으로 남겼다. `FadeArt` 는 어디서도 안 쓰므로
+파일을 복사할 이유가 없다. 이 수정으로 `sidebar.nut`·`wheel2.nut` 이 **처음으로 실행된다** — S2-3 의 교훈대로
+두 스크립트를 먼저 읽어 참조 자산(`images/*`)이 이 레이아웃 폴더에 전부 있는지 확인했다(Advanced 와 파일 동일).
 
 ```
 32  fe.do_nut("scripts/whitebar.nut");
