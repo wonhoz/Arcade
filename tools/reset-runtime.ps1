@@ -118,10 +118,13 @@ $JunkPaths = @(
 
 # ---------------------------------------------------------------------------
 function Get-Changed([string[]]$Paths) {
-    # 추적 중이면서 커밋 상태에서 벗어난 파일만 돌려준다
-    $existing = @($Paths | Where-Object { Test-Path -LiteralPath $_ })
-    if ($existing.Count -eq 0) { return @() }
-    $out = & git status --porcelain -- $existing 2>$null
+    # 추적 중이면서 커밋 상태에서 벗어난 파일만 돌려준다.
+    #
+    # 경로를 Test-Path 로 걸러내면 안 된다. 에뮬레이터가 설정 파일을 지운 경우
+    # (porcelain " D") 작업트리에 파일이 없어 목록에서 빠지고, 정확히 그 상황을
+    # 되돌리려는 스크립트가 "정리할 것이 없습니다"를 내놓는다. 실제로 그랬다 (ISSUES 32).
+    # git status 는 존재하지 않는 pathspec 이 섞여도 무해하게 무시하므로 그대로 넘긴다.
+    $out = & git status --porcelain -- $Paths 2>$null
     if (-not $out) { return @() }
     @($out | Where-Object { $_ -notmatch '^\?\?' } | ForEach-Object { $_.Substring(3).Trim('"') })
 }
