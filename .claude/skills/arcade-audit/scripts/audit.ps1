@@ -369,7 +369,10 @@ if (Want 'branch') {
         # --cherry-pick --right-only drops commits whose patch already exists in main under another
         # hash (the bartop -> develop cherry-picks of 2022); without it every one of them is listed.
         $c = git log --oneline --no-merges --cherry-pick --right-only "origin/main...origin/$b" -- 'emulators/*.cfg' attract.cfg romlists/ tools/ docs/ 2>$null
-        if ($c) { $any = $true; "ISSUE  $b"; $c | ForEach-Object { "         $_" } }
+        # INFO, not ISSUE: device-specific edits to attract.cfg/emulators are legitimate on a device
+        # branch (CLAUDE.md 2). The 2022 bartop -> develop ports were re-done by hand, so even
+        # --cherry-pick keeps them (a089eb42 etc., already ported: ISSUES 19). Read the list, judge.
+        if ($c) { $any = $true; "INFO   $b  (review candidates; known-ported ones are in ISSUES 19)"; $c | ForEach-Object { "         $_" } }
     }
     if (-not $any) { "OK     nothing shared-looking stranded on a device branch" }
 }
