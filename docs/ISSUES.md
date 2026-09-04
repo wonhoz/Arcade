@@ -718,7 +718,15 @@ $out = & git status --porcelain -- $existing
 | 스크립트 | `NXL HD/carrier.nut`, `NXL HD/assets/shaders/layout.nut` | 어느 `do_nut` 도 안 부름 / 3단계 깊이라 AM 메뉴에 안 뜸. 후자는 참조 이미지 22개·폰트 `grobold` 가 전부 없는 데모 잔재 |
 | 원본·백업 | `logo/bak`, `Buttons/bak`, `UIelements/bak`, `*.psd` 20개, `Thumbs.db` | 작업 파일. 17번 정리 때 그대로 남음 |
 
-### - [ ] 35. NEVATO ↔ Console Box 가 같은 파일 63벌을 따로 들고 있다
+### - [x] 35. NEVATO ↔ Console Box 가 같은 파일 63벌을 따로 들고 있다 — **처리 완료 (드리프트 감시로)**
+
+**조치 (2026-09-04)**: 한쪽이 다른 쪽을 `../NEVATO/...` 로 참조하게 바꾸는 것이 근본 해결이지만 13개 `.nut` 을 고치고
+캐비닛에서 실행 확인이 필요해 이번엔 하지 않았다. 대신 **어긋남 자체를 잡는다** — `audit.ps1 -Section dupes` 가
+레이아웃 공용 정적 자산 `background/ listbox/ key/ monitor/` 를 이름 기준으로 대조해 해시가 다르거나 한쪽에만 있는 파일을 `ISSUE` 로 낸다.
+`character/ system/ wheel/` 은 대조하지 않는다 — 디스플레이는 레이아웃을 하나만 쓰므로(아케이드→NEVATO, 콘솔→Console Box)
+디스플레이별 파일은 두 레이아웃에서 같을 필요가 없다(실제로 `wheel/` 7개가 다르지만 각자 자기 디스플레이에서만 쓰인다).
+실행해 보니 30번의 `white.png` 가 NEVATO 에만 있었다 — Console Box 에도 넣어 공용 폴더를 다시 동일하게 맞췄다.
+CLAUDE.md 5.4 에 "두 레이아웃의 공용 폴더는 항상 같은 내용을 유지한다" 규칙을 적었다.
 
 200KB 이상 추적 미디어를 MD5 로 묶으면 **63그룹 · 125MB** 가 바이트 동일하다(background/*.png 각 4벌,
 background/*.mp4, listbox/*.png, character/*.png). 문제는 용량이 아니라 **어긋남** — 이번 마스코트 3장도

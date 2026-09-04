@@ -270,6 +270,11 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 
 ### 5.4 레이아웃 수정
 - Squirrel(`.nut`). 모듈은 `fe.load_module("...")`, 하위 스크립트는 `fe.do_nut("scripts/...")`.
+- **`NEVATO`와 `Console Box`는 공용 정적 자산(`background/ listbox/ key/ monitor/`)을
+  바이트 단위로 똑같이 유지한다.** 한쪽만 고치면 두 레이아웃이 다르게 보인다(`docs/ISSUES.md` 35번).
+  디스플레이별 폴더(`character/ system/ wheel/`)는 예외 — 디스플레이는 레이아웃을 하나만 쓴다.
+  둘 중 하나를 바꾸면 반드시 다른 쪽에도 같은 파일을 넣고,
+  `.claude\skills\arcade-audit\scripts\audit.ps1 -Section dupes`로 어긋남이 없는지 확인한다.
 - **레이아웃이 쓰는 폰트는 그 레이아웃 폴더 안이나 `font_path`(= `fonts` / `fonts/NXL HD`)에 있어야 한다.**
   폰트를 새로 넣으면서 폴더를 추가했다면 `attract.cfg`의 `font_path`도 같이 늘려야 한다.
 
