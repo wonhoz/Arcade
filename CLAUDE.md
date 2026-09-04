@@ -261,6 +261,36 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 
 캐비닛 자동 시작(바로가기·시작프로그램)도 `attract.exe`가 아니라 `attract.bat`을 가리켜야 한다.
 
+### 4.6 PSXMAME — ⚠️ `mame.exe`에 1바이트 패치가 들어가 있다
+
+`emulators/PSXMAME/mame.exe`(MAME 0.139 계열, 2009년 빌드)는 게임 시작 때
+**저작권 고지 화면**과 **롬/에뮬레이션 경고 화면**을 띄운다. 이 버전에는 이를 끄는 옵션이 없다
+(`-showusage` 로 확인한 지원 옵션은 `-skip_gameinfo` 뿐 — `-skip_disclaimer`·`-skip_warnings` 는 없다).
+
+그래서 2026-09-04에 `ui_display_startup_screens()`의 분기 한 개를 뒤집었다
+(`docs/ISSUES.md` 44번).
+
+| 파일 오프셋 | VA | 원래 | 패치 후 |
+|---|---|---|---|
+| `0x1039C1` | `0x005045C1` | `74 0E` (`je 0x5045D1`) | `EB 0E` (`jmp 0x5045D1`) |
+
+`0x5045D1`은 `show_disclaimer`·`show_warnings`·`show_gameinfo`를 전부 0으로 두는 블록이다.
+PSXMAME 자신이 `use_gpu_plugin` 이 켜져 있을 때 타는 것과 **같은 경로**라 새로 도는 코드가 없다.
+
+> **`mame.exe` 를 교체하면 패치가 사라진다.** 재적용:
+> ```powershell
+> $exe='D:\AttractMode\emulators\PSXMAME\mame.exe'; $off=0x1039C1
+> $b=[IO.File]::ReadAllBytes($exe)
+> if ($b[$off] -ne 0x74) { throw '패치 위치 불일치 — 바이너리가 다른 빌드다' }
+> $b[$off]=0xEB; [IO.File]::WriteAllBytes($exe,$b)
+> ```
+> 위치가 안 맞으면 다른 빌드다. `ui.c`의 `if (!first_time || (str > 0 && str < 60*5) || …)` 분기를
+> 무조건 성립으로 바꾸는 것이 목적이므로, 상수 `300`(`cmp eax,0x12A`)과 그 앞의 `je` 를 찾아 같은 방식으로 처리한다.
+> 되돌리려면 `git checkout -- emulators/PSXMAME/mame.exe`.
+
+`emulators/Mame`의 MAME 0.246은 경고 화면 억제가 UI 옵션 `skip_warnings`(0.226부터)인데,
+같은 폴더의 `EKMAME64.exe` 가 0.212라 공용 `ui.ini` 에 넣으면 EKMAME 쪽에서 미지원 옵션이 된다. 그래서 넣지 않았다.
+
 
 ## 5. 자주 하는 작업 레시피
 
@@ -356,11 +386,41 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 > 실제로 `arcade_name.nut`에서 이 방식으로 회귀가 났다(`docs/ISSUES.md` S2-3 참고).
 > **예외 줄 아래 문장을 먼저 읽고, 그것이 실행돼도 되는 코드인지 판단한 뒤 지운다.**
 
-### 5.5 손대지 말아야 할 것
+### 5.5 MAME 계열 게임의 버튼 배열 바꾸기 (`emulators/<Mame|PSXMAME>/cfg/<게임>.cfg`)
+
+게임별 입력은 MAME 자신이 쓰는 XML 형식이다. `<system name="<셋 이름>">` → `<input>` → `<port>`.
+
+```xml
+<port type="P1_BUTTON1" mask="16" defvalue="16">
+    <newseq type="standard">
+        JOYCODE_1_BUTTON4
+    </newseq>
+</port>
+```
+
+> ⚠️ **`type` 만 맞으면 되는 게 아니다.** `inptport.c` `load_game_config()` 는
+> `type` · `player` · **`mask`** · **`defvalue`** 가 전부 맞아야 적용하고,
+> 하나라도 틀리면 **오류 없이 조용히 무시**한다. `mask`/`defvalue` 는 드라이버 소스의
+> `PORT_BIT( <mask>, IP_ACTIVE_LOW, IPT_BUTTONn )` 에서 가져온다(`IP_ACTIVE_LOW` 면 `defvalue` = `mask`).
+> `tag` 는 생략하면 전 포트를 훑으므로 **빼는 편이 안전하다**(드라이버가 바뀌어도 안 깨진다).
+
+- **버튼 번호는 두 체계가 다르다.** MAME UI 가 보여 주는 `Joy 1 3` 은 **0-base**(DirectInput 이 준 이름),
+  cfg 에 쓰는 `JOYCODE_1_BUTTONn` 은 **1-base**다. 즉 UI 의 `Joy 1 3` = `JOYCODE_1_BUTTON4`.
+- 4버튼/6버튼 구분은 `mame.exe -listxml <게임>` 의 `<input buttons="…">` 로 본다.
+- 파일은 **UTF-8 BOM 없이** 저장한다(MAME 자신이 쓰는 형식).
+- **검증법**: 게임을 띄우고 ESC 로 정상 종료하면 MAME 가 그 cfg 를 다시 쓴다.
+  **다시 쓴 파일에 내 `<port>` 가 그대로 남아 있으면 매칭 성공**이고, 빠졌으면 mask 가 틀린 것이다.
+  (프로세스를 강제 종료하면 `cfg/default.cfg` 가 0바이트로 잘릴 수 있으니 ESC 로 끝낼 것.)
+
+현재 PSXMAME 은 격투게임 20종에 캐비닛 배열(윗줄 = 조이스틱 4·5·6, 아랫줄 = 1·2·3)을 적용해 뒀다
+(`docs/ISSUES.md` 45번에 포트군별 mask 표).
+
+### 5.6 손대지 말아야 할 것
 - `default-*.cfg`, `emulators/script/`, `loader/`, `modules/`, `plugins/` — AM 벤더 원본.
   `plugins/`는 `attract.cfg`에 `plugin` 섹션이 없어 전부 비활성이지만, AM 설정 메뉴에서
   켤 수 있는 정상 자산이라 지우지 않는다.
 - `layouts/Mega-Display` — 어떤 display도 쓰지 않지만 AM 레이아웃 메뉴에서 선택 가능한 예비 테마다.
+- `emulators/PSXMAME/mame.exe` — **1바이트 패치가 들어가 있다**(4.6절). 새 빌드로 교체하면 시작 확인 창이 다시 뜬다.
 
 > **미연결 자산을 정리한 이력** — 2026-09-03에 아래를 제거하고
 > `archive/unused-assets-2026-09-03` 태그에 보존했다.
@@ -390,7 +450,7 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 > 레이아웃 폴더의 미연결 자산은 `.claude/skills/arcade-audit/scripts/audit.ps1 -Section dispimg,dupes,fonts,junk`가 뽑아 준다.
 - `License.txt`, `Readme.txt`, `Layouts.txt`, `Compile.txt`, `Changelog.txt` — AM 공식 문서.
 
-### 5.6 Attract-Mode 본체 업그레이드
+### 5.7 Attract-Mode 본체 업그레이드
 
 배포본은 "AM 벤더 원본"만 덮어쓰고, 이 저장소가 직접 만든 것은 절대 덮지 않는다.
 공식 zip(`attract-vX.Y.Z-win64.zip`)을 임시 폴더에 풀고 **해시로 비교**해서 실제로 다른 파일만 반영한다.
