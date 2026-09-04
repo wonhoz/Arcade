@@ -23,7 +23,10 @@ description: AttractMode 저장소 주기 재점검. 지정 커밋(또는 마지
   다운로드는 `curl -L -o` 또는 `Invoke-WebRequest` 로 하고, 받은 이미지는 `Read` 로 열어 눈으로 확인한 뒤 쓴다.
   - 열려 있는 소스: `fightersgeneration.com`(격투 캐릭터 공식 아트, 흰 배경 JPG), `flyers.arcade-museum.com`(전단, 페이지의 `data-src` 가 원본 JPG).
     Cloudflare 로 막힌 곳(curl·WebFetch 모두): Spriters Resource, Fandom 위키, pngwing/pngegg/cleanpng, MobyGames.
-  - **마스코트 컷아웃 도구** — `scripts/cutout.ps1 <in> <out> [-Mode white|light] [-Tol 40] [-Erase "x,y,w,h;…"] [-Crop "x,y,w,h"]`.
+  - **마스코트 컷아웃 도구** — `scripts/cutout.ps1 <in> <out> [-Mode white|light] [-Tol 40] [-Erase "x,y,w,h;…"] [-Crop "x,y,w,h"] [-HoleTol 14 -HoleDark 20]`.
+    `-HoleTol` 은 피사체에 둘러싸여 플러드필이 못 닿는 흰 영역(머리카락·팔 사이)을 추가로 지운다 — 둘레의 `-HoleDark`% 이상이 먹선일 때만(흰 옷 하이라이트 보호).
+    남는 곳이 있으면 `-Debug <png>` 로 후보를 초록(제거)/빨강(거부)으로 보고, `-HoleBox "x,y,w,h"`(원본 픽셀)로 그 영역만 둘레 조건을 면제한다.
+    결과는 마젠타 같은 배경을 깔고 2배 확대해 머리카락·손 주변을 반드시 본다(ISSUES 42). 도움 스크립트: 확대는 `zoom.ps1`, 후보 비교는 `sheet.ps1`(스크래치에 있음, 필요하면 재작성).
     가장자리에서 플러드필로 배경을 떼고 480×760 투명 캔버스에 맞춘다. `light` 모드는 연한 그라데이션(분홍·회색)까지 배경으로 본다.
     선화 외곽선이 있는 애니 그림에 잘 맞는다. GDI+ 가 "매개 변수가 잘못되었습니다"로 못 여는 JPEG 는 `scripts/img-to-png.ps1` 로 먼저 변환.
     bash 에서 경로를 넘길 때 `"$SW\web\$in"` 처럼 쓰면 `\$` 가 이스케이프돼 깨진다 — 슬래시(`$SW/web/$in`)로 쓴다.
@@ -51,14 +54,14 @@ powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\aud
 
 | 섹션 | 보는 것 | 왜 validate.ps1 이 못 잡나 |
 |---|---|---|
-| `layout` | `.nut` 의 리터럴 이미지/영상/셰이더 참조 · `do_nut`/`load_module` 대상 존재 · 로드 불가 위치의 layout*.nut · 어디서도 안 부르는 .nut | 레이아웃 내부는 검사 안 함. `do_nut` 대상 부재는 Squirrel 예외 → 그 아래 전부 미실행 |
+| `layout` | `.nut` 의 리터럴 이미지/영상/셰이더 참조(옵션 자리표시자 `my-own-marquee.jpg` 는 INFO 로 분리) · `do_nut`/`load_module` 대상 존재 · 로드 불가 위치의 layout*.nut · 어디서도 안 부르는 .nut | 레이아웃 내부는 검사 안 함. `do_nut` 대상 부재는 Squirrel 예외 → 그 아래 전부 미실행 |
 | `dispimg` | `character/ system/ wheel/[DisplayName]` 21개 디스플레이별 존재 · 디스플레이 이름과 안 맞는 죽은 복사본 | 마스코트 존재만 봄 |
-| `mascot` | 480×760 · 알파 컷아웃 여부(투명 비율·가장자리 투명) · 파일 크기 이상치 | 존재만 봄. **불투명 플라이어를 잘라 넣어도 통과** |
-| `dupes` | NEVATO↔Console Box 바이트 동일 미디어 · 참조 없는 `background/{1280,1920,2xScale}` | — |
+| `mascot` | 480×760 · 알파 컷아웃 여부(투명 비율·가장자리 투명) · **피사체가 직선으로 잘렸는지**(최외곽 불투명 행/열이 피사체 폭의 20% 이상) · 파일 크기 이상치 | 존재만 봄. **불투명 플라이어를 잘라 넣어도 통과** |
+| `dupes` | 바이트 동일 미디어(NEVATO↔Console Box 쌍은 정책상 의도된 것이라 INFO, 그 외는 ISSUE) · 두 레이아웃 공용 폴더 드리프트 · 참조 없는 `background/{1280,1920,2xScale}` | — |
 | `fonts` | 참조 폰트 해석 가능 여부 · font_path 안의 미사용 폰트 · font_path 밖 폰트 파일 | — |
 | `glyph` | 실제 표시 텍스트(overview·romlist Title·kr.msg·NXL HD 한글 리터럴) ↔ 그 텍스트를 그리는 폰트의 글리프 | AM 은 글리프 폴백이 없다(CLAUDE.md 5.4) |
 | `cfg` | artwork 경로 후행 공백 · 형제 cfg(CUE/CCD/PBP…) artwork 블록 일치 · 어떤 라벨이 실제 그려지는지 결정하는 layout_config 값 | validate 는 `Trim()` 해서 후행 공백을 영원히 못 본다 |
-| `case` | attract.cfg romlist 이름 ↔ 파일명 **대소문자 정확** 일치 · .gitignore 경로 대소문자 | Windows 가 가려 줌 |
+| `case` | attract.cfg romlist 이름 ↔ 파일명 **대소문자 정확** 일치 · .gitignore 경로 대소문자 · `layouts/<name>/layout.nut` 철자(NXL HD 의 `Layout.nut`) | Windows 가 가려 줌 |
 | `branch` | 장비 브랜치 5개 behind main = 0 · 장비 브랜치에만 있는 공통성 커밋 | — |
 | `video` | 추적 mp4 해상도/길이/비트레이트(ffprobe 없이 tkhd 파싱) · intro.nut 이 가리키는 영상 존재 | — |
 | `junk` | 자체 자산 영역의 `(2)`·`bak/`·`.psd`·`Thumbs.db` · 추적 중인 런타임 산출물 | — |
