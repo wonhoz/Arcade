@@ -117,6 +117,7 @@ D:\AttractMode\
 ├─ .+필독.txt                           ★ 각 장비에서 반드시 해야 할 것 (git 으로 안 따라오는 작업)
 ├─ attract.exe                          프론트엔드 본체 (38MB, 추적됨) — 2.7.0부터 콘솔 서브시스템
 ├─ attract.bat                          ★ 실행 런처 (--logfile 로 last_run.log 복원, 4.5절)
+├─ test-roms.cmd                        ★ 롬 구동 검증 런처 — 인자 없이 실행하면 메뉴 (7.5절)
 ├─ attract.cfg                         ★ 메인 설정: display / sound / input_map / general / layout_config
 ├─ attract.am                          런타임 상태(마지막 선택/레이아웃). 실행할 때마다 변함
 ├─ default-{display,emulator,filter}.cfg  AM 기본 템플릿(수정 금지)
@@ -144,7 +145,10 @@ D:\AttractMode\
 ├─ tools\validate.ps1                  ★ 설정 무결성 검증 스크립트 (7.1절)
 ├─ tools\reset-runtime.ps1             ★ 런타임 파일 초기화 스크립트 (7.3절)
 ├─ tools\smoke-run.ps1                 ★ 실행 점검 — 지정 디스플레이·레이아웃으로 AM 을 띄워 로그 확인 (7.4절)
+├─ tools\test-roms.ps1                 ★ 롬 구동 검증 — romlist 전 항목의 실행 명령 조립·실행 (7.5절)
+│                                       PowerShell 도구는 전부 tools\ 에 둔다. 루트에는 런처 cmd 만.
 ├─ docs\                               ASSETS.md(자산 정책) / ISSUES.md(과제 목록)
+├─ logs\                               검증 보고서 CSV (gitignored, test-roms.ps1 이 생성)
 ├─ stats\<Emulator>\                   플레이 통계 (track_usage yes, 로컬 생성물)
 │                                      ★ 2.7.0에서 romlist명 → Emulator명 기준으로 바뀜
 └─ last_run.log                        ★ 마지막 실행 로그 — 문제 진단의 1순위 (gitignored)
@@ -668,6 +672,52 @@ powershell -ExecutionPolicy Bypass -File tools\smoke-run.ps1 -All               
 - 지정한 초(기본 20) 동안 **화면을 AM이 차지한다.** 창 모드는 480×320이라 NEVATO가 지원하지 않는 종횡비(1.5)가 되어 쓰지 않는다.
 - 로그에 `AN ERROR HAS OCCURED`·`Script Error`가 있으면 종료 코드 1과 함께 그 부분을 출력한다.
 - 이 PC의 모니터 종횡비로만 검증된다(5:4 데스크톱에서는 NEVATO의 `5x4` 분기). 16:9 캐비닛 분기는 캐비닛에서 봐야 한다.
+
+### 7.5 롬 구동 검증 — romlist 전 항목이 실제로 실행되는가
+
+```
+test-roms.cmd                                          인자 없이 실행하면 메뉴 (캐비닛에서 더블클릭)
+test-roms.cmd -Launch -List MAME -Sample 3             인자를 주면 그대로 tools\test-roms.ps1 에 넘어간다
+
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1              # 정적 점검 (전체 1,079개, 수 초)
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Sample 1   # 에뮬레이터별 1개씩 실제 실행
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Name tekken
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Failed     # 직전 보고서의 실패 항목만
+```
+
+`validate.ps1`(7.1절)이 **설정끼리 앞뒤가 맞는지**를 본다면, 이쪽은 **AM 이 실제로 만들어 낼 실행 명령**을
+romlist 한 줄 한 줄에 대해 그대로 조립한다. `emulators/<Emulator>.cfg` 의 `executable`·`rompath`·`romext`·`args` 를
+읽어 `[romfilename]`·`[rompath]`·`[romext]`·`[name]` 을 AM 과 같은 방식으로 치환하므로,
+결과 CSV 의 `Exe`/`Args` 열이 곧 **캐비닛에서 게임을 고를 때 실행될 명령 그 자체**다.
+
+| 상태 | 뜻 |
+|---|---|
+| `OK` | 실행파일·롬·인자까지 조립 완료 (정적 점검의 통과) |
+| `PASS` | `-Launch` 에서 지정 시간(기본 12초) 동안 살아 있었다 |
+| `NOCHK` | 롬 존재를 단정할 수 없는 정의. **실패가 아니다** — 고정 실행형(`Taito Type X The BishiBashi`)과 `romext` 가 없는 Demul 정의 |
+| `NOEMU`/`NOEXE`/`NOROM` | 에뮬레이터 정의·실행파일·롬 없음 |
+| `EXIT0`/`CRASH` | 실행 직후 스스로 종료. 롬을 못 읽고 조용히 닫히는 경우가 대부분 |
+| `NOWIN` | 살아 있으나 창이 없음. 런처가 다른 프로세스를 띄운 경우(경고) |
+
+- 결과는 `logs\rom-test-<날짜시각>.{csv,html}` 두 벌. **HTML 쪽이 사람이 볼 보고서**다 —
+  상태별 카드로 필터, 목록·에뮬레이터별 집계, 검색, 행을 누르면 실제 실행 명령이 펼쳐진다.
+  캐비닛에 인터넷이 없어도 되도록 CSS·JS·데이터를 전부 파일 안에 넣은 단일 파일이고,
+  열었을 때 **문제가 있는 항목부터** 보여준다(실패 → 경고 → 확인 불가, 전부 정상이면 전체).
+  `-Open` 이면 끝나고 바로 띄운다(`test-roms.cmd` 메뉴는 항상 붙인다). `-NoHtml` 로 끌 수 있다.
+- `-Failed` 는 `logs\rom-test-*.csv` 중 최신 파일을 읽어 실패 항목만 다시 돈다.
+- **`-Launch` 는 ESC → 창 닫기 → 강제 종료 순으로 끝낸다.** MAME 계열을 강제 종료하면 `cfg\default.cfg` 가
+  0바이트로 잘리기 때문이다(5.5절). 강제 종료까지 갔으면 보고서 `Detail` 에 남고, `default.cfg` 가 잘렸으면
+  되돌리는 명령을 화면에 띄운다.
+  - ESC 는 **스캔코드(`SendInput`)로 보낸다.** MAME 는 DirectInput 으로 키보드를 읽어서
+    `WScript.Shell` 의 `SendKeys` 를 **받지 않는다**(PSXMAME 로 실측).
+  - 보내기 전에 **포그라운드 창의 PID 가 그 프로세스인지 확인한다.** 그 사이 게임이 죽어 있으면
+    ESC 가 터미널로 들어간다(`docs/ISSUES.md` 45번의 교훈). `AppActivate` 의 반환값은 쓰지 않는다 —
+    이미 포그라운드인 창에도 `False` 를 돌려준다.
+  - 그래도 **`emulators/Mame` 의 MAME 0.246 은 ESC 로 끝나고, PSXMAME(0.139)는 끝나지 않아 강제 종료된다.**
+    PSXMAME 를 많이 돌린 뒤에는 `git status` 로 `emulators/PSXMAME/cfg/` 를 한 번 보는 편이 좋다.
+- 실행하면 런타임 파일(`Mame\cfg\*.cfg`, `hiscore\`, `stats\` …)이 바뀐다. 끝나면 `reset-runtime.ps1 -Config -Clean`(7.3절).
+- **`Emulator` 필드가 아니라 실제 실행까지 보는 유일한 수단**이지만, 게임이 "정상 플레이되는가"까지는 못 본다.
+  프로세스가 살아 있는지만 본다 — 검은 화면으로 떠 있는 것과 구별하지 못한다.
 
 ## 8. 관련 문서
 

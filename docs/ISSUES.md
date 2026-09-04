@@ -4,7 +4,8 @@
 근거: `attract.cfg`, `emulators/*.cfg`, `romlists/*`, `last_run.log`, `mame64 -verifyroms`, git 메타데이터 실측
 
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
-> 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1` 로 자동화되어 있다.
+> 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
+> `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
 **진행 현황** — 처리 **43건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
@@ -1033,6 +1034,43 @@ S1의 히스토리 정리를 먼저 끝낸 뒤 진행할 것.
 2. **플레이 통계 경로가 `stats/<romlist명>/` → `stats/<Emulator명>/` 로 변경**.
    기존 `stats/Capcom/`·`stats/Zinc/` 등은 더 이상 읽히지 않아 플레이 횟수가 0으로 보인다.
    집계용 데이터라 실행에는 영향 없음. 되살리려면 폴더명을 Emulator 이름으로 바꿔야 한다.
+
+### - [x] E. 롬 구동 검증 스크립트 — **완료: `test-roms.cmd` + `tools/test-roms.ps1`**
+
+```
+test-roms.cmd                                  인자 없이 실행하면 메뉴 (캐비닛에서 더블클릭)
+tools\test-roms.ps1                            정적 점검 — 전체 1,079건, 수 초
+tools\test-roms.ps1 -Launch -Sample 1          구동 점검 — 에뮬레이터별 1개씩 실제 실행
+```
+
+`validate.ps1`(A)은 **설정끼리 앞뒤가 맞는지**를 본다. 그것만으로는 "이 게임을 고르면 실제로 실행되는가"를
+답할 수 없어서, romlist 한 줄 한 줄에 대해 **AM 이 만들어 낼 실행 명령을 그대로 조립**하는 쪽을 따로 만들었다.
+`executable`·`rompath`·`romext`·`args` 를 읽어 `[romfilename]`·`[rompath]`·`[romext]`·`[name]` 을 AM 과 같은
+방식으로 치환하므로, 보고서의 `Exe`/`Args` 열이 곧 캐비닛에서 실행될 명령 그 자체다.
+`-Launch` 를 붙이면 그 명령을 실제로 띄워 지정 시간 동안 살아 있는지까지 본다.
+
+결과는 `logs\rom-test-<날짜시각>.{csv,html}` 두 벌. **HTML 이 사람이 볼 보고서**다 —
+상태별 카드 필터·목록/에뮬레이터별 집계·검색이 있고, 행을 누르면 실행 명령이 펼쳐진다.
+캐비닛에 인터넷이 없어도 되도록 CSS·JS·데이터를 전부 파일 안에 넣은 단일 파일이고,
+열었을 때 문제가 있는 항목부터 보여준다.
+
+**첫 실행 결과 (2026-09-05, 이 PC)** — 1,079건 중 `OK` 1,075 / `NOCHK` 4, 실패 0.
+
+| 확인 불가 4건 | 왜 |
+|---|---|
+| `blokpong`, `srtshot`, `cvs2mf` | Demul 정의는 `-rom="[name]"` 이라 **`romext` 가 없다.** 확장자를 모르니 존재를 단정할 수 없는데, `.zip`/`.7z`/`.chd` 로 훑어도 안 나온다 — **실제로 롬이 없을 가능성이 높다.** `validate.ps1` 도 같은 이유로 이 셋을 못 본다 |
+| `The BishiBashi` | 인자에 롬 토큰이 없는 고정 실행형 정의. 정상 |
+
+**여기서 실측으로 알게 된 것 두 가지** (45번의 ESC 교훈을 코드로 옮기다 나왔다)
+
+1. **MAME 는 `WScript.Shell` 의 `SendKeys` 를 받지 않는다.** DirectInput 으로 키보드를 읽기 때문이다.
+   ESC 는 **스캔코드 `SendInput`** 으로 보내야 한다.
+2. **`AppActivate` 는 이미 포그라운드인 창에도 `False` 를 돌려준다.** 반환값으로 분기하면 ESC 를 아예 안 보낸다.
+   포그라운드 창의 PID 를 직접 확인하는 쪽이 맞다 — 그 확인은 45번의 "ESC 가 터미널로 새는" 사고도 같이 막는다.
+
+그래도 `emulators/Mame` 의 MAME 0.246 은 ESC 로 끝나는 반면 **PSXMAME(0.139)는 끝나지 않아 강제 종료로 넘어간다.**
+강제 종료는 `cfg\default.cfg` 를 0바이트로 자를 수 있으므로(5.5절) 스크립트가 실행 전후 크기를 비교해
+잘렸으면 되돌리는 명령을 띄운다. 실측에서는 손상이 나지 않았다.
 
 ---
 
