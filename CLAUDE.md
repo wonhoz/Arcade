@@ -328,6 +328,19 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 >
 > **기준**: AM이 스스로 선택할 수 있는 것(레이아웃·플러그인)은 남기고,
 > **이름을 바꾸지 않으면 절대 로드될 수 없는 것**만 지웠다.
+>
+> **2차 정리(2026-09-04)** — 같은 기준으로 레이아웃 폴더 안쪽을 훑어 아래를 제거하고
+> `archive/unused-assets-2026-09-04` 태그에 보존했다(`docs/ISSUES.md` 34번).
+>
+> | 대상 | 왜 지웠나 |
+> |---|---|
+> | `layouts/{NEVATO,Console Box}/character/* (2).png · (3).png` 12개, `Console Box/system/nintendo wii u (2).png` | 파일명이 디스플레이 이름과 달라 `[DisplayName]`으로 도달 불가 |
+> | `layouts/{NEVATO,Console Box}/background/{1280,1920,2xScale}/` | 어떤 .nut도 참조 안 함. `2xScale`은 원본과 바이트 동일한 복사본 |
+> | `fonts/NXL HD/{etc,download}/` | `font_path`는 `fonts;fonts/NXL HD`까지만 — 하위 폴더는 탐색 대상이 아님 |
+> | `layouts/NXL HD/carrier.nut`, `layouts/NXL HD/assets/shaders/layout.nut` | 어느 `do_nut`도 안 부름 / 3단계 깊이라 AM 메뉴에 안 뜸(참조 이미지 22개·폰트가 전부 없는 데모 잔재) |
+> | `layouts/**/bak/`, `layouts/**/*.psd`, `Thumbs.db` | 작업 원본·백업. AM이 읽는 파일이 아님 |
+>
+> 레이아웃 폴더의 미연결 자산은 `.claude/skills/arcade-audit/scripts/audit.ps1 -Section dispimg,dupes,fonts,junk`가 뽑아 준다.
 - `License.txt`, `Readme.txt`, `Layouts.txt`, `Compile.txt`, `Changelog.txt` — AM 공식 문서.
 
 ### 5.6 Attract-Mode 본체 업그레이드

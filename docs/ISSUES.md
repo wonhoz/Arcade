@@ -704,7 +704,11 @@ $out = & git status --porcelain -- $existing
 23번 커밋(`a57d0e8c`)이 PSP cfg 를 열어 고치면서도 남겨 둔 것이고, 형제 cfg(GZ↔ISO) 사이에서도 다르다.
 34개 cfg 의 "끝 개행 없음"도 같은 정리 대상.
 
-### - [ ] 34. 레이아웃 폴더의 미연결 자산 — 17번 기준에 걸리는 것이 다섯 부류 남았다
+### - [x] 34. 레이아웃 폴더의 미연결 자산 — 17번 기준에 걸리는 것이 다섯 부류 남았다 — **처리 완료**
+
+**조치 (2026-09-04)**: 17번과 같은 방식 — 삭제 직전 커밋에 `archive/unused-assets-2026-09-04` 태그를 달고 다섯 부류를 전부 지웠다.
+되살리려면 `git checkout archive/unused-assets-2026-09-04 -- <경로>`. `assets/shaders/bloom_shader.frag` 는 NXL HD 가 실제로 쓰므로 남겼다.
+삭제 후 `validate.ps1` FAIL 0/WARN 0, `audit.ps1 -Section layout,dispimg,fonts` 에서 새 누락 참조 0. CLAUDE.md 5.5 에 목록을 적었다.
 
 | 부류 | 실체 | 왜 안 쓰이나 |
 |---|---|---|
