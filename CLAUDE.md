@@ -86,7 +86,8 @@ D:\AttractMode\
 ├─ modules\                            AM 공용 Squirrel 모듈 (animate, conveyor, objects/scrollingtext …)
 ├─ plugins\                            플러그인 (**현재 attract.cfg에 활성화된 것 없음**)
 ├─ screensaver\                        기본 스크린세이버 (`screensaver.nut`) — 600초 후 동작
-├─ intro\                              시작 인트로 (`intro.nut` + `intro.mp4`, `intro_16x9.mp4`)
+├─ intro\                              시작 인트로 (`intro.nut` + `intro.mp4`(16:9), `intro_4x3.mp4`)
+│                                      ※ 9:16·3:4 영상은 없음 → 세로 모니터에선 인트로가 조용히 생략된다
 ├─ loader\                             타 프론트엔드 목록 임포터(hyperspin/mala/mamewah/attract_xml)
 ├─ scraper\@\overview\<display>.txt    ★ 디스플레이 메뉴에 뜨는 시스템 설명문 (한국어)
 ├─ scraper\@exit\overview\             종료 항목 설명문
@@ -261,11 +262,19 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 - **마스코트(캐릭터) 이미지**: `NEVATO` · `Console Box` 는 `select_character = "By Display"` 라서
   화면 우측 캐릭터를 **`layouts/<레이아웃>/character/<디스플레이 이름>.png`** 에서 찾는다.
   emulator cfg 의 `artwork character` 와는 **무관하다**(그쪽은 `By Game` 일 때만 쓰인다).
-  없으면 오류 없이 그 자리만 비어 보인다. `tools/validate.ps1` 이 누락을 경고한다.
+  없으면 오류 없이 그 자리만 비어 보인다.
+  **규격은 480×760, 투명 배경 위 컷아웃**이다 — 불투명 플라이어를 잘라 넣으면 리스트 박스 위에
+  포스터 블록이 얹힌다(`docs/ISSUES.md` 28번). `tools/validate.ps1` 이 누락과 규격(크기·알파 비율)을 경고한다.
+  Taito Type X · MAME Adult 는 캐릭터 소재가 없어 **게임 로고를 얹은 임시본**이다.
 - 디스플레이 메뉴 아트웍은 `menu-art/system|marquee|snap|wheel`(로컬 전용).
 
 ### 5.4 레이아웃 수정
 - Squirrel(`.nut`). 모듈은 `fe.load_module("...")`, 하위 스크립트는 `fe.do_nut("scripts/...")`.
+- **`NEVATO`와 `Console Box`는 공용 정적 자산(`background/ listbox/ key/ monitor/`)을
+  바이트 단위로 똑같이 유지한다.** 한쪽만 고치면 두 레이아웃이 다르게 보인다(`docs/ISSUES.md` 35번).
+  디스플레이별 폴더(`character/ system/ wheel/`)는 예외 — 디스플레이는 레이아웃을 하나만 쓴다.
+  둘 중 하나를 바꾸면 반드시 다른 쪽에도 같은 파일을 넣고,
+  `.claude\skills\arcade-audit\scripts\audit.ps1 -Section dupes`로 어긋남이 없는지 확인한다.
 - **레이아웃이 쓰는 폰트는 그 레이아웃 폴더 안이나 `font_path`(= `fonts` / `fonts/NXL HD`)에 있어야 한다.**
   폰트를 새로 넣으면서 폴더를 추가했다면 `attract.cfg`의 `font_path`도 같이 늘려야 한다.
 
@@ -295,6 +304,15 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 > **글꼴을 바꿀 때는 한글 지원 여부만이 아니라 실제 표시될 문자 집합 전체를 검사한다.**
 > `SUIT` 계열에는 `：`(U+FF1A 전각 콜론)가 없어서, `rss()`의 URL에 섞여 있던 전각 콜론을
 > 반각으로 고치고 나서야 쓸 수 있었다. 문장부호 하나 때문에 깨진다.
+>
+> 지금은 안전하지만 한 줄만 바꾸면 깨지는 곳 두 군데(`docs/ISSUES.md` 36번):
+> - `romlists/MAME.txt`의 `뱀프½` — `½`(U+00BD)가 `default_font`인 `SUIT-Regular`에 **없다**.
+>   NEVATO·Console Box가 `select_font = Font`(`fonts/font.ttf`, ½ 있음)라 지금은 보이지만,
+>   `select_font`를 SUIT로 바꾸거나 폰트 폴백이 일어나면 두부가 된다.
+> - NEVATO의 LCD 텍스트(`digital-7 (italic)`, 라틴·숫자만)가 `[FilterName]`을 표시한다.
+>   `attract.cfg`의 필터 이름(All, Favourites, Fighting …)을 **한글로 바꾸는 순간** 두부가 된다.
+>
+> 표시 텍스트 ↔ 폰트 글리프 대조는 `.claude\skills\arcade-audit\scripts\audit.ps1 -Section glyph`가 한다.
 - 수정 후 반드시 `attract.bat` 실행하고 `last_run.log`에 `AN ERROR HAS OCCURED`가 없는지 확인.
 
 > ⚠️ **예외 줄을 지울 때는 그 아래 코드가 새로 살아난다.**
@@ -324,6 +342,19 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 >
 > **기준**: AM이 스스로 선택할 수 있는 것(레이아웃·플러그인)은 남기고,
 > **이름을 바꾸지 않으면 절대 로드될 수 없는 것**만 지웠다.
+>
+> **2차 정리(2026-09-04)** — 같은 기준으로 레이아웃 폴더 안쪽을 훑어 아래를 제거하고
+> `archive/unused-assets-2026-09-04` 태그에 보존했다(`docs/ISSUES.md` 34번).
+>
+> | 대상 | 왜 지웠나 |
+> |---|---|
+> | `layouts/{NEVATO,Console Box}/character/* (2).png · (3).png` 12개, `Console Box/system/nintendo wii u (2).png` | 파일명이 디스플레이 이름과 달라 `[DisplayName]`으로 도달 불가 |
+> | `layouts/{NEVATO,Console Box}/background/{1280,1920,2xScale}/` | 어떤 .nut도 참조 안 함. `2xScale`은 원본과 바이트 동일한 복사본 |
+> | `fonts/NXL HD/{etc,download}/` | `font_path`는 `fonts;fonts/NXL HD`까지만 — 하위 폴더는 탐색 대상이 아님 |
+> | `layouts/NXL HD/carrier.nut`, `layouts/NXL HD/assets/shaders/layout.nut` | 어느 `do_nut`도 안 부름 / 3단계 깊이라 AM 메뉴에 안 뜸(참조 이미지 22개·폰트가 전부 없는 데모 잔재) |
+> | `layouts/**/bak/`, `layouts/**/*.psd`, `Thumbs.db` | 작업 원본·백업. AM이 읽는 파일이 아님 |
+>
+> 레이아웃 폴더의 미연결 자산은 `.claude/skills/arcade-audit/scripts/audit.ps1 -Section dispimg,dupes,fonts,junk`가 뽑아 준다.
 - `License.txt`, `Readme.txt`, `Layouts.txt`, `Compile.txt`, `Changelog.txt` — AM 공식 문서.
 
 ### 5.6 Attract-Mode 본체 업그레이드
@@ -383,12 +414,16 @@ $fs.Position=0x3C; $pe=$br.ReadInt32(); $fs.Position=$pe+0x5C; $br.ReadUInt16() 
 즉 **이 저장소를 클론하는 것만으로는 실행되지 않는다.** 롬·코어·아트웍은 별도로 옮겨야 한다.
 
 주의 사항:
-- `core.ignorecase=true`(Windows)에 의존한다. `.gitignore`는 `emulators/MAME/...`로 적혀 있지만
-  실제 폴더는 `emulators/Mame`다. Linux/macOS에서 클론하면 무시 규칙이 깨진다.
-- `core.autocrlf=true`이고 `.gitattributes`가 없다. 다른 설정의 PC에서 작업하면 전체 줄바꿈 diff가 난다.
+- `.gitignore`의 경로 대소문자는 2026-09-03에 실제 폴더명(`emulators/Mame` 등)과 맞췄다(불일치 0건).
+  다만 **아트웍·레이아웃 자산은 여전히 Windows의 대소문자 무시에 기대고 있다**
+  (`assets/buttons/1button.png` ↔ 실제 `1Button.png`, `menu-art/wheel/MAME.png` ↔ `mame.png`).
+  Linux/macOS에서 클론하면 버튼 아이콘과 메뉴 아트가 사라진다.
+- 줄바꿈은 `.gitattributes`(2026-09-03 신설)가 고정한다 — 저장소 LF, 작업트리 OS 기본, `*.bat`만 CRLF 강제.
+  `core.autocrlf` 설정이 다른 PC에서도 전체 줄바꿈 diff가 나지 않는다.
 - `attract.am`은 추적 중인데 실행할 때마다 내용이 바뀔 수 있다(런타임 상태 파일).
-- `stats/`는 무시 목록에 없다. 플레이 통계가 쌓이면 미추적 파일로 나타난다.
-  2.7.0부터 저장 경로가 `stats/<romlist명>/` → `stats/<Emulator명>/` 로 바뀌어서,
+- `stats/`와 `emulators/Mame/cheat/output.{json,xml}`은 런타임 산출물이라 2026-09-04부터 무시 목록에 있다
+  (그 전엔 cheat 산출물이 추적되고 있어 `reset-runtime.ps1`이 매번 "건너뜀"을 찍었다).
+  `stats/`는 2.7.0부터 저장 경로가 `stats/<romlist명>/` → `stats/<Emulator명>/` 로 바뀌어서,
   기존 `stats/Capcom/`·`stats/Zinc/` 같은 폴더는 더 이상 읽히지 않는다(플레이 횟수만 0으로 초기화됨).
 
 ## 7. 검증 및 문제 진단
@@ -416,6 +451,30 @@ romlist 필드 수·중복·BOM, Emulator/layout/romlist 상호 참조, executab
 **`WARN`이 0이 아니면 고쳐야 한다.** 예전에는 미설치 자산까지 전부 WARN 이라
 59건이 상수처럼 깔려 새 경고가 묻혔다. `-Quiet` 는 `환경`·`참고`를 숨기고
 `WARN`/`FAIL`만 보여주므로 커밋 전 점검에 쓰기 좋다.
+
+#### validate.ps1 이 못 보는 것 — 주기 재점검 스킬 `/arcade-audit`
+
+`validate.ps1`은 **설정 파일의 상호 참조**를 본다. 레이아웃 스크립트 내부, 이미지의 규격(알파·크기),
+폰트 글리프, 두 레이아웃의 어긋남 같은 것은 보지 않는다. 그쪽은 저장소 안 스킬이 맡는다.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\audit.ps1            # 11개 섹션 전부
+powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\audit.ps1 -Section mascot   # 하나만
+```
+
+| 섹션 | 보는 것 |
+|---|---|
+| `layout` | `.nut`의 리터럴 이미지·`do_nut`·`load_module` 대상 존재, 로드 불가 위치의 layout*.nut, 어디서도 안 부르는 .nut |
+| `dispimg` | `character/ system/ wheel/[DisplayName]` 디스플레이별 존재, 이름이 안 맞는 죽은 복사본 |
+| `mascot` | 480×760·알파 컷아웃 여부(투명 비율) |
+| `dupes` | NEVATO↔Console Box 공용 폴더 어긋남, 참조 없는 배경 변형, 바이트 동일 중복 |
+| `fonts` · `glyph` | 참조 폰트 해석 가능 여부, **표시 텍스트 ↔ 폰트 글리프** |
+| `cfg` · `case` | 값 끝 공백, 형제 cfg 일치, `layout_config` 값, romlist·.gitignore 대소문자 |
+| `branch` · `video` · `junk` | 장비 브랜치 전파, mp4 해상도·비트레이트, `(2)`·`bak/`·`.psd`·추적된 런타임 산출물 |
+
+출력 태그는 `ISSUE`(보고) / `OK`(측정했고 이상 없음) / `INFO`. 읽기 전용이다.
+Claude Code에서 `/arcade-audit <커밋…>`을 부르면 diff 정독 → validate → audit → 이미지 직접 열기 →
+ISSUES "완료" 재검증 → 아티팩트 갱신까지 절차 전체를 따른다(`.claude/skills/arcade-audit/SKILL.md`).
 
 ### 7.2 진단 순서
 
