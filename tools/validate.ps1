@@ -107,6 +107,16 @@ $emulators = @{}
 foreach ($file in Get-ChildItem -LiteralPath (Join-Path $Root 'emulators') -Filter '*.cfg') {
     $emulators[$file.BaseName] = Read-AmConfig $file.FullName
     if (Test-Bom $file.FullName) { Add-Fail 'BOM' "emulators\$($file.Name) 에 UTF-8 BOM 이 있습니다 (AM 파서가 첫 줄을 설정 키로 오인)" }
+    # 값 끝의 공백. Read-AmConfig 가 Trim() 하기 때문에 아래 경로 검사는 이걸 절대 못 본다.
+    # 지금은 Windows 가 디렉터리 끝 공백을 관대하게 다뤄 동작하지만, 형제 cfg 사이에서
+    # 다르게 저장되어 있었고 "경로가 맞는데 왜 안 뜨지"로 돌아올 부류다 (ISSUES 33).
+    $lineNo = 0
+    foreach ($raw in [System.IO.File]::ReadAllLines($file.FullName)) {
+        $lineNo++
+        if ($raw -match '^(artwork|rompath|executable|args|romext)\b.*[ \t]+$') {
+            Add-Warn 'cfg' "emulators\$($file.Name):$lineNo 값 끝에 공백이 있습니다 -> '$($raw.TrimEnd())'"
+        }
+    }
 }
 Write-Host ("에뮬레이터 정의 {0}개" -f $emulators.Count)
 

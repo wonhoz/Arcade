@@ -694,7 +694,10 @@ $out = & git status --porcelain -- $existing
 함께: `emulators/Mame/cheat/output.{json,xml}` 은 MAME 런타임 산출물인데 **추적 중**이라
 21번의 가드가 매번 "건너뜀"을 찍는다. 추적 해제 + `.gitignore` 가 근본 해결이다.
 
-### - [ ] 33. emulator cfg 의 artwork 경로 후행 공백 5줄 — `validate.ps1` 은 못 잡는다
+### - [x] 33. emulator cfg 의 artwork 경로 후행 공백 5줄 — `validate.ps1` 은 못 잡는다 — **처리 완료**
+
+**조치 (2026-09-04)**: 35개 cfg 전체에서 값 끝 공백을 지우고(5줄), 끝 개행이 없던 34개 파일에 개행을 넣었다.
+`git diff -w` 기준 내용 변화 0. `validate.ps1` 에 Trim 전 원문으로 `artwork|rompath|executable|args|romext` 줄의 후행 공백을 WARN 으로 잡는 검사를 추가했다(시험: 공백을 붙이면 잡히고 지우면 통과).
 
 `Sony PlayStation Portable.cfg:12`(공백 2), `Sony PlayStation 2 GZ.cfg:10,12,13`, `Sony PlayStation 2 ISO.cfg:13`.
 `validate.ps1` 은 값을 `.Trim()` 한 뒤 `Test-Path` 하므로 영원히 통과한다. Windows 도 관대해 지금은 동작하지만
