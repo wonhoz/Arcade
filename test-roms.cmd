@@ -28,13 +28,17 @@ echo   ================================================================
 echo.
 echo    [1] 빠른 점검      전체 목록의 실행파일·롬·인자를 조립 검사  (수 초)
 echo.
-echo    [2] 구동 점검      에뮬레이터별 1개씩 표본 실행              (약 10분)
-echo    [3] 구동 점검      목록 하나를 골라 전부 실행
-echo    [4] 구동 점검      게임 이름으로 찾아서 실행
-echo    [5] 직전 실패 항목만 다시 실행
+echo    --- 실제로 실행해 보는 구동 점검 (화면을 에뮬레이터가 차지한다) ---
+echo.
+echo    [2] 표본 점검      에뮬레이터별 1개씩                        (약 10분)
+echo    [3] 전수 점검      모든 목록의 모든 롬                       (수 시간)
+echo    [4] 이어하기       중단된 전수 점검을 이어서
+echo    [5] 목록 지정      목록 하나를 골라 전부
+echo    [6] 이름으로 찾기
+echo    [7] 직전 실패 항목만 다시
 echo.
 echo    검사가 끝나면 HTML 보고서가 열린다.
-echo    [6] 마지막 보고서 다시 열기      [7] 보고서 폴더 (logs\)
+echo    [8] 마지막 보고서 다시 열기      [9] 보고서 폴더 (logs\)
 echo    [0] 종료
 echo.
 set "sel="
@@ -42,11 +46,13 @@ set /p "sel=  선택: "
 
 if "%sel%"=="1" goto :static
 if "%sel%"=="2" goto :sample
-if "%sel%"=="3" goto :bylist
-if "%sel%"=="4" goto :byname
-if "%sel%"=="5" goto :failed
-if "%sel%"=="6" goto :last
-if "%sel%"=="7" goto :logs
+if "%sel%"=="3" goto :full
+if "%sel%"=="4" goto :resume
+if "%sel%"=="5" goto :bylist
+if "%sel%"=="6" goto :byname
+if "%sel%"=="7" goto :failed
+if "%sel%"=="8" goto :last
+if "%sel%"=="9" goto :logs
 if "%sel%"=="0" goto :end
 goto :menu
 
@@ -56,6 +62,15 @@ goto :pause
 
 :sample
 %PS% -Launch -Sample 1 -Open
+goto :pause
+
+:full
+rem 전수 점검. 10건마다 보고서를 써 두므로 중단해도 [4] 로 이어서 할 수 있다.
+%PS% -Launch -Open
+goto :pause
+
+:resume
+%PS% -Launch -Resume -Open
 goto :pause
 
 :bylist

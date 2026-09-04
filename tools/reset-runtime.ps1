@@ -78,6 +78,8 @@ $ConfigPaths = @(
     'emulators/RetroArch/content_favorites.lpl'
     'emulators/PCSX2/inis'                      # PCSX2 설정·입력
     'emulators/M2/CFG'                          # MODEL2 게임별 입력
+    'emulators/M2/EMULATOR.INI'                 # MODEL2 화면·필터 (게임을 한 번 띄우면 Filter 값이 바뀐다)
+    'emulators/PSXMAME/cfg'                     # PSXMAME 게임별 입력·딥스위치
     'emulators/Project64/Config'                # Project64 설정·입력
     'emulators/TeknoParrot/UserProfiles'        # TeknoParrot 게임별 입력
     'emulators/Demul/padDemul.ini'

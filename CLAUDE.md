@@ -645,7 +645,7 @@ powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1 -All -Force
 
 | 갈래 | 대상 | 되돌리면 |
 |---|---|---|
-| **설정** | `attract.am`, `Mame\cfg`(게임별 입력·딥스위치), `Mame\ui.ini`, `RetroArch\retroarch.cfg`·`content_*.lpl`, `PCSX2\inis`, `M2\CFG`, `Project64\Config`, `TeknoParrot\UserProfiles`, `Demul\*.ini`, `PPSSPP\...\SYSTEM` | 잃는 것 없음 |
+| **설정** | `attract.am`, `Mame\cfg`(게임별 입력·딥스위치), `Mame\ui.ini`, `PSXMAME\cfg`, `RetroArch\retroarch.cfg`·`content_*.lpl`, `PCSX2\inis`, `M2\CFG`·`M2\EMULATOR.INI`, `Project64\Config`, `TeknoParrot\UserProfiles`, `Demul\*.ini`, `PPSSPP\...\SYSTEM` | 잃는 것 없음 |
 | **세이브** | `Mame\{nvram,memcard,diff,sta}`, `PCSX2\{memcards,sstates}`, `ePSXe\{memcards,sstates}`, `Project64\Save`, `SuperModel\{NVRAM,Saves}`, `Demul\nvram`, `RetroArch\{saves,states}` | **게임 진행이 사라진다** |
 | **산출물** | `last_run.log`, `script.nv`, `stats\`, `Mame\hiscore`, `Mame\data\history.db`, `Mame\cheat\output.*`, `RetroArch\screenshots` | 미추적이라 삭제 |
 
@@ -681,9 +681,14 @@ test-roms.cmd -Launch -List MAME -Sample 3             인자를 주면 그대�
 
 powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1              # 정적 점검 (전체 1,079개, 수 초)
 powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Sample 1   # 에뮬레이터별 1개씩 실제 실행
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch             # ★ 전수 점검 (1,079개 전부 실행)
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Resume     # 중단된 전수 점검 이어서
 powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Name tekken
 powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Failed     # 직전 보고서의 실패 항목만
 ```
+
+메뉴는 `[1]` 빠른(정적) 점검, `[2]` 표본 · `[3]` 전수 · `[4]` 이어하기 · `[5]` 목록 지정 ·
+`[6]` 이름으로 · `[7]` 실패만 다시(구동), `[8]`·`[9]` 보고서 순이다.
 
 `validate.ps1`(7.1절)이 **설정끼리 앞뒤가 맞는지**를 본다면, 이쪽은 **AM 이 실제로 만들어 낼 실행 명령**을
 romlist 한 줄 한 줄에 대해 그대로 조립한다. `emulators/<Emulator>.cfg` 의 `executable`·`rompath`·`romext`·`args` 를
@@ -715,7 +720,15 @@ romlist 한 줄 한 줄에 대해 그대로 조립한다. `emulators/<Emulator>.
     이미 포그라운드인 창에도 `False` 를 돌려준다.
   - 그래도 **`emulators/Mame` 의 MAME 0.246 은 ESC 로 끝나고, PSXMAME(0.139)는 끝나지 않아 강제 종료된다.**
     PSXMAME 를 많이 돌린 뒤에는 `git status` 로 `emulators/PSXMAME/cfg/` 를 한 번 보는 편이 좋다.
-- 실행하면 런타임 파일(`Mame\cfg\*.cfg`, `hiscore\`, `stats\` …)이 바뀐다. 끝나면 `reset-runtime.ps1 -Config -Clean`(7.3절).
+- **전수 점검은 몇 시간짜리다.** 그래서 `-Launch` 는 **5건마다 보고서를 써 두고**, 중단하면 `-Resume` 이
+  직전 보고서에 이미 있는 항목을 건너뛰고 같은 파일에 이어 쓴다. 강제 종료(`taskkill /F`)로도
+  여기까지의 결과가 남는 것을 실측했다.
+  - **항목당 소요는 ESC 가 먹느냐에 갈린다.** 포그라운드에서 ESC 로 바로 끝나면 판정 시간 + 2~3초지만,
+    창이 최소화돼 있거나 ESC 를 안 받는 에뮬레이터는 재전송·창닫기·강제 종료를 거쳐 **20초를 넘긴다.**
+    전수 점검은 그 PC 를 점유하고 **포그라운드에서** 돌리는 편이 훨씬 빠르다.
+- 실행하면 런타임 파일(`Mame\cfg\*.cfg`, `M2\EMULATOR.INI`, `hiscore\`, `stats\` …)이 바뀐다.
+  끝나면 `reset-runtime.ps1 -Config -Clean`(7.3절). 다만 **처음 실행한 게임의 `Mame\cfg\<게임>.cfg` 는
+  미추적 파일로 새로 생기므로** `git checkout` 대상이 아니다 — `git status` 에 남으면 직접 지운다.
 - **`Emulator` 필드가 아니라 실제 실행까지 보는 유일한 수단**이지만, 게임이 "정상 플레이되는가"까지는 못 본다.
   프로세스가 살아 있는지만 본다 — 검은 화면으로 떠 있는 것과 구별하지 못한다.
 

@@ -30,6 +30,9 @@
     순서를 무작위로 섞는다. -Sample/-Max 와 함께 쓰면 무작위 표본이 된다.
 .PARAMETER Failed
     직전 보고서(logs\rom-test-*.csv 중 최신)에서 실패한 항목만 다시 검사한다.
+.PARAMETER Resume
+    중단된 검사를 이어서 한다. 직전 보고서에 이미 결과가 있는 항목을 건너뛰고
+    같은 보고서에 계속 써 넣는다. 수 시간짜리 전수 구동 점검용.
 .PARAMETER IncludeDisabled
     '#' 로 비활성화된 항목도 포함한다.
 .PARAMETER Report
@@ -66,6 +69,7 @@ param(
     [int]$Max = 0,
     [switch]$Shuffle,
     [switch]$Failed,
+    [switch]$Resume,
     [switch]$IncludeDisabled,
     [string]$Report,
     [switch]$NoHtml,
@@ -505,11 +509,49 @@ if (Test-Path -LiteralPath $mameRomsDir) {
     $mameRoots = @(Get-ChildItem -LiteralPath $mameRomsDir -Directory -Recurse | Select-Object -ExpandProperty FullName)
 }
 
-# 직전 보고서에서 실패 항목 추리기
+# --- 보고서 경로. -Resume 은 새로 만들지 않고 직전 보고서를 이어 쓴다.
+$logDir = Join-Path $Root 'logs'
+if (-not (Test-Path -LiteralPath $logDir)) { [void](New-Item -ItemType Directory -Path $logDir) }
+function Get-LastReport {
+    Get-ChildItem -LiteralPath (Join-Path $Root 'logs') -Filter 'rom-test-*.csv' -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending | Select-Object -First 1
+}
+if ($Report) {
+    # 확장자를 붙여 줬으면 뗀다. .csv / .html 두 벌이 나온다.
+    if ($Report -match '\.(csv|html?)$') { $Report = [IO.Path]::ChangeExtension($Report, $null).TrimEnd('.') }
+} elseif ($Resume) {
+    $last = Get-LastReport
+    if (-not $last) { Write-Error "logs\rom-test-*.csv 가 없습니다. -Resume 은 이어 쓸 보고서가 있어야 합니다."; exit 1 }
+    $Report = [IO.Path]::Combine($last.DirectoryName, [IO.Path]::GetFileNameWithoutExtension($last.Name))
+} else {
+    $Report = Join-Path $logDir ("rom-test-{0}" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
+}
+$csvPath  = "$Report.csv"
+$htmlPath = "$Report.html"
+
+# 이번 실행에서 건너뛸 항목(-Resume)과 다시 볼 항목(-Failed)
+$results = New-Object System.Collections.ArrayList   # 이어하기면 이전 결과를 담고 시작한다
+$done  = @{}
 $retry = $null
+
+if ($Resume) {
+    if (-not (Test-Path -LiteralPath $csvPath)) {
+        Write-Error "이어 쓸 보고서가 없습니다: $csvPath"
+        exit 1
+    }
+    foreach ($r in (Import-Csv -LiteralPath $csvPath -Encoding UTF8)) {
+        [void]$results.Add([pscustomobject]@{
+            List = $r.List; Name = $r.Name; Title = $r.Title; Emulator = $r.Emulator
+            Disabled = ($r.Disabled -eq 'True'); Status = $r.Status; Detail = $r.Detail
+            Exe = $r.Exe; Args = $r.Args; ElapsedMs = [int]$r.ElapsedMs
+        })
+        $done[($r.List + "`t" + $r.Name)] = $true
+    }
+    Write-Host ("이어하기: {0} — 이미 끝난 {1}건은 건너뛴다" -f (Split-Path $csvPath -Leaf), $done.Count) -ForegroundColor DarkGray
+}
+
 if ($Failed) {
-    $last = Get-ChildItem -LiteralPath (Join-Path $Root 'logs') -Filter 'rom-test-*.csv' -ErrorAction SilentlyContinue |
-            Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    $last = Get-LastReport
     if (-not $last) {
         Write-Error "logs\rom-test-*.csv 가 없습니다. -Failed 는 이전 실행 결과가 있어야 합니다."
         exit 1
@@ -522,6 +564,21 @@ if ($Failed) {
     if ($retry.Count -eq 0) {
         Write-Host "직전 보고서에 실패 항목이 없습니다." -ForegroundColor Green
         exit 0
+    }
+}
+
+# 보고서 두 벌을 지금 상태로 써 낸다. 전수 구동 점검은 몇 시간짜리라
+# 중간에 끊겨도(Ctrl+C, 정전) 여기까지의 결과는 남아 있어야 한다.
+function Save-Reports {
+    $results | Export-Csv -LiteralPath $csvPath -NoTypeInformation -Encoding UTF8
+    if (-not $NoHtml) {
+        $span = (Get-Date) - $startedAt
+        Write-HtmlReport $results $htmlPath ([pscustomobject]@{
+            Mode    = if ($Launch) { "구동 점검 (항목당 최대 $Seconds 초)" } else { '정적 점검' }
+            When    = $startedAt.ToString('yyyy-MM-dd HH:mm:ss')
+            Elapsed = if ($span.TotalSeconds -ge 1) { "{0:hh\:mm\:ss}" -f $span } else { '' }
+            Root    = $Root
+        })
     }
 }
 
@@ -548,6 +605,7 @@ foreach ($rf in (Get-ChildItem -LiteralPath (Join-Path $Root 'romlists') -Filter
         if ($Emulator -and -not ($Emulator | Where-Object { $emuName -like $_ })) { continue }
         if ($Name -and ($romName -notlike "*$Name*") -and ($title -notlike "*$Name*")) { continue }
         if ($retry -and -not $retry.ContainsKey($listName + "`t" + $romName)) { continue }
+        if ($done.ContainsKey($listName + "`t" + $romName)) { continue }
 
         [void]$items.Add([pscustomobject]@{
             List = $listName; Line = $lineNo; Name = $romName; Title = $title
@@ -569,15 +627,31 @@ if ($Max -gt 0 -and $items.Count -gt $Max) { $items = @($items | Select-Object -
 $mode = if ($Launch) { "구동 점검, 항목당 최대 $Seconds 초" } else { "정적 점검" }
 Write-Host ("검사 대상 {0}개  (모드: {1})" -f $items.Count, $mode)
 if ($items.Count -eq 0) {
-    Write-Host "조건에 맞는 항목이 없습니다." -ForegroundColor Yellow
+    if ($Resume -and $results.Count) {
+        Write-Host ("이 조건의 {0}건은 이미 전부 끝나 있습니다." -f $results.Count) -ForegroundColor Green
+        Save-Reports
+        Write-Host ("보고서: {0}" -f $csvPath) -ForegroundColor DarkGray
+        if (-not $NoHtml) { Write-Host ("        {0}" -f $htmlPath) -ForegroundColor DarkGray; if ($Open) { Start-Process $htmlPath } }
+    } else {
+        Write-Host "조건에 맞는 항목이 없습니다." -ForegroundColor Yellow
+    }
     exit 0
 }
 
 if ($Launch -and -not $Force) {
-    $est = [TimeSpan]::FromSeconds($items.Count * ($Seconds + 4))
+    # 항목당 = 생존 판정 시간 + 종료 처리. 종료는 ESC 로 바로 끝나면 2~3초,
+    # ESC 를 안 받는 에뮬레이터(PSXMAME)는 재전송·창닫기를 거쳐 20초를 넘기기도 한다.
+    $lo = [TimeSpan]::FromSeconds($items.Count * ($Seconds + 4))
+    $hi = [TimeSpan]::FromSeconds($items.Count * ($Seconds + 24))
     Write-Host ""
-    Write-Host "[!] 에뮬레이터를 실제로 실행합니다. 실행 중에는 화면을 에뮬레이터가 차지합니다." -ForegroundColor Yellow
-    Write-Host ("    예상 소요 약 {0:hh\:mm\:ss}.  중단은 Ctrl+C." -f $est) -ForegroundColor Yellow
+    Write-Host "[!] 에뮬레이터를 실제로 실행합니다. 실행 중에는 화면을 에뮬레이터가 차지해" -ForegroundColor Yellow
+    Write-Host "    이 PC 로 다른 일을 할 수 없습니다." -ForegroundColor Yellow
+    Write-Host ("    예상 소요 {0:hh\:mm\:ss} ~ {1:hh\:mm\:ss}  ({2}건)" -f $lo, $hi, $items.Count) -ForegroundColor Yellow
+    if ($items.Count -ge 50) {
+        Write-Host "    중단은 Ctrl+C. 5건마다 보고서를 써 두므로 -Resume 으로 이어서 할 수 있습니다." -ForegroundColor Yellow
+    } else {
+        Write-Host "    중단은 Ctrl+C." -ForegroundColor Yellow
+    }
     $ans = Read-Host "계속할까요? (y/N)"
     if ($ans -ne 'y' -and $ans -ne 'Y') { Write-Host "취소했습니다."; exit 0 }
 }
@@ -592,8 +666,8 @@ if ($Launch) {
 }
 
 # ------------------------------------------------------------------ 검사
-$results = New-Object System.Collections.ArrayList
 $i = 0
+try {
 foreach ($it in $items) {
     $i++
     $status = 'OK'; $detail = ''; $exePath = ''; $argStr = ''; $elapsed = 0; $exe = $null
@@ -673,30 +747,20 @@ foreach ($it in $items) {
     } elseif ($Launch) {
         Write-Progress -Activity "구동 점검" -Status ("{0} / {1}  {2}" -f $i, $items.Count, $it.Name) -PercentComplete (100 * $i / $items.Count)
     }
+
+    # 긴 구동 점검은 중간에 끊길 수 있다. 몇 건마다 지금까지의 결과를 써 둔다.
+    # 쓰는 비용은 0.2초 남짓인데, 항목 하나가 30초 넘게 걸리기도 해서 자주 쓰는 편이 남는다.
+    # (강제 종료되면 아래 finally 는 돌지 않는다. 실질적인 보호막은 이 주기 저장이다.)
+    if ($Launch -and ($i % 5 -eq 0)) { Save-Reports }
 }
-if ($Launch) { Write-Progress -Activity "구동 점검" -Completed }
+} finally {
+    # Ctrl+C 로 빠져나가도 여기까지는 남긴다
+    if ($Launch) { Write-Progress -Activity "구동 점검" -Completed }
+    if ($results.Count) { Save-Reports }
+}
 
 # ------------------------------------------------------------------ 보고
-if (-not $Report) {
-    $logDir = Join-Path $Root 'logs'
-    if (-not (Test-Path -LiteralPath $logDir)) { [void](New-Item -ItemType Directory -Path $logDir) }
-    $Report = Join-Path $logDir ("rom-test-{0}" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
-}
-# 확장자를 붙여 줬으면 떼고 .csv / .html 두 벌을 만든다
-if ($Report -match '\.(csv|html?)$') { $Report = [IO.Path]::ChangeExtension($Report, $null).TrimEnd('.') }
-$csvPath  = "$Report.csv"
-$htmlPath = "$Report.html"
-$results | Export-Csv -LiteralPath $csvPath -NoTypeInformation -Encoding UTF8
-
-if (-not $NoHtml) {
-    $span = (Get-Date) - $startedAt
-    Write-HtmlReport $results $htmlPath ([pscustomobject]@{
-        Mode    = if ($Launch) { "구동 점검 (항목당 최대 $Seconds 초)" } else { '정적 점검' }
-        When    = $startedAt.ToString('yyyy-MM-dd HH:mm:ss')
-        Elapsed = if ($span.TotalSeconds -ge 1) { "{0:hh\:mm\:ss}" -f $span } else { '' }
-        Root    = $Root
-    })
-}
+Save-Reports
 
 Write-Host ""
 Write-Host ("=" * 78)
