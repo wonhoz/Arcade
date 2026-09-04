@@ -60,6 +60,13 @@ git branch Compact archive/Compact           # 되살리기
   ```
   각 장비 브랜치에서 병합 직후 `validate.ps1`을 돌린다 — 장비 전용 설정과 공통 변경이 충돌하지 않았는지 보는 유일한 자리다.
   `gh`가 없으면 위처럼 로컬에서 `--no-ff`로 병합한다(PR 머지와 같은 모양).
+
+  > ⚠️ **커밋하기 전에 `git branch --show-current`가 `develop`인지 확인한다.**
+  > 위 스크립트의 `git checkout -B $b origin/$b`는 로컬 장비 브랜치를 원격 상태로 **되돌린다**.
+  > 그래서 실수로 장비 브랜치에 커밋한 뒤 이 스크립트를 돌리면 그 커밋이 고아가 된다
+  > (2026-09-04에 실제로 `bartop`에 커밋했다가 `reflog`에서 `cherry-pick`으로 건졌다).
+  > 스크립트는 그 자리에서 브랜치를 검사하고 아니면 멈추는 것이 안전하다:
+  > `[ "$(git branch --show-current)" = develop ] || { echo "develop 아님"; exit 1; }`
 - 장비 전용 변경(레이아웃 해상도, 입력맵, 롬 구성)은 해당 장비 브랜치에만 둔다.
 - `main`↔`bartop` 실제 차이(113개 파일): `layouts/NEVATO/*`(캐비닛 아트/vewlix 레이아웃),
   `layouts/Console Box/*`, `layouts/Mega-Display Advanced/{layout.nut, scripts/*}`,
