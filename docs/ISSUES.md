@@ -655,7 +655,11 @@ TeknoParrot · Taito Type X · MAME Adult 세 개가 없어 그 자리가 빈 �
 "메뉴에서 선택 가능하니 같이 고쳤다"며 손댔는데, 같은 폴더 `layout.nut` 의 이 줄은 보지 않았다.
 `fade.nut` 이 정의하는 `FadeArt` 클래스는 두 레이아웃 어디에서도 쓰이지 않는다.
 
-### - [ ] 30. `layout_vewlix_white.nut:281` 의 배경 `background/white.png` 가 없다
+### - [x] 30. `layout_vewlix_white.nut:281` 의 배경 `background/white.png` 가 없다 — **처리 완료**
+
+**조치 (2026-09-04)**: `background/gray.png`(2048×1536, 제조사 로고 패턴)를 흰색 쪽으로 55% 블렌드해
+`white.png` 를 만들었다. 다른 색 배경과 같은 텍스처를 유지하면서 `cabinet/vewlix_white.png` 에 맞는 밝기다.
+NEVATO 에만 넣었다 — Console Box 의 .nut 은 white 를 참조하지 않는다.
 
 vewlix 변형은 죽은 파일이 아니다 — AM 은 `layout*.nut` 을 **L 키(`toggle_layout`)로 순환**하고,
 `attract.am` 에 `layout_vewlix_black`(MAME) · `_blue`(Capcom) · `_red`(SNK)가 실제 사용 중으로 기록돼 있다.
