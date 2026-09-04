@@ -343,8 +343,8 @@ if (Want 'glyph') {
     }
     Cover "$Root\fonts\$df.ttf" $titles "all romlist Titles vs default_font $df (fallback path)"
     Cover "$Root\fonts\$df.ttf" ([Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes("$Root\language\kr.msg"))) "language/kr.msg vs $df"
-    if (Test-Path -LiteralPath "$Root\layouts\NXL HD\Layout.nut") {
-        $nxl = [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes("$Root\layouts\NXL HD\Layout.nut"))
+    if (Test-Path -LiteralPath "$Root\layouts\NXL HD\layout.nut") {
+        $nxl = [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes("$Root\layouts\NXL HD\layout.nut"))
         $hs = [char]0xAC00; $he = [char]0xD7A3   # Hangul syllable range, built from code points to keep this file ASCII
         $lits = ([regex]::Matches($nxl, ('"([^"]*[' + $hs + '-' + $he + '][^"]*)"')) | ForEach-Object { $_.Groups[1].Value }) -join ''
         Cover "$Root\fonts\SUIT-Regular.ttf" $lits "NXL HD Korean literals (genre/rss) vs SUIT-Regular"

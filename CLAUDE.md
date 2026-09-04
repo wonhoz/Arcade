@@ -448,6 +448,9 @@ $fs.Position=0x3C; $pe=$br.ReadInt32(); $fs.Position=$pe+0x5C; $br.ReadUInt16() 
   다만 **아트웍·레이아웃 자산은 여전히 Windows의 대소문자 무시에 기대고 있다**
   (`assets/buttons/1button.png` ↔ 실제 `1Button.png`, `menu-art/wheel/MAME.png` ↔ `mame.png`).
   Linux/macOS에서 클론하면 버튼 아이콘과 메뉴 아트가 사라진다.
+  `layouts/NXL HD/Layout.nut`(대문자 L)은 그보다 심해서 레이아웃 자체가 안 열리는 문제라 2026-09-04에 `layout.nut`으로
+  개명했다(`docs/ISSUES.md` 40번). 대소문자만 바꾸는 개명은 `git mv`를 임시 이름 경유로 두 번 한다.
+  `audit.ps1 -Section case`가 `layouts/<name>/layout.nut` 철자를 감시한다.
 - 줄바꿈은 `.gitattributes`(2026-09-03 신설)가 고정한다 — 저장소 LF, 작업트리 OS 기본, `*.bat`만 CRLF 강제.
   `core.autocrlf` 설정이 다른 PC에서도 전체 줄바꿈 diff가 나지 않는다.
 - `attract.am`은 추적 중인데 실행할 때마다 내용이 바뀔 수 있다(런타임 상태 파일).

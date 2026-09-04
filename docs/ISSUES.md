@@ -116,7 +116,7 @@ cps3 6개(레드 어스, 스파3 3부작, 조조 2종)는 어떤 필터에도 �
 
 ### - [x] 6. NXL HD 레이아웃 폰트 3종 미로드 — **처리 완료**
 
-`layouts/NXL HD/Layout.nut`이 쓰는 `futureforces` / `Squares Bold Free` / `MSMINCHO`가
+`layouts/NXL HD/layout.nut`이 쓰는 `futureforces` / `Squares Bold Free` / `MSMINCHO`가
 `layouts/NXL HD/` 안에도, `font_path`(=`fonts`) 안에도 없어 기본 폰트로 대체되고 있었다.
 실제 파일은 `layouts/NXL HD font/`라는 별도 폴더에 있었다.
 
@@ -309,7 +309,7 @@ Attract-Mode의 romlist는 21개 필드가 **고정된 의미**를 갖는 포맷
 | 16 `Extra` | 자유 필드 | **PS2 목록에서 언어(한국어)** / 다른 목록에서는 `0` |
 | 19 `Language` | 언어 | **전 목록에서 비어 있음** |
 
-**왜 이렇게 됐나**: `layouts/NXL HD/Layout.nut:971`이 정보 상자에 `[Rotation]`을 그대로 뿌린다.
+**왜 이렇게 됐나**: `layouts/NXL HD/layout.nut:971`이 정보 상자에 `[Rotation]`을 그대로 뿌린다.
 언어를 화면에 띄우려면 레이아웃을 고치는 대신 데이터를 `Rotation`에 넣는 쪽이 빨랐던 것.
 `AltRomname`은 `attract.cfg`의 Capcom 필터(`rule AltRomname equals cps1`)가 실제로 의존하고 있어
 이제 와서 바꾸면 필터가 깨진다.
@@ -318,7 +318,7 @@ Attract-Mode의 romlist는 21개 필드가 **고정된 의미**를 갖는 포맷
 특히 `Rotation`에 언어를 넣은 NESiCAxLive는 나중에 실제 세로 게임이 추가되면 판단이 불가능해진다.
 
 **조치안**
-1. (권장) 언어는 `Language`(19)로 통일하고 `NXL HD/Layout.nut`을 `[Language]`로 수정.
+1. (권장) 언어는 `Language`(19)로 통일하고 `NXL HD/layout.nut`을 `[Language]`로 수정.
    `AltRomname`의 플랫폼 태그는 `attract.cfg` 필터와 함께 `Series`(18) 등으로 이전.
 2. (최소) 지금처럼 두되 **[`../CLAUDE.md`](../CLAUDE.md) 4.1절의 표를 반드시 보고
    같은 파일의 기존 줄을 복사해서 추가**한다. ← 현재 채택 중
@@ -798,7 +798,11 @@ fightersgeneration 의 켄시로 원화 10장 중 전신은 저해상도 3D 렌�
 `last_run.log`(16:34) 에는 NESiCAxLive 와 디스플레이 메뉴만 세 번 로드된 기록뿐이다. NEVATO(마스코트 28 · white 배경 30)도 Mega-Display(29)도 한 번도 열리지 않았다.
 29번은 처음 실행되는 코드를 살리는 수정이라(S2-3 전례) 실행해야 안다.
 
-### - [ ] 40. `layouts/NXL HD/Layout.nut` 이 대문자 L 로 git 에 추적돼 있다
+### - [x] 40. `layouts/NXL HD/Layout.nut` 이 대문자 L 로 git 에 추적돼 있다 — **처리 완료 (`layout.nut` 으로 개명)**
+
+**조치 (2026-09-04)**: Windows 는 대소문자만 다른 이름 변경을 한 번에 못 하므로 `git mv` 두 단계(`tmp-layout.nut` 경유)로 `layout.nut` 이 됐다.
+`audit.ps1` 의 glyph 섹션이 하드코딩하던 경로도 소문자로 맞췄고, 이 문서의 다른 언급 3곳도 새 이름으로 고쳤다.
+`audit.ps1 -Section case` 가 앞으로 `layouts/<name>/layout.nut` 철자를 감시한다.
 
 19개 `layout*.nut` 중 유일. AM 은 `layout.nut` 을 글자 그대로 열므로 Windows 에서는 열리고 로그에도 소문자로 찍혀 눈에 안 띈다.
 Linux/macOS 클론에서는 NESiCAxLive 디스플레이가 레이아웃 없이 뜬다(CLAUDE.md 6절의 대소문자 의존 목록에 추가할 것).
