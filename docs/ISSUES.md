@@ -911,20 +911,33 @@ cfg 에 쓰는 `JOYCODE_1_BUTTONn` 은 **1-base**다. 스크린샷의 `Joy 1 0` 
 그래서 `mask`/`defvalue` 를 드라이버에서 정확히 가져와야 한다(`tag` 는 없으면 전 포트를 훑으므로 생략하는 편이 안전하다).
 
 **조치 (2026-09-04)** — `emulators/PSXMAME/cfg/` 에 게임별 cfg **20개**를 만들었다(신규 9 · 갱신 11).
-`mame.exe -listxml <게임>` 의 `buttons=` 로 4버튼/6버튼을 가르고, mask 는 MAME 0.139 드라이버 원본에서 네 갈래로 확인했다.
-
-| 포트군 | 게임 | P1 BUTTON1~6 mask |
-|---|---|---|
-| `namcos11` / `tekken` | tekken, tekken2, primglex | 16, 32, 16, 32 |
-| `namcos11` / `souledge` | souledge | 16, 32, 64, 16 |
-| `namcos12` | tekken3, tektagt, ehrgeiz, mrdrillr, fgtlayer | 16, 32, 64, 2, 4, 8 |
-| `zn.c` / `zn6b` | ts2, starglad, sfex, sfexp, sfex2, sfex2p, rvschool, jgakuen, plsmaswd, techromnu, bldyror2 | 16, 32, 64, 16, 32, 64 |
-
-검증: 네 갈래에서 각각 한 게임씩(tekken · tektagt · sfex2p · souledge) 실제로 띄운 뒤 ESC 로 정상 종료시켜
-**MAME 가 다시 써 낸 cfg 에 12개(4버튼은 8개) 포트가 그대로 남는 것**을 확인했다 —
-매칭에 실패한 포트는 재기록에서 빠지므로 이것이 확실한 판정이다.
-
 기존 파일에 있던 UTF-8 BOM 은 뺐다(MAME 자신이 쓰는 형식과 같게). 3버튼 게임의 cfg 는 손대지 않았다.
+
+**1차 조치의 오류 (2026-09-04, 사용자 재보고 "tekken·tekken2 반영 안 됨")**
+mask 를 **MAME 0.139 mainline 드라이버 소스에서 읽어** 넣은 것이 문제였다.
+PSXMAME 은 0.139 기반이지만 **드라이버가 개조돼 있어 값이 다르다.**
+namcos12·zn6b 는 우연히 mainline 과 같아서 tekken3·tektagt 는 동작했고,
+namcos11 계열만 전부 어긋나 조용히 무시되고 있었다.
+
+게다가 **검증 자체가 잘못돼 있었다.** "ESC 로 정상 종료 후 다시 써 낸 cfg 에 포트가 남아 있으면 성공"으로 판정했는데,
+매칭이 0건이면 MAME 가 파일을 아예 다시 쓰지 않고 **내 파일이 그대로 남는** 경우가 있어 그것을 성공으로 오독했다.
+**MAME 가 써 낸 파일에는 `tag="…"` 가 붙는다** — 이 유무를 먼저 봐야 한다.
+
+**2차 조치 (2026-09-04)** — mask 를 추정하지 않고 **바이너리에서 직접 실측**했다.
+후보 mask(1·2·4·…·32768 × `defvalue` = mask/0)를 전부 써 넣은 탐침 cfg 로 게임을 띄우고 ESC 로 종료하면,
+MAME 가 다시 써 낸 파일에 **실제로 매칭된 것만** `tag`·`mask`·`defvalue` 와 함께 남는다.
+
+| 포트군 | 게임 | P1 BUTTON1~6 `mask`/`defvalue` (실측) |
+|---|---|---|
+| `namcos11` / tekken 계열 | tekken, tekken2, primglex | 4096/0, 8192/0, 4096/0, 8192/0 |
+| `namcos11` / souledge | souledge | 4096/0, 8192/0, 16384/0, 4096/0 |
+| `namcos12` | tekken3, tektagt, ehrgeiz, mrdrillr, fgtlayer | 16/16, 32/32, 64/64, 2/2, 4/4, 8/8 |
+| `zn.c` / `zn6b` | ts2, starglad, sfex, sfexp, sfex2, sfex2p, rvschool, jgakuen, plsmaswd, techromnu, bldyror2 | 16/16, 32/32, 64/64, 16/16, 32/32, 64/64 |
+
+(P2 는 namcos12 만 다르다 — BUTTON1~3 이 4096/8192/16384, BUTTON4~6 이 32/64/128.)
+
+실측으로 바뀐 것은 **namcos11 4종뿐**이고, 나머지 16종은 재생성해도 1차와 동일했다.
+tekken·tekken2·primglex·souledge 를 실제로 띄워 `tag=` 가 붙은 재기록 파일로 8개 포트 전부 적용을 확인했다.
 
 ---
 
