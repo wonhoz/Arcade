@@ -678,7 +678,11 @@ white 변형으로 넘기면 배경이 조용히 검게 빈다. `cabinet/vewlix_
 
 "구조·규칙이 바뀌면 같은 커밋에서 이 문서를 갱신"이라는 CLAUDE.md 자신의 규칙을 PR #28 이 어겼다.
 
-### - [ ] 32. `reset-runtime.ps1` 은 에뮬레이터가 **지운** 추적 파일을 되돌리지 못한다
+### - [x] 32. `reset-runtime.ps1` 은 에뮬레이터가 **지운** 추적 파일을 되돌리지 못한다 — **처리 완료**
+
+**조치 (2026-09-04)**: `Get-Changed` 의 `Test-Path` 필터를 없애고 pathspec 을 그대로 `git status --porcelain --` 에 넘긴다
+(없는 경로는 git 이 무해하게 무시한다). 삭제된 추적 파일이 ` D` 로 잡혀 `git checkout --` 으로 복원된다.
+`emulators/Mame/cheat/output.{json,xml}` 은 `git rm --cached` 로 추적을 풀고 `.gitignore` 에 넣었다. `stats/` 도 같이 무시 목록에 올렸다.
 
 ```powershell
 $existing = @($Paths | Where-Object { Test-Path -LiteralPath $_ })   # 작업트리에 없는 경로를 버린다

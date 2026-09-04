@@ -394,8 +394,9 @@ $fs.Position=0x3C; $pe=$br.ReadInt32(); $fs.Position=$pe+0x5C; $br.ReadUInt16() 
 - 줄바꿈은 `.gitattributes`(2026-09-03 신설)가 고정한다 — 저장소 LF, 작업트리 OS 기본, `*.bat`만 CRLF 강제.
   `core.autocrlf` 설정이 다른 PC에서도 전체 줄바꿈 diff가 나지 않는다.
 - `attract.am`은 추적 중인데 실행할 때마다 내용이 바뀔 수 있다(런타임 상태 파일).
-- `stats/`는 무시 목록에 없다. 플레이 통계가 쌓이면 미추적 파일로 나타난다.
-  2.7.0부터 저장 경로가 `stats/<romlist명>/` → `stats/<Emulator명>/` 로 바뀌어서,
+- `stats/`와 `emulators/Mame/cheat/output.{json,xml}`은 런타임 산출물이라 2026-09-04부터 무시 목록에 있다
+  (그 전엔 cheat 산출물이 추적되고 있어 `reset-runtime.ps1`이 매번 "건너뜀"을 찍었다).
+  `stats/`는 2.7.0부터 저장 경로가 `stats/<romlist명>/` → `stats/<Emulator명>/` 로 바뀌어서,
   기존 `stats/Capcom/`·`stats/Zinc/` 같은 폴더는 더 이상 읽히지 않는다(플레이 횟수만 0으로 초기화됨).
 
 ## 7. 검증 및 문제 진단
