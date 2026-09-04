@@ -68,6 +68,31 @@ git branch Compact archive/Compact           # 되살리기
   > 스크립트는 그 자리에서 브랜치를 검사하고 아니면 멈추는 것이 안전하다:
   > `[ "$(git branch --show-current)" = develop ] || { echo "develop 아님"; exit 1; }`
 - 장비 전용 변경(레이아웃 해상도, 입력맵, 롬 구성)은 해당 장비 브랜치에만 둔다.
+
+  > ⚠️ **`emulators/PSXMAME/cfg/` 는 장비 전용이다 — 전파할 때 되돌려야 한다.**
+  > 버튼 매핑이 조이스틱 종류에 묶여 있다. `bartop` 은 generic USB 아케이드 패널,
+  > desktop 계열 4개는 **XInput Xbox 패드**라 같은 게임이라도 `JOYCODE` 번호가 다르다
+  > (6버튼 펀치: bartop = 조이 4·5·6 / desktop = 3·4·5).
+  >
+  > **"충돌 나면 장비 것 우선"으로는 부족하다.** git 은 양쪽이 같은 파일을 고쳤을 때만 충돌을 낸다.
+  > 장비 브랜치가 자기 매핑을 가진 파일은 `tektagt.cfg` 하나뿐이라(`desktop-ASUS-TUF` 는 그것도 없다)
+  > 나머지는 **충돌 없이 조용히 덮인다**. 그래서 충돌 여부가 아니라 **경로**로 갈라야 한다.
+  >
+  > ```bash
+  > PRE=$(git rev-parse HEAD)                 # 병합 전 장비 상태
+  > git merge main -m "Merge branch 'main' into $b"
+  > #  cfg/ 안에서 충돌이 나면 --ours(장비 쪽)로 해결한 뒤,
+  > #  병합으로 새로 들어온 cfg 파일을 지우고 나머지는 PRE 로 되돌린다
+  > comm -13 <(git ls-tree -r --name-only $PRE -- emulators/PSXMAME/cfg | sort) \
+  >          <(git ls-tree -r --name-only HEAD -- emulators/PSXMAME/cfg | sort) \
+  >   | while read -r f; do git rm -q -f -- "$f"; done
+  > git checkout $PRE -- emulators/PSXMAME/cfg
+  > git commit -m "emulators | $b 의 PSXMAME 입력 설정 유지 — 공용 변경만 반영"
+  > git diff --quiet $PRE HEAD -- emulators/PSXMAME/cfg   # 되돌아갔는지 확인
+  > ```
+  >
+  > 이렇게 하면 `mame.exe` 패치·`MAME Adult.cfg`·문서·즐겨찾기 같은 **장비 무관 변경만** 전파된다.
+  > 2026-09-05에 5개 장비 브랜치 전부 이 방식으로 처리했다(`docs/ISSUES.md` 45번).
 - `main`↔`bartop` 실제 차이(113개 파일): `layouts/NEVATO/*`(캐비닛 아트/vewlix 레이아웃),
   `layouts/Console Box/*`, `layouts/Mega-Display Advanced/{layout.nut, scripts/*}`,
   `scraper/@/overview/*`, 각 에뮬레이터의 입력·화면 설정(`emulators/*/`), `intro/*`.
