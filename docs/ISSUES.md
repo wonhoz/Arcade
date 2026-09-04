@@ -1,12 +1,12 @@
 # 개선 과제 / 알려진 문제 (심각도순)
 
-최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 시각 자산 재스크리닝 2026-09-03 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
+최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 시각 자산 재스크리닝 2026-09-03 · 3차 재점검 2026-09-04 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
 근거: `attract.cfg`, `emulators/*.cfg`, `romlists/*`, `last_run.log`, `mame64 -verifyroms`, git 메타데이터 실측
 
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1` 로 자동화되어 있다.
 
-**진행 현황** — 처리 **25건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
+**진행 현황** — 처리 **25건** / 미해결 **10건**(13번, 28~36번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
 
 > **보류 (우선순위 낮춤, 별도 지시 전까지 대기)** — S1 공개 저장소의 BIOS·롬, S2 `.git` 1.2GB.
 > 둘 다 히스토리 재작성이 필요하고 되돌리기 어렵다.
@@ -614,6 +614,96 @@ TeknoParrot · Taito Type X · MAME Adult 세 개가 없어 그 자리가 빈 �
 `layout.nut` 의 `do_nut` 순서가 `snap`(26행) → `arcade_name`(32행) 이라 텍스트가 항상 위에 온다.
 **둘 중 하나를 지우거나 옮기면 안 된다.** 전제가 깨지는 경우(디스플레이용 marquee 를 넣거나
 `@exit` 에 overview 를 쓰는 것)만 조심하면 되고, 그 내용을 `snap.nut` 주석에 남겼다.
+---
+
+## S6 — 3차 재점검 (2026-09-04) · PR #27~#30 재검토
+
+> 머지 4건(`b03d2e96` `c6a51d0e` `86af84f0` `ed963b32`)의 작업 커밋 20개를 다시 열어 봤다.
+> S5 의 "처리 완료" 7건 중 **22번·25번은 완료가 아니었다.** 점검 절차는 `/arcade-audit` 스킬
+> (`.claude/skills/arcade-audit/`)로 고정했고, 결과 아티팩트는 「AttractMode 재점검」에 갱신했다.
+
+### - [ ] 28. 마스코트 2종이 컷아웃이 아니라 불투명 포스터 — Taito Type X · MAME Adult
+
+22번에서 "flyer 를 480×760 으로 채움-크롭"해 넣은 3장 중 2장이 규격 위반이다.
+기존 19종은 전부 **투명 배경 위 캐릭터 컷아웃**인데, 이 둘은 알파를 4px 간격으로 실측하면 **투명 0.0%**
+(나머지 44~80%, 가장자리 투명 83~100%). 열어 보면 사무라이 스피리츠 포스터와 파칭코 전단이 잘려 있고
+우측 `TAITO Type X` 로고와 하단 퍼블리셔 띠가 중간에서 끊긴다. 크기도 975KB·756KB 로 2~4배.
+`character_alpha 255` 라 리스트 박스 위에 직사각형 포스터가 통째로 얹힌다.
+**개수(21/21)로 완료 판정한 것이 원인** — `validate.ps1` 의 마스코트 검사도 존재만 본다.
+
+### - [ ] 29. `layouts/Mega-Display/layout.nut:33` 이 없는 `scripts/fade.nut` 을 부른다
+
+```
+32  fe.do_nut("scripts/whitebar.nut");
+33  fe.do_nut("scripts/fade.nut");      ← Mega-Display/scripts/ 에 없다 (Advanced 에만 있음)
+34  fe.do_nut("scripts/sidebar.nut");   ← 예외 이후, 실행 안 됨
+35  fe.do_nut("scripts/wheel2.nut");    ← 예외 이후, 실행 안 됨
+```
+
+레이아웃 메뉴에서 `Mega-Display` 를 고르면 사이드바·휠이 없는 화면이 나온다. 5.5절이 "예비 테마"로
+지키고 있는 레이아웃이 실제로는 깨져 있었다. 25번 커밋(`5edb9d7e`)이 바로 이 레이아웃의 `clock.nut` 을
+"메뉴에서 선택 가능하니 같이 고쳤다"며 손댔는데, 같은 폴더 `layout.nut` 의 이 줄은 보지 않았다.
+`fade.nut` 이 정의하는 `FadeArt` 클래스는 두 레이아웃 어디에서도 쓰이지 않는다.
+
+### - [ ] 30. `layout_vewlix_white.nut:281` 의 배경 `background/white.png` 가 없다
+
+vewlix 변형은 죽은 파일이 아니다 — AM 은 `layout*.nut` 을 **L 키(`toggle_layout`)로 순환**하고,
+`attract.am` 에 `layout_vewlix_black`(MAME) · `_blue`(Capcom) · `_red`(SNK)가 실제 사용 중으로 기록돼 있다.
+white 변형으로 넘기면 배경이 조용히 검게 빈다. `cabinet/vewlix_white.png` 는 있다.
+
+### - [ ] 31. CLAUDE.md 가 이미 고친 것을 "아직 안 고쳤다"고 말한다
+
+| 서술 | 실제 | 어긋난 커밋 |
+|---|---|---|
+| §6 "`.gitignore`는 `emulators/MAME/...`로 적혀 있지만 실제 폴더는 `emulators/Mame`" | 전부 `emulators/Mame/` 로 고쳐짐, 대소문자 불일치 0건 | `c6a51d0e` |
+| §6 "`.gitattributes`가 없다" | 58줄 존재 | `c6a51d0e` |
+| §3 트리 "`intro.mp4`, `intro_16x9.mp4`" | 실제 파일은 `intro.mp4` · `intro_4x3.mp4` | (원래부터) |
+
+"구조·규칙이 바뀌면 같은 커밋에서 이 문서를 갱신"이라는 CLAUDE.md 자신의 규칙을 PR #28 이 어겼다.
+
+### - [ ] 32. `reset-runtime.ps1` 은 에뮬레이터가 **지운** 추적 파일을 되돌리지 못한다
+
+```powershell
+$existing = @($Paths | Where-Object { Test-Path -LiteralPath $_ })   # 작업트리에 없는 경로를 버린다
+$out = & git status --porcelain -- $existing
+```
+
+추적 중인 파일이 삭제된 상태(porcelain ` D`)는 `Test-Path` 가 실패해 목록에서 빠진다.
+"커밋된 정상 상태로 되돌린다"는 목적에서 가장 흔한 사고(에뮬레이터가 설정 파일을 지움)가 제외된다.
+함께: `emulators/Mame/cheat/output.{json,xml}` 은 MAME 런타임 산출물인데 **추적 중**이라
+21번의 가드가 매번 "건너뜀"을 찍는다. 추적 해제 + `.gitignore` 가 근본 해결이다.
+
+### - [ ] 33. emulator cfg 의 artwork 경로 후행 공백 5줄 — `validate.ps1` 은 못 잡는다
+
+`Sony PlayStation Portable.cfg:12`(공백 2), `Sony PlayStation 2 GZ.cfg:10,12,13`, `Sony PlayStation 2 ISO.cfg:13`.
+`validate.ps1` 은 값을 `.Trim()` 한 뒤 `Test-Path` 하므로 영원히 통과한다. Windows 도 관대해 지금은 동작하지만
+23번 커밋(`a57d0e8c`)이 PSP cfg 를 열어 고치면서도 남겨 둔 것이고, 형제 cfg(GZ↔ISO) 사이에서도 다르다.
+34개 cfg 의 "끝 개행 없음"도 같은 정리 대상.
+
+### - [ ] 34. 레이아웃 폴더의 미연결 자산 — 17번 기준에 걸리는 것이 다섯 부류 남았다
+
+| 부류 | 실체 | 왜 안 쓰이나 |
+|---|---|---|
+| 마스코트 복사본 | `character/{capcom,mame,snk neo geo,zinc,sony playstation} (2)·(3).png` × 2 레이아웃 = 12개, `Console Box/system/nintendo wii u (2).png` | 파일명이 디스플레이 이름과 안 맞아 `[DisplayName]` 으로 도달 불가 |
+| 배경 변형 | `background/{1280,1920,2xScale}/` × 2 레이아웃 (약 60MB) | 어떤 .nut 도 참조하지 않음. **2xScale 은 원본과 바이트 동일**(복사본) |
+| 폰트 | `fonts/NXL HD/{etc,download}/` 30여 개 | `font_path = fonts;fonts/NXL HD` — 하위 폴더는 탐색 안 함 |
+| 스크립트 | `NXL HD/carrier.nut`, `NXL HD/assets/shaders/layout.nut` | 어느 `do_nut` 도 안 부름 / 3단계 깊이라 AM 메뉴에 안 뜸. 후자는 참조 이미지 22개·폰트 `grobold` 가 전부 없는 데모 잔재 |
+| 원본·백업 | `logo/bak`, `Buttons/bak`, `UIelements/bak`, `*.psd` 20개, `Thumbs.db` | 작업 파일. 17번 정리 때 그대로 남음 |
+
+### - [ ] 35. NEVATO ↔ Console Box 가 같은 파일 63벌을 따로 들고 있다
+
+200KB 이상 추적 미디어를 MD5 로 묶으면 **63그룹 · 125MB** 가 바이트 동일하다(background/*.png 각 4벌,
+background/*.mp4, listbox/*.png, character/*.png). 문제는 용량이 아니라 **어긋남** — 이번 마스코트 3장도
+양쪽에 따로 넣었고, `system/nintendo wii u (2).png` 는 Console Box 에만 있다.
+
+### - [ ] 36. 폰트 함정 두 곳 — 지금은 안전, 한 줄만 바꾸면 두부
+
+표시 텍스트 전체 ↔ 그리는 폰트의 글리프를 대조했다. overview 21개 · kr.msg · NXL HD 한글 리터럴 · romlist Title ↔ `font.ttf` 전부 OK.
+- `MAME.txt:245` `뱀프½` 의 ½(U+00BD)이 `default_font` **SUIT-Regular 에 없다.** `select_font` 를 SUIT 로 바꾸거나 폰트 폴백이 나면 깨진다.
+- NEVATO 의 LCD 텍스트(`digital-7`, 한글 없음)가 `[FilterName]` 을 표시한다 — 필터명을 한글로 바꾸는 순간 두부.
+
+---
+
 ## 개선 제안
 
 ### - [x] A. 무결성 검증 스크립트 — **완료: `tools/validate.ps1`**
