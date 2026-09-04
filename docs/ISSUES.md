@@ -936,8 +936,22 @@ MAME 가 다시 써 낸 파일에 **실제로 매칭된 것만** `tag`·`mask`·
 
 (P2 는 namcos12 만 다르다 — BUTTON1~3 이 4096/8192/16384, BUTTON4~6 이 32/64/128.)
 
-실측으로 바뀐 것은 **namcos11 4종뿐**이고, 나머지 16종은 재생성해도 1차와 동일했다.
+실측으로 바뀐 것은 **namcos11 4종뿐**이고, 나머지는 재생성해도 1차와 동일했다.
 tekken·tekken2·primglex·souledge 를 실제로 띄워 `tag=` 가 붙은 재기록 파일로 8개 포트 전부 적용을 확인했다.
+
+**실측 범위** — 개발 PC 에는 롬이 일부만 있어(`.gitignore` 대상) 20종 중 11종만 실행·실측했다.
+
+| 상태 | 게임 |
+|---|---|
+| 실측 완료 | tekken, tekken2, primglex, souledge, tekken3, tektagt, ehrgeiz, mrdrillr, fgtlayer, ts2, starglad |
+| 미실측 (롬 불완전 / 실행 시 ACCESS VIOLATION) | sfex, sfexp, sfex2, sfex2p, rvschool, jgakuen, plsmaswd, techromnu, bldyror2 — 전부 `zn6b` |
+
+미실측 9종은 전부 `zn.c` 의 **같은 `zn6b` 포트셋**을 쓰고, 같은 포트셋을 쓰는 ts2·starglad 두 종이
+서로 다른 보드(coh1000c)에서 동일한 값(16/32/64 × 2줄, `defvalue` = `mask`)으로 실측됐다.
+그래도 **캐비닛에서 스트리트 파이터 EX 계열 한 종은 직접 눌러 확인하는 것이 좋다.**
+
+> **여기서 얻은 교훈**: 실측 스크립트가 MAME 창에 ESC 를 보낼 때 **게임이 조기 종료돼 있으면 그 ESC 가
+> 터미널로 들어간다**(Claude Code 에서는 중단 키다). 포그라운드 창의 PID 가 대상 프로세스와 같을 때만 보낼 것.
 
 ---
 
