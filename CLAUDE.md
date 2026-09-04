@@ -280,7 +280,11 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
   없으면 오류 없이 그 자리만 비어 보인다.
   **규격은 480×760, 투명 배경 위 컷아웃**이다 — 불투명 플라이어를 잘라 넣으면 리스트 박스 위에
   포스터 블록이 얹힌다(`docs/ISSUES.md` 28번). `tools/validate.ps1` 이 누락과 규격(크기·알파 비율)을 경고한다.
-  Taito Type X · MAME Adult 는 캐릭터 소재가 없어 **게임 로고를 얹은 임시본**이다.
+  **새 마스코트를 만들 때**: 흰/단색 배경의 원화(공식 아트, 전단)를 구해
+  `.claude\skills\arcade-audit\scripts\cutout.ps1 <in> <out> [-Mode white|light] [-Erase "x,y,w,h;…"]` 로
+  배경을 떼어내면 480×760 알파 PNG 가 나온다. GDI+ 가 못 여는 JPEG 는 `img-to-png.ps1` 로 먼저 변환.
+  소재가 열려 있는 곳: fightersgeneration.com(격투 캐릭터 공식 아트), flyers.arcade-museum.com(전단).
+  Spriters Resource·Fandom·pngwing 류는 Cloudflare 가 스크립트 접근을 막는다.
 - 디스플레이 메뉴 아트웍은 `menu-art/system|marquee|snap|wheel`(로컬 전용).
 
 ### 5.4 레이아웃 수정
