@@ -122,7 +122,7 @@ D:\AttractMode\
 ├─ attract.am                          런타임 상태(마지막 선택/레이아웃). 실행할 때마다 변함
 ├─ default-{display,emulator,filter}.cfg  AM 기본 템플릿(수정 금지)
 ├─ emulators\
-│   ├─ *.cfg                           ★ 에뮬레이터 정의 38개 (= romlist의 Emulator 필드 값)
+│   ├─ *.cfg                           ★ 에뮬레이터 정의 35개 (= romlist의 Emulator 필드 값)
 │   ├─ Mame\ Demul\ M2\ SuperModel\ PCSX2\ ePSXe\ PPSSPP\ Dolphin\
 │   │  Project64\ Project64_v1.7\ Cemu\ Mednafen\ RetroArch\ PSXMAME\
 │   │  TeknoParrot\ "Taito Type X"\ "PC Game"\      실제 에뮬레이터 바이너리
@@ -221,12 +221,11 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 - **MAME 계열은 `mame.ini`의 `rompath`가 실제 롬 탐색을 담당**하므로, cfg의 `rompath`는
   주로 목록 생성/`[romfilename]` 치환용이다. (`emulators/Mame/mame.ini:11` 참고)
 
-**에뮬레이터 정의 목록 (38개)**
+**에뮬레이터 정의 목록 (35개)**
 
 | 계열 | cfg |
 |---|---|
 | MAME | `MAME`, `MAME Vertical`, `MAME Adult`, `EKMAME`(한글롬), `EKMAME Vertical`, `PSXMAME` |
-| MAME 0.212 | `MAME Legacy`, `MAME Legacy Vertical`, `MAME Legacy Adult` — 0.246이 못 읽는 옛 롬셋 전용(4.7절) |
 | RetroArch | `RetroArch FinalBurn Neo` (한글패치 롬: `emulators/RetroArch/system/fbneo/patched`) |
 | Demul | `SEGA NAOMI`, `Sammy Atomiswave`, `SEGA Hikaru`, `CAVE`, `SEGA Dreamcast` |
 | SEGA | `SEGA MODEL 2`(M2 emulator_multicpu), `SEGA MODEL 3`(SuperModel) |
@@ -325,8 +324,11 @@ PSXMAME 자신이 `use_gpu_plugin` 이 켜져 있을 때 타는 것과 **같은 
 
 ### 4.7 `emulators/Mame` 에는 MAME이 **두 벌** 들어 있다 — 섞이는 지점 세 곳
 
-`mame64.exe`(0.246)와 `EKMAME64.exe`(0.212, 한글롬 빌드)가 **같은 폴더에서 같은 `mame.ini` 를 읽는다.**
-버전이 34단계나 벌어져 있어서 아래 세 곳이 어긋난다. 2026-09-06에 전부 처리했다(`docs/ISSUES.md` 46~48번).
+`mame64.exe`(0.246)와 `EKMAME64.exe`(0.212, 한글롬 빌드)가 **같은 폴더에서 같은 `mame.ini`·`ui.ini`·`plugins`·`cfg`·`roms` 를 쓴다.**
+버전이 34단계나 벌어져 있어서 아래 세 곳이 어긋난다(`docs/ISSUES.md` 46~48번).
+
+> **두 벌을 폴더째 분리할 예정이다**(2026-09-06 사용자 방침). 분리하면 (1)과 (2)는 자연히 사라진다.
+> 분리할 때 같이 손봐야 하는 것은 4.8절에 적어 뒀다.
 
 **(1) `plugins/boot.lua` 는 0.246 것이라 0.212 가 못 읽는다 — EKMAME 계열은 `-pluginspath plugins-none`**
 
@@ -337,31 +339,93 @@ MAME은 `pluginspath` 의 `boot.lua` 를 Lua 엔진 부트스트랩으로 항상
 [LUA ERROR] in run: plugins\boot.lua:11: attempt to index a function value (field 'options')
 ```
 
-그래서 `EKMAME*`·`MAME Legacy*` 정의 5개는 `args` 에 **`-pluginspath plugins-none`** 을 준다.
+그래서 `EKMAME`·`EKMAME Vertical` 정의는 `args` 에 **`-pluginspath plugins-none`** 을 준다.
 `emulators/Mame/plugins-none/` 은 `README.txt` 만 있는 빈 폴더다 — `boot.lua` 가 없으면 Lua 엔진을 건너뛴다.
 **여기에 파일을 넣지 말 것.**
 
 > 이 증상은 **프로세스가 살아 있어서** 구동 점검에서 `PASS` 로 잡혔다(7.5절 `DIALOG` 상태 참고).
+> 폴더를 분리해 EKMAME 이 자기 `plugins`(또는 없는 경로)를 쓰게 되면 이 인자는 필요 없어진다.
 
-**(2) 롬 컬렉션이 0.212 시절 것이라 0.246 이 거부하는 세트가 61개 있다 — `MAME Legacy` 계열**
+**(2) 롬 컬렉션이 0.212 시절 것이라 0.246 이 거부하는 세트가 61개 있다 — ⚠️ 미해결**
 
-0.246은 나중에 덤프된 PLD·MCU·디바이스 롬(`ym2413`, `segabill` …)까지 요구해서
+0.246은 나중에 덤프된 PLD·MCU·디바이스 롬(`ym2413`, `segabill`, `stvbios` …)까지 요구해서
 `Fatal error: Required files are missing`(종료 코드 2)로 끝난다. 같은 롬이 0.212에서는 그대로 돈다.
-그 61개 중 **58개**는 romlist 의 Emulator 필드를 `MAME Legacy` / `MAME Legacy Vertical` / `MAME Legacy Adult` 로 돌렸다
-(나머지 3개는 0.212 가 드라이버 검증에서 걸려 비활성화 — `ddenlovr.cpp` 계열).
-세 정의는 원본(`MAME`·`MAME Vertical`·`MAME Adult`)과 **`executable` 과 `-pluginspath` 만 다르다** — 인자·롬 경로·아트웍은 같다.
+**MAME 본체와 롬 컬렉션을 최신으로 갱신해 푸는 것이 방침이다**(2026-09-06 사용자 결정).
+갱신 뒤 `test-roms.cmd` 로 다시 돌려 확인한다. 대상 세트와 없는 파일 목록은 `docs/ISSUES.md` 47번에 있다.
 
-> 새 게임이 종료 코드 2로 안 뜨면 `mame64 -verifyroms <셋>` 과 `EKMAME64 -verifyroms <셋>` 을 나란히 돌려 본다.
-> 0.212 쪽만 `is good` 이면 `MAME Legacy` 후보다. **다만 `verifyroms` 가 통과해도 안 뜨는 것이 있으니 반드시 띄워서 확인한다** —
-> 0.212는 8,741셋뿐이고 `ddenlovr.cpp` 처럼 드라이버 검증 오류로 아예 못 뜨는 계열도 있다.
+> 진단은 `mame64 -verifyroms <셋>` 과 `EKMAME64 -verifyroms <셋>` 을 나란히 돌려 본다.
+> **`verifyroms` 가 통과해도 안 뜨는 것이 있으니 반드시 띄워서 확인한다** — 0.212는 8,741셋뿐이고
+> `ddenlovr.cpp` 처럼 드라이버 검증 오류로 아예 못 뜨는 계열도 있다.
 > **`EKMAME64 -verifyroms` 는 없는 셋 이름에 대해 대화상자를 띄우고 멈춘다.** 존재 확인은 `-listfull` 로 먼저 한다.
-> 거꾸로 EKMAME 쪽에서 안 되는 한글롬이 0.246에서는 되는 경우도 있다(`twinadvk`·`fort2ba`·`yamyamk`·`raidenkb`).
+> 거꾸로 EKMAME 쪽에서 안 되는 한글롬이 0.246에서는 되는 경우도 있다(`twinadvk`·`fort2ba`·`yamyamk`·`raidenkb` — 이 넷은 `MAME` 계열로 옮겼다).
 
 **(3) `mame.ini` 의 `rompath` 가 실제 롬 탐색을 담당한다 — 폴더명이 한 글자만 달라도 전부 실패**
 
 `roms\Arcade AD` 로 적혀 있어 실제 폴더 `roms\Arcade Adult` 를 못 찾았고, MAME Adult 목록 38개가 통째로 실행되지 않았다.
 **cfg 의 `rompath` 는 목록 생성·`[romfilename]` 치환용일 뿐이라 이 오타를 가려 주지 못한다.**
 `tools\validate.ps1` 도 cfg 쪽만 보므로 잡지 못한다 — 실제로 띄워 보는 `test-roms.cmd` 만이 잡는다.
+
+### 4.8 에뮬레이터를 갱신하거나 폴더를 나눌 때
+
+현재 들어 있는 것(2026-09-06 실측). **버전 열은 바이너리의 버전 리소스에서 읽은 것만 적었다** —
+빈 칸은 리소스가 없어서 파일 날짜밖에 근거가 없다는 뜻이니, 갱신 전에 각자 실행해서 확인한다.
+
+| 폴더 | 버전 | 파일 날짜 | 갱신할 때 걸리는 것 |
+|---|---|---|---|
+| `Mame` | **0.246** | 2022-07-30 | 롬 세트가 버전에 묶인다(4.7절 (2)). 세트 이름도 판마다 바뀐다 |
+| `Mame` | EKMAME **0.212** | 2019-08-08 | 같은 폴더를 공유한다 — 아래 분리 항목 |
+| `PSXMAME` | MAME 0.139 계열 | 2026-09-05 | ⚠️ **`mame.exe` 에 1바이트 패치**(4.6절). 교체하면 사라진다 |
+| `SuperModel` | (0.3a-WIP · `revision.txt` 는 svn r757 까지) | 2018-11-28 | ⚠️ **개조 빌드다** — `revision.txt` 에 "sr2 music fix" 패치를 넣었다고 적혀 있다 |
+| `Demul` | | 2018-04-28 | `-run=<플랫폼> -rom=` 인자 체계 |
+| `M2` | | 2018-10-14 | 인자가 `[name]` 하나뿐이라 갱신 여파가 작다 |
+| `PCSX2` | | 2020-05-07 | ⚠️ **최신판은 CLI 가 다르다.** 지금 쓰는 `--nogui --portable` 이 그대로 있는지 먼저 확인 |
+| `ePSXe` | | 2018-11-14 | `-loadmemc0 "memcards\epsxe000.mcr"` 가 메모리카드를 직접 가리킨다 |
+| `Dolphin` | | 2019-01-06 | `-b -e` 인자와 `Sys/`·`User/` 구조 |
+| `Project64` | 3.0.1 | 2021-07-30 | `Config/`·`Save/` |
+| `Cemu` | | 2022-02-18 | ⚠️ 인자가 `-f -g "<롬>\code\<롬>.rpx"` 라 **롬 폴더 구조에 묶여 있다** |
+| `Mednafen` | 1.29.0 | 2022-01-18 | `firmware/` 의 BIOS 파일 이름이 고정이다 |
+| `RetroArch` | | 2022-05-03 | `cores/` 는 gitignore. 코어와 본체의 ABI 가 맞아야 한다 |
+| `PPSSPP` | 1.13.1 | 2022-07-28 | |
+| `TeknoParrot` | 1.0.0.804 | 2022-08-01 | `UserProfiles/` 형식이 판마다 바뀐다 |
+
+> ⚠️ **교체하면 이 저장소의 손질이 사라지는 바이너리가 둘 있다** — `PSXMAME/mame.exe`(4.6절)와
+> `SuperModel/Supermodel.exe`. 둘 다 `.gitignore` 대상이 아니라 **git 추적 중**이므로
+> `git checkout -- <경로>` 로 되돌릴 수 있다. 새 빌드를 쓰기로 했다면 그 손질을 다시 넣을지 먼저 정한다.
+> (`Mame/mame64.exe`·`EKMAME64.exe` 는 반대로 미추적이라 되돌릴 원본이 저장소에 없다.)
+
+**갱신할 때마다 같이 봐야 하는 자리**
+
+1. **`emulators/<이름>.cfg` 의 `args`** — 에뮬레이터 CLI 는 메이저 버전에서 잘 바뀐다.
+   MAME 의 `-fallback_artwork` 는 0.215+, `skip_warnings` 는 0.226+ 처럼 **버전 하한이 있는 옵션**이 섞여 있다.
+   모르는 옵션을 만나면 MAME 계열은 **오류 대화상자를 띄우고 멈춘다**(7.5절 `DIALOG`).
+2. **`rompath` / `romext`** — `executable` 이 있는 디렉터리 기준 상대경로(4.2절). 폴더를 옮기면 같이 고친다.
+3. **`artwork` 경로** — 이쪽은 AM 루트 기준이다. 기준이 다르니 헷갈리지 말 것.
+4. **`.gitignore`** — 폴더 이름으로 걸러내므로 폴더를 추가·개명하면 롬·코어가 추적되기 시작한다(S1 위험).
+5. **`tools/reset-runtime.ps1` 의 `$ConfigPaths`·`$SavePaths`** — 경로가 하드코딩돼 있다.
+6. **세이브** — `PCSX2/memcards`, `ePSXe/memcards`, `Project64/Save`, `Mame/nvram`, `SuperModel/NVRAM`,
+   `Demul/nvram`, `RetroArch/saves`. 갱신 전에 따로 챙긴다.
+7. **`stats/<Emulator>/`** — 에뮬레이터 정의 이름이 바뀌면 플레이 통계가 0으로 돌아간다(6절).
+8. 끝나면 `tools\validate.ps1` → `test-roms.cmd` 전수 구동 점검(7.5절) 순으로 확인한다.
+   **정적 점검만으로는 부족하다** — 인자가 안 먹는 것은 띄워 봐야 나온다.
+
+**`Mame` 와 `EKMAME` 를 폴더째 나눌 때 손봐야 하는 것**
+
+지금은 `emulators/Mame` 하나에 `mame64.exe`(0.246)와 `EKMAME64.exe`(0.212)가 같이 있고
+`mame.ini`·`ui.ini`·`plugins`·`cfg`·`roms`·아트웍 폴더를 전부 공유한다. 나눌 때 볼 자리는 다음과 같다.
+
+| 대상 | 지금 | 할 일 |
+|---|---|---|
+| `emulators/EKMAME.cfg`, `EKMAME Vertical.cfg` | `executable emulators\mame\ekmame64` | 새 폴더로. `-pluginspath plugins-none` 은 **뺄 수 있다**(4.7절 (1)) |
+| 두 cfg 의 `rompath` | `roms\korean\` | 새 폴더 기준으로 다시 잡는다 |
+| 두 cfg 의 `artwork` 4줄 | `emulators\mame\{flyer,marquee,video,wheel}` | AM 루트 기준. 아트웍을 공유할지 나눌지 정한다 |
+| `mame.ini` | rompath 에 `roms\Korean` 포함 | EKMAME 쪽에도 자기 `mame.ini` 가 필요하다 |
+| `emulators/Mame/cfg/` | 두 MAME 이 게임별 입력 설정을 공유 | 나누면 한쪽 설정이 사라진다. 필요한 것은 복사 |
+| `.gitignore` | `emulators/Mame/roms` 등 폴더명 기준 | 새 폴더 경로를 추가하지 않으면 롬이 추적된다 |
+| `tools/reset-runtime.ps1` | `emulators/Mame/{cfg,ui.ini,nvram,…}` | 새 경로 추가 |
+| `emulators/Mame/plugins-none/` | EKMAME 용 우회 | 분리 후 불필요해지면 `README.txt` 와 함께 정리 |
+
+> 나눈 뒤에는 **EKMAME 쪽 45개를 반드시 띄워서 확인한다**(`test-roms.cmd -Launch -Emulator EKMAME*`).
+> 경로가 하나만 어긋나도 `Unknown system` 대화상자로 끝나는데, 그것은 정적 점검에 안 잡힌다.
 
 
 ## 5. 자주 하는 작업 레시피
@@ -511,7 +575,7 @@ MAME 가 다시 써 낸 cfg 에 **실제로 매칭된 것만** 남는다.
 - `layouts/Mega-Display` — 어떤 display도 쓰지 않지만 AM 레이아웃 메뉴에서 선택 가능한 예비 테마다.
 - `emulators/PSXMAME/mame.exe` — **1바이트 패치가 들어가 있다**(4.6절). 새 빌드로 교체하면 시작 확인 창이 다시 뜬다.
 - `emulators/Mame/plugins-none/` — **비어 있는 것이 목적인 폴더**다(4.7절). `README.txt` 외에 무엇도 넣지 말 것.
-  특히 `boot.lua` 가 들어가면 EKMAME 계열 45+61개가 다시 오류 대화상자에서 멈춘다.
+  특히 `boot.lua` 가 들어가면 EKMAME 게임 39개가 다시 오류 대화상자에서 멈춘다.
 
 > **미연결 자산을 정리한 이력** — 2026-09-03에 아래를 제거하고
 > `archive/unused-assets-2026-09-03` 태그에 보존했다.

@@ -7,11 +7,12 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **47건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
+**진행 현황** — 처리 **46건** / 미해결 **2건**(13번 · **47번**) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
 42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일.
 **46~49번은 2026-09-06 전수 구동 점검(E)의 실패 106건을 파고들어 나온 것** —
-실제 실행 불가는 151개였고(보고서의 106 + 대화상자 때문에 `PASS` 로 잘못 잡힌 EKMAME 45), 그중 **131개를 살렸다.** 나머지 20개는 롬이 불완전해 비활성화)
+실제 실행 불가는 151개였다(보고서의 106 + 대화상자 때문에 `PASS` 로 잘못 잡힌 EKMAME 45).
+46·48·49번으로 **73개**를 살렸고, 나머지 **78개는 47번**으로 남아 있다 — MAME 본체와 롬 컬렉션을 갱신해서 풀 예정)
 
 > **보류 (우선순위 낮춤, 별도 지시 전까지 대기)** — S1 공개 저장소의 BIOS·롬, S2 `.git` 1.2GB.
 > 둘 다 히스토리 재작성이 필요하고 되돌리기 어렵다.
@@ -971,9 +972,11 @@ tekken·tekken2·primglex·souledge 를 실제로 띄워 `tag=` 가 붙은 재�
 게임 대신 이 대화상자가 뜨고 거기서 멈춘다. `-noplugins` 로도 막히지 않는다 — `boot.lua` 는 플러그인이 아니라
 **Lua 엔진 부트스트랩**이라 항상 읽힌다. (`-plugins 0` 은 `0` 을 시스템 이름으로 먹어 `Unknown system '0'` 이 된다.)
 
-**조치** — `emulators/Mame/plugins-none/`(README 만 있는 빈 폴더)을 만들고, EKMAME 계열 정의의 `args` 에
-`-pluginspath plugins-none` 을 넣었다. `boot.lua` 가 없으면 Lua 엔진을 건너뛰고 정상 기동한다.
-대상: `EKMAME.cfg`, `EKMAME Vertical.cfg`, 그리고 47번에서 새로 만든 `MAME Legacy*.cfg` 3개.
+**조치** — `emulators/Mame/plugins-none/`(README 만 있는 빈 폴더)을 만들고, `EKMAME.cfg` · `EKMAME Vertical.cfg` 의
+`args` 에 `-pluginspath plugins-none` 을 넣었다. `boot.lua` 가 없으면 Lua 엔진을 건너뛰고 정상 기동한다.
+
+> **두 MAME 을 폴더째 나누면 이 우회는 필요 없어진다**(2026-09-06 사용자 방침 — [`../CLAUDE.md`](../CLAUDE.md) 4.8절).
+> 나눈 뒤 EKMAME 이 자기 `plugins`(또는 없는 경로)를 읽게 되면 `-pluginspath plugins-none` 과 `plugins-none/` 을 같이 정리한다.
 
 검증: 창 클래스를 직접 읽어 확인했다. 수정 전 `#32770`(대화상자) 하나 → 수정 후 `MAME: WWF WrestleFest (Korea) [wwfwfestk]`.
 
@@ -983,8 +986,11 @@ tekken·tekken2·primglex·souledge 를 실제로 띄워 `tag=` 가 붙은 재�
 |---|---|---|
 | `twinadvk` `fort2ba` `yamyamk` | `Unknown system` / 기동 중 크래시 | 0.246 에 있고 정상 기동 → Emulator 를 **`MAME`** 로 |
 | `raidenkb` | 기동 중 크래시 | 0.246 정상 → **`MAME Vertical`** 로 |
-| `ddenlovrk` | `Driver ultrchmp (file ddenlovr.cpp)` 검증 오류 | 0.246 도 롬 불완전 → 비활성화(47번) |
-| `thuntk` | `Unknown system` | 0.246 도 롬 불완전 → 비활성화(47번) |
+| `ddenlovrk` | `Driver ultrchmp (file ddenlovr.cpp)` 검증 오류 | 0.246 도 롬 불완전 → **미해결**(47번) |
+| `thuntk` | `Unknown system` | 0.246 도 롬 불완전 → **미해결**(47번) |
+
+앞의 넷은 `MAME` / `MAME Vertical` 로 옮긴 상태를 유지한다 — 0.246 에서 창 제목까지 확인했다
+(`MAME: Twin Adventure (Korea) [twinadvk]` 식). 47번을 되돌릴 때도 이 넷은 되돌리지 않았다.
 
 > **EKMAME 는 만능이 아니다.** 0.212 는 8,741셋뿐이고 `ddenlovr.cpp` 처럼 드라이버 검증에서 걸려
 > 아예 못 뜨는 계열도 있다. 0.246 이 거부하면 무조건 EKMAME 으로 보내는 것이 아니라, **양쪽 다 띄워 보고** 정한다.
@@ -995,7 +1001,13 @@ tekken·tekken2·primglex·souledge 를 실제로 띄워 `tag=` 가 붙은 재�
 > 창 클래스가 `#32770` 인 것이 있으면 새 상태 **`DIALOG`(실패)** 로 판정하고 상자 안 문구를 `Detail` 에 담게 했다.
 > 이 판정이 없었으면 이 문제도, 아래 47·48번의 검증도 불가능했다.
 
-### - [x] 47. 롬 컬렉션이 0.212 시절 것이라 MAME 0.246 이 61개를 거부한다 — **처리 완료 (0.212 로 라우팅)**
+### - [ ] 47. 롬 컬렉션이 0.212 시절 것이라 MAME 0.246 이 61개를 거부한다 — ⏳ **MAME·롬 갱신으로 처리 예정**
+
+> **2026-09-06 되돌림.** 아래 "0.212 로 라우팅" 은 한 번 적용했다가(`8740d5b4`) 사용자 지시로 되돌렸다.
+> **MAME 본체와 롬 컬렉션을 최신으로 갱신해서 정면으로 풀기로 했고**, 그때까지 목록은 손대지 않는다.
+> 그래서 지금 `romlists` 는 이 문제에 대해 **아무 조치도 되어 있지 않은 상태**다 —
+> 아래 61개는 캐비닛에서 고르면 종료 코드 2 로 끝나고, "못 돌리는 20개" 도 활성 상태 그대로다.
+> 아래 분석과 목록은 갱신 뒤 **무엇이 풀렸는지 대조하는 기준**으로 남긴다.
 
 전수 점검 1차에서 124건, 실패분만 다시 돌린 2차에서도 106건이 `CRASH`(종료 코드 2 = `Required files are missing`)였다.
 `mame64 -verifyroms` 로 전수 확인한 결과, 0.246 이 나중에 추가된 PLD·MCU·디바이스 롬을 요구하는 것이었다.
@@ -1010,11 +1022,12 @@ tekken·tekken2·primglex·souledge 를 실제로 띄워 `tag=` 가 붙은 재�
 
 같은 롬이 **`EKMAME64.exe`(0.212)에서는 그대로 돈다.** 0.246 BAD / 0.212 OK 가 61건이었다.
 
-**조치** — `MAME Legacy` / `MAME Legacy Vertical` / `MAME Legacy Adult` 정의 3개를 만들고
-(원본과 `executable` · `-pluginspath` 만 다르다) 그 61개의 romlist Emulator 필드를 바꿨다.
-`acedrvrw` · `raveracw` 처럼 0.246 에서 이름이 바뀐 세트도 0.212 에서는 옛 이름이라 같이 해결된다.
+**한 번 해 봤던 조치(되돌림)** — `MAME Legacy` / `MAME Legacy Vertical` / `MAME Legacy Adult` 정의 3개를 만들어
+(원본과 `executable` · `-pluginspath` 만 다르다) 58개의 romlist Emulator 필드를 그쪽으로 돌렸다.
+`acedrvrw` · `raveracw` 처럼 0.246 에서 이름이 바뀐 세트도 0.212 에서는 옛 이름이라 같이 해결됐다.
+**135개를 실제로 띄워 124개가 정상 기동하는 것까지 확인했다.** 되살리려면 `git show 8740d5b4` 를 보면 된다.
 
-**어느 쪽으로도 못 돌리는 20개(21행)는 `#` 으로 비활성화**했다. 롬 자체가 불완전하다.
+**어느 쪽으로도 못 돌리는 19세트(20행).** 롬 자체가 불완전하다. 한 번 `#` 으로 비활성화했다가 같이 되돌렸다.
 
 | 목록 | 세트 | 없는 파일 |
 |---|---|---|
@@ -1032,16 +1045,16 @@ tekken·tekken2·primglex·souledge 를 실제로 띄워 `tag=` 가 붙은 재�
 | MAME Adult | `sxyreac2` | `gal16v8d.ac1709g00.u34` |
 | MAME Adult | `hanamai` | `2.3j` `1.4j`(hnkochou) |
 
-> 롬이 채워지면 `#` 을 떼고 `test-roms.cmd` 로 확인하면 된다.
+> 롬을 갱신한 뒤 `test-roms.cmd` 로 돌려 이 표와 대조한다.
 > **`ym2413` 7개는 144바이트짜리 디바이스 롬 하나(`ym2413.zip`)를 `emulators\Mame\roms\Bios` 에 넣으면 전부 풀린다** — 가장 값싼 한 건이다.
 > `stvbios`·`segabill` 4개도 BIOS 두 파일이면 된다.
 
-**0.212 로 도는 61개 중 3개는 결국 못 썼다.** `ddenlovj` · `ultrchmp` · `ddenlovrk` 는 0.212 가
-`Driver ultrchmp (file ddenlovr.cpp)` 검증 오류 대화상자를 띄우고 멈춘다(46번 표). 위 비활성화 목록에 들어갔다.
+**0.212 로 도는 61개 중 3개는 그쪽으로도 안 됐다.** `ddenlovj` · `ultrchmp` · `ddenlovrk` 는 0.212 가
+`Driver ultrchmp (file ddenlovr.cpp)` 검증 오류 대화상자를 띄우고 멈춘다(46번 표).
 
-**`gangwars` · `karnov` · `victroad` 는 0.212 에서 가끔 기동 직후 크래시한다**(`0xC0000005`).
-재시도하면 뜨는 것을 확인해 그대로 뒀다 — 1차 전수 점검에서도 실패 124건 중 18건이 재시도로 통과했다.
-캐비닛에서 한 번에 안 뜨면 다시 고르면 된다.
+**`gangwars` · `karnov` · `victroad` 는 0.212 에서 가끔 기동 직후 크래시했다**(`0xC0000005`).
+재시도하면 뜨는 것을 확인했다 — 1차 전수 점검에서도 실패 124건 중 18건이 재시도로 통과했다.
+**"한 번 실패 = 안 됨" 이 아니라는 뜻이라, 갱신 뒤 판정할 때도 실패 항목은 `-Failed` 로 한 번 더 돌려 보고 정한다.**
 
 ### - [x] 48. `mame.ini` 의 rompath 오타 하나로 MAME Adult 38개가 통째로 실행 불가였다 — **처리 완료**
 
