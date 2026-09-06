@@ -957,6 +957,16 @@ tekken·tekken2·primglex·souledge 를 실제로 띄워 `tag=` 가 붙은 재�
 > **여기서 얻은 교훈**: 실측 스크립트가 MAME 창에 ESC 를 보낼 때 **게임이 조기 종료돼 있으면 그 ESC 가
 > 터미널로 들어간다**(Claude Code 에서는 중단 키다). 포그라운드 창의 PID 가 대상 프로세스와 같을 때만 보낼 것.
 
+**장비 전파 현황 (2026-09-07)** — 이 20개는 **bartop 의 조이스틱 번호**(윗줄 = 4·5·6)로 만든 것이라
+desktop 계열 4대(XInput 패드, 윗줄 = 3·4·5)에는 전파하지 않는다(CLAUDE.md 2절의 경로 되돌리기).
+그 결과 desktop 계열에는 아래 **9개의 cfg 가 아예 없고** MAME 공장 기본값(아랫줄부터)으로 돈다.
+
+ehrgeiz · primglex · rvschool · sfex2 · sfexp · sfexu · starglad · tekken · tekken2
+
+나머지 11개(bldyror2 · fgtlayer · jgakuen · mrdrillr · plsmaswd · souledge · techromnu · tekken3 · tektagt · ts2 · sfex2p)는
+desktop 쪽에도 파일이 있어 **각 장비의 기존 값이 유지**된다 — 다만 그 값이 6버튼 배열인지는 확인하지 않았다.
+채우려면 위 mask 표를 그대로 쓰고 JOYCODE 번호만 3·4·5 / 1·2·3 으로 바꾸면 된다.
+
 ### - [x] 46. EKMAME(0.212) 로 도는 게임 45개가 Lua 오류 대화상자에서 멈춰 있었다 — **처리 완료**
 
 사용자가 전수 구동 점검(E 항목)을 두 차례 돌린 결과를 분석하다 찾았다. 보고서에는 **`PASS` 로 찍혀 있던** 항목들이다.
