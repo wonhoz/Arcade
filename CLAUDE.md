@@ -117,6 +117,7 @@ D:\AttractMode\
 ├─ .+필독.txt                           ★ 각 장비에서 반드시 해야 할 것 (git 으로 안 따라오는 작업)
 ├─ attract.exe                          프론트엔드 본체 (38MB, 추적됨) — 2.7.0부터 콘솔 서브시스템
 ├─ attract.bat                          ★ 실행 런처 (--logfile 로 last_run.log 복원, 4.5절)
+├─ test-roms.cmd                        ★ 롬 구동 검증 런처 — 인자 없이 실행하면 메뉴 (7.5절)
 ├─ attract.cfg                         ★ 메인 설정: display / sound / input_map / general / layout_config
 ├─ attract.am                          런타임 상태(마지막 선택/레이아웃). 실행할 때마다 변함
 ├─ default-{display,emulator,filter}.cfg  AM 기본 템플릿(수정 금지)
@@ -125,6 +126,8 @@ D:\AttractMode\
 │   ├─ Mame\ Demul\ M2\ SuperModel\ PCSX2\ ePSXe\ PPSSPP\ Dolphin\
 │   │  Project64\ Project64_v1.7\ Cemu\ Mednafen\ RetroArch\ PSXMAME\
 │   │  TeknoParrot\ "Taito Type X"\ "PC Game"\      실제 에뮬레이터 바이너리
+│   ├─ Mame\mame.ini                   ★ MAME 계열의 실제 롬 탐색 경로(rompath) — 4.7절
+│   ├─ Mame\plugins-none\              ★ 비어 있어야 하는 폴더. EKMAME(0.212)용 — 4.7절
 │   └─ script\                         AM 내장 에뮬레이터 자동탐지 스크립트(벤더 원본, 수정 금지)
 ├─ romlists\
 │   ├─ <Display>.txt                   ★ 게임 목록 (세미콜론 21필드)
@@ -144,7 +147,10 @@ D:\AttractMode\
 ├─ tools\validate.ps1                  ★ 설정 무결성 검증 스크립트 (7.1절)
 ├─ tools\reset-runtime.ps1             ★ 런타임 파일 초기화 스크립트 (7.3절)
 ├─ tools\smoke-run.ps1                 ★ 실행 점검 — 지정 디스플레이·레이아웃으로 AM 을 띄워 로그 확인 (7.4절)
+├─ tools\test-roms.ps1                 ★ 롬 구동 검증 — romlist 전 항목의 실행 명령 조립·실행 (7.5절)
+│                                       PowerShell 도구는 전부 tools\ 에 둔다. 루트에는 런처 cmd 만.
 ├─ docs\                               ASSETS.md(자산 정책) / ISSUES.md(과제 목록)
+├─ logs\                               검증 보고서 CSV (gitignored, test-roms.ps1 이 생성)
 ├─ stats\<Emulator>\                   플레이 통계 (track_usage yes, 로컬 생성물)
 │                                      ★ 2.7.0에서 romlist명 → Emulator명 기준으로 바뀜
 └─ last_run.log                        ★ 마지막 실행 로그 — 문제 진단의 1순위 (gitignored)
@@ -316,6 +322,111 @@ PSXMAME 자신이 `use_gpu_plugin` 이 켜져 있을 때 타는 것과 **같은 
 `emulators/Mame`의 MAME 0.246은 경고 화면 억제가 UI 옵션 `skip_warnings`(0.226부터)인데,
 같은 폴더의 `EKMAME64.exe` 가 0.212라 공용 `ui.ini` 에 넣으면 EKMAME 쪽에서 미지원 옵션이 된다. 그래서 넣지 않았다.
 
+### 4.7 `emulators/Mame` 에는 MAME이 **두 벌** 들어 있다 — 섞이는 지점 세 곳
+
+`mame64.exe`(0.246)와 `EKMAME64.exe`(0.212, 한글롬 빌드)가 **같은 폴더에서 같은 `mame.ini`·`ui.ini`·`plugins`·`cfg`·`roms` 를 쓴다.**
+버전이 34단계나 벌어져 있어서 아래 세 곳이 어긋난다(`docs/ISSUES.md` 46~48번).
+
+> **두 벌을 폴더째 분리할 예정이다**(2026-09-06 사용자 방침). 분리하면 (1)과 (2)는 자연히 사라진다.
+> 분리할 때 같이 손봐야 하는 것은 4.8절에 적어 뒀다.
+
+**(1) `plugins/boot.lua` 는 0.246 것이라 0.212 가 못 읽는다 — EKMAME 계열은 `-pluginspath plugins-none`**
+
+MAME은 `pluginspath` 의 `boot.lua` 를 Lua 엔진 부트스트랩으로 항상 읽는다(`-noplugins` 로도 안 막힌다).
+0.246용 `boot.lua` 를 0.212가 읽으면 게임 대신 오류 대화상자가 뜨고 **거기서 멈춘다.**
+
+```
+[LUA ERROR] in run: plugins\boot.lua:11: attempt to index a function value (field 'options')
+```
+
+그래서 `EKMAME`·`EKMAME Vertical` 정의는 `args` 에 **`-pluginspath plugins-none`** 을 준다.
+`emulators/Mame/plugins-none/` 은 `README.txt` 만 있는 빈 폴더다 — `boot.lua` 가 없으면 Lua 엔진을 건너뛴다.
+**여기에 파일을 넣지 말 것.**
+
+> 이 증상은 **프로세스가 살아 있어서** 구동 점검에서 `PASS` 로 잡혔다(7.5절 `DIALOG` 상태 참고).
+> 폴더를 분리해 EKMAME 이 자기 `plugins`(또는 없는 경로)를 쓰게 되면 이 인자는 필요 없어진다.
+
+**(2) 롬 컬렉션이 0.212 시절 것이라 0.246 이 거부하는 세트가 61개 있다 — ⚠️ 미해결**
+
+0.246은 나중에 덤프된 PLD·MCU·디바이스 롬(`ym2413`, `segabill`, `stvbios` …)까지 요구해서
+`Fatal error: Required files are missing`(종료 코드 2)로 끝난다. 같은 롬이 0.212에서는 그대로 돈다.
+**MAME 본체와 롬 컬렉션을 최신으로 갱신해 푸는 것이 방침이다**(2026-09-06 사용자 결정).
+갱신 뒤 `test-roms.cmd` 로 다시 돌려 확인한다. 대상 세트와 없는 파일 목록은 `docs/ISSUES.md` 47번에 있다.
+
+> 진단은 `mame64 -verifyroms <셋>` 과 `EKMAME64 -verifyroms <셋>` 을 나란히 돌려 본다.
+> **`verifyroms` 가 통과해도 안 뜨는 것이 있으니 반드시 띄워서 확인한다** — 0.212는 8,741셋뿐이고
+> `ddenlovr.cpp` 처럼 드라이버 검증 오류로 아예 못 뜨는 계열도 있다.
+> **`EKMAME64 -verifyroms` 는 없는 셋 이름에 대해 대화상자를 띄우고 멈춘다.** 존재 확인은 `-listfull` 로 먼저 한다.
+> 거꾸로 EKMAME 쪽에서 안 되는 한글롬이 0.246에서는 되는 경우도 있다(`twinadvk`·`fort2ba`·`yamyamk`·`raidenkb` — 이 넷은 `MAME` 계열로 옮겼다).
+
+**(3) `mame.ini` 의 `rompath` 가 실제 롬 탐색을 담당한다 — 폴더명이 한 글자만 달라도 전부 실패**
+
+`roms\Arcade AD` 로 적혀 있어 실제 폴더 `roms\Arcade Adult` 를 못 찾았고, MAME Adult 목록 38개가 통째로 실행되지 않았다.
+**cfg 의 `rompath` 는 목록 생성·`[romfilename]` 치환용일 뿐이라 이 오타를 가려 주지 못한다.**
+`tools\validate.ps1` 도 cfg 쪽만 보므로 잡지 못한다 — 실제로 띄워 보는 `test-roms.cmd` 만이 잡는다.
+
+### 4.8 에뮬레이터를 갱신하거나 폴더를 나눌 때
+
+현재 들어 있는 것(2026-09-06 실측). **버전 열은 바이너리의 버전 리소스에서 읽은 것만 적었다** —
+빈 칸은 리소스가 없어서 파일 날짜밖에 근거가 없다는 뜻이니, 갱신 전에 각자 실행해서 확인한다.
+
+| 폴더 | 버전 | 파일 날짜 | 갱신할 때 걸리는 것 |
+|---|---|---|---|
+| `Mame` | **0.246** | 2022-07-30 | 롬 세트가 버전에 묶인다(4.7절 (2)). 세트 이름도 판마다 바뀐다 |
+| `Mame` | EKMAME **0.212** | 2019-08-08 | 같은 폴더를 공유한다 — 아래 분리 항목 |
+| `PSXMAME` | MAME 0.139 계열 | 2026-09-05 | ⚠️ **`mame.exe` 에 1바이트 패치**(4.6절). 교체하면 사라진다 |
+| `SuperModel` | (0.3a-WIP · `revision.txt` 는 svn r757 까지) | 2018-11-28 | ⚠️ **개조 빌드다** — `revision.txt` 에 "sr2 music fix" 패치를 넣었다고 적혀 있다 |
+| `Demul` | | 2018-04-28 | `-run=<플랫폼> -rom=` 인자 체계 |
+| `M2` | | 2018-10-14 | 인자가 `[name]` 하나뿐이라 갱신 여파가 작다 |
+| `PCSX2` | | 2020-05-07 | ⚠️ **최신판은 CLI 가 다르다.** 지금 쓰는 `--nogui --portable` 이 그대로 있는지 먼저 확인 |
+| `ePSXe` | | 2018-11-14 | `-loadmemc0 "memcards\epsxe000.mcr"` 가 메모리카드를 직접 가리킨다 |
+| `Dolphin` | | 2019-01-06 | `-b -e` 인자와 `Sys/`·`User/` 구조 |
+| `Project64` | 3.0.1 | 2021-07-30 | `Config/`·`Save/` |
+| `Cemu` | | 2022-02-18 | ⚠️ 인자가 `-f -g "<롬>\code\<롬>.rpx"` 라 **롬 폴더 구조에 묶여 있다** |
+| `Mednafen` | 1.29.0 | 2022-01-18 | `firmware/` 의 BIOS 파일 이름이 고정이다 |
+| `RetroArch` | | 2022-05-03 | `cores/` 는 gitignore. 코어와 본체의 ABI 가 맞아야 한다 |
+| `PPSSPP` | 1.13.1 | 2022-07-28 | |
+| `TeknoParrot` | 1.0.0.804 | 2022-08-01 | `UserProfiles/` 형식이 판마다 바뀐다 |
+
+> ⚠️ **교체하면 이 저장소의 손질이 사라지는 바이너리가 둘 있다** — `PSXMAME/mame.exe`(4.6절)와
+> `SuperModel/Supermodel.exe`. 둘 다 `.gitignore` 대상이 아니라 **git 추적 중**이므로
+> `git checkout -- <경로>` 로 되돌릴 수 있다. 새 빌드를 쓰기로 했다면 그 손질을 다시 넣을지 먼저 정한다.
+> (`Mame/mame64.exe`·`EKMAME64.exe` 는 반대로 미추적이라 되돌릴 원본이 저장소에 없다.)
+
+**갱신할 때마다 같이 봐야 하는 자리**
+
+1. **`emulators/<이름>.cfg` 의 `args`** — 에뮬레이터 CLI 는 메이저 버전에서 잘 바뀐다.
+   MAME 의 `-fallback_artwork` 는 0.215+, `skip_warnings` 는 0.226+ 처럼 **버전 하한이 있는 옵션**이 섞여 있다.
+   모르는 옵션을 만나면 MAME 계열은 **오류 대화상자를 띄우고 멈춘다**(7.5절 `DIALOG`).
+2. **`rompath` / `romext`** — `executable` 이 있는 디렉터리 기준 상대경로(4.2절). 폴더를 옮기면 같이 고친다.
+3. **`artwork` 경로** — 이쪽은 AM 루트 기준이다. 기준이 다르니 헷갈리지 말 것.
+4. **`.gitignore`** — 폴더 이름으로 걸러내므로 폴더를 추가·개명하면 롬·코어가 추적되기 시작한다(S1 위험).
+5. **`tools/reset-runtime.ps1` 의 `$ConfigPaths`·`$SavePaths`** — 경로가 하드코딩돼 있다.
+6. **세이브** — `PCSX2/memcards`, `ePSXe/memcards`, `Project64/Save`, `Mame/nvram`, `SuperModel/NVRAM`,
+   `Demul/nvram`, `RetroArch/saves`. 갱신 전에 따로 챙긴다.
+7. **`stats/<Emulator>/`** — 에뮬레이터 정의 이름이 바뀌면 플레이 통계가 0으로 돌아간다(6절).
+8. 끝나면 `tools\validate.ps1` → `test-roms.cmd` 전수 구동 점검(7.5절) 순으로 확인한다.
+   **정적 점검만으로는 부족하다** — 인자가 안 먹는 것은 띄워 봐야 나온다.
+
+**`Mame` 와 `EKMAME` 를 폴더째 나눌 때 손봐야 하는 것**
+
+지금은 `emulators/Mame` 하나에 `mame64.exe`(0.246)와 `EKMAME64.exe`(0.212)가 같이 있고
+`mame.ini`·`ui.ini`·`plugins`·`cfg`·`roms`·아트웍 폴더를 전부 공유한다. 나눌 때 볼 자리는 다음과 같다.
+
+| 대상 | 지금 | 할 일 |
+|---|---|---|
+| `emulators/EKMAME.cfg`, `EKMAME Vertical.cfg` | `executable emulators\mame\ekmame64` | 새 폴더로. `-pluginspath plugins-none` 은 **뺄 수 있다**(4.7절 (1)) |
+| 두 cfg 의 `rompath` | `roms\korean\` | 새 폴더 기준으로 다시 잡는다 |
+| 두 cfg 의 `artwork` 4줄 | `emulators\mame\{flyer,marquee,video,wheel}` | AM 루트 기준. 아트웍을 공유할지 나눌지 정한다 |
+| `mame.ini` | rompath 에 `roms\Korean` 포함 | EKMAME 쪽에도 자기 `mame.ini` 가 필요하다 |
+| `emulators/Mame/cfg/` | 두 MAME 이 게임별 입력 설정을 공유 | 나누면 한쪽 설정이 사라진다. 필요한 것은 복사 |
+| `.gitignore` | `emulators/Mame/roms` 등 폴더명 기준 | 새 폴더 경로를 추가하지 않으면 롬이 추적된다 |
+| `tools/reset-runtime.ps1` | `emulators/Mame/{cfg,ui.ini,nvram,…}` | 새 경로 추가 |
+| `emulators/Mame/plugins-none/` | EKMAME 용 우회 | 분리 후 불필요해지면 `README.txt` 와 함께 정리 |
+
+> 나눈 뒤에는 **EKMAME 쪽 45개를 반드시 띄워서 확인한다**(`test-roms.cmd -Launch -Emulator EKMAME*`).
+> 경로가 하나만 어긋나도 `Unknown system` 대화상자로 끝나는데, 그것은 정적 점검에 안 잡힌다.
+
 
 ## 5. 자주 하는 작업 레시피
 
@@ -463,6 +574,8 @@ MAME 가 다시 써 낸 cfg 에 **실제로 매칭된 것만** 남는다.
   켤 수 있는 정상 자산이라 지우지 않는다.
 - `layouts/Mega-Display` — 어떤 display도 쓰지 않지만 AM 레이아웃 메뉴에서 선택 가능한 예비 테마다.
 - `emulators/PSXMAME/mame.exe` — **1바이트 패치가 들어가 있다**(4.6절). 새 빌드로 교체하면 시작 확인 창이 다시 뜬다.
+- `emulators/Mame/plugins-none/` — **비어 있는 것이 목적인 폴더**다(4.7절). `README.txt` 외에 무엇도 넣지 말 것.
+  특히 `boot.lua` 가 들어가면 EKMAME 게임 39개가 다시 오류 대화상자에서 멈춘다.
 
 > **미연결 자산을 정리한 이력** — 2026-09-03에 아래를 제거하고
 > `archive/unused-assets-2026-09-03` 태그에 보존했다.
@@ -641,7 +754,7 @@ powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1 -All -Force
 
 | 갈래 | 대상 | 되돌리면 |
 |---|---|---|
-| **설정** | `attract.am`, `Mame\cfg`(게임별 입력·딥스위치), `Mame\ui.ini`, `RetroArch\retroarch.cfg`·`content_*.lpl`, `PCSX2\inis`, `M2\CFG`, `Project64\Config`, `TeknoParrot\UserProfiles`, `Demul\*.ini`, `PPSSPP\...\SYSTEM` | 잃는 것 없음 |
+| **설정** | `attract.am`, `Mame\cfg`(게임별 입력·딥스위치), `Mame\ui.ini`, `PSXMAME\cfg`, `RetroArch\retroarch.cfg`·`content_*.lpl`, `PCSX2\inis`, `M2\CFG`·`M2\EMULATOR.INI`, `Project64\Config`, `TeknoParrot\UserProfiles`, `Demul\*.ini`, `PPSSPP\...\SYSTEM` | 잃는 것 없음 |
 | **세이브** | `Mame\{nvram,memcard,diff,sta}`, `PCSX2\{memcards,sstates}`, `ePSXe\{memcards,sstates}`, `Project64\Save`, `SuperModel\{NVRAM,Saves}`, `Demul\nvram`, `RetroArch\{saves,states}` | **게임 진행이 사라진다** |
 | **산출물** | `last_run.log`, `script.nv`, `stats\`, `Mame\hiscore`, `Mame\data\history.db`, `Mame\cheat\output.*`, `RetroArch\screenshots` | 미추적이라 삭제 |
 
@@ -668,6 +781,71 @@ powershell -ExecutionPolicy Bypass -File tools\smoke-run.ps1 -All               
 - 지정한 초(기본 20) 동안 **화면을 AM이 차지한다.** 창 모드는 480×320이라 NEVATO가 지원하지 않는 종횡비(1.5)가 되어 쓰지 않는다.
 - 로그에 `AN ERROR HAS OCCURED`·`Script Error`가 있으면 종료 코드 1과 함께 그 부분을 출력한다.
 - 이 PC의 모니터 종횡비로만 검증된다(5:4 데스크톱에서는 NEVATO의 `5x4` 분기). 16:9 캐비닛 분기는 캐비닛에서 봐야 한다.
+
+### 7.5 롬 구동 검증 — romlist 전 항목이 실제로 실행되는가
+
+```
+test-roms.cmd                                          인자 없이 실행하면 메뉴 (캐비닛에서 더블클릭)
+test-roms.cmd -Launch -List MAME -Sample 3             인자를 주면 그대로 tools\test-roms.ps1 에 넘어간다
+
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1              # 정적 점검 (전체 1,079개, 수 초)
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Sample 1   # 에뮬레이터별 1개씩 실제 실행
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch             # ★ 전수 점검 (1,079개 전부 실행)
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Resume     # 중단된 전수 점검 이어서
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Name tekken
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Failed     # 직전 보고서의 실패 항목만
+```
+
+메뉴는 `[1]` 빠른(정적) 점검, `[2]` 표본 · `[3]` 전수 · `[4]` 이어하기 · `[5]` 목록 지정 ·
+`[6]` 이름으로 · `[7]` 실패만 다시(구동), `[8]`·`[9]` 보고서 순이다.
+
+`validate.ps1`(7.1절)이 **설정끼리 앞뒤가 맞는지**를 본다면, 이쪽은 **AM 이 실제로 만들어 낼 실행 명령**을
+romlist 한 줄 한 줄에 대해 그대로 조립한다. `emulators/<Emulator>.cfg` 의 `executable`·`rompath`·`romext`·`args` 를
+읽어 `[romfilename]`·`[rompath]`·`[romext]`·`[name]` 을 AM 과 같은 방식으로 치환하므로,
+결과 CSV 의 `Exe`/`Args` 열이 곧 **캐비닛에서 게임을 고를 때 실행될 명령 그 자체**다.
+
+| 상태 | 뜻 |
+|---|---|
+| `OK` | 실행파일·롬·인자까지 조립 완료 (정적 점검의 통과) |
+| `PASS` | `-Launch` 에서 지정 시간(기본 12초) 동안 살아 있었고, **대화상자가 아닌 진짜 창**을 갖고 있었다 |
+| `NOCHK` | 롬 존재를 단정할 수 없는 정의. **실패가 아니다** — 고정 실행형(`Taito Type X The BishiBashi`)과 `romext` 가 없는 Demul 정의 |
+| `NOEMU`/`NOEXE`/`NOROM` | 에뮬레이터 정의·실행파일·롬 없음 |
+| `EXIT0`/`CRASH` | 실행 직후 스스로 종료. 롬을 못 읽고 조용히 닫히는 경우가 대부분 |
+| `DIALOG` | 살아 있지만 떠 있는 것이 **오류 대화상자**다. 게임은 시작되지 않았다. 상자 안 문구가 `Detail` 에 들어간다 |
+| `NOWIN` | 살아 있으나 창이 없음. 런처가 다른 프로세스를 띄운 경우(경고) |
+
+- **"살아 있으면 통과"로 보면 안 된다.** 오류 대화상자를 띄운 채 서 있는 프로세스도 살아 있다.
+  그래서 판정은 프로세스의 **보이는 최상위 창을 전부 훑어** 창 클래스가 `#32770`(윈도우 표준 대화상자)인 것이
+  하나라도 있으면 `DIALOG`(실패), 대화상자가 아닌 창이 있으면 `PASS` 로 한다.
+  `Process.MainWindowHandle` 만으로는 그 창이 게임 화면인지 오류 상자인지 구별하지 못한다 —
+  실제로 EKMAME 45개가 이 때문에 첫 전수 점검에서 `PASS` 로 잡혔다(`docs/ISSUES.md` 46번).
+- 결과는 `logs\rom-test-<날짜시각>.{csv,html}` 두 벌. **HTML 쪽이 사람이 볼 보고서**다 —
+  상태별 카드로 필터, 목록·에뮬레이터별 집계, 검색, 행을 누르면 실제 실행 명령이 펼쳐진다.
+  캐비닛에 인터넷이 없어도 되도록 CSS·JS·데이터를 전부 파일 안에 넣은 단일 파일이고,
+  열었을 때 **문제가 있는 항목부터** 보여준다(실패 → 경고 → 확인 불가, 전부 정상이면 전체).
+  `-Open` 이면 끝나고 바로 띄운다(`test-roms.cmd` 메뉴는 항상 붙인다). `-NoHtml` 로 끌 수 있다.
+- `-Failed` 는 `logs\rom-test-*.csv` 중 최신 파일을 읽어 실패 항목만 다시 돈다.
+- **`-Launch` 는 ESC → 창 닫기 → 강제 종료 순으로 끝낸다.** MAME 계열을 강제 종료하면 `cfg\default.cfg` 가
+  0바이트로 잘리기 때문이다(5.5절). 강제 종료까지 갔으면 보고서 `Detail` 에 남고, `default.cfg` 가 잘렸으면
+  되돌리는 명령을 화면에 띄운다.
+  - ESC 는 **스캔코드(`SendInput`)로 보낸다.** MAME 는 DirectInput 으로 키보드를 읽어서
+    `WScript.Shell` 의 `SendKeys` 를 **받지 않는다**(PSXMAME 로 실측).
+  - 보내기 전에 **포그라운드 창의 PID 가 그 프로세스인지 확인한다.** 그 사이 게임이 죽어 있으면
+    ESC 가 터미널로 들어간다(`docs/ISSUES.md` 45번의 교훈). `AppActivate` 의 반환값은 쓰지 않는다 —
+    이미 포그라운드인 창에도 `False` 를 돌려준다.
+  - 그래도 **`emulators/Mame` 의 MAME 0.246 은 ESC 로 끝나고, PSXMAME(0.139)는 끝나지 않아 강제 종료된다.**
+    PSXMAME 를 많이 돌린 뒤에는 `git status` 로 `emulators/PSXMAME/cfg/` 를 한 번 보는 편이 좋다.
+- **전수 점검은 몇 시간짜리다.** 그래서 `-Launch` 는 **5건마다 보고서를 써 두고**, 중단하면 `-Resume` 이
+  직전 보고서에 이미 있는 항목을 건너뛰고 같은 파일에 이어 쓴다. 강제 종료(`taskkill /F`)로도
+  여기까지의 결과가 남는 것을 실측했다.
+  - **항목당 소요는 ESC 가 먹느냐에 갈린다.** 포그라운드에서 ESC 로 바로 끝나면 판정 시간 + 2~3초지만,
+    창이 최소화돼 있거나 ESC 를 안 받는 에뮬레이터는 재전송·창닫기·강제 종료를 거쳐 **20초를 넘긴다.**
+    전수 점검은 그 PC 를 점유하고 **포그라운드에서** 돌리는 편이 훨씬 빠르다.
+- 실행하면 런타임 파일(`Mame\cfg\*.cfg`, `M2\EMULATOR.INI`, `hiscore\`, `stats\` …)이 바뀐다.
+  끝나면 `reset-runtime.ps1 -Config -Clean`(7.3절). 다만 **처음 실행한 게임의 `Mame\cfg\<게임>.cfg` 는
+  미추적 파일로 새로 생기므로** `git checkout` 대상이 아니다 — `git status` 에 남으면 직접 지운다.
+- **`Emulator` 필드가 아니라 실제 실행까지 보는 유일한 수단**이지만, 게임이 "정상 플레이되는가"까지는 못 본다.
+  프로세스가 살아 있는지만 본다 — 검은 화면으로 떠 있는 것과 구별하지 못한다.
 
 ## 8. 관련 문서
 

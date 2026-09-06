@@ -78,6 +78,8 @@ $ConfigPaths = @(
     'emulators/RetroArch/content_favorites.lpl'
     'emulators/PCSX2/inis'                      # PCSX2 설정·입력
     'emulators/M2/CFG'                          # MODEL2 게임별 입력
+    'emulators/M2/EMULATOR.INI'                 # MODEL2 화면·필터 (게임을 한 번 띄우면 Filter 값이 바뀐다)
+    'emulators/PSXMAME/cfg'                     # PSXMAME 게임별 입력·딥스위치
     'emulators/Project64/Config'                # Project64 설정·입력
     'emulators/TeknoParrot/UserProfiles'        # TeknoParrot 게임별 입력
     'emulators/Demul/padDemul.ini'
@@ -124,9 +126,19 @@ function Get-Changed([string[]]$Paths) {
     # (porcelain " D") 작업트리에 파일이 없어 목록에서 빠지고, 정확히 그 상황을
     # 되돌리려는 스크립트가 "정리할 것이 없습니다"를 내놓는다. 실제로 그랬다 (ISSUES 32).
     # git status 는 존재하지 않는 pathspec 이 섞여도 무해하게 무시하므로 그대로 넘긴다.
+    #
+    # 이름이 바뀐 파일(porcelain "R  old -> new")은 화살표 뒤쪽만 취한다.
+    # 통째로 넘기면 "old -> new" 가 그대로 pathspec 이 되어
+    #   error: pathspec '... -> ...' did not match any file(s) known to git
+    # 로 git checkout 이 통째로 실패하고, 같이 넘긴 나머지 파일도 하나도 안 되돌아간다.
+    # (2026-09-06 sfex.cfg -> sfexu.cfg 개명 때 실제로 그랬다.)
     $out = & git status --porcelain -- $Paths 2>$null
     if (-not $out) { return @() }
-    @($out | Where-Object { $_ -notmatch '^\?\?' } | ForEach-Object { $_.Substring(3).Trim('"') })
+    @($out | Where-Object { $_ -notmatch '^\?\?' } | ForEach-Object {
+        $p = $_.Substring(3)
+        if ($p -match '^(.*?)\s->\s(.*)$') { $p = $Matches[2] }
+        $p.Trim('"')
+    })
 }
 
 function Get-Junk([string[]]$Paths) {
