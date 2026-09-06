@@ -64,3 +64,4 @@ script.nv
 emulators/Mame/cheat/output.json
 emulators/Mame/cheat/output.xml
 stats/
+logs/
