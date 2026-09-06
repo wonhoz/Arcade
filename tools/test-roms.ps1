@@ -6,7 +6,9 @@
     그대로 재구성해서 점검한다. 두 단계로 나뉜다.
 
       1) 정적 점검 (기본, 수 초)   실행파일 . 롬 파일 . 인자 치환까지 조립해 본다.
-      2) 구동 점검 (-Launch)       조립한 명령을 실제로 실행해서 살아 있는지 본다.
+      2) 구동 점검 (-Launch)       조립한 명령을 실제로 실행해서 게임이 떴는지 본다.
+                                   "프로세스가 살아 있다"로는 부족하다 — 오류 대화상자를
+                                   띄운 채 서 있어도 살아 있다. 창 클래스까지 본다(DIALOG).
 
     tools\validate.ps1 은 "설정이 서로 맞는가"를 보고, 이 스크립트는
     "그 설정으로 실제 실행이 되는가"를 본다. 자세한 구조는 CLAUDE.md 4절 참고.
@@ -99,16 +101,22 @@ $BOM = [char]0xFEFF
 #         EXIT0 바로 끝났다(코드 0). 롬을 못 읽고 조용히 닫힌 경우가 대부분이라 실패로 센다.
 #         CRASH 0 이 아닌 코드로 끝났다.
 #         NOWIN 살아 있으나 창이 없다. 런처가 다른 프로세스를 띄웠을 수 있어 경고에 그친다.
-$FailStatus = @('NOEMU', 'NOEXE', 'NOROM', 'EXIT0', 'CRASH', 'LAUNCHERR')
+#         DIALOG 살아 있지만 떠 있는 것이 오류 대화상자다. 게임은 시작되지 않았다.
+#               "살아 있으면 PASS" 로만 보면 이것을 정상으로 세게 된다(실제로 그랬다 — ISSUES 46번).
+$FailStatus = @('NOEMU', 'NOEXE', 'NOROM', 'EXIT0', 'CRASH', 'LAUNCHERR', 'DIALOG')
 $WarnStatus = @('NOWIN')
 
 # ESC 를 에뮬레이터에 보내기 위한 것. 두 가지가 필요하다.
 #   1. 포그라운드 창의 소유 프로세스 확인 — 엉뚱한 창(터미널)에 ESC 를 보내지 않기 위해(ISSUES 45번).
 #   2. 스캔코드 SendInput — MAME 는 DirectInput 으로 키보드를 읽어서
 #      WScript.Shell 의 SendKeys 를 받지 않는다(PSXMAME 로 실측).
+# 여기에 창 조사도 같이 둔다. 프로세스가 살아 있다는 것만으로는 기동을 판정할 수 없어서다 —
+# 오류 대화상자(창 클래스 #32770)가 떠 있어도 프로세스는 멀쩡히 살아 있다.
 if (-not ('AmInput' -as [type])) {
     Add-Type -TypeDefinition @'
 using System;
+using System.Text;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 public class AmInput {
     [StructLayout(LayoutKind.Sequential)]
@@ -118,6 +126,53 @@ public class AmInput {
     [DllImport("user32.dll")] static extern uint SendInput(uint n, INPUT[] p, int cb);
     [DllImport("user32.dll")] static extern IntPtr GetForegroundWindow();
     [DllImport("user32.dll")] static extern int GetWindowThreadProcessId(IntPtr h, out int pid);
+    [DllImport("user32.dll")] static extern bool EnumWindows(EnumProc cb, IntPtr p);
+    [DllImport("user32.dll")] static extern bool EnumChildWindows(IntPtr h, EnumProc cb, IntPtr p);
+    [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr h);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern int GetWindowTextW(IntPtr h, StringBuilder s, int n);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern int GetClassNameW(IntPtr h, StringBuilder s, int n);
+    delegate bool EnumProc(IntPtr h, IntPtr p);
+
+    static string ClassOf(IntPtr h) { var s = new StringBuilder(256); GetClassNameW(h, s, 256); return s.ToString(); }
+    static string TextOf(IntPtr h)  { var s = new StringBuilder(1024); GetWindowTextW(h, s, 1024); return s.ToString(); }
+
+    // 프로세스가 가진 "보이는 최상위 창"을 클래스 이름과 함께 모은다.
+    // Process.MainWindowHandle 로는 창이 하나라는 것밖에 알 수 없고, 그것이
+    // 게임 화면인지 오류 대화상자인지 구별하지 못한다.
+    static List<IntPtr> TopWindows(int pid) {
+        var r = new List<IntPtr>();
+        EnumWindows((h, p) => {
+            int wp; GetWindowThreadProcessId(h, out wp);
+            if (wp == pid && IsWindowVisible(h)) { r.Add(h); }
+            return true; }, IntPtr.Zero);
+        return r;
+    }
+
+    // 오류 대화상자가 떠 있으면 그 안의 Static 텍스트를 돌려준다. 없으면 null.
+    // #32770 은 윈도우 표준 대화상자의 클래스 이름이다(MessageBox 포함).
+    public static string DialogText(int pid) {
+        foreach (IntPtr h in TopWindows(pid)) {
+            if (ClassOf(h) != "#32770") { continue; }
+            var parts = new List<string>();
+            EnumChildWindows(h, (ch, cp) => {
+                if (ClassOf(ch) == "Static") {
+                    string t = TextOf(ch).Trim();
+                    if (t.Length > 0) { parts.Add(t); }
+                }
+                return true; }, IntPtr.Zero);
+            string msg = string.Join(" / ", parts.ToArray());
+            return msg.Length > 0 ? msg : TextOf(h);
+        }
+        return null;
+    }
+
+    // 대화상자가 아닌 진짜 창이 하나라도 있는가.
+    public static bool HasRealWindow(int pid) {
+        foreach (IntPtr h in TopWindows(pid)) {
+            if (ClassOf(h) != "#32770") { return true; }
+        }
+        return false;
+    }
 
     public static int ForegroundPid() {
         int pid = 0;
@@ -718,9 +773,19 @@ foreach ($it in $items) {
                 if ($code -eq 0) { $status = 'EXIT0'; $detail = "$sec 초 만에 스스로 종료(코드 0)" }
                 else { $status = 'CRASH'; $detail = "$sec 초 만에 종료, 코드 $code" }
             } else {
-                $hasWin = $false
-                try { $hasWin = ($proc.MainWindowHandle -ne [IntPtr]::Zero) } catch {}
-                if ($hasWin) { $status = 'PASS'; $detail = '' }
+                # 살아 있다고 기동한 것이 아니다. 오류 대화상자를 띄운 채 서 있으면
+                # 프로세스는 멀쩡하지만 게임은 시작되지 않았다. 대화상자를 먼저 본다.
+                $dlg = $null; $hasWin = $false
+                try { $dlg = [AmInput]::DialogText($proc.Id) } catch {}
+                try { $hasWin = [AmInput]::HasRealWindow($proc.Id) } catch {}
+                if (-not $hasWin) {
+                    try { $hasWin = ($proc.MainWindowHandle -ne [IntPtr]::Zero) } catch {}
+                }
+                if ($dlg) {
+                    $status = 'DIALOG'
+                    $detail = '오류 대화상자: ' + ($dlg -replace '\s+', ' ')
+                }
+                elseif ($hasWin) { $status = 'PASS'; $detail = '' }
                 else { $status = 'NOWIN'; $detail = '살아 있으나 창을 찾지 못함(런처가 다른 프로세스를 띄웠을 수 있음)' }
                 if (Stop-Emulator $proc $exePath $pre) {
                     $detail = ($detail + ' ESC 로 안 끝나 강제 종료함').Trim()

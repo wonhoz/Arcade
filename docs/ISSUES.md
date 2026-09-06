@@ -1,15 +1,17 @@
 # 개선 과제 / 알려진 문제 (심각도순)
 
-최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 시각 자산 재스크리닝 2026-09-03 · 3차 재점검 2026-09-04 · 4차 재점검 2026-09-04 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
+최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 시각 자산 재스크리닝 2026-09-03 · 3차 재점검 2026-09-04 · 4차 재점검 2026-09-04 · 전수 구동 점검 2026-09-06 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
 근거: `attract.cfg`, `emulators/*.cfg`, `romlists/*`, `last_run.log`, `mame64 -verifyroms`, git 메타데이터 실측
 
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **43건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
+**진행 현황** — 처리 **47건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
-42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일)
+42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일.
+**46~49번은 2026-09-06 전수 구동 점검(E)의 실패 106건을 파고들어 나온 것** —
+실제 실행 불가는 151개였고(보고서의 106 + 대화상자 때문에 `PASS` 로 잘못 잡힌 EKMAME 45), 그중 **131개를 살렸다.** 나머지 20개는 롬이 불완전해 비활성화)
 
 > **보류 (우선순위 낮춤, 별도 지시 전까지 대기)** — S1 공개 저장소의 BIOS·롬, S2 `.git` 1.2GB.
 > 둘 다 히스토리 재작성이 필요하고 되돌리기 어렵다.
@@ -954,6 +956,121 @@ tekken·tekken2·primglex·souledge 를 실제로 띄워 `tag=` 가 붙은 재�
 > **여기서 얻은 교훈**: 실측 스크립트가 MAME 창에 ESC 를 보낼 때 **게임이 조기 종료돼 있으면 그 ESC 가
 > 터미널로 들어간다**(Claude Code 에서는 중단 키다). 포그라운드 창의 PID 가 대상 프로세스와 같을 때만 보낼 것.
 
+### - [x] 46. EKMAME(0.212) 로 도는 게임 45개가 Lua 오류 대화상자에서 멈춰 있었다 — **처리 완료**
+
+사용자가 전수 구동 점검(E 항목)을 두 차례 돌린 결과를 분석하다 찾았다. 보고서에는 **`PASS` 로 찍혀 있던** 항목들이다.
+
+`emulators/Mame` 에는 MAME 이 두 벌 들어 있다 — `mame64.exe`(0.246)와 `EKMAME64.exe`(0.212, 한글롬 빌드).
+둘은 같은 폴더의 같은 `mame.ini` 를 읽고, 따라서 같은 `pluginspath`(= `plugins`)를 읽는다.
+그런데 그 폴더의 `boot.lua` 는 0.246용이라 0.212의 Lua API 와 맞지 않는다.
+
+```
+[LUA ERROR] in run: plugins\boot.lua:11: attempt to index a function value (field 'options')
+```
+
+게임 대신 이 대화상자가 뜨고 거기서 멈춘다. `-noplugins` 로도 막히지 않는다 — `boot.lua` 는 플러그인이 아니라
+**Lua 엔진 부트스트랩**이라 항상 읽힌다. (`-plugins 0` 은 `0` 을 시스템 이름으로 먹어 `Unknown system '0'` 이 된다.)
+
+**조치** — `emulators/Mame/plugins-none/`(README 만 있는 빈 폴더)을 만들고, EKMAME 계열 정의의 `args` 에
+`-pluginspath plugins-none` 을 넣었다. `boot.lua` 가 없으면 Lua 엔진을 건너뛰고 정상 기동한다.
+대상: `EKMAME.cfg`, `EKMAME Vertical.cfg`, 그리고 47번에서 새로 만든 `MAME Legacy*.cfg` 3개.
+
+검증: 창 클래스를 직접 읽어 확인했다. 수정 전 `#32770`(대화상자) 하나 → 수정 후 `MAME: WWF WrestleFest (Korea) [wwfwfestk]`.
+
+**대화상자를 걷어내니 그 뒤에 가려져 있던 개별 문제 6건이 드러났다.** 45개 중 39개는 이 수정만으로 정상 기동한다.
+
+| 세트 | 0.212 에서 | 조치 |
+|---|---|---|
+| `twinadvk` `fort2ba` `yamyamk` | `Unknown system` / 기동 중 크래시 | 0.246 에 있고 정상 기동 → Emulator 를 **`MAME`** 로 |
+| `raidenkb` | 기동 중 크래시 | 0.246 정상 → **`MAME Vertical`** 로 |
+| `ddenlovrk` | `Driver ultrchmp (file ddenlovr.cpp)` 검증 오류 | 0.246 도 롬 불완전 → 비활성화(47번) |
+| `thuntk` | `Unknown system` | 0.246 도 롬 불완전 → 비활성화(47번) |
+
+> **EKMAME 는 만능이 아니다.** 0.212 는 8,741셋뿐이고 `ddenlovr.cpp` 처럼 드라이버 검증에서 걸려
+> 아예 못 뜨는 계열도 있다. 0.246 이 거부하면 무조건 EKMAME 으로 보내는 것이 아니라, **양쪽 다 띄워 보고** 정한다.
+
+> **왜 점검 도구가 놓쳤나 — 도구도 같이 고쳤다.**
+> `tools/test-roms.ps1` 은 "지정 시간 동안 프로세스가 살아 있고 `MainWindowHandle` 이 있으면 `PASS`" 였다.
+> **오류 대화상자를 띄운 채 서 있는 프로세스도 이 조건을 만족한다.** 그래서 보이는 최상위 창을 전부 훑어
+> 창 클래스가 `#32770` 인 것이 있으면 새 상태 **`DIALOG`(실패)** 로 판정하고 상자 안 문구를 `Detail` 에 담게 했다.
+> 이 판정이 없었으면 이 문제도, 아래 47·48번의 검증도 불가능했다.
+
+### - [x] 47. 롬 컬렉션이 0.212 시절 것이라 MAME 0.246 이 61개를 거부한다 — **처리 완료 (0.212 로 라우팅)**
+
+전수 점검 1차에서 124건, 실패분만 다시 돌린 2차에서도 106건이 `CRASH`(종료 코드 2 = `Required files are missing`)였다.
+`mame64 -verifyroms` 로 전수 확인한 결과, 0.246 이 나중에 추가된 PLD·MCU·디바이스 롬을 요구하는 것이었다.
+
+| 요구하는 것 | 세트 수 |
+|---|---|
+| `segabill`(세가 빌보드 디바이스) | 20 |
+| `stvbios` 의 `epr-17741a.ic8` | 18 |
+| `megaplay` BIOS | 15 |
+| `ym2413`(YM2413 내부 인스트루먼트 롬) | 10 |
+| 그 밖에 게임별 PAL·PLD 덤프 | 다수 |
+
+같은 롬이 **`EKMAME64.exe`(0.212)에서는 그대로 돈다.** 0.246 BAD / 0.212 OK 가 61건이었다.
+
+**조치** — `MAME Legacy` / `MAME Legacy Vertical` / `MAME Legacy Adult` 정의 3개를 만들고
+(원본과 `executable` · `-pluginspath` 만 다르다) 그 61개의 romlist Emulator 필드를 바꿨다.
+`acedrvrw` · `raveracw` 처럼 0.246 에서 이름이 바뀐 세트도 0.212 에서는 옛 이름이라 같이 해결된다.
+
+**어느 쪽으로도 못 돌리는 20개(21행)는 `#` 으로 비활성화**했다. 롬 자체가 불완전하다.
+
+| 목록 | 세트 | 없는 파일 |
+|---|---|---|
+| MAME | `quiztvqq` `ddenlovj` `ddenlovrk` `ultrchmp` | **`ym2413_instruments.bin`(ym2413)** |
+| MAME | `othellos` `sanjeon` `thuntk` | `epr-17741a.ic8`(stvbios), `epr-18022.ic2`(segabill) |
+| MAME | `gloc` | `epr-11830.ic37` |
+| MAME | `wcbowl` | `itbwl-3 1997 it,inc.1996` |
+| MAME | `hangon` | `315-5118.bin` `315-5119.bin` `315-5120.bin` |
+| Capcom | `sf2m6` | `27c010.u221` 외 14개 |
+| Capcom | `jojo` | `cap-jjk-3.chd` |
+| MAME Adult | `kotbinyo` `kotbinsp` `pkgnsh` | **`ym2413_instruments.bin`(ym2413)** |
+| MAME Adult | `danchih` | stvbios · segabill (위와 같음) |
+| MAME Adult | `ddenlovrk` | ym2413 (MAME 목록에도 같은 세트가 있어 2행) |
+| MAME Adult | `galpani4` | `gp4-301-00.u7` |
+| MAME Adult | `sxyreac2` | `gal16v8d.ac1709g00.u34` |
+| MAME Adult | `hanamai` | `2.3j` `1.4j`(hnkochou) |
+
+> 롬이 채워지면 `#` 을 떼고 `test-roms.cmd` 로 확인하면 된다.
+> **`ym2413` 7개는 144바이트짜리 디바이스 롬 하나(`ym2413.zip`)를 `emulators\Mame\roms\Bios` 에 넣으면 전부 풀린다** — 가장 값싼 한 건이다.
+> `stvbios`·`segabill` 4개도 BIOS 두 파일이면 된다.
+
+**0.212 로 도는 61개 중 3개는 결국 못 썼다.** `ddenlovj` · `ultrchmp` · `ddenlovrk` 는 0.212 가
+`Driver ultrchmp (file ddenlovr.cpp)` 검증 오류 대화상자를 띄우고 멈춘다(46번 표). 위 비활성화 목록에 들어갔다.
+
+**`gangwars` · `karnov` · `victroad` 는 0.212 에서 가끔 기동 직후 크래시한다**(`0xC0000005`).
+재시도하면 뜨는 것을 확인해 그대로 뒀다 — 1차 전수 점검에서도 실패 124건 중 18건이 재시도로 통과했다.
+캐비닛에서 한 번에 안 뜨면 다시 고르면 된다.
+
+### - [x] 48. `mame.ini` 의 rompath 오타 하나로 MAME Adult 38개가 통째로 실행 불가였다 — **처리 완료**
+
+`emulators/Mame/mame.ini:11` 의 `rompath` 에 **`roms\Arcade AD`** 라고 적혀 있었다. 실제 폴더는 `roms\Arcade Adult` 다.
+
+```
+- …;roms\Arcade Zinc;…;roms\Arcade AD;roms\Console\neocd"
++ …;roms\Arcade Zinc;…;roms\Arcade Adult;roms\Console\neocd"
+```
+
+MAME 계열은 **`mame.ini` 의 `rompath` 가 실제 롬 탐색을 담당한다.** 에뮬레이터 cfg 의 `rompath` 는
+목록 생성과 `[romfilename]` 치환에만 쓰이므로, cfg 가 아무리 맞아도 이 오타를 가려 주지 못한다.
+`validate.ps1` 도 cfg 쪽만 보기 때문에 잡지 못했다 — **실제로 띄워 보는 `test-roms.cmd` 만이 잡는다.**
+
+한 줄 고쳐서 38개 중 28개가 바로 정상이 됐고, 나머지 10개는 47번에서 처리했다.
+
+### - [x] 49. Zinc 목록 두 항목의 Name 이 실제 MAME 셋 이름과 달랐다 — **처리 완료**
+
+| romlist Name | 실제 | 확인 방법 |
+|---|---|---|
+| `psyfrcex` | **`psyforcex`** (Psychic Force EX) | 0.139 에 `psyfrcex` 라는 셋이 없다(종료 코드 5 = NO_SUCH_GAME) |
+| `sfex` | **`sfexu`** (Street Fighter EX, USA 961219) | `sfex.zip` 만 두고 `-verifyroms sfexu` → `is good`. `sfex` 로는 `sfee-04a.2h` 가 없다 |
+
+MAME 은 **zip 파일명 = 셋 이름**이어야 롬을 찾으므로 romlist 와 zip 을 같이 고쳐야 한다.
+`romlists/Zinc.txt` 는 고쳤고, zip 이름과 `emulators/PSXMAME/cfg/sfex.cfg` → `sfexu.cfg` 는
+git 으로 따라오지 않으므로 [`../.+필독.txt`](../.+필독.txt) 3번에 적어 뒀다.
+
+45번이 "미실측 (롬 불완전 / ACCESS VIOLATION)" 으로 남겨 뒀던 `sfex` 는 이것이 원인이었다.
+
 ---
 
 ## 개선 제안
@@ -1087,6 +1204,16 @@ tools\test-roms.ps1 -Launch -Resume            중단된 전수 점검을 이어
 불완전한 롬셋이다. **정적 점검은 `gloc.zip` 이 있으니 `OK` 로 봤다** — 파일 존재만으로는 알 수 없고
 실제로 띄워 봐야 나오는 부류다. 롬은 `.gitignore` 대상이라 장비마다 다르므로 이 항목은
 저장소 문제가 아니라 **각 장비에서 전수 점검으로 걸러낼 것**이다.
+
+**2026-09-06 보강 — `DIALOG` 상태 추가.** 사용자가 전수 점검을 두 차례 돌린 결과를 분석하다,
+`PASS` 의 판정 기준("살아 있고 `MainWindowHandle` 이 있다")이 **오류 대화상자를 띄운 채 서 있는 프로세스**를
+걸러내지 못한다는 것이 드러났다(46번). 이제 보이는 최상위 창을 전부 훑어 창 클래스가 `#32770` 이면
+`DIALOG`(실패)로 판정하고 상자 안 문구를 `Detail` 에 담는다. 이 판정이 없으면 46~48번은 찾을 수 없었다.
+
+**2026-09-06 곁가지 — `reset-runtime.ps1` 의 rename 처리.** 49번에서 `sfex.cfg` 를 `sfexu.cfg` 로 개명하자
+`git status --porcelain` 이 `R  old -> new` 를 내놓았고, 스크립트가 그 한 줄을 통째로 pathspec 으로 넘겨
+`git checkout` 이 **통째로 실패**했다(`pathspec '... -> ...' did not match`). 같이 넘긴 나머지 10개도 하나도 안 되돌아간다.
+화살표 뒤쪽만 취하도록 고쳤다.
 
 곁가지로 `emulators/M2/EMULATOR.INI` 가 MODEL2 를 한 번 띄울 때마다 `Filter` 값이 바뀌는 것을 발견해
 `reset-runtime.ps1` 의 설정 목록에 넣었다(`emulators/PSXMAME/cfg` 도 같이). 다만 **처음 실행한 게임의

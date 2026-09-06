@@ -14,13 +14,13 @@ beastrzr;블러디 로어 / 동물철권 / 비스토라이저;PSXMAME;;1997;Raiz
 bldyror2;블러디 로어 2 / 동물철권 2;PSXMAME;0;1998;Raizing;Fighting;2;0;Joystick (8-way);imperfect;1;raster;psarc95;0;0;6;;;;
 jgakuen;사립 저스티스 학원: 리전 오브 히어로즈;PSXMAME;;1997;Capcom;Fighting;2;;;;;;;;;;;;;
 psyforce;사이킥 포스;PSXMAME;0;1996;Taito;Fighting;2;;;;;;cpzn2;;;;;;;
-psyfrcex;사이킥 포스 EX;PSXMAME;;1995;Taito;Fighting;2;;;;;;;;;;;;;
+psyforcex;사이킥 포스 EX;PSXMAME;;1995;Taito;Fighting;2;;;;;;;;;;;;;
 #sncwgltd;소닉 윙즈 리미티드;PSXMAME;0;1996;Video system;Shooting;2;;;;;;cpzn2;;;;;;;
 souledge;소울 엣지;PSXMAME;0;1996;Namco;Fighting;2;;;;;;cpzn2;;;;;;;
 starglad;스타 글래디에이터: 에피소드 I 파이널 크루세이드;PSXMAME;;1996;Capcom;Fighting;2;;;;;;;;;;;;;
 plsmaswd;스타 글래디에이터 2 / 플라스마 스워드: 나이트메어 오브 빌슈타인;PSXMAME;0;1998;Capcom;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cpzn2;0;0;6;;;;
 strider2;스트라이더 비룡 2;PSXMAME;0;1999;Capcom;Action;4;0;Joystick (8-way);preliminary;1;raster;cpzn2;0;0;3;;;;
-sfex;스트리트 파이터 EX;PSXMAME;;1996;Capcom;Fighting;2;;;;;;;;;;;;;
+sfexu;스트리트 파이터 EX;PSXMAME;;1996;Capcom;Fighting;2;;;;;;;;;;;;;
 sfexp;스트리트 파이터 EX 플러스;PSXMAME;;1997;Capcom;Fighting;2;;;;;;;;;;;;;
 sfex2;스트리트 파이터 EX2;PSXMAME;;1998;Capcom;Fighting;2;;;;;;;;;;;;;
 sfex2p;스트리트 파이터 EX2 플러스;PSXMAME;0;1999;Capcom;Fighting;2;0;Joystick (8-way);imperfect;1;raster;cpzn2;0;0;6;;;;

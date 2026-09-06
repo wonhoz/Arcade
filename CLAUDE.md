@@ -122,10 +122,12 @@ D:\AttractMode\
 ├─ attract.am                          런타임 상태(마지막 선택/레이아웃). 실행할 때마다 변함
 ├─ default-{display,emulator,filter}.cfg  AM 기본 템플릿(수정 금지)
 ├─ emulators\
-│   ├─ *.cfg                           ★ 에뮬레이터 정의 35개 (= romlist의 Emulator 필드 값)
+│   ├─ *.cfg                           ★ 에뮬레이터 정의 38개 (= romlist의 Emulator 필드 값)
 │   ├─ Mame\ Demul\ M2\ SuperModel\ PCSX2\ ePSXe\ PPSSPP\ Dolphin\
 │   │  Project64\ Project64_v1.7\ Cemu\ Mednafen\ RetroArch\ PSXMAME\
 │   │  TeknoParrot\ "Taito Type X"\ "PC Game"\      실제 에뮬레이터 바이너리
+│   ├─ Mame\mame.ini                   ★ MAME 계열의 실제 롬 탐색 경로(rompath) — 4.7절
+│   ├─ Mame\plugins-none\              ★ 비어 있어야 하는 폴더. EKMAME(0.212)용 — 4.7절
 │   └─ script\                         AM 내장 에뮬레이터 자동탐지 스크립트(벤더 원본, 수정 금지)
 ├─ romlists\
 │   ├─ <Display>.txt                   ★ 게임 목록 (세미콜론 21필드)
@@ -219,11 +221,12 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 - **MAME 계열은 `mame.ini`의 `rompath`가 실제 롬 탐색을 담당**하므로, cfg의 `rompath`는
   주로 목록 생성/`[romfilename]` 치환용이다. (`emulators/Mame/mame.ini:11` 참고)
 
-**에뮬레이터 정의 목록 (35개)**
+**에뮬레이터 정의 목록 (38개)**
 
 | 계열 | cfg |
 |---|---|
 | MAME | `MAME`, `MAME Vertical`, `MAME Adult`, `EKMAME`(한글롬), `EKMAME Vertical`, `PSXMAME` |
+| MAME 0.212 | `MAME Legacy`, `MAME Legacy Vertical`, `MAME Legacy Adult` — 0.246이 못 읽는 옛 롬셋 전용(4.7절) |
 | RetroArch | `RetroArch FinalBurn Neo` (한글패치 롬: `emulators/RetroArch/system/fbneo/patched`) |
 | Demul | `SEGA NAOMI`, `Sammy Atomiswave`, `SEGA Hikaru`, `CAVE`, `SEGA Dreamcast` |
 | SEGA | `SEGA MODEL 2`(M2 emulator_multicpu), `SEGA MODEL 3`(SuperModel) |
@@ -319,6 +322,46 @@ PSXMAME 자신이 `use_gpu_plugin` 이 켜져 있을 때 타는 것과 **같은 
 
 `emulators/Mame`의 MAME 0.246은 경고 화면 억제가 UI 옵션 `skip_warnings`(0.226부터)인데,
 같은 폴더의 `EKMAME64.exe` 가 0.212라 공용 `ui.ini` 에 넣으면 EKMAME 쪽에서 미지원 옵션이 된다. 그래서 넣지 않았다.
+
+### 4.7 `emulators/Mame` 에는 MAME이 **두 벌** 들어 있다 — 섞이는 지점 세 곳
+
+`mame64.exe`(0.246)와 `EKMAME64.exe`(0.212, 한글롬 빌드)가 **같은 폴더에서 같은 `mame.ini` 를 읽는다.**
+버전이 34단계나 벌어져 있어서 아래 세 곳이 어긋난다. 2026-09-06에 전부 처리했다(`docs/ISSUES.md` 46~48번).
+
+**(1) `plugins/boot.lua` 는 0.246 것이라 0.212 가 못 읽는다 — EKMAME 계열은 `-pluginspath plugins-none`**
+
+MAME은 `pluginspath` 의 `boot.lua` 를 Lua 엔진 부트스트랩으로 항상 읽는다(`-noplugins` 로도 안 막힌다).
+0.246용 `boot.lua` 를 0.212가 읽으면 게임 대신 오류 대화상자가 뜨고 **거기서 멈춘다.**
+
+```
+[LUA ERROR] in run: plugins\boot.lua:11: attempt to index a function value (field 'options')
+```
+
+그래서 `EKMAME*`·`MAME Legacy*` 정의 5개는 `args` 에 **`-pluginspath plugins-none`** 을 준다.
+`emulators/Mame/plugins-none/` 은 `README.txt` 만 있는 빈 폴더다 — `boot.lua` 가 없으면 Lua 엔진을 건너뛴다.
+**여기에 파일을 넣지 말 것.**
+
+> 이 증상은 **프로세스가 살아 있어서** 구동 점검에서 `PASS` 로 잡혔다(7.5절 `DIALOG` 상태 참고).
+
+**(2) 롬 컬렉션이 0.212 시절 것이라 0.246 이 거부하는 세트가 61개 있다 — `MAME Legacy` 계열**
+
+0.246은 나중에 덤프된 PLD·MCU·디바이스 롬(`ym2413`, `segabill` …)까지 요구해서
+`Fatal error: Required files are missing`(종료 코드 2)로 끝난다. 같은 롬이 0.212에서는 그대로 돈다.
+그 61개 중 **58개**는 romlist 의 Emulator 필드를 `MAME Legacy` / `MAME Legacy Vertical` / `MAME Legacy Adult` 로 돌렸다
+(나머지 3개는 0.212 가 드라이버 검증에서 걸려 비활성화 — `ddenlovr.cpp` 계열).
+세 정의는 원본(`MAME`·`MAME Vertical`·`MAME Adult`)과 **`executable` 과 `-pluginspath` 만 다르다** — 인자·롬 경로·아트웍은 같다.
+
+> 새 게임이 종료 코드 2로 안 뜨면 `mame64 -verifyroms <셋>` 과 `EKMAME64 -verifyroms <셋>` 을 나란히 돌려 본다.
+> 0.212 쪽만 `is good` 이면 `MAME Legacy` 후보다. **다만 `verifyroms` 가 통과해도 안 뜨는 것이 있으니 반드시 띄워서 확인한다** —
+> 0.212는 8,741셋뿐이고 `ddenlovr.cpp` 처럼 드라이버 검증 오류로 아예 못 뜨는 계열도 있다.
+> **`EKMAME64 -verifyroms` 는 없는 셋 이름에 대해 대화상자를 띄우고 멈춘다.** 존재 확인은 `-listfull` 로 먼저 한다.
+> 거꾸로 EKMAME 쪽에서 안 되는 한글롬이 0.246에서는 되는 경우도 있다(`twinadvk`·`fort2ba`·`yamyamk`·`raidenkb`).
+
+**(3) `mame.ini` 의 `rompath` 가 실제 롬 탐색을 담당한다 — 폴더명이 한 글자만 달라도 전부 실패**
+
+`roms\Arcade AD` 로 적혀 있어 실제 폴더 `roms\Arcade Adult` 를 못 찾았고, MAME Adult 목록 38개가 통째로 실행되지 않았다.
+**cfg 의 `rompath` 는 목록 생성·`[romfilename]` 치환용일 뿐이라 이 오타를 가려 주지 못한다.**
+`tools\validate.ps1` 도 cfg 쪽만 보므로 잡지 못한다 — 실제로 띄워 보는 `test-roms.cmd` 만이 잡는다.
 
 
 ## 5. 자주 하는 작업 레시피
@@ -467,6 +510,8 @@ MAME 가 다시 써 낸 cfg 에 **실제로 매칭된 것만** 남는다.
   켤 수 있는 정상 자산이라 지우지 않는다.
 - `layouts/Mega-Display` — 어떤 display도 쓰지 않지만 AM 레이아웃 메뉴에서 선택 가능한 예비 테마다.
 - `emulators/PSXMAME/mame.exe` — **1바이트 패치가 들어가 있다**(4.6절). 새 빌드로 교체하면 시작 확인 창이 다시 뜬다.
+- `emulators/Mame/plugins-none/` — **비어 있는 것이 목적인 폴더**다(4.7절). `README.txt` 외에 무엇도 넣지 말 것.
+  특히 `boot.lua` 가 들어가면 EKMAME 계열 45+61개가 다시 오류 대화상자에서 멈춘다.
 
 > **미연결 자산을 정리한 이력** — 2026-09-03에 아래를 제거하고
 > `archive/unused-assets-2026-09-03` 태그에 보존했다.
@@ -698,12 +743,18 @@ romlist 한 줄 한 줄에 대해 그대로 조립한다. `emulators/<Emulator>.
 | 상태 | 뜻 |
 |---|---|
 | `OK` | 실행파일·롬·인자까지 조립 완료 (정적 점검의 통과) |
-| `PASS` | `-Launch` 에서 지정 시간(기본 12초) 동안 살아 있었다 |
+| `PASS` | `-Launch` 에서 지정 시간(기본 12초) 동안 살아 있었고, **대화상자가 아닌 진짜 창**을 갖고 있었다 |
 | `NOCHK` | 롬 존재를 단정할 수 없는 정의. **실패가 아니다** — 고정 실행형(`Taito Type X The BishiBashi`)과 `romext` 가 없는 Demul 정의 |
 | `NOEMU`/`NOEXE`/`NOROM` | 에뮬레이터 정의·실행파일·롬 없음 |
 | `EXIT0`/`CRASH` | 실행 직후 스스로 종료. 롬을 못 읽고 조용히 닫히는 경우가 대부분 |
+| `DIALOG` | 살아 있지만 떠 있는 것이 **오류 대화상자**다. 게임은 시작되지 않았다. 상자 안 문구가 `Detail` 에 들어간다 |
 | `NOWIN` | 살아 있으나 창이 없음. 런처가 다른 프로세스를 띄운 경우(경고) |
 
+- **"살아 있으면 통과"로 보면 안 된다.** 오류 대화상자를 띄운 채 서 있는 프로세스도 살아 있다.
+  그래서 판정은 프로세스의 **보이는 최상위 창을 전부 훑어** 창 클래스가 `#32770`(윈도우 표준 대화상자)인 것이
+  하나라도 있으면 `DIALOG`(실패), 대화상자가 아닌 창이 있으면 `PASS` 로 한다.
+  `Process.MainWindowHandle` 만으로는 그 창이 게임 화면인지 오류 상자인지 구별하지 못한다 —
+  실제로 EKMAME 45개가 이 때문에 첫 전수 점검에서 `PASS` 로 잡혔다(`docs/ISSUES.md` 46번).
 - 결과는 `logs\rom-test-<날짜시각>.{csv,html}` 두 벌. **HTML 쪽이 사람이 볼 보고서**다 —
   상태별 카드로 필터, 목록·에뮬레이터별 집계, 검색, 행을 누르면 실제 실행 명령이 펼쳐진다.
   캐비닛에 인터넷이 없어도 되도록 CSS·JS·데이터를 전부 파일 안에 넣은 단일 파일이고,
