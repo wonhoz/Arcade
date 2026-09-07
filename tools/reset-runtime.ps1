@@ -70,6 +70,8 @@ $ConfigPaths = @(
     'attract.am'                                # AM 마지막 선택 디스플레이/게임
     'emulators/Mame/cfg'                        # MAME 게임별 입력·딥스위치
     'emulators/Mame/ui.ini'                     # MAME UI 상태
+    'emulators/EKMAME/cfg'                      # EKMAME 게임별 입력·딥스위치
+    'emulators/EKMAME/ui.ini'                   # EKMAME UI 상태
     'emulators/RetroArch/retroarch.cfg'         # RetroArch 설정 (종료 시 덮어씀)
     'emulators/RetroArch/content_history.lpl'   # 최근 실행 목록
     'emulators/RetroArch/content_image_history.lpl'
@@ -93,6 +95,7 @@ $SavePaths = @(
     'emulators/Mame/memcard'
     'emulators/Mame/diff'
     'emulators/Mame/sta'
+    'emulators/EKMAME/nvram'
     'emulators/PCSX2/memcards'
     'emulators/PCSX2/sstates'
     'emulators/ePSXe/memcards'
