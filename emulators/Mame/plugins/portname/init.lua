@@ -26,9 +26,11 @@ exports.author = { name = "Carl" }
 
 local portname = exports
 
+local start_subscription
+
 function portname.startplugin()
 	local json = require("json")
-	local ctrlrpath = emu.subst_env(manager.options.entries.ctrlrpath:value():match("([^;]+)"))
+	local ctrlrpath = manager.options.entries.ctrlrpath:value():match("([^;]+)")
 	local function get_filename(nosoft)
 		local filename
 		if emu.softname() ~= "" and not nosoft then
@@ -70,7 +72,7 @@ function portname.startplugin()
 		end
 	end
 
-	emu.register_start(function()
+	start_subscription = emu.add_machine_reset_notifier(function()
 		local file = emu.file(ctrlrpath .. "/portname", "r")
 		local ret = file:open(get_filename())
 		if ret then
