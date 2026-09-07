@@ -52,7 +52,7 @@ pkgnsh;파칭코 은구슬 승부;MAME Adult;0;1998;Dynax;Adult;;;;;;;;;;;;;;
 fantsia2;판티지아 II;MAME Adult;0;1997;Comad;Adult;;;;;;;;0;0;4;;;;
 funybubl;퍼니 버블;MAME Adult;0;1999;Comad;Adult;;;;;;;;0;0;4;;;;
 pcktgal;포켓걸;MAME Adult;0;1987;Data East;Adult;2;0;joystick (8-way);;;;;;;;;;;
-pcktgalk;포켓걸 (한글판);MAME Adult;pcktgal;1987;Data East;Adult;1;0;Joystick (4-way);imperfect;1;raster;0;0;0;2;;;;
+pcktgalk;포켓걸 (한글판);EKMAME Adult;pcktgal;1987;Data East;Adult;1;0;Joystick (4-way);imperfect;1;raster;0;0;0;2;;;;
 pcktgal2;포켓걸 2;MAME Adult;0;1989;Data East;Adult;2;0;joystick (8-way);;;;;;;;;;;
 hanamai;하나노마이;MAME Adult;0;1988;Dynax;Adult;;;;;;;;;;;;;;
 hotpinbl;핫 핀볼;MAME Adult;0;1995;Comad;Adult;;;;;;;;;;;;;;

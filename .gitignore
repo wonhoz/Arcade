@@ -31,6 +31,11 @@ emulators/Mame/snap/
 emulators/Mame/title/
 emulators/Mame/video/
 emulators/Mame/wheel/
+emulators/EKMAME/EKMAME64.exe
+emulators/EKMAME/roms/
+emulators/EKMAME/nvram/
+emulators/EKMAME/hash/
+emulators/EKMAME/samples/
 emulators/[Mm]ame_bak/
 emulators/Mednafen/ISO/
 emulators/PCSX2/Game ISO/

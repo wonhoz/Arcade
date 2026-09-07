@@ -62,7 +62,8 @@ git checkout bartop        # 장비에 맞는 브랜치 선택 (아래 표 참�
 git에서 제외된 것들을 기존 설치본에서 복사합니다.
 
 ```
-emulators\Mame\mame64.exe          emulators\Mame\EKMAME64.exe
+emulators\Mame\mame64.exe          (MAME 0.289)
+emulators\EKMAME\EKMAME64.exe      (EKMAME 0.212 — 팬 한글화 롬 전용)
 emulators\Mame\hash\               emulators\Mame\artwork\
 emulators\RetroArch\cores\         emulators\RetroArch\system\
 ```
@@ -84,7 +85,8 @@ emulators\RetroArch\cores\         emulators\RetroArch\system\
 경로는 **executable이 있는 디렉터리 기준 상대경로**입니다.
 
 ```
-emulators\Mame\roms\{Arcade, Arcade Adult, Arcade CHD, Arcade Zinc, Bios, Korean}\
+emulators\Mame\roms\{Arcade, Arcade Adult, Arcade CHD, Arcade Zinc, Bios}\
+emulators\EKMAME\roms\Korean\                  팬 한글화 롬 (배포 세트에 없다 - 유일본)
 emulators\RetroArch\system\fbneo\patched\      NESiCAxLive 한글패치 롬
 emulators\Demul\{Roms, Disc Image}\            NAOMI / Atomiswave / Dreamcast
 emulators\M2\Roms\                             SEGA MODEL 2
