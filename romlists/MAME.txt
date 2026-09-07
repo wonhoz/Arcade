@@ -470,6 +470,7 @@ wondl96;원더리그 96 (한글판);MAME;0;1996;SemiCom;Sports;2;0;Joystick (8-w
 wlstar;원더리그 스타;MAME;;1995;Mijin;Sports;2;0;Joystick (8-way);good;1;raster;;;;3;;;;
 wboy;원더보이;MAME;0;1986;SEGA;Action;2;0;Joystick (2-way);good;1;raster;0;0;0;2;;;;
 wbmljb;원더보이 인 몬스터랜드;MAME;wbml;1987;SEGA;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2;;;;
+wbmlkb;원더보이 인 몬스터랜드 (한글판);EKMAME;wbml;1987;SEGA;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2;;;;
 wb3;원더보이 III 몬스터 레어;MAME;0;1988;SEGA;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;3;;;;
 #prehislek;원시도 (한글판);MAME;prehisle;1988;SNK;Shooting;2;;;;;;;;;;;;;
 wbeachvl;월드 비치 발리볼;MAME;;1995;Playmark;Sports;4;0;Joystick (8-way);imperfect;1;raster;;;;3;;;;

@@ -48,9 +48,11 @@ sfiii3n;스트리트 파이터 III 써드 스트라이크: 미래를 위한 싸�
 sftm;스트리트 파이터 무비;MAME;0;1995;Capcom;Fighting;2;;;;;;MAME;sf;;;;;;
 sfa;스트리트 파이터 알파;MAME;0;1995;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
 sfzjk;스트리트 파이터 알파 (한글판);EKMAME;sfa;1995;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
+sfzchk;스트리트 파이터 알파 (CPS 체인저, 한글판);EKMAME;sfzch;1995;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
 sfa2;스트리트 파이터 알파 2;MAME;0;1996;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
 sfz2jr1k;스트리트 파이터 제로 2 (한글판 960227);EKMAME;sfa2;1996;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
 sfz2jk;스트리트 파이터 알파 2 (한글판);EKMAME;sfa2;1996;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
+sfz2aljk;스트리트 파이터 제로 2 알파 (한글판);EKMAME;sfz2al;1996;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
 sfa3;스트리트 파이터 알파 3;MAME;0;1998;Capcom;Fighting;2;0;Joystick (8-way);good;1;raster;cps2;sf;0;6;;;;
 strider;스트라이더 비룡;MAME;0;1989;Capcom;Action;2;0;Joystick (8-way);good;1;raster;cps1;0;0;3;;;;
 slammast;슬램 마스터즈;MAME;0;1993;Capcom;Sports;4;0;Joystick (8-way);good;1;raster;cps1;0;0;3;;;;

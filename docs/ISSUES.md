@@ -1214,19 +1214,56 @@ CHD 만 있고 zip 이 없는 `raycris` · `shangtou` · `shikigam` · `zooo` �
 | Capcom | `csclubk` `rockmank` `rckman2k` `sfzjk` `sfz2jk` `sfz2jr1k` |
 | MAME Adult | `pcktgalk` |
 
-### - [ ] 53. 한글화 패치 롬 7종이 부모셋·복호화 롬이 없어 못 돈다 — ⏳ **미해결**
+### - [ ] 53. 한글화 패치 롬 7종이 부모셋·복호화 롬이 없어 못 돌았다 — **6종 해결 / 2종 남음**
 
-롬은 `emulators\EKMAME\roms\Korean\` 에 이미 넣어 뒀다. 아래를 구하면 바로 romlist 에 넣을 수 있다.
+**해결 (2026-09-07)** — 사용자가 부모셋을 구해 왔다. 받은 파일을 `EKMAME64 -listroms` 의 CRC 목록과
+대조해 판정했고(EKMAME 은 `-verifyroms` 결과를 메시지 박스로만 내보내 자동 점검에 못 쓴다),
+**6종이 살아나 romlist 에 들어갔다.**
 
-| 한글판 셋 | 게임 | 없는 것 |
+| 한글판 | 쓴 부모셋 | 결과 |
 |---|---|---|
-| `kof2kkt` | KOF 2000 (한글판) | **복호화 롬** `257-m1d.bin` · `257-c3d`~`c8d.bin` (romlist 에는 이미 있고 실행하면 대화상자) |
-| `flipshok` | Battle Flip Shot | 부모셋 `flipshot.zip` |
-| `puzzldpk` · `puzldprk` | Puzzle De Pon! / R! | 부모셋 `puzzledp.zip` |
-| `sfz2aljk` | 스파 제로 2 알파 | 부모셋 `sfz2al.zip` |
-| `sfzchk` | 스파 제로 (CPS Changer) | 부모셋 `sfzch.zip` |
-| `wjammerk` | 윈드재머스 | 부모셋 `wjammers.zip` |
-| `wbmlkb` | 원더보이 인 몬스터랜드 (한글판) | **0.224 시절** `wbml.zip` (0.289 판은 파일명이 달라 `wbml.01` 을 못 찾는다) |
+| `puzzldpk` · `puzldprk` | `puzzledp.zip` | 부족 0 · PASS |
+| `sfzchk` | `sfzch.zip` | 부족 0 · PASS |
+| `wjammerk` | `wjammers.zip` | 부족 0 · PASS |
+| `wbmlkb` | `wbml.zip` (516,518 바이트) | 부족 0 · PASS |
+| `sfz2aljk` | `sfz2al.zip` | `szajk.03a` 체크섬 불일치(3b795a57 vs 3c545a2a) — **경고만 뜨고 구동은 된다**(실제 창으로 6초 만에 정상 종료 확인) |
+
+> `wbml` 후보 4개 중 **`wbml.zip`(516,518 바이트) 하나만** 요구 16개를 모두 채웠다. 나머지 3개는 1개씩 부족했다.
+> 파일명은 달라도 된다 — MAME 은 zip 안을 **해시로** 찾는다. 실제로 `flipshot.zip` 은 `.bin` 확장자였는데도 5개가 매칭됐다.
+
+**남은 2종**
+롬은 `emulators\EKMAME\roms\Korean\` 에 이미 넣어 뒀다.
+
+**(1) `kof2kkt` — KOF 2000 한글판. 복호화 롬 5개가 없다.**
+
+KOF2000 은 SMA/PCM2 로 암호화돼 있고, 본가 MAME 은 실행 중에 복호화하므로 별도 파일이 없다.
+EKMAME 계열은 **미리 복호화해 둔 덤프**(파일명 끝의 `d` = decrypted)를 그대로 요구한다.
+`kof2kkt.zip` 은 자기 몫 7개만 갖고 있고, 아래 5개가 어디에도 없다.
+
+```
+257-m1d.bin      262,144 바이트   CRC d404db70
+257-c3d.bin    8,388,608 바이트   CRC 087fb15b
+257-c4d.bin    8,388,608 바이트   CRC fe9dfde4
+257-c5d.bin    8,388,608 바이트   CRC 03ee4bf4
+257-c6d.bin    8,388,608 바이트   CRC 8599cc5b
+```
+
+> **`kof99ndkt-partial.zip` 과 똑같은 성격의 묶음이다.** 그 파일이 `251-c3d`~`c8d.bin` · `251-s1.bin` 을
+> 공급해 `kof99ndkt` 를 살렸듯이, `257-*d.bin` 을 담은 묶음 하나면 된다.
+> 0.224 에는 `kof2000d` 같은 복호화 전용 셋이 등재돼 있지 않으므로 **배포처의 별도 파일**로 구해야 한다
+> (`한글화패치롬` 폴더의 "[EKMAME 한글화패치롬] (kof99~2000)" 글이 같은 출처로 보인다).
+
+**(2) `flipshok` — Battle Flip Shot 한글판. 원본 프로그램 롬이 없다.**
+
+이 한글판은 그래픽만 바꾼 것이라(`247-c1k` · `247-c2k` 두 개뿐) 프로그램은 **원본 `flipshot` 의 것**을 쓴다.
+
+```
+247-p1.p1      1,048,576 바이트   CRC 95779094   SHA1 a985e033bc6f137fa65855d3eed245d66d5b244a
+```
+
+받은 `flipshot.zip` 의 p1 은 `d2e7a7e3`, `대규모 업로드` 쪽은 `5567aa9f` 라 **둘 다 다른 리비전**이다.
+나머지 5개(`c1` `c2` `m1` `s1` `v1`)는 받은 파일로 전부 맞는다 — **p1 하나만 있으면 된다.**
+romlist 에는 아직 넣지 않았다(넣으면 대화상자에서 멈춘다). 롬은 `roms\Korean\flipshot.zip` 에 넣어 뒀다.
 
 > ⚠️ `한글화패치게임 대규모 업로드`(FBA2012용 81개)의 `flipshot`·`puzzledp`·`sfzch`·`wjammers` 는
 > **원본이 아니라 한글 패치본**이다(`mame64 -verifyroms` 전부 `is bad`). 부모셋으로 쓸 수 없다.

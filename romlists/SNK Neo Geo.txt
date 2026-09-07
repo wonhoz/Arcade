@@ -79,6 +79,7 @@ aof3;용호의 권 3 / 아트 오브 파이팅 3: 패치 오브 워리어즈;MAM
 whp;월드 히어로즈 퍼펙트;MAME;0;1995;ADK;Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 lastblad;월화의 검사 / 라스트 블레이드;MAME;0;1997;SNK;Fighting;2;0;Joystick (8-way),dial;good;1;raster;neogeo;0;0;4;;;;
 lastbld2;월화의 검사 2 / 라스트 블레이드 2;MAME;0;1998;SNK;Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
+wjammerk;윈드재머스 (한글판);EKMAME;wjammers;1994;Data East;Sports;2;270;Joystick (8-way),positional;good;1;raster;neogeo;0;0;3;;;;
 sengoku;전국전승 / 센고쿠;MAME;0;1991;SNK;Arcade;2;;;;;;neogeo;;;;;;;
 sengoku2;전국전승 2 / 센고쿠 2;MAME;0;1993;SNK;Arcade;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 sengoku3;전국전승 3 / 센고쿠 3;MAME;0;2001;SNK;Arcade;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
@@ -123,4 +124,6 @@ pspikes;파워 스파이크;MAME;0;1991;Video System;Sports;2;0;Joystick (8-way)
 pspikesk;파워 스파이크 (한글판);MAME;pspikes;1991;Video System;Sports;2;0;joystick (8-way);good;1;raster;neogeo;;;3;;;;
 pspikes2;파워 스파이크 II;MAME;0;1994;Video System;Sports;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 karnovr;파이터즈 히스토리 다이너마이트 / 카르노브의 복수;MAME;;1994;Data east;Fighting;2;0;Joystick (8-way),dial;good;1;raster;neogeo;0;0;4;;;;
+puzzldpk;퍼즐 드 퐁! (한글판);EKMAME;puzzledp;1995;Taito (Visco license);Sports;2;270;Joystick (8-way),positional;good;1;raster;neogeo;0;0;3;;;;
+puzldprk;퍼즐 드 퐁! R! (한글판);EKMAME;puzzledp;1997;Taito (Visco license);Sports;2;270;Joystick (8-way),positional;good;1;raster;neogeo;0;0;3;;;;
 kizuna;풍운 슈퍼 태그 배틀 / 키즈나 인카운터 / 세비지 레인 2;MAME;0;1996;SNK;Fighting;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
