@@ -53,11 +53,36 @@ git branch Compact archive/Compact           # 되살리기
   git push origin develop
   git checkout main && git merge --no-ff develop && git push origin main
   for b in bartop desktop desktop-ASUS-TUF desktop-MSI-Sword desktop-MSI-Sword-DriveWheel; do
+    #  아래 한 줄이 없으면 exe 교체 때 unlink 오류로 죽는다 (바로 아래 경고)
+    git diff --name-only HEAD origin/$b -- '*.exe' | while read -r f; do rm -f "$f"; done
     git checkout -B $b origin/$b && git merge main -m "Merge branch 'main' into $b" \
       && powershell -ExecutionPolicy Bypass -File tools/validate.ps1 -Quiet && git push origin $b
   done
   git checkout develop && git merge --ff-only main && git push origin develop
   ```
+
+  > ⚠️ **`.exe` 를 바꾸는 병합·체크아웃은 `unable to unlink … : Invalid argument` 로 죽는다.**
+  > Windows Defender 실시간 검사가 방금 쓴 실행파일을 붙잡고 있어서다. 재시도해도 잘 안 풀린다.
+  > **git 이 지우지 않고 새로 만들게 하면 통과한다** — 바꿀 `.exe` 를 먼저 지워 두는 것이 유일하게 확실했다.
+  >
+  > ```bash
+  > git diff --name-only <현재> <대상> -- '*.exe' | while read -r f; do rm -f "$f"; done
+  > ```
+  >
+  > 2026-09-07 MAME 0.289 전파 때 `emulators/Mame/` 의 보조 도구 11개(`nltool` `nlwav` `chdman` …)가
+  > 한꺼번에 바뀌면서 `main` 병합이 세 번 연속 실패했다. 위 한 줄을 넣으니 한 번에 됐다.
+
+  > 🚨🚨 **장비 브랜치·`main` 에서 `git clean` 을 돌리지 말 것. `.gitignore` 가 브랜치마다 다르다.**
+  > `.gitignore` 는 추적 파일이라 브랜치를 따라 바뀐다. `develop` 에서 무시되는 경로가
+  > `main` 에서는 무시 대상이 아닐 수 있고, 그 상태에서 `git clean -fd` 를 돌리면
+  > **롬·에뮬레이터 실행파일처럼 되찾기 어려운 것이 통째로 지워진다.**
+  >
+  > 2026-09-07 에 실제로 `main` 에서 `git clean -fd` 를 돌려 `emulators/EKMAME/` 가 통째로 날아갔다
+  > (`EKMAME64.exe` + `roms/Korean` 38개). `main` 의 `.gitignore` 에는 아직 EKMAME 규칙이 없었기 때문이다.
+  > 백업본이 저장소 밖에 있어 복구했지만, `roms/Korean` 은 **어떤 롬셋으로도 다시 못 만드는 유일본**이었다.
+  >
+  > 병합이 남긴 미추적 잔재를 치워야 하면 `git clean` 대신 **`git checkout -f <브랜치>`** 를 쓴다.
+  > 굳이 지워야 하면 `git clean -nd` 로 먼저 보고, 무시 규칙이 다른 브랜치인지 확인한다.
   각 장비 브랜치에서 병합 직후 `validate.ps1`을 돌린다 — 장비 전용 설정과 공통 변경이 충돌하지 않았는지 보는 유일한 자리다.
   `gh`가 없으면 위처럼 로컬에서 `--no-ff`로 병합한다(PR 머지와 같은 모양).
 
@@ -682,6 +707,11 @@ $fs.Position=0x3C; $pe=$br.ReadInt32(); $fs.Position=$pe+0x5C; $br.ReadUInt16() 
 즉 **이 저장소를 클론하는 것만으로는 실행되지 않는다.** 롬·코어·아트웍은 별도로 옮겨야 한다.
 
 주의 사항:
+- 🚨 **`.gitignore` 는 추적 파일이라 브랜치마다 다르다 — `git clean` 을 함부로 돌리면 안 된다.**
+  `develop` 에 새 무시 규칙을 넣은 직후에는 `main`·장비 브랜치가 아직 그 규칙을 모른다.
+  그 브랜치에서 `git clean -fd` 를 돌리면 **거기서는 무시 대상이 아닌** 롬·실행파일이 통째로 지워진다.
+  2026-09-07에 `main` 에서 실제로 `emulators/EKMAME/` 를 날렸다(2절의 경고 참고).
+  잔재 정리는 `git clean` 이 아니라 `git checkout -f <브랜치>` 로 한다.
 - `.gitignore`의 경로 대소문자는 2026-09-03에 실제 폴더명(`emulators/Mame` 등)과 맞췄다(불일치 0건).
   다만 **아트웍·레이아웃 자산은 여전히 Windows의 대소문자 무시에 기대고 있다**
   (`assets/buttons/1button.png` ↔ 실제 `1Button.png`, `menu-art/wheel/MAME.png` ↔ `mame.png`).
