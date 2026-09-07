@@ -18,6 +18,8 @@ emulators/Mame/artwork/
 emulators/Mame/artwork_/
 emulators/Mame/dats/history.dat
 emulators/Mame/dats/history.db
+emulators/Mame/data/history.db
+emulators/Mame/data/history.db-journal
 emulators/Mame/EKMAME64.exe
 emulators/Mame/flyer/
 emulators/Mame/hash/
@@ -31,6 +33,13 @@ emulators/Mame/snap/
 emulators/Mame/title/
 emulators/Mame/video/
 emulators/Mame/wheel/
+emulators/EKMAME/EKMAME64.exe
+emulators/EKMAME/roms/
+emulators/EKMAME/nvram/
+emulators/EKMAME/hash/
+emulators/EKMAME/samples/
+emulators/EKMAME/history/
+emulators/EKMAME/dats/history.db
 emulators/[Mm]ame_bak/
 emulators/Mednafen/ISO/
 emulators/PCSX2/Game ISO/

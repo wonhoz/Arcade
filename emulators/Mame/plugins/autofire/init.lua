@@ -9,6 +9,8 @@ local exports = {
 
 local autofire = exports
 
+local frame_subscription, stop_subscription
+
 function autofire.startplugin()
 
 	-- List of autofire buttons, each being a table with keys:
@@ -22,14 +24,14 @@ function autofire.startplugin()
 	--   'button' - reference to ioport_field
 	--   'counter' - position in autofire cycle
 	local buttons = {}
+	local loaded = false
 
+	local input_manager
 	local menu_handler
 
 	local function process_frame()
-		local input = manager.machine.input
-
 		local function process_button(button)
-			local pressed = input:seq_pressed(button.key)
+			local pressed = input_manager:seq_pressed(button.key)
 			if pressed then
 				local state = button.counter < button.on_frames and 1 or 0
 				button.counter = (button.counter + 1) % (button.on_frames + button.off_frames)
@@ -52,15 +54,22 @@ function autofire.startplugin()
 			end
 		end
 		for i, state in pairs(button_states) do
-			state[2]:set_value(state[1])
+			if state[1] ~= 0 then
+				state[2]:set_value(state[1])
+			else
+				state[2]:clear_value()
+			end
 		end
 	end
 
 	local function load_settings()
 		local loader = require('autofire/autofire_save')
-		if loader then
+		if loader and not loaded then
 			buttons = loader:load_settings()
+			loaded = true
 		end
+
+		input_manager = manager.machine.input
 	end
 
 	local function save_settings()
@@ -70,7 +79,9 @@ function autofire.startplugin()
 		end
 
 		menu_handler = nil
+		input_manager = nil
 		buttons = {}
+		loaded = false
 	end
 
 	local function menu_callback(index, event)
@@ -83,7 +94,10 @@ function autofire.startplugin()
 
 	local function menu_populate()
 		if not menu_handler then
-			menu_handler = require('autofire/autofire_menu')
+			local status, msg = pcall(function () menu_handler = require('autofire/autofire_menu') end)
+			if not status then
+				emu.print_error(string.format('Error loading autofire menu: %s', msg))
+			end
 			if menu_handler then
 				menu_handler:init_menu(buttons)
 			end
@@ -95,9 +109,9 @@ function autofire.startplugin()
 		end
 	end
 
-	emu.register_frame(process_frame)
+	frame_subscription = emu.add_machine_frame_notifier(process_frame)
 	emu.register_prestart(load_settings)
-	emu.register_stop(save_settings)
+	stop_subscription = emu.add_machine_stop_notifier(save_settings)
 	emu.register_menu(menu_callback, menu_populate, _p('plugin-autofire', 'Autofire'))
 end
 
