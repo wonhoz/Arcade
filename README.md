@@ -8,8 +8,8 @@ Attract-Mode 프론트엔드와 에뮬레이터, 게임 목록·아트웍 설정
 |---|---|
 | 프론트엔드 | Attract-Mode v2.7.0 (Windows / SFML 2.5.1) |
 | 디스플레이 | 21개 (MAME, Capcom, SNK Neo Geo, SEGA MODEL 2/3, NAOMI, Atomiswave, Taito Type X, TeknoParrot, Zinc, NESiCAxLive, PS1/PS2/PSP, N64, GameCube, Wii, Wii U, Saturn, Dreamcast, MAME Adult) |
-| 에뮬레이터 정의 | 35개 |
-| 게임 항목 | 활성 1,079개 (비활성 포함 1,683개) |
+| 에뮬레이터 정의 | 36개 |
+| 게임 항목 | 활성 1,091개 (비활성 포함 1,692개) |
 | UI 언어 | 한국어 |
 
 ## 문서
@@ -63,7 +63,7 @@ git에서 제외된 것들을 기존 설치본에서 복사합니다.
 
 ```
 emulators\Mame\mame64.exe          (MAME 0.289)
-emulators\EKMAME\EKMAME64.exe      (EKMAME 0.212 — 팬 한글화 롬 전용)
+emulators\EKMAME\EKMAME64.exe      (EKMAME 0.224 — 팬 한글화 롬 전용)
 emulators\Mame\hash\               emulators\Mame\artwork\
 emulators\RetroArch\cores\         emulators\RetroArch\system\
 ```

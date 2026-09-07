@@ -7,7 +7,7 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **48건** / 미해결 **2건**(13번 · **51번**) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
+**진행 현황** — 처리 **50건** / 미해결 **3건**(13번 · 53번 · 54번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
 42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일.
 **46~49번은 2026-09-06 전수 구동 점검(E)의 실패 106건을 파고들어 나온 것** —
@@ -1156,7 +1156,11 @@ git 으로 따라오지 않으므로 [`../.+필독.txt`](../.+필독.txt) 3번�
 
 분리 후 `test-roms.cmd -Launch -Emulator EKMAME*` 로 활성 11개 전부 **PASS** 확인했다.
 
-### - [ ] 51. CHD 가 있어야 도는 셋 5개의 CHD 가 없다 — ⏳ **미해결**
+### - [x] 51. CHD 가 있어야 도는 셋 5개의 CHD 가 없다 — **처리 완료 (2026-09-07)**
+
+> **해결.** 사용자가 `cvsgd` · `darkhleg` · `ddr3mk` · `ddrextrm` · `jojo` 의 CHD 를 구해
+> `roms\Arcade CHD\<셋이름>\<파일>.chd` 로 넣었다. `verifyroms` 가 `good` / `best available` 로 바뀌었고
+> `jojo` · `darkhleg` 는 실제 구동도 확인했다. 남은 것은 `simpbowl` 하나뿐이다(54번).
 
 0.289 롬 갱신(47번)으로 zip 은 전부 갖췄지만, split zip 세트에는 CHD 가 들어 있지 않다.
 `mame64 -verifyroms` 가 `bad` 로 잡은 10개 중 5개는 기존 `roms\Arcade CHD` 에 있고 5개가 없다.
@@ -1174,6 +1178,68 @@ CHD 만 있고 zip 이 없는 `raycris` · `shangtou` · `shikigam` · `zooo` �
 
 > **CHD 는 MAME 버전에 묶인다.** 0.289 용을 받아야 하고, `roms\Arcade CHD\<셋이름>\<파일>.chd` 구조로 넣는다.
 > 넣은 뒤 `mame64 -verifyroms <셋>` 으로 확인한다.
+### - [x] 52. EKMAME 0.224 갱신 · 한글화 패치 게임 확충 — **처리 완료 (2026-09-07)**
+
+**EKMAME 0.212 -> 0.224 (2024-04-04 빌드).** 지원 셋이 **8,740 -> 16,304** 로 늘었다.
+배포본 두 종을 비교해 고른 결과다.
+
+| | `_20230112` | `_20240404`(구 `_blog`) |
+|---|---|---|
+| EKMAME64.exe | 2023-01-16 | **2024-04-04** ← 채택 |
+| 등재 셋 | 16,303 | **16,304** (`dinocb` 하나 더) |
+| 동봉물 | `EKLauncher.exe` | `ekgui\`·`libdll\`(GUI·.NET) — AM 에는 불필요 |
+
+`EKMAME64.exe` 와 `dats\`(hash·plugins·language·ctrlr·folders·samples)만 가져왔다.
+0.224 는 기본값이 `writeconfig 0` 이고 정상적인 `plugin.ini` 를 자기 폴더에 만든다.
+
+**한글화 패치 롬 30종을 넣고 romlist 에 반영했다.** 사용자가 모아 둔 컬렉션에서 왔고,
+27개는 파일명이 0.224 셋 이름과 그대로 맞았다. 나머지 3개는 **부분 파일**이라 병합했다.
+
+| 파일 | 처리 |
+|---|---|
+| `tophuntrk-.zip` | `tophuntrk.zip` 로 개명 |
+| `kof99ndkt-partial.zip` | 기존 `kof99ndkt.zip` 에 병합(`251-s1`·`251-c3d`~`c8d` 등 7개 추가) |
+| `kof2kkt_257-s1.zip` | 기존 `kof2kkt.zip` 에 병합(`257-s1.bin`) |
+
+**배치 규칙 — 한글판은 부모 게임 바로 아래 줄에 둔다**(2026-09-07 사용자 지시).
+부모 행을 그대로 복사해 `Name`·`Title`·`Emulator`·`CloneOf` 만 바꾼다. 그래서 장르·연도·조작·회전이 부모와 자동으로 일치한다.
+세로 게임(`gunbirdkp`·`tophuntrk`)이 생겨 `EKMAME Vertical.cfg` 를 되살렸다(정의 36개).
+
+구동 점검 결과 **23개 중 22개 PASS**. EKMAME 계열 항목은 이렇게 늘었다.
+
+| 목록 | 추가된 한글판 |
+|---|---|
+| SNK Neo Geo | `aofkt` `neocup98kt` `kof94kt` `kof95kt` `kof96kt` `kof97kt` `kof97plskt` `kof98hkt` `kof99ndkt` `kof2kkt` `tophuntrk` |
+| MAME | `blkdrgonk` `ginganins01` `renjuk` `gunbirdkp` `tengaik` |
+| Capcom | `csclubk` `rockmank` `rckman2k` `sfzjk` `sfz2jk` `sfz2jr1k` |
+| MAME Adult | `pcktgalk` |
+
+### - [ ] 53. 한글화 패치 롬 7종이 부모셋·복호화 롬이 없어 못 돈다 — ⏳ **미해결**
+
+롬은 `emulators\EKMAME\roms\Korean\` 에 이미 넣어 뒀다. 아래를 구하면 바로 romlist 에 넣을 수 있다.
+
+| 한글판 셋 | 게임 | 없는 것 |
+|---|---|---|
+| `kof2kkt` | KOF 2000 (한글판) | **복호화 롬** `257-m1d.bin` · `257-c3d`~`c8d.bin` (romlist 에는 이미 있고 실행하면 대화상자) |
+| `flipshok` | Battle Flip Shot | 부모셋 `flipshot.zip` |
+| `puzzldpk` · `puzldprk` | Puzzle De Pon! / R! | 부모셋 `puzzledp.zip` |
+| `sfz2aljk` | 스파 제로 2 알파 | 부모셋 `sfz2al.zip` |
+| `sfzchk` | 스파 제로 (CPS Changer) | 부모셋 `sfzch.zip` |
+| `wjammerk` | 윈드재머스 | 부모셋 `wjammers.zip` |
+| `wbmlkb` | 원더보이 인 몬스터랜드 (한글판) | **0.224 시절** `wbml.zip` (0.289 판은 파일명이 달라 `wbml.01` 을 못 찾는다) |
+
+> ⚠️ `한글화패치게임 대규모 업로드`(FBA2012용 81개)의 `flipshot`·`puzzledp`·`sfzch`·`wjammers` 는
+> **원본이 아니라 한글 패치본**이다(`mame64 -verifyroms` 전부 `is bad`). 부모셋으로 쓸 수 없다.
+> EKMAME 이 요구하는 것은 **원본 부모셋**이다.
+
+### - [ ] 54. `simpbowl` 의 CHD 가 0.289 판이 아니다 — ⏳ **미해결**
+
+`roms\Arcade CHD\simpbowl\simpbowl.chd` 는 0.246 시절 것이다.
+0.289 는 이름과 해시가 다른 것을 요구한다 — `829uaa02` / SHA1 `2ec4cc608d5582e478ee047b60ccee67b52f060c`.
+전수 구동 점검(607건)에서 **유일한 실패**였다.
+
+같은 이유로 `redearth`(`cap-wzd-5` SHA1 불일치)와 `raycris`(SHA1 불일치)도 `verifyroms` 는 `is bad` 지만,
+**둘 다 실제로는 구동된다**(`redearth` PASS, `raycris` 는 비활성). 급하지 않다.
 ---
 
 ## 개선 제안

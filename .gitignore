@@ -36,6 +36,8 @@ emulators/EKMAME/roms/
 emulators/EKMAME/nvram/
 emulators/EKMAME/hash/
 emulators/EKMAME/samples/
+emulators/EKMAME/history/
+emulators/EKMAME/dats/history.db
 emulators/[Mm]ame_bak/
 emulators/Mednafen/ISO/
 emulators/PCSX2/Game ISO/

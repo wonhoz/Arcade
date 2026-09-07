@@ -127,7 +127,7 @@ D:\AttractMode\
 │   │  Project64\ Project64_v1.7\ Cemu\ Mednafen\ RetroArch\ PSXMAME\
 │   │  TeknoParrot\ "Taito Type X"\ "PC Game"\      실제 에뮬레이터 바이너리
 │   ├─ Mame\mame.ini                   ★ MAME 계열의 실제 롬 탐색 경로(rompath) — 4.7절
-│   ├─ EKMAME\                        ★ EKMAME 0.212 — MAME 과 분리된 별도 폴더 (4.7절)
+│   ├─ EKMAME\                        ★ EKMAME 0.224 — MAME 과 분리된 별도 폴더 (4.7절)
 │   └─ script\                         AM 내장 에뮬레이터 자동탐지 스크립트(벤더 원본, 수정 금지)
 ├─ romlists\
 │   ├─ <Display>.txt                   ★ 게임 목록 (세미콜론 21필드)
@@ -225,7 +225,7 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 
 | 계열 | cfg |
 |---|---|
-| MAME | `MAME`, `MAME Vertical`, `MAME Adult`, `EKMAME`(팬 한글화 롬), `EKMAME Adult`, `PSXMAME` |
+| MAME | `MAME`, `MAME Vertical`, `MAME Adult`, `EKMAME`, `EKMAME Vertical`, `EKMAME Adult`(팬 한글화 롬), `PSXMAME` |
 | RetroArch | `RetroArch FinalBurn Neo` (한글패치 롬: `emulators/RetroArch/system/fbneo/patched`) |
 | Demul | `SEGA NAOMI`, `Sammy Atomiswave`, `SEGA Hikaru`, `CAVE`, `SEGA Dreamcast` |
 | SEGA | `SEGA MODEL 2`(M2 emulator_multicpu), `SEGA MODEL 3`(SuperModel) |
@@ -320,13 +320,13 @@ PSXMAME 자신이 `use_gpu_plugin` 이 켜져 있을 때 타는 것과 **같은 
 > 되돌리려면 `git checkout -- emulators/PSXMAME/mame.exe`.
 
 `emulators/Mame`의 MAME 0.289는 경고 화면 억제가 UI 옵션 `skip_warnings`(0.226부터)인데,
-같은 폴더의 `EKMAME64.exe` 가 0.212라 공용 `ui.ini` 에 넣으면 EKMAME 쪽에서 미지원 옵션이 된다. 그래서 넣지 않았다.
+예전에는 `EKMAME64.exe` 와 `ui.ini` 를 공유해 넣지 못했는데, 2026-09-07 폴더를 나누면서 넣었다(4.7절).
 
-### 4.7 MAME(0.289)와 EKMAME(0.212)은 **폴더가 나뉘어 있다** — 2026-09-07 분리
+### 4.7 MAME(0.289)와 EKMAME(0.224)은 **폴더가 나뉘어 있다** — 2026-09-07 분리
 
 ```
 emulators\Mame\      mame64.exe 0.289   roms\{Arcade, Arcade Adult, Bios, Arcade CHD, Arcade Zinc}
-emulators\EKMAME\    EKMAME64.exe 0.212 roms\Korean   ← 팬 한글화 롬 전용
+emulators\EKMAME\    EKMAME64.exe 0.224 roms\Korean   ← 팬 한글화 롬 전용 (30종)
 ```
 
 2026-09-07 이전에는 두 벌이 한 폴더에서 `mame.ini`·`plugins`·`cfg`·`roms` 를 공유했고,
@@ -340,7 +340,7 @@ rompath   roms;roms\Korean;..\Mame\roms\Arcade;..\Mame\roms\Bios
 artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame\cheat
 ```
 
-> ⚠️ **EKMAME 0.212 의 ini 는 함정이 셋 있다. 전부 실측으로 확인했다.**
+> ⚠️ **EKMAME 의 ini 는 함정이 셋 있다. 0.212 에서 실측했고 0.224 도 같은 전제로 다룬다.**
 >
 > 1. **`mame.ini` 에 UTF-8 BOM 이 없으면 파일을 통째로 무시한다.** 오류도 경고도 없이
 >    전부 기본값으로 돈다(`rompath` 가 `roms` 로 되돌아가 롬을 못 찾는다).
@@ -349,7 +349,7 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 >    역시 조용히 무시된다. 그래서 `pcktgalk` 의 부모 `pcktgal.zip` 은 `EKMAME\roms\Korean\` 에 복사해 뒀다.
 > 3. **`writeconfig 0` 이 아니면 종료할 때 3바이트(BOM 만) 짜리 `plugin.ini` 를 써 놓고,
 >    다음 실행에서 그걸 읽다 `Error loading plugin.ini` 대화상자를 띄운다.**
->    플러그인 설정은 `EKMAME\ini\plugin.ini`(BOM 없이)에 둔다.
+>    0.224 는 정상적인 `plugin.ini` 를 자기 폴더 루트에 만들어 둔다 — 그것을 추적한다.
 >
 > **`EKMAME64 -verifyroms` 는 결과를 stdout 이 아니라 메시지 박스로 낸다.** 자동 점검에 쓸 수 없다.
 > 존재 확인은 `-listfull`, 실제 구동은 `test-roms.cmd`(대화상자를 `DIALOG` 로 잡는다)로 본다.
@@ -393,7 +393,7 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 | 폴더 | 버전 | 파일 날짜 | 갱신할 때 걸리는 것 |
 |---|---|---|---|
 | `Mame` | **0.289** | 2026-07-30 | 2026-09-07 갱신. 롬 세트가 버전에 묶인다(4.7절 (2)). 세트 이름도 판마다 바뀐다 |
-| `EKMAME` | EKMAME **0.212** | 2019-08-08 | 2026-09-07 별도 폴더로 분리. 0.224 빌드가 대기 중(4.7절) |
+| `EKMAME` | EKMAME **0.224** | 2024-04-04 | 2026-09-07 분리 + 갱신. 지원 셋 8,740 -> 16,304 (4.7절) |
 | `PSXMAME` | MAME 0.139 계열 | 2026-09-05 | ⚠️ **`mame.exe` 에 1바이트 패치**(4.6절). 교체하면 사라진다 |
 | `SuperModel` | (0.3a-WIP · `revision.txt` 는 svn r757 까지) | 2018-11-28 | ⚠️ **개조 빌드다** — `revision.txt` 에 "sr2 music fix" 패치를 넣었다고 적혀 있다 |
 | `Demul` | | 2018-04-28 | `-run=<플랫폼> -rom=` 인자 체계 |
@@ -594,7 +594,7 @@ MAME 가 다시 써 낸 cfg 에 **실제로 매칭된 것만** 남는다.
   켤 수 있는 정상 자산이라 지우지 않는다.
 - `layouts/Mega-Display` — 어떤 display도 쓰지 않지만 AM 레이아웃 메뉴에서 선택 가능한 예비 테마다.
 - `emulators/PSXMAME/mame.exe` — **1바이트 패치가 들어가 있다**(4.6절). 새 빌드로 교체하면 시작 확인 창이 다시 뜬다.
-- `emulators/EKMAME/mame.ini` — **UTF-8 BOM 이 없으면 0.212 가 통째로 무시한다**(4.7절). 편집할 때 BOM 유지.
+- `emulators/EKMAME/mame.ini` — **UTF-8 BOM 이 없으면 EKMAME 이 통째로 무시한다**(4.7절). 편집할 때 BOM 유지.
   `writeconfig 0` 도 지우지 말 것 — 지우면 깨진 `plugin.ini` 를 스스로 써 놓고 다음 실행에서 멈춘다.
 
 > **미연결 자산을 정리한 이력** — 2026-09-03에 아래를 제거하고
