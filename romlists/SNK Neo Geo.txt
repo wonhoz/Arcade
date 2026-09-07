@@ -35,6 +35,7 @@ mslug3;메탈슬러그 3;MAME;0;2000;SNK;Action;2;0;Joystick (8-way);good;1;rast
 mslug4;메탈슬러그 4;MAME;0;2002;SNK Playmore;Action;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 mslug5;메탈슬러그 5;MAME;0;2003;SNK Playmore;Action;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;4;;;;
 mslugx;메탈슬러그 X;MAME;0;1999;SNK;Action;2;;;;;;neogeo;;;;;;;
+flipshok;배틀 플립 샷 (한글판);EKMAME;flipshot;1998;Visco;Action;2;270;Joystick (8-way),positional;good;1;raster;neogeo;0;0;3;;;;
 bstars;베이스볼 스타즈 프로페셔널;MAME;;1990;SNK;Sports;2;0;joystick (8-way);good;1;raster;neogeo;;;4;;;;
 bstars2;베이스볼 스타즈 2;MAME;0;1993;SNK;Sports;2;0;Joystick (8-way);good;1;raster;neogeo;0;0;2;;;;
 #viewpoin;뷰포인트;MAME;0;1992;Sammy;Shooting;1;0;Joystick (8-way);good;1;raster;neogeo;0;0;2;;;;

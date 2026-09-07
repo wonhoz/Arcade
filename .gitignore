@@ -18,6 +18,8 @@ emulators/Mame/artwork/
 emulators/Mame/artwork_/
 emulators/Mame/dats/history.dat
 emulators/Mame/dats/history.db
+emulators/Mame/data/history.db
+emulators/Mame/data/history.db-journal
 emulators/Mame/EKMAME64.exe
 emulators/Mame/flyer/
 emulators/Mame/hash/
