@@ -7,7 +7,7 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **46건** / 미해결 **2건**(13번 · **47번**) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
+**진행 현황** — 처리 **52건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
 42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일.
 **46~49번은 2026-09-06 전수 구동 점검(E)의 실패 106건을 파고들어 나온 것** —
@@ -1011,8 +1011,37 @@ desktop 쪽에도 파일이 있어 **각 장비의 기존 값이 유지**된다 
 > 창 클래스가 `#32770` 인 것이 있으면 새 상태 **`DIALOG`(실패)** 로 판정하고 상자 안 문구를 `Detail` 에 담게 했다.
 > 이 판정이 없었으면 이 문제도, 아래 47·48번의 검증도 불가능했다.
 
-### - [ ] 47. 롬 컬렉션이 0.212 시절 것이라 MAME 0.246 이 61개를 거부한다 — ⏳ **MAME·롬 갱신으로 처리 예정**
+### - [x] 47. 롬 컬렉션이 0.212 시절 것이라 MAME 0.246 이 61개를 거부한다 — **처리 완료 (2026-09-07)**
 
+**해결 (2026-09-07) — MAME 0.246 -> 0.289, 롬 컬렉션 통째 교체.**
+
+`mame0289b_x64.exe` 에서 `mame.exe` 를 꺼내 `mame64.exe` 로 앉히고, 2025-10-01 full split set(43,528 zip)에서
+romlists 가 참조하는 것만 **1,005개**로 추려 넣었다. 추린 기준은 romlist 항목(비활성 `#` 포함 906개) ->
+`mame.exe -listxml` 로 부모(`cloneof`) · BIOS(`romof`) · 디바이스 롬을 더 나오지 않을 때까지 따라간 폐포다.
+
+| 폴더 | 개수 | 내용 |
+|---|---|---|
+| `roms\Arcade` | 833 | `MAME`·`MAME Vertical` + 한국 정식 발매판 36개 |
+| `roms\Arcade Adult` | 56 | `MAME Adult` |
+| `roms\Bios` | 116 | 부모셋·BIOS·디바이스 롬 (의존성만) |
+| `roms\Arcade CHD` · `Arcade Zinc` | 13 · 31 | 기존 유지(zip 세트에 CHD 는 없다) |
+
+`mame64 -verifyroms` 전수: **good 774 / best available 102 / bad 10 / 실제 누락 0 · 체크섬 오류 0**.
+`best available` 102 개는 `NO GOOD DUMP KNOWN` 뿐이라 구동에 지장이 없고,
+`bad` 10 개는 **CHD 미보유**가 원인이다(zip 은 전부 갖췄다 — 51번).
+
+이 갱신으로 이 항목의 61개와, 별도로 못 돌던 것들이 함께 풀렸다. 부수적으로 처리한 것:
+
+- **한글 롬 36개를 `EKMAME` -> `MAME`/`MAME Vertical` 로 이관.** 본가에 정식 클론으로 등재된
+  한국 발매판이라 0.289 로 그대로 돈다(50번). `EKMAME Vertical` 정의는 참조 0 이 되어 삭제.
+- **셋 이름 4개 정정** — `acedrvrw`->`acedrive`, `raveracw`->`raverace`, `getstar`->`grdian`, `kof99nd`->`kof99ka`.
+  넷 다 0.246 에서도 이미 없던 이름이라 여태 실행되지 않고 있었다.
+- **`pcktgalk`** 는 본가에 없는 한글화 롬이라 `EKMAME Adult` 정의를 새로 만들어 옮겼다.
+- **`emulators/Mame/ui.ini` 에 `skip_warnings 1`** — 불완전 덤프 셋의 빨간 경고 화면을 넘긴다.
+  0.226+ 옵션이고, EKMAME 을 폴더째 분리해 `ui.ini` 를 공유하지 않게 되면서 넣을 수 있게 됐다.
+
+교체 전 상태는 저장소 밖 `D:\AttractMode emulators updates\backup-mame-0.246-20260907\` 에 있다
+(`roms` 12GB · `mame64.exe` 0.246 · `hash` · `mame.ini.0.246`).
 > **2026-09-06 되돌림.** 아래 "0.212 로 라우팅" 은 한 번 적용했다가(`8740d5b4`) 사용자 지시로 되돌렸다.
 > **MAME 본체와 롬 컬렉션을 최신으로 갱신해서 정면으로 풀기로 했고**, 그때까지 목록은 손대지 않는다.
 > 그래서 지금 `romlists` 는 이 문제에 대해 **아무 조치도 되어 있지 않은 상태**다 —
@@ -1094,6 +1123,187 @@ git 으로 따라오지 않으므로 [`../.+필독.txt`](../.+필독.txt) 3번�
 
 45번이 "미실측 (롬 불완전 / ACCESS VIOLATION)" 으로 남겨 뒀던 `sfex` 는 이것이 원인이었다.
 
+### - [x] 50. MAME 과 EKMAME 이 한 폴더를 공유해 서로를 망가뜨렸다 — **처리 완료 (2026-09-07)**
+
+`emulators/Mame` 하나에서 `mame64.exe`(0.246)와 `EKMAME64.exe`(0.212)가 `mame.ini`·`ui.ini`·`plugins`·`cfg`·`roms` 를
+전부 공유하고 있었다. 46·48번이 여기서 나왔고, `ui.ini` 에 `skip_warnings` 를 넣지 못한 이유도 이것이었다.
+
+**조치** — `emulators/EKMAME/` 로 분리했다(사용자 승인 2026-09-07).
+
+| | MAME | EKMAME |
+|---|---|---|
+| 실행파일 | `emulators\Mame\mame64.exe` 0.289 | `emulators\EKMAME\EKMAME64.exe` 0.212 |
+| 롬 | `roms\{Arcade, Arcade Adult, Bios, Arcade CHD, Arcade Zinc}` | `roms\Korean` (16개) |
+| 설정 | 자기 `mame.ini`·`ui.ini` | 자기 `mame.ini`·`ini\plugin.ini` |
+| 공유 | — | `artpath`·`samplepath`·`cheatpath` 를 `..\Mame\...` 로 참조. 부모셋도 `..\Mame\roms\{Arcade,Bios}` 에서 빌린다 |
+
+`-pluginspath plugins-none` 우회와 `emulators/Mame/plugins-none/` 폴더는 없앴다.
+`emulators/EKMAME.cfg` 는 새 경로로, `EKMAME Vertical.cfg` 는 참조 0 이라 삭제,
+`pcktgalk` 용 `EKMAME Adult.cfg` 를 새로 만들었다. `.gitignore`·`tools/reset-runtime.ps1` 도 새 경로를 반영했다.
+
+**여기서 알아낸 EKMAME 0.212 의 함정 셋** (전부 실측·재현 확인):
+
+1. **`mame.ini` 에 UTF-8 BOM 이 없으면 파일을 통째로 무시한다.** 오류도 경고도 없이 전부 기본값으로 돌아
+   `rompath` 가 `roms` 로 되돌아가고 롬을 못 찾는다. BOM 을 지웠다 되살리며 두 번 재현했다.
+2. **`rompath` 에 따옴표·공백 경로를 못 쓴다.** `"...;..\Mame\roms\Arcade Adult"` 도 조용히 무시된다.
+   그래서 `pcktgalk` 의 부모 `pcktgal.zip` 만 `EKMAME\roms\Korean\` 에 복사해 뒀다.
+3. **`writeconfig 0` 이 아니면 종료할 때 3바이트(BOM 만)짜리 `plugin.ini` 를 써 놓고,
+   다음 실행에서 그걸 읽다 `Error loading plugin.ini` 대화상자를 띄운다.**
+   1번 때문에 ini 가 무시되던 동안 실제로 이 일이 났고, 11개 전부가 대화상자에서 멈췄다.
+
+또 **`EKMAME64 -verifyroms` 는 결과를 stdout 이 아니라 메시지 박스로 낸다.** 자동 점검에 쓸 수 없다 —
+존재 확인은 `-listfull`, 구동 확인은 `test-roms.cmd`(대화상자를 `DIALOG` 로 잡는다)로 한다.
+
+분리 후 `test-roms.cmd -Launch -Emulator EKMAME*` 로 활성 11개 전부 **PASS** 확인했다.
+
+### - [x] 51. CHD 가 있어야 도는 셋 5개의 CHD 가 없다 — **처리 완료 (2026-09-07)**
+
+> **해결.** 사용자가 `cvsgd` · `darkhleg` · `ddr3mk` · `ddrextrm` · `jojo` 의 CHD 를 구해
+> `roms\Arcade CHD\<셋이름>\<파일>.chd` 로 넣었다. `verifyroms` 가 `good` / `best available` 로 바뀌었고
+> `jojo` · `darkhleg` 는 실제 구동도 확인했다. 남은 것은 `simpbowl` 하나뿐이다(54번).
+
+0.289 롬 갱신(47번)으로 zip 은 전부 갖췄지만, split zip 세트에는 CHD 가 들어 있지 않다.
+`mame64 -verifyroms` 가 `bad` 로 잡은 10개 중 5개는 기존 `roms\Arcade CHD` 에 있고 5개가 없다.
+
+| 셋 | 목록 | 필요한 CHD |
+|---|---|---|
+| `cvsgd` | MAME | `gdl-0004` (NAOMI GD-ROM) |
+| `darkhleg` | MAME | `706jaa02` (Konami System 573) |
+| `ddr3mk` | MAME (비활성) | `887kba02` (System 573) + `ge887kb.u1` 등 NEEDS REDUMP |
+| `ddrextrm` | MAME (비활성) | `c36jaa02` (System 573) |
+| `jojo` | Capcom | `cap-jjk-3` (CPS3) |
+
+보유 중이라 문제없는 것: `bmcompm2` · `bmfinal` · `kinst2` · `redearth` · `simpbowl`.
+CHD 만 있고 zip 이 없는 `raycris` · `shangtou` · `shikigam` · `zooo` 는 BIOS(`coh3002t`)가 `roms\Bios` 에 있어 정상이다.
+
+> **CHD 는 MAME 버전에 묶인다.** 0.289 용을 받아야 하고, `roms\Arcade CHD\<셋이름>\<파일>.chd` 구조로 넣는다.
+> 넣은 뒤 `mame64 -verifyroms <셋>` 으로 확인한다.
+### - [x] 52. EKMAME 0.224 갱신 · 한글화 패치 게임 확충 — **처리 완료 (2026-09-07)**
+
+**EKMAME 0.212 -> 0.224 (2024-04-04 빌드).** 지원 셋이 **8,740 -> 16,304** 로 늘었다.
+배포본 두 종을 비교해 고른 결과다.
+
+| | `_20230112` | `_20240404`(구 `_blog`) |
+|---|---|---|
+| EKMAME64.exe | 2023-01-16 | **2024-04-04** ← 채택 |
+| 등재 셋 | 16,303 | **16,304** (`dinocb` 하나 더) |
+| 동봉물 | `EKLauncher.exe` | `ekgui\`·`libdll\`(GUI·.NET) — AM 에는 불필요 |
+
+`EKMAME64.exe` 와 `dats\`(hash·plugins·language·ctrlr·folders·samples)만 가져왔다.
+0.224 는 기본값이 `writeconfig 0` 이고 정상적인 `plugin.ini` 를 자기 폴더에 만든다.
+
+**한글화 패치 롬 30종을 넣고 romlist 에 반영했다.** 사용자가 모아 둔 컬렉션에서 왔고,
+27개는 파일명이 0.224 셋 이름과 그대로 맞았다. 나머지 3개는 **부분 파일**이라 병합했다.
+
+| 파일 | 처리 |
+|---|---|
+| `tophuntrk-.zip` | `tophuntrk.zip` 로 개명 |
+| `kof99ndkt-partial.zip` | 기존 `kof99ndkt.zip` 에 병합(`251-s1`·`251-c3d`~`c8d` 등 7개 추가) |
+| `kof2kkt_257-s1.zip` | 기존 `kof2kkt.zip` 에 병합(`257-s1.bin`) |
+
+**배치 규칙 — 한글판은 부모 게임 바로 아래 줄에 둔다**(2026-09-07 사용자 지시).
+부모 행을 그대로 복사해 `Name`·`Title`·`Emulator`·`CloneOf` 만 바꾼다. 그래서 장르·연도·조작·회전이 부모와 자동으로 일치한다.
+세로 게임(`gunbirdkp`·`tophuntrk`)이 생겨 `EKMAME Vertical.cfg` 를 되살렸다(정의 36개).
+
+구동 점검 결과 **23개 중 22개 PASS**. EKMAME 계열 항목은 이렇게 늘었다.
+
+| 목록 | 추가된 한글판 |
+|---|---|
+| SNK Neo Geo | `aofkt` `neocup98kt` `kof94kt` `kof95kt` `kof96kt` `kof97kt` `kof97plskt` `kof98hkt` `kof99ndkt` `kof2kkt` `tophuntrk` |
+| MAME | `blkdrgonk` `ginganins01` `renjuk` `gunbirdkp` `tengaik` |
+| Capcom | `csclubk` `rockmank` `rckman2k` `sfzjk` `sfz2jk` `sfz2jr1k` |
+| MAME Adult | `pcktgalk` |
+
+### - [x] 53. 한글화 패치 롬 7종이 부모셋·복호화 롬이 없어 못 돌았다 — **처리 완료 (2026-09-07)**
+
+**해결 (2026-09-07)** — 사용자가 부모셋을 구해 왔다. 받은 파일을 `EKMAME64 -listroms` 의 CRC 목록과
+대조해 판정했고(EKMAME 은 `-verifyroms` 결과를 메시지 박스로만 내보내 자동 점검에 못 쓴다),
+**6종이 살아나 romlist 에 들어갔다.**
+
+| 한글판 | 쓴 부모셋 | 결과 |
+|---|---|---|
+| `puzzldpk` · `puzldprk` | `puzzledp.zip` | 부족 0 · PASS |
+| `sfzchk` | `sfzch.zip` | 부족 0 · PASS |
+| `wjammerk` | `wjammers.zip` | 부족 0 · PASS |
+| `wbmlkb` | `wbml.zip` (516,518 바이트) | 부족 0 · PASS |
+| `sfz2aljk` | `sfz2al.zip` | `szajk.03a` 체크섬 불일치(3b795a57 vs 3c545a2a) — **경고만 뜨고 구동은 된다**(실제 창으로 6초 만에 정상 종료 확인) |
+
+> `wbml` 후보 4개 중 **`wbml.zip`(516,518 바이트) 하나만** 요구 16개를 모두 채웠다. 나머지 3개는 1개씩 부족했다.
+> 파일명은 달라도 된다 — MAME 은 zip 안을 **해시로** 찾는다. 실제로 `flipshot.zip` 은 `.bin` 확장자였는데도 5개가 매칭됐다.
+
+**2차 보완 (2026-09-07) — 남아 있던 2종도 해결**
+
+| 대상 | 받은 파일 | 검증 | 조치 |
+|---|---|---|---|
+| `flipshok` | `247-p1.p1` | SHA1 `a985e033…` **정확히 일치** | `flipshot.zip` 의 잘못된 `247-p1.bin` 을 빼고 이것으로 교체 |
+| `kof2kkt` | `kof2knd.zip` | 필요한 5개가 CRC 로 전부 확인 | 요구 이름(`257-m1d.bin` · `257-c3d`~`c6d.bin`)으로 바꿔 `kof2kkt.zip` 에 병합 |
+
+`kof2knd.zip` 안의 이름은 `257-m1_decrypted.bin` · `kof2k_c3.rom` … 처럼 달랐지만 CRC 가 요구값과 일치했다.
+MAME 은 해시로 찾으므로 그대로도 됐겠지만, 나중에 헷갈리지 않도록 요구 이름으로 바꿔 넣었다.
+
+둘 다 `부족 0` 이 되었고 구동도 확인했다(`flipshok` PASS · `kof2kkt` PASS).
+`flipshok` 은 romlist(SNK Neo Geo, "배틀 플립 샷 (한글판)")에 새로 넣었다.
+
+**`sfz2aljk` 체크섬 경고도 해소했다.** 처음에는 `sfz2al` 부모셋 후보 4개를 대조했는데 넷 다
+`szajk.03a`(CRC `3c545a2a`)가 없었다 — **그 파일은 부모가 아니라 한글패치 zip 소속**이라
+부모를 바꿔서는 해결되지 않는 문제였다. `sfz2aljk.7z`(한글패치 쪽)를 받아 `sfz2aljk.zip` 에 덮어
+`szajk.03a` 를 `3b795a57` -> `3c545a2a` 로 바꾸니 부족 0 이 되고 `WRONG CHECKSUMS` 경고도 사라졌다.
+
+> **교훈**: 클론 셋이 파일 하나를 못 찾을 때 **그 파일이 부모 소속인지 클론 소속인지 먼저 가른다.**
+> `EKMAME64 -listroms <클론>` 은 부모 것까지 합쳐 보여주므로 어느 쪽인지 알 수 없다 —
+> 클론 zip 안에 같은 이름이 이미 있는데 CRC 만 다르면 **클론 쪽 빌드가 다른 것**이다.
+
+**1차에 남았던 내용 (기록용)**
+
+롬은 `emulators\EKMAME\roms\Korean\` 에 이미 넣어 뒀다.
+
+**(1) `kof2kkt` — KOF 2000 한글판. 복호화 롬 5개가 없다.**
+
+KOF2000 은 SMA/PCM2 로 암호화돼 있고, 본가 MAME 은 실행 중에 복호화하므로 별도 파일이 없다.
+EKMAME 계열은 **미리 복호화해 둔 덤프**(파일명 끝의 `d` = decrypted)를 그대로 요구한다.
+`kof2kkt.zip` 은 자기 몫 7개만 갖고 있고, 아래 5개가 어디에도 없다.
+
+```
+257-m1d.bin      262,144 바이트   CRC d404db70
+257-c3d.bin    8,388,608 바이트   CRC 087fb15b
+257-c4d.bin    8,388,608 바이트   CRC fe9dfde4
+257-c5d.bin    8,388,608 바이트   CRC 03ee4bf4
+257-c6d.bin    8,388,608 바이트   CRC 8599cc5b
+```
+
+> **`kof99ndkt-partial.zip` 과 똑같은 성격의 묶음이다.** 그 파일이 `251-c3d`~`c8d.bin` · `251-s1.bin` 을
+> 공급해 `kof99ndkt` 를 살렸듯이, `257-*d.bin` 을 담은 묶음 하나면 된다.
+> 0.224 에는 `kof2000d` 같은 복호화 전용 셋이 등재돼 있지 않으므로 **배포처의 별도 파일**로 구해야 한다
+> (`한글화패치롬` 폴더의 "[EKMAME 한글화패치롬] (kof99~2000)" 글이 같은 출처로 보인다).
+
+**(2) `flipshok` — Battle Flip Shot 한글판. 원본 프로그램 롬이 없다.**
+
+이 한글판은 그래픽만 바꾼 것이라(`247-c1k` · `247-c2k` 두 개뿐) 프로그램은 **원본 `flipshot` 의 것**을 쓴다.
+
+```
+247-p1.p1      1,048,576 바이트   CRC 95779094   SHA1 a985e033bc6f137fa65855d3eed245d66d5b244a
+```
+
+받은 `flipshot.zip` 의 p1 은 `d2e7a7e3`, `대규모 업로드` 쪽은 `5567aa9f` 라 **둘 다 다른 리비전**이다.
+나머지 5개(`c1` `c2` `m1` `s1` `v1`)는 받은 파일로 전부 맞는다 — **p1 하나만 있으면 된다.**
+romlist 에는 아직 넣지 않았다(넣으면 대화상자에서 멈춘다). 롬은 `roms\Korean\flipshot.zip` 에 넣어 뒀다.
+
+> ⚠️ `한글화패치게임 대규모 업로드`(FBA2012용 81개)의 `flipshot`·`puzzledp`·`sfzch`·`wjammers` 는
+> **원본이 아니라 한글 패치본**이다(`mame64 -verifyroms` 전부 `is bad`). 부모셋으로 쓸 수 없다.
+> EKMAME 이 요구하는 것은 **원본 부모셋**이다.
+
+### - [x] 54. `simpbowl` 의 CHD 가 0.289 판이 아니다 — **처리 완료 (2026-09-07)**
+
+> **해결.** 사용자가 `829uaa02.chd` 를 구해 왔고 SHA1 이 `2ec4cc608d5582e478ee047b60ccee67b52f060c` 로
+> 정확히 일치했다. `roms\Arcade CHD\simpbowl\` 의 옛 `simpbowl.chd` 를 이것으로 갈아 끼워
+> `verifyroms` 가 `is good` 이 되었고 구동도 확인했다. 이로써 **MAME 계열 607건이 전부 통과**한다.
+
+`roms\Arcade CHD\simpbowl\simpbowl.chd` 는 0.246 시절 것이다.
+0.289 는 이름과 해시가 다른 것을 요구한다 — `829uaa02` / SHA1 `2ec4cc608d5582e478ee047b60ccee67b52f060c`.
+전수 구동 점검(607건)에서 **유일한 실패**였다.
+
+같은 이유로 `redearth`(`cap-wzd-5` SHA1 불일치)와 `raycris`(SHA1 불일치)도 `verifyroms` 는 `is bad` 지만,
+**둘 다 실제로는 구동된다**(`redearth` PASS, `raycris` 는 비활성). 급하지 않다.
 ---
 
 ## 개선 제안

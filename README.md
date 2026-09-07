@@ -8,8 +8,8 @@ Attract-Mode 프론트엔드와 에뮬레이터, 게임 목록·아트웍 설정
 |---|---|
 | 프론트엔드 | Attract-Mode v2.7.0 (Windows / SFML 2.5.1) |
 | 디스플레이 | 21개 (MAME, Capcom, SNK Neo Geo, SEGA MODEL 2/3, NAOMI, Atomiswave, Taito Type X, TeknoParrot, Zinc, NESiCAxLive, PS1/PS2/PSP, N64, GameCube, Wii, Wii U, Saturn, Dreamcast, MAME Adult) |
-| 에뮬레이터 정의 | 35개 |
-| 게임 항목 | 활성 1,079개 (비활성 포함 1,683개) |
+| 에뮬레이터 정의 | 36개 |
+| 게임 항목 | 활성 1,098개 (비활성 포함 1,699개) |
 | UI 언어 | 한국어 |
 
 ## 문서
@@ -62,7 +62,8 @@ git checkout bartop        # 장비에 맞는 브랜치 선택 (아래 표 참�
 git에서 제외된 것들을 기존 설치본에서 복사합니다.
 
 ```
-emulators\Mame\mame64.exe          emulators\Mame\EKMAME64.exe
+emulators\Mame\mame64.exe          (MAME 0.289)
+emulators\EKMAME\EKMAME64.exe      (EKMAME 0.224 — 팬 한글화 롬 전용)
 emulators\Mame\hash\               emulators\Mame\artwork\
 emulators\RetroArch\cores\         emulators\RetroArch\system\
 ```
@@ -84,7 +85,8 @@ emulators\RetroArch\cores\         emulators\RetroArch\system\
 경로는 **executable이 있는 디렉터리 기준 상대경로**입니다.
 
 ```
-emulators\Mame\roms\{Arcade, Arcade Adult, Arcade CHD, Arcade Zinc, Bios, Korean}\
+emulators\Mame\roms\{Arcade, Arcade Adult, Arcade CHD, Arcade Zinc, Bios}\
+emulators\EKMAME\roms\Korean\                  팬 한글화 롬 (배포 세트에 없다 - 유일본)
 emulators\RetroArch\system\fbneo\patched\      NESiCAxLive 한글패치 롬
 emulators\Demul\{Roms, Disc Image}\            NAOMI / Atomiswave / Dreamcast
 emulators\M2\Roms\                             SEGA MODEL 2
