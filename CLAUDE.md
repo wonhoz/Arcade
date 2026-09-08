@@ -308,6 +308,7 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 대응은 두 가지를 같이 쓴다.
 
 1. `attract.bat` — `attract.exe --logfile "%~dp0last_run.log"` 로 로그를 되살린다.
+   여기서 `MEDNAFEN_HOME` 도 함께 걸어 준다(4.9절) — 직접 실행하면 Saturn 이 죽는다.
 2. `attract.cfg`의 `hide_console yes` — 콘솔 창을 숨긴다.
    이 설정은 소스에서 `#ifdef WINDOWS_CONSOLE` 안에 있어 **2.6.2에선 무시되던 값**이고,
    2.7.0에서 비로소 동작한다.
@@ -445,7 +446,7 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 | `Dolphin` | | 2019-01-06 | `-b -e` 인자와 `Sys/`·`User/` 구조 |
 | `Project64` | 3.0.1 | 2021-07-30 | `Config/`·`Save/` |
 | `Cemu` | | 2022-02-18 | ⚠️ 인자가 `-f -g "<롬>\code\<롬>.rpx"` 라 **롬 폴더 구조에 묶여 있다** |
-| `Mednafen` | 1.29.0 | 2022-01-18 | `firmware/` 의 BIOS 파일 이름이 고정이다 |
+| `Mednafen` | **1.32.1** | 2024-03-15 | 2026-09-08 갱신. ⚠️ 베이스 디렉터리가 저장소 밖을 본다 — 4.9절 |
 | `RetroArch` | | 2022-05-03 | `cores/` 는 gitignore. 코어와 본체의 ABI 가 맞아야 한다 |
 | `PPSSPP` | 1.13.1 | 2022-07-28 | |
 | `TeknoParrot` | 1.0.0.804 | 2022-08-01 | `UserProfiles/` 형식이 판마다 바뀐다 |
@@ -489,6 +490,37 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 > 나눈 뒤 **EKMAME 활성 11개를 전부 띄워 확인했다**(`test-roms.cmd -Launch -Emulator EKMAME*` → 11/11 PASS).
 > 경로가 하나만 어긋나도 `Unknown system` 대화상자로 끝나는데, 그것은 정적 점검에 안 잡힌다.
 
+
+### 4.9 Mednafen — ⚠️ 베이스 디렉터리가 저장소 밖을 가리킨다
+
+Mednafen 은 설정·BIOS·세이브를 **"베이스 디렉터리"** 아래에서 찾는다. 그 위치는
+`MEDNAFEN_HOME` → `HOME` 순으로 정해지고, 둘 다 없으면 **`%USERPROFILE%\.mednafen`** 이다.
+**명령행 옵션은 없다.** 환경변수뿐이다.
+
+그래서 아무 조치 없이 실행하면 저장소의 `emulators\Mednafen\mednafen.cfg` 와 `firmware\` 를
+**읽지 않는다.** Saturn 은 BIOS 를 못 찾아 대화상자를 띄우고 멈춘다.
+
+```
+Error opening file "C:\Users\admin\.mednafen\firmware\sega_101.bin": No such file or directory
+```
+
+`filesys.path_firmware` 같은 경로 설정도 베이스 디렉터리 기준이라 **소용이 없다** —
+그 설정이 들어 있는 `mednafen.cfg` 자체를 안 읽기 때문이다.
+
+**조치 (2026-09-08)** — `attract.bat` 이 환경변수를 걸고 시작한다. `attract.exe` 가 띄우는
+자식 프로세스가 그대로 물려받는다.
+
+```bat
+set "MEDNAFEN_HOME=%~dp0emulators\Mednafen"
+```
+
+`tools\test-roms.ps1` 도 같은 값을 걸어 준다 — 안 그러면 점검 결과가 실제 구동과 달라진다.
+
+> **`attract.exe` 를 직접 실행하면 이 변수가 없어 Saturn 이 다시 죽는다.** 4.5절이
+> `attract.bat` 으로 실행하라고 하는 이유가 하나 더 늘었다(로그·콘솔 창에 이어 세 번째).
+
+> 이 문제로 Saturn 8개가 **오랫동안 전부 실행 불가였다**(`docs/ISSUES.md` 56번).
+> `validate.ps1` 은 롬 파일 존재만 보므로 못 잡았고, 실제로 띄우는 `test-roms.cmd` 가 잡았다.
 
 ## 5. 자주 하는 작업 레시피
 

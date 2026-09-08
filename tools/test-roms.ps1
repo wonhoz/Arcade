@@ -750,6 +750,10 @@ foreach ($it in $items) {
     }
 
     # --- 구동 점검
+    #  attract.bat 이 걸어 주는 환경변수를 여기서도 같게 맞춘다.
+    #  MEDNAFEN_HOME 이 없으면 Mednafen 이 %USERPROFILE%\.mednafen 을 베이스로 삼아
+    #  저장소의 mednafen.cfg 와 firmware\ 를 못 찾는다 (CLAUDE.md 4.9절).
+    $env:MEDNAFEN_HOME = Join-Path $Root 'emulators\Mednafen'
     if ($Launch -and ($status -eq 'OK' -or $status -eq 'NOCHK')) {
         $base = [IO.Path]::GetFileNameWithoutExtension($exePath)
         $pre = @(Get-Process -Name $base -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)

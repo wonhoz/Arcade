@@ -7,7 +7,7 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **53건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
+**진행 현황** — 처리 **55건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
 42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일.
 **46~49번은 2026-09-06 전수 구동 점검(E)의 실패 106건을 파고들어 나온 것** —
@@ -1329,6 +1329,42 @@ romlist 에는 아직 넣지 않았다(넣으면 대화상자에서 멈춘다). 
 > 3. **바꾸기 전에 그 에뮬레이터의 romlist 항목을 전수 구동해 기준선을 잡는다.**
 > 4. 교체하고 손질을 다시 얹은 뒤 같은 점검을 돌려 **기준선과 대조한다.**
 > 5. 회귀가 있으면 되돌린다(`git checkout -- <경로>`).
+### - [x] 56. SEGA Saturn 8개가 전부 실행 불가였다 — Mednafen 베이스 디렉터리 — **처리 완료 (2026-09-08)**
+
+Mednafen 갱신 전 기준선을 잡으려고 Saturn 목록을 띄워 봤더니 **8개가 전부 `DIALOG`** 였다.
+
+```
+Error opening file "C:\Users\admin\.mednafen\firmware\sega_101.bin": No such file or directory
+```
+
+Mednafen 은 설정·BIOS·세이브를 **베이스 디렉터리** 아래에서 찾는데, 그 위치가
+`MEDNAFEN_HOME` → `HOME` → **`%USERPROFILE%\.mednafen`** 순으로 정해진다. 명령행 옵션은 없다.
+그래서 저장소의 `emulators\Mednafen\mednafen.cfg` 와 `firmware\` 를 **아예 읽지 않고 있었다** —
+Saturn BIOS 설정(`ss.bios_jp` 등)도 같이 무시됐다.
+
+**조치** — `attract.bat` 이 `MEDNAFEN_HOME` 을 걸고 시작한다. 자식 프로세스가 물려받는다.
+`tools\test-roms.ps1` 에도 같은 값을 넣었다(점검이 실제 구동과 달라지지 않도록).
+이 한 가지로 **0/8 → 8/8 PASS** 가 됐다.
+
+> **언제부터 깨져 있었는지** — `emulators/Mednafen/` 에 `mednafen.cfg`·`firmware`·`sav`·`mcs` 가
+> 갖춰져 있는 것으로 보아 예전 Mednafen 은 실행파일 폴더를 베이스로 삼았다.
+> 1.29.0 으로 올린 2022-01-18 이후로 계속 죽어 있었을 가능성이 높다.
+> `validate.ps1` 은 롬 파일 존재만 보므로 4년 넘게 못 잡았고, 실제로 띄우는 `test-roms.cmd` 가 잡았다.
+
+### - [x] 57. Mednafen 1.29.0 -> 1.32.1 — **처리 완료 (2026-09-08)**
+
+56번을 고쳐 기준선을 8/8 로 만든 뒤 갱신했다.
+
+| | 이전 | 이후 |
+|---|---|---|
+| 버전 | 1.29.0 (2022-01-12) | **1.32.1 (2024-03-15)** |
+| DLL | 10개 | 4개 (`SDL2` `libcharset-1` `libgcc_s_seh-1` `libiconv-2`) |
+
+`mednafen.exe` 의 import 를 확인해 **1.32.1 이 더 이상 쓰지 않는 DLL 6개**
+(`libFLAC-8` `libogg-0` `libsndfile-1` `libstdc++-6` `libvorbis-0` `libvorbisenc-2`)는 저장소 밖 백업으로 옮겼다.
+`firmware\` · `sav\` · `mcs\` · `mcm\` · `b\` · `mednafen.cfg` 는 그대로 두고 배포본에 있는 것만 덮었다.
+
+갱신 후 Saturn 8개 전수 구동 **8/8 PASS**. `Starting Mednafen 1.32.1` 로 버전도 확인했다.
 ---
 
 ## 개선 제안

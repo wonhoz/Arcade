@@ -87,6 +87,7 @@ $ConfigPaths = @(
     'emulators/Demul/padDemul.ini'
     'emulators/Demul/gpuDX11.ini'
     'emulators/PPSSPP/memstick/PSP/SYSTEM'      # PPSSPP 설정·입력
+    'emulators/Mednafen/mednafen.cfg'           # Mednafen 설정 (종료할 때마다 다시 쓴다)
 )
 
 # 세이브 — 되돌리면 게임 진행이 사라진다
@@ -96,6 +97,9 @@ $SavePaths = @(
     'emulators/Mame/diff'
     'emulators/Mame/sta'
     'emulators/EKMAME/nvram'
+    'emulators/Mednafen/sav'
+    'emulators/Mednafen/b'
+    'emulators/Mednafen/mcs'
     'emulators/PCSX2/memcards'
     'emulators/PCSX2/sstates'
     'emulators/ePSXe/memcards'
