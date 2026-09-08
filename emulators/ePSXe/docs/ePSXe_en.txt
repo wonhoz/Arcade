@@ -27,11 +27,11 @@ Index
         3.4.5. Configuring the input
         3.4.6. Choosing MemoryCards files
    3.5. Command line options
-   3.6. Emulator patches
-   3.7. Memory card support
-   3.8. Savestates.
-   3.9. Netplay plugins.
-   3.10. Cheat Codes.
+   3.6. Memory card support
+   3.7. Savestates.
+   3.8. Netplay plugins.
+   3.9. Cheat Codes.
+   3.10. Local netplay support
 4. Implemented features
 5. Compatibility in ePSXe
 6. Where can I get help with the emulator?
@@ -54,69 +54,32 @@ plugin system.
 1.  What's New?
 ****************************************************************************
 
-ePSXe v2.0.2, released on 04.14.2016
+ePSXe v2.0.18, released on 12.xx.2025
 
-- In the first place, this version includes some important changes to improve 
-  the accuracy, sadly it could breaks games, if you find that a broken game 
-  on this version please report to epsxepc@gmail.com
+- Updated the emulator core to version 2.0.18, including multiple fixes.
 
-- Multi-language support. Added French and Russian languages (Thanks to
-  Benjamin Sisko and paul_met). Other languages could be added in a future 
-  version.
+- Support for ISOs in CHD format.
 
-- Fixed a delay slot bug in the interpreter cpu mode. It should run again
-  some games broken on interpreter cpu mode on the v2.0. Fixed loading
-  savestates from the UI in interpreter mode.
+- Fixed a bug when reading the configuration that caused the emulator to 
+  close if the overlock value was not selected.
 
-- Improved CDROM timing accuracy,bugs and change disc problems. Improved the 
-  timing when seeking and reading cdrom sectors, fixed Tales of Destiny 2
-  changedisc and fixed Twins Story and Harukanaru Toki no Naka de - Banjou Yuugi.
+- Added support for DPI Awareness (enable it in Options), and fixed issues 
+  with high resolutions when it was not enabled.
 
-- Improved the GPU timing (when using the ePSXe GPUCORE). It fixes or improve 
-  some games as: Namco Vol 4, Soul Blade, Tunguska, Derby Stallion, 
-  Derby Stallion 99, NBA Live 99, Sangokushi Eiketsuden, Dukes of Hazzard,
-  Alice in Cyberland, Vampire Hunter D, Macross Digital Mission VF-X,
-  Monaco Grand Prix Racing, Power Dolls 2, Spots Goes To Hollywood ...
+- Improved reverb and volume management in SPUCORE, including fixes in: 
+  Ghost in the Shell, Dinocrisis 1 & 2, Wipeout, DW7, and DQ4.
 
-- Improved the GPUCORE. Fixed a bug while transfering data, improved screen
-  centering (Star Ocean 2, Jumping Flash 2, Hogs of War...), fixed some 
-  gargabe on the borders when changing the resolution, fixed a scrolling 
-  problem, fixed a screen ratio problem when changing from windowing to 
-  fullscreen on the fly, added vsync support, and added support to select the 
-  blitter as OpenGL2 or OpenGL1 (it should be compatible with some old 
-  videocards, but shader support is not supported in OpenGL1 mode).
+- Compatibility improvements: Starfighter Sanvein, Need for Speed III/IV, 
+  Kagero Deception II, Captain Commando, Valkyrie Profile, Street Scooters, 
+  Metal Gear Solid - Special Missions (changedisc), V-Rally 2 (JAP), and 
+  Samurai Shodown III.
 
-- Improved the openGL2 plugin. Fixes Xmen Mutant Academy 1 & 2, Nascar
-  Thunder 2002/2003/2004, Pro Pinball - Big Race Usa, Pro Pinball - TimeShock,
-  Pro Pinball Fantastic Journey and Worms Pinball (use framebuffer effects=0 
-  in the pinball games).
-
-- Changes in the SPUCORE. Implemented the SPU mute flag, it fixes some sound
-  glitches during the pause in the game: Car & Driver Presents - Grand Tour 
-  Racing 98.
-
-- Changes in the INPUTCORE. Now it has native supports for XInput devices, 
-  select Xinput when configurating the gamepad in the config dialog if you 
-  want use the XInput API. (mapping buttons is not required).
-
-- Fixed the external input plugins support when stopping and pressing continue.
-
-- Fixed the changedisc option when using external GPU plugins.
-
-- Added support to overclock the PSX CPU. You can select x1, x1.5, x2.0, x3.0
-  and x4.0. Be careful it could break compatibility.
+- Improved BIOS support for HLE: Groove Adventure Rave - Mikan no Hiseki, 
+  SimCity Japan.
 
 ******************************************************************************
 2.  What do you need to run EPSXE?
 ******************************************************************************
-
-Minimum system requirements:
-  800Mhz 32-bit CPU
-  256 MB of RAM
-  Fast graphic card
-  x16 CD-ROM
-  Windows XP SP3
-  DirectX 8 or OpenGL 1.0
 
 Recommended system configuration:
   Fast dual-core CPU
@@ -124,7 +87,7 @@ Recommended system configuration:
   OpenGL 2.0 + GLSL shaders video card
   Fast CD-ROM
   Windows Vista+
-  DirectX 8
+  DirectX 8+
 
 *****************************************************************************
 3. Usage
@@ -208,6 +171,10 @@ options:
  (*) Open Gamelist : Open a window to config a gamelist (or click on
      the letters "PSX" from the logo).
 
+ (*) Local Netplay: Open a window to select player1 or player, to play in local
+                net. It is required to have the same game in both devices, 
+                and the game have to be indexed in the gamelist.
+
  (*) Change Disc : Use this option to switch between discs/isos in 
      games with multiple CD-Roms.
 
@@ -238,7 +205,7 @@ options:
   (*) GTE Hacks - Widescreen : Enable widescreen hack (16:9). 
       Warning: it is a hack and some game could be glitches.
 
-  (*) GTE Hacks - Subpixel precission : enable subpixel precission when
+  (*) GTE Hacks - Subpixel precision : enable subpixel precision when
       increasing internal rendering resolution. It requires a GPU plugin
       supporting this feature.
 
@@ -425,7 +392,7 @@ epsxe [options] [psx-exe]
 
  (*) -gpuremovebb              : Enable to disable top/bottom black bars (gpu core)
 
- (*) -gteaccuracyhack <val>    : Enable subpixel precission (0-1)
+ (*) -gteaccuracyhack <val>    : Enable subpixel precision (0-1)
 
  (*) -inshader <val>           : Select internal shader (0-4 internal gpu core)
  
@@ -521,6 +488,36 @@ disabled by default).
 
 Other way to get cheat codes working is download PEC
 (http://pec.emucheater.com) for in game cheating.
+
+3.10. Local netplay support (experimental)
+
+From the version 2.0.5, ePSXe supports local netplay without using external
+plugins. This feature is compatible with the rest of ePSXe ports (MacOSX,
+Linux, Android ...). In order to play you need the same bios in both devices,
+and the same games in both devices. In order to find the game, this game have
+to be available in the gamelist feature in both devices. 
+
+How to use:
+
+Player1:
+
+1) File>Local netplay>Player1
+2) Select the game from the gamelist and press run
+3) You can see your local IP address in the console, it will be necessary in 
+   player2 to connect.
+4) Wait to the game to start.
+
+Player2:
+1) File>Local netplay>Player2
+2) Insert the local IP address from the player1
+3) Wait to the game to start
+
+When using this feature, it will use isolated memcards by game stored in the
+folder epsxe/memcards/net/ in the player1, and it will get synched in the
+same folder in the player2.
+
+It is possible to load savestates in the player1, and it will be sent by
+net to the player2.
 
 ******************************************************************************
 4.  Implemented features
@@ -665,6 +662,94 @@ A.  Frequently Asked Questions
 *****************************************************************************
 B. Changelog
 *****************************************************************************
+
+ePSXe v2.0.5, released on 06.23.2016
+
+- Updated the x86 recompiler to use the same recompiler than in the rest of
+  versions (Android, Linux x64, Mac ...). Now it should be easier to
+  fix problems in all versions.
+
+- Ported the local netplay from Android (Experimental). This version is
+  compatible using local netplay with the rest of ePSXe versions from the
+  version 2.0.5 (MacOSX, Linux x86, Linux x64 and Android - version 2.0.6).
+  (Additional info the epsxe docs)
+
+- Ported the GPUCORE threading mode from the Android version. The PC CPUs
+  are faster than Android CPUs, so it will improve less FPS. (This
+  option is better when the CPU is slower).
+
+- Added new threading modes to the Pete OpenGL2 Core Plugin. It includes
+  a basic 2-thread mode, and 2 extra modes adding soft/hardware effects.
+  (It could improve some effects, for example the burning photo on the
+  start of Castlevania)
+
+- In the INPUTCORE plugin, swapped the vibration actuators when using the
+  Xinput mode (to match to real PSX Left/Right). Besides when using a
+  gamepad in digital mode, now you can use the left stick as the dpad.
+
+- Fixed the >2GB PBP roms support. Now it should be able to run the PSX2PSP
+  isos bigger than 2GB as Final Fantasy VIII PSP pack.
+
+- Fixed the cheat codes support when running on the interpreter mode.
+
+- Added a new option in the cheat codes window to download cheat codes from
+  the ePSXe version (Thanks to psxdatacenter.com)
+
+- Fixes to the core which made more games playable or better working.
+     - WING COMMANDER IV
+     - MONKEY HERO
+
+ePSXe v2.0.2, released on 04.14.2016
+
+- In the first place, this version includes some important changes to improve
+  the accuracy, sadly it could breaks games, if you find that a broken game
+  on this version please report to epsxepc@gmail.com
+
+- Multi-language support. Added French and Russian languages (Thanks to
+  Benjamin Sisko and paul_met). Other languages could be added in a future
+  version.
+
+- Fixed a delay slot bug in the interpreter cpu mode. It should run again
+  some games broken on interpreter cpu mode on the v2.0. Fixed loading
+  savestates from the UI in interpreter mode.
+
+- Improved CDROM timing accuracy,bugs and change disc problems. Improved the
+  timing when seeking and reading cdrom sectors, fixed Tales of Destiny 2
+  changedisc and fixed Twins Story and Harukanaru Toki no Naka de - Banjou Yuugi.
+
+- Improved the GPU timing (when using the ePSXe GPUCORE). It fixes or improve
+  some games as: Namco Vol 4, Soul Blade, Tunguska, Derby Stallion,
+  Derby Stallion 99, NBA Live 99, Sangokushi Eiketsuden, Dukes of Hazzard,
+  Alice in Cyberland, Vampire Hunter D, Macross Digital Mission VF-X,
+  Monaco Grand Prix Racing, Power Dolls 2, Spots Goes To Hollywood ...
+
+- Improved the GPUCORE. Fixed a bug while transfering data, improved screen
+  centering (Star Ocean 2, Jumping Flash 2, Hogs of War...), fixed some
+  gargabe on the borders when changing the resolution, fixed a scrolling
+  problem, fixed a screen ratio problem when changing from windowing to
+  fullscreen on the fly, added vsync support, and added support to select the
+  blitter as OpenGL2 or OpenGL1 (it should be compatible with some old
+  videocards, but shader support is not supported in OpenGL1 mode).
+
+- Improved the openGL2 plugin. Fixes Xmen Mutant Academy 1 & 2, Nascar
+  Thunder 2002/2003/2004, Pro Pinball - Big Race Usa, Pro Pinball - TimeShock,
+  Pro Pinball Fantastic Journey and Worms Pinball (use framebuffer effects=0
+  in the pinball games).
+
+- Changes in the SPUCORE. Implemented the SPU mute flag, it fixes some sound
+  glitches during the pause in the game: Car & Driver Presents - Grand Tour
+  Racing 98.
+
+- Changes in the INPUTCORE. Now it has native supports for XInput devices,
+  select Xinput when configurating the gamepad in the config dialog if you
+  want use the XInput API. (mapping buttons is not required).
+
+- Fixed the external input plugins support when stopping and pressing continue.
+
+- Fixed the changedisc option when using external GPU plugins.
+
+- Added support to overclock the PSX CPU. You can select x1, x1.5, x2.0, x3.0
+  and x4.0. Be careful it could break compatibility.
 
 ePSXe v2.0, released on 02.17.2016
 
