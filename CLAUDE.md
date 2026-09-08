@@ -118,6 +118,51 @@ git branch Compact archive/Compact           # 되살리기
   >
   > 이렇게 하면 `mame.exe` 패치·`MAME Adult.cfg`·문서·즐겨찾기 같은 **장비 무관 변경만** 전파된다.
   > 2026-09-05에 5개 장비 브랜치 전부 이 방식으로 처리했다(`docs/ISSUES.md` 45번).
+
+  > ⚠️ **장비 전용 경로는 `PSXMAME/cfg` 하나가 아니다 — 2026-09-08 전수 실측.**
+  > 전파 전에 **"이번 배치가 건드리는 파일" ∩ "장비마다 값이 다른 파일"** 을 먼저 구한다.
+  >
+  > ```bash
+  > #  장비마다 값이 다른 경로 찾기
+  > for p in <검사할 경로들>; do
+  >   for b in bartop desktop desktop-ASUS-TUF desktop-MSI-Sword desktop-MSI-Sword-DriveWheel; do
+  >     echo "$p $b $(git diff --name-only origin/main origin/$b -- "$p" | wc -l)"
+  >   done
+  > done
+  > ```
+  >
+  > | 경로 | 성격 | 장비마다 다른가 |
+  > |---|---|---|
+  > | `emulators/TeknoParrot/UserProfiles/` | **게임 exe 절대경로** | **★ 설치 루트가 장비마다 다르다** |
+  > | `emulators/PSXMAME/cfg/` | 게임별 버튼 배열 | ★ (45번) |
+  > | `emulators/Mame/cfg/` | 게임별 입력·딥스위치 | ★ 4개 브랜치 8개씩 |
+  > | `emulators/M2/CFG/` | MODEL2 입력 | ★ 4개 브랜치 8~9개씩 |
+  > | `emulators/PCSX2/inis/LilyPad.ini` | PS2 패널 매핑 | ★ bartop 106 / desktop·Wheel 24 / MSI 는 XInput |
+  > | `emulators/Project64/Config/NRage.ini` | N64 입력 | ★ 4개 브랜치 |
+  > | `emulators/Cemu/portable/controllerProfiles/*.txt` | Wii U 패드 | ★ 4개 브랜치 |
+  > | `emulators/Demul/padDemul.ini` | 드림캐스트·NAOMI 입력 | ★ 4개 브랜치 |
+  > | `attract.cfg` | 해상도·입력맵 | ★ bartop |
+  >
+  > **설치 루트가 장비마다 다르다** — `<GamePath>` 같은 절대경로를 전파하면 그 장비가 통째로 죽는다.
+  >
+  > | 브랜치 | 설치 경로 |
+  > |---|---|
+  > | `develop` · `bartop` | `D:\AttractMode` |
+  > | `desktop-ASUS-TUF` | `D:\Git\AttractMode` |
+  > | `desktop-MSI-Sword` · `desktop-MSI-Sword-DriveWheel` | `C:\Git\AttractMode` |
+  > | `desktop` | (옛 경로 `D:\attract-v2.6.2-win64` 가 남아 있었다) |
+  >
+  > **처리 원칙** — 이번 배치가 건드리는 장비 전용 파일은 병합 뒤 `PRE` 로 되돌린다(위 PSXMAME 방식).
+  > 건드리지 않는 것은 git 이 알아서 유지하므로 손대지 않는다.
+  >
+  > **파일이 바뀌지 않아도 동작이 바뀔 수 있다.** 2026-09-08 전파에서 셋이 그랬다.
+  > - Project64 가 입력 플러그인을 **N-Rage -> 자체 플러그인**으로 바꿔 `NRage.ini` 가 안 쓰이게 됐다.
+  > - Dolphin 이 `portable.txt` 로 **`내 문서\Dolphin Emulator` 대신 `User\`** 를 보게 돼,
+  >   장비에 있던 컨트롤러 매핑이 저장소의 작업 PC 설정으로 대체된다.
+  > - Cemu 2.6 은 프로필을 `.xml` 로 읽는다. 다행히 **`.txt` 를 바이트 동일하게 자동 이관**하므로
+  >   장비의 `.txt` 만 남겨 두면 된다(실측 확인). 작업 PC 의 `.xml` 은 장비 브랜치에서 빼야 한다.
+  >
+  > 이런 것은 `.+필독.txt` 7절에 장비에서 할 일로 적는다.
 - `main`↔`bartop` 실제 차이(113개 파일): `layouts/NEVATO/*`(캐비닛 아트/vewlix 레이아웃),
   `layouts/Console Box/*`, `layouts/Mega-Display Advanced/{layout.nut, scripts/*}`,
   `scraper/@/overview/*`, 각 에뮬레이터의 입력·화면 설정(`emulators/*/`), `intro/*`.
