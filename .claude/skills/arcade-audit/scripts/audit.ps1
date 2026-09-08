@@ -377,6 +377,14 @@ if (Want 'cfg') {
     }
     if ($diffs -eq 0) { "OK     $($groups.Count) sibling groups consistent" }
 
+    Hdr "cfg: MAME input tokens that are device/locale specific (0.289 drops DPAD*/HATSWITCH*/POV*/non-ASCII with 'Dropping invalid input token')"
+    $tokBad = 0
+    foreach ($f in @(Get-ChildItem -LiteralPath "$Root\emulators\Mame\cfg", "$Root\emulators\EKMAME\cfg" -Filter *.cfg -ErrorAction SilentlyContinue)) {
+        $m = @(Select-String -LiteralPath $f.FullName -Pattern 'JOYCODE_\d+_(DPAD|HATSWITCH|POV)[A-Z]*|JOYCODE_\d+_[^\x00-\x7F][^ <]*' -AllMatches | ForEach-Object { $_.Matches } | ForEach-Object { $_.Value } | Sort-Object -Unique)
+        if ($m.Count) { "ISSUE  invalid/locale token  $(Rel $f.FullName): " + ($m -join ' '); $tokBad++ }
+    }
+    if ($tokBad -eq 0) { "OK     no device/locale-specific JOYCODE tokens in Mame/EKMAME cfg" }
+
     Hdr "cfg: layout_config toggles that decide which artwork labels are actually drawn"
     foreach ($k in $layoutCfg.Keys) { foreach ($key in @('select_character', 'boximage_type', 'spinwheelArt', 'bg_art', 'cabScreenType', 'marquee_type', 'enable_flyer', 'bg_media')) { if ($layoutCfg[$k].ContainsKey($key)) { "INFO   $k.$key = $($layoutCfg[$k][$key])" } } }
 }
@@ -485,6 +493,13 @@ if (Want 'junk') {
     Hdr "junk: runtime outputs that are tracked (reset-runtime.ps1 must skip them every run)"
     foreach ($p in @('emulators/Mame/cheat/output.json', 'emulators/Mame/cheat/output.xml', 'last_run.log', 'script.nv')) { if (git ls-files -- $p) { "ISSUE  tracked runtime output  $p" } }
     if (-not (Select-String -LiteralPath "$Root\.gitignore" -Pattern '^stats/?\s*$' -Quiet)) { "INFO   stats/ not in .gitignore (play statistics show up as untracked files)" }
+
+    Hdr "junk: tracked files that also match .gitignore (committed before the rule existed - the rule does nothing for them)"
+    $ign = @(git ls-files -i -c --exclude-standard)
+    if ($ign.Count) {
+        $dirs = @($ign | ForEach-Object { (($_ -split '/') | Select-Object -First 3) -join '/' } | Sort-Object -Unique)
+        "ISSUE  $($ign.Count) tracked files match .gitignore: " + ($dirs -join ', ') + "   (fix: git rm -r --cached <dir>)"
+    } else { "OK     no tracked file matches .gitignore" }
 }
 ""
 "done."
