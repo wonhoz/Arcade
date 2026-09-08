@@ -309,8 +309,19 @@ function Expand-AmArgs([string]$Template, [string]$RomName, [string]$Title, [str
 # 실행 중인 에뮬레이터를 안전하게 끝낸다. 반환값은 "강제 종료했는가".
 #   MAME 계열을 강제 종료하면 cfg\default.cfg 가 0바이트로 잘린다(CLAUDE.md 5.5절).
 #   그래서 ESC -> 창 닫기 -> 강제 종료 순으로 올라간다.
-function Stop-Emulator($Proc, [string]$ExePath, $Preexisting) {
+# 이번 실행으로 새로 생긴, emulators\ 아래 실행파일의 프로세스. 런처형 정의가 띄운 게임이 여기 잡힌다.
+#   Root 전체가 아니라 emulators\ 아래로 한정한다 — 점검 중 우연히 뜬 다른 프로그램을 잡지 않기 위해.
+function Get-NewEmuProcs($PreIds, [int]$MainId) {
+    $emuRoot = (Join-Path $Root 'emulators').TrimEnd('\') + '\'
+    @(Get-Process | Where-Object { $_.Id -ne $MainId -and $PreIds -notcontains $_.Id } | Where-Object {
+        $p = $null; try { $p = $_.Path } catch {}
+        $p -and $p.StartsWith($emuRoot, [StringComparison]::OrdinalIgnoreCase)
+    })
+}
+
+function Stop-Emulator($Proc, [string]$ExePath, $Preexisting, $Kids) {
     $killed = $false
+    $ids = @($Proc.Id) + @($Kids | ForEach-Object { $_.Id })
     # 로딩 중인 MAME 는 ESC 를 씹는다. 한 번 보내고 마는 대신 로딩이 끝날 때까지 몇 번 더 보낸다.
     if (-not $Proc.HasExited) {
         $wsh = $null
@@ -320,10 +331,11 @@ function Stop-Emulator($Proc, [string]$ExePath, $Preexisting) {
             if ($Proc.HasExited) { break }
             # AppActivate 는 이미 포그라운드인 창에도 False 를 돌려준다(PSXMAME 로 실측).
             # 그래서 반환값이 아니라 포그라운드 PID 로 판단한다.
+            # 런처형은 게임 프로세스가 포그라운드다. 그쪽에 ESC 를 보내야 게임이 끝난다.
             try { if ($wsh) { [void]$wsh.AppActivate($Proc.Id) } } catch {}
             Start-Sleep -Milliseconds 350
             $Proc.Refresh()
-            if (-not $Proc.HasExited -and [AmInput]::ForegroundPid() -eq $Proc.Id) {
+            if (-not $Proc.HasExited -and $ids -contains [AmInput]::ForegroundPid()) {
                 [AmInput]::SendEsc()
             }
             $w = [Diagnostics.Stopwatch]::StartNew()
@@ -348,6 +360,11 @@ function Stop-Emulator($Proc, [string]$ExePath, $Preexisting) {
         if ($Preexisting -notcontains $p.Id) {
             try { & taskkill.exe /PID $p.Id /T /F 2>&1 | Out-Null; $killed = $true } catch {}
         }
+    }
+    # 런처가 띄운 게임 프로세스(emulators\ 아래, 이번에 새로 생긴 것). ESC 로 안 끝났으면 여기서 끝낸다 —
+    # 남겨 두면 TeknoParrot 이 다음 항목에서 "already running" 을 띄운다. 이건 강제 종료로 세지 않는다.
+    foreach ($k in @($Kids)) {
+        try { $k.Refresh(); if (-not $k.HasExited) { & taskkill.exe /PID $k.Id /T /F 2>&1 | Out-Null } } catch {}
     }
     return $killed
 }
@@ -711,6 +728,11 @@ if ($Launch -and -not $Force) {
     if ($ans -ne 'y' -and $ans -ne 'Y') { Write-Host "취소했습니다."; exit 0 }
 }
 
+# attract.bat 이 걸어 주는 환경변수를 여기서도 같게 맞춘다.
+# MEDNAFEN_HOME 이 없으면 Mednafen 이 %USERPROFILE%\.mednafen 을 베이스로 삼아
+# 저장소의 mednafen.cfg 와 firmware\ 를 못 찾는다 (CLAUDE.md 4.9절).
+$env:MEDNAFEN_HOME = Join-Path $Root 'emulators\Mednafen'
+
 # MAME 계열 cfg\default.cfg 는 강제 종료 시 0바이트로 잘린다. 실행 전 크기를 기억해 둔다.
 $guardFiles = @{}
 if ($Launch) {
@@ -750,13 +772,11 @@ foreach ($it in $items) {
     }
 
     # --- 구동 점검
-    #  attract.bat 이 걸어 주는 환경변수를 여기서도 같게 맞춘다.
-    #  MEDNAFEN_HOME 이 없으면 Mednafen 이 %USERPROFILE%\.mednafen 을 베이스로 삼아
-    #  저장소의 mednafen.cfg 와 firmware\ 를 못 찾는다 (CLAUDE.md 4.9절).
-    $env:MEDNAFEN_HOME = Join-Path $Root 'emulators\Mednafen'
     if ($Launch -and ($status -eq 'OK' -or $status -eq 'NOCHK')) {
         $base = [IO.Path]::GetFileNameWithoutExtension($exePath)
         $pre = @(Get-Process -Name $base -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
+        # 런처형 정의는 게임을 다른 프로세스로 띄운다. 그것을 알아보려면 실행 전 전체 PID 가 필요하다.
+        $preAll = @(Get-Process | Select-Object -ExpandProperty Id)
         $sw = [Diagnostics.Stopwatch]::StartNew()
         $proc = $null
         try {
@@ -779,19 +799,31 @@ foreach ($it in $items) {
             } else {
                 # 살아 있다고 기동한 것이 아니다. 오류 대화상자를 띄운 채 서 있으면
                 # 프로세스는 멀쩡하지만 게임은 시작되지 않았다. 대화상자를 먼저 본다.
-                $dlg = $null; $hasWin = $false
+                $dlg = $null; $hasWin = $false; $childNote = ''
                 try { $dlg = [AmInput]::DialogText($proc.Id) } catch {}
                 try { $hasWin = [AmInput]::HasRealWindow($proc.Id) } catch {}
                 if (-not $hasWin) {
                     try { $hasWin = ($proc.MainWindowHandle -ne [IntPtr]::Zero) } catch {}
                 }
+                # 런처형(TeknoParrotUi · cmd /c)은 게임을 다른 프로세스로 띄운다. 그 프로세스의 창도 본다 —
+                # 안 그러면 런처는 창이 없으니 NOWIN 이고, 게임 프로세스는 남아서 다음 항목이
+                # "already running" 으로 막힌다(ISSUES 68번).
+                $kids = @(Get-NewEmuProcs $preAll $proc.Id)
+                if (-not $dlg) {
+                    foreach ($k in $kids) { try { $dlg = [AmInput]::DialogText($k.Id) } catch {}; if ($dlg) { break } }
+                }
+                if (-not $hasWin) {
+                    foreach ($k in $kids) {
+                        try { if ([AmInput]::HasRealWindow($k.Id)) { $hasWin = $true; $childNote = "런처가 띄운 $($k.ProcessName)"; break } } catch {}
+                    }
+                }
                 if ($dlg) {
                     $status = 'DIALOG'
                     $detail = '오류 대화상자: ' + ($dlg -replace '\s+', ' ')
                 }
-                elseif ($hasWin) { $status = 'PASS'; $detail = '' }
+                elseif ($hasWin) { $status = 'PASS'; $detail = $childNote }
                 else { $status = 'NOWIN'; $detail = '살아 있으나 창을 찾지 못함(런처가 다른 프로세스를 띄웠을 수 있음)' }
-                if (Stop-Emulator $proc $exePath $pre) {
+                if (Stop-Emulator $proc $exePath $pre $kids) {
                     $detail = ($detail + ' ESC 로 안 끝나 강제 종료함').Trim()
                 }
             }
