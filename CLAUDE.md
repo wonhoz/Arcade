@@ -442,7 +442,7 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 | `Demul` | | 2018-04-28 | `-run=<플랫폼> -rom=` 인자 체계 |
 | `M2` | | 2018-10-14 | 인자가 `[name]` 하나뿐이라 갱신 여파가 작다 |
 | `PCSX2` | | 2020-05-07 | ⚠️ **최신판은 CLI 가 다르다.** 지금 쓰는 `--nogui --portable` 이 그대로 있는지 먼저 확인 |
-| `ePSXe` | | 2018-11-14 | `-loadmemc0 "memcards\epsxe000.mcr"` 가 메모리카드를 직접 가리킨다 |
+| `ePSXe` | **2.0.18** | 2025-12 | 2026-09-08 갱신(2.0.0 → 2.0.18). `-loadmemc0 "memcards\epsxe000.mcr"` 가 메모리카드를 직접 가리킨다 |
 | `Dolphin` | | 2019-01-06 | `-b -e` 인자와 `Sys/`·`User/` 구조 |
 | `Project64` | 3.0.1 (**2023-10-13 빌드**) | 2023-10-13 | 2026-09-08 갱신. 버전 문자열은 그대로라 **PE 빌드 타임스탬프로 구분**한다. `Config/`·`Save/` |
 | `Cemu` | | 2022-02-18 | ⚠️ 인자가 `-f -g "<롬>\code\<롬>.rpx"` 라 **롬 폴더 구조에 묶여 있다** |
