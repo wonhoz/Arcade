@@ -1,12 +1,15 @@
 ﻿================================================================================
-  각 장비에서 반드시 해야 할 것                              최종 2026-09-07
+  각 장비에서 반드시 해야 할 것                              최종 2026-09-08
 ================================================================================
 
   git 으로 따라오지 않는 것만 적었다. git pull 만으로는 끝나지 않는다.
-  1 ~ 4번을 안 하면 프론트엔드나 게임이 제대로 동작하지 않는다.
+  1 ~ 6번을 안 하면 프론트엔드나 게임이 제대로 동작하지 않는다.
+  7번은 장비마다 값이 달라야 하는 설정들이다 - 이번 갱신에서 위치가 바뀐 것이 있다.
 
   이번 갱신은 규모가 크다. MAME 을 0.246 -> 0.289 로, EKMAME 을 0.212 -> 0.224 로 올렸고
   롬 컬렉션을 통째로 갈았다. EKMAME 은 emulators\EKMAME\ 로 분리됐다.
+  이어서 에뮬레이터 11종을 최신으로 올렸다 - Mednafen PPSSPP Project64 ePSXe Dolphin
+  SuperModel RetroArch Cemu 갱신, PSXMAME 교체, Demul TeknoParrot PCSX2 는 현행 유지.
 
 
 --------------------------------------------------------------------------------
@@ -102,14 +105,26 @@
 
 
 --------------------------------------------------------------------------------
-  4.  Cemu 롬 폴더 이름 바꾸기
+  4.  Cemu 롬 폴더·파일 이름 맞추기            ★ 폴더만 바꾸면 안 된다
 --------------------------------------------------------------------------------
+
+  Cemu 는  <이름>\code\<이름>.rpx  구조를 요구한다.
+  폴더 이름과 .rpx 파일 이름이 같아야 한다.
 
       emulators\Cemu\Roms\Tekken
           ->  emulators\Cemu\Roms\Tekken Tag Tournament 2
 
-  롬 폴더는 git 추적 대상이 아니라 따라오지 않는다.
-  안 바꾸면 "철권 태그 토너먼트 2" 가 실행되지 않는다.
+      그 안의  code\Tekken.rpx
+          ->  code\Tekken Tag Tournament 2.rpx        ★ 이것도 같이
+
+      OPU3 는 data\ 가 한 겹 더 있으면 걷어낸다
+          OPU3\data\{code,content,meta}  ->  OPU3\{code,content,meta}
+
+  롬은 git 추적 대상이 아니라 따라오지 않으므로 각 장비에서 직접 해야 한다.
+  안 맞추면 Cemu 가 "Unknown file type" 오류를 내고 게임이 실행되지 않는다.
+
+  ※ 예전 안내는 폴더만 바꾸라고 되어 있어서 .rpx 가 그대로 남아 있었다.
+    그 때문에 Wii U 4개가 오랫동안 전부 실행 불가였다 (docs\ISSUES.md 66번).
 
 
 --------------------------------------------------------------------------------
@@ -132,8 +147,83 @@
   desktop 계열 4대는 원래 sfex 계열 cfg 를 갖고 있지 않다.
 
 
+
 --------------------------------------------------------------------------------
-  6.  확인
+  6.  Visual C++ 재배포 패키지 설치            ★ Dolphin 이 이것 없이는 안 뜬다
+--------------------------------------------------------------------------------
+
+  Dolphin 5.0-12188 은 MSVC 14.44 런타임을 요구한다.
+  없으면 게임을 고르는 즉시 아무 메시지 없이 죽는다 (종료 코드 0xC0000005).
+
+      https://aka.ms/vs/17/release/vc_redist.x64.exe
+
+  받아서 실행하고 "다음 - 설치" 만 누르면 된다.
+
+  ※ 설치할 때만 관리자 권한이 필요하다. 설치되면 시스템 폴더에 DLL 이 들어가고
+    그 뒤로는 일반 권한으로 도는 프로그램이 그냥 쓴다.
+    Attract-Mode 를 관리자로 실행할 필요는 없다. 부팅 자동 실행에도 영향 없다.
+
+  설치됐는지는 이렇게 확인한다 (14.44 이상이면 된다).
+
+      powershell -Command "(Get-Item $env:WINDIR\System32\vcruntime140.dll).VersionInfo.FileVersion"
+
+--------------------------------------------------------------------------------
+  7.  장비마다 확인할 것            ★ 이번 갱신에서 설정 위치가 바뀐 것들
+--------------------------------------------------------------------------------
+
+  아래 넷은 장비마다 값이 달라야 하는 것들이다. 전파할 때 이 장비의 값을
+  유지하도록 처리했지만, 실제로 그런지는 한 번 확인하는 편이 좋다.
+
+  (1) Dolphin  -  설정 위치가 바뀌었다              ★ 확인 필요
+
+      전       내 문서\Dolphin Emulator\        (git 밖. 장비마다 따로 있었다)
+      후       emulators\Dolphin\User\          (git 안. portable.txt 가 이렇게 만든다)
+
+      저장소가 들고 있는 User\Config\ 는 작업 PC 에서 잡은 설정이다.
+      이 장비에서 쓰던 컨트롤러 매핑이 따로 있었다면 옮기거나 다시 잡아야 한다.
+
+          copy "%USERPROFILE%\Documents\Dolphin Emulator\Config\GCPadNew.ini"   emulators\Dolphin\User\Config\
+          copy "%USERPROFILE%\Documents\Dolphin Emulator\Config\WiimoteNew.ini" emulators\Dolphin\User\Config\
+
+      옛 폴더는 지우지 않았으니 언제든 꺼내 쓸 수 있다.
+      portable.txt 를 지우면 안 된다. 지우면 다시 내 문서\ 를 보게 된다.
+
+  (2) Project64  -  입력 플러그인이 바뀌었다        ★ 확인 필요
+
+      N-Rage  ->  Project64 자체 입력 플러그인 으로 바뀌었다.
+      그래서 이 장비의 Config\NRage.ini 매핑이 더 이상 쓰이지 않는다.
+
+      N64 게임을 하나 띄워 조작을 확인하고, 예전 감이 낫다면
+      Project64 설정 - 플러그인 에서 N-Rage 로 되돌린다. NRage.ini 는 그대로 남아 있다.
+
+  (3) Cemu  -  설정 위치가 바뀌었다 (조작은 유지된다)
+
+      emulators\Cemu\portable\ 아래에서 읽는다. 이 폴더가 없으면 %APPDATA% 를 본다.
+      컨트롤러 프로필(controllerProfiles\*.txt)은 이 장비 것이 그대로 유지된다.
+      Cemu 2.6 이 첫 실행 때 .txt 를 읽어 .xml 로 자동 이관한다 - 손댈 것 없다.
+
+  (4) TeknoParrot  -  <GamePath> 가 절대경로다
+
+      UserProfiles\*.xml 32개가 게임 exe 를 절대경로로 가리킨다.
+      장비마다 설치 위치가 달라서 전파할 때 이 장비 값을 그대로 두었다.
+
+          bartop                        D:\AttractMode
+          desktop-ASUS-TUF              D:\Git\AttractMode
+          desktop-MSI-Sword             C:\Git\AttractMode
+          desktop-MSI-Sword-DriveWheel  C:\Git\AttractMode
+          desktop                       ※ 옛 경로가 남아 있어 D:\AttractMode 로 맞췄다.
+                                          이 장비의 실제 설치 경로가 다르면 아래로 고친다.
+
+      경로를 통째로 바꾸려면 (PowerShell, <새경로> 만 바꿔서 실행):
+
+          Get-ChildItem emulators\TeknoParrot\UserProfiles\*.xml | ForEach-Object {
+            (Get-Content $_ -Raw) -replace '[A-Za-z]:\\[^<]*?\\emulators\\TeknoParrot','<새경로>\emulators\TeknoParrot' |
+              Set-Content $_ -Encoding UTF8 }
+
+      TeknoParrot 은 단일 인스턴스라 test-roms 로 연속 확인이 안 된다. 하나씩 띄워 볼 것.
+
+--------------------------------------------------------------------------------
+  8.  확인
 --------------------------------------------------------------------------------
 
       powershell -ExecutionPolicy Bypass -File tools\validate.ps1
@@ -182,3 +272,4 @@
         docs\ISSUES.md     알려진 문제와 개선 과제
 
 ================================================================================
+ 

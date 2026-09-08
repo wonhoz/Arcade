@@ -118,6 +118,51 @@ git branch Compact archive/Compact           # 되살리기
   >
   > 이렇게 하면 `mame.exe` 패치·`MAME Adult.cfg`·문서·즐겨찾기 같은 **장비 무관 변경만** 전파된다.
   > 2026-09-05에 5개 장비 브랜치 전부 이 방식으로 처리했다(`docs/ISSUES.md` 45번).
+
+  > ⚠️ **장비 전용 경로는 `PSXMAME/cfg` 하나가 아니다 — 2026-09-08 전수 실측.**
+  > 전파 전에 **"이번 배치가 건드리는 파일" ∩ "장비마다 값이 다른 파일"** 을 먼저 구한다.
+  >
+  > ```bash
+  > #  장비마다 값이 다른 경로 찾기
+  > for p in <검사할 경로들>; do
+  >   for b in bartop desktop desktop-ASUS-TUF desktop-MSI-Sword desktop-MSI-Sword-DriveWheel; do
+  >     echo "$p $b $(git diff --name-only origin/main origin/$b -- "$p" | wc -l)"
+  >   done
+  > done
+  > ```
+  >
+  > | 경로 | 성격 | 장비마다 다른가 |
+  > |---|---|---|
+  > | `emulators/TeknoParrot/UserProfiles/` | **게임 exe 절대경로** | **★ 설치 루트가 장비마다 다르다** |
+  > | `emulators/PSXMAME/cfg/` | 게임별 버튼 배열 | ★ (45번) |
+  > | `emulators/Mame/cfg/` | 게임별 입력·딥스위치 | ★ 4개 브랜치 8개씩 |
+  > | `emulators/M2/CFG/` | MODEL2 입력 | ★ 4개 브랜치 8~9개씩 |
+  > | `emulators/PCSX2/inis/LilyPad.ini` | PS2 패널 매핑 | ★ bartop 106 / desktop·Wheel 24 / MSI 는 XInput |
+  > | `emulators/Project64/Config/NRage.ini` | N64 입력 | ★ 4개 브랜치 |
+  > | `emulators/Cemu/portable/controllerProfiles/*.txt` | Wii U 패드 | ★ 4개 브랜치 |
+  > | `emulators/Demul/padDemul.ini` | 드림캐스트·NAOMI 입력 | ★ 4개 브랜치 |
+  > | `attract.cfg` | 해상도·입력맵 | ★ bartop |
+  >
+  > **설치 루트가 장비마다 다르다** — `<GamePath>` 같은 절대경로를 전파하면 그 장비가 통째로 죽는다.
+  >
+  > | 브랜치 | 설치 경로 |
+  > |---|---|
+  > | `develop` · `bartop` | `D:\AttractMode` |
+  > | `desktop-ASUS-TUF` | `D:\Git\AttractMode` |
+  > | `desktop-MSI-Sword` · `desktop-MSI-Sword-DriveWheel` | `C:\Git\AttractMode` |
+  > | `desktop` | (옛 경로 `D:\attract-v2.6.2-win64` 가 남아 있었다) |
+  >
+  > **처리 원칙** — 이번 배치가 건드리는 장비 전용 파일은 병합 뒤 `PRE` 로 되돌린다(위 PSXMAME 방식).
+  > 건드리지 않는 것은 git 이 알아서 유지하므로 손대지 않는다.
+  >
+  > **파일이 바뀌지 않아도 동작이 바뀔 수 있다.** 2026-09-08 전파에서 셋이 그랬다.
+  > - Project64 가 입력 플러그인을 **N-Rage -> 자체 플러그인**으로 바꿔 `NRage.ini` 가 안 쓰이게 됐다.
+  > - Dolphin 이 `portable.txt` 로 **`내 문서\Dolphin Emulator` 대신 `User\`** 를 보게 돼,
+  >   장비에 있던 컨트롤러 매핑이 저장소의 작업 PC 설정으로 대체된다.
+  > - Cemu 2.6 은 프로필을 `.xml` 로 읽는다. 다행히 **`.txt` 를 바이트 동일하게 자동 이관**하므로
+  >   장비의 `.txt` 만 남겨 두면 된다(실측 확인). 작업 PC 의 `.xml` 은 장비 브랜치에서 빼야 한다.
+  >
+  > 이런 것은 `.+필독.txt` 7절에 장비에서 할 일로 적는다.
 - `main`↔`bartop` 실제 차이(113개 파일): `layouts/NEVATO/*`(캐비닛 아트/vewlix 레이아웃),
   `layouts/Console Box/*`, `layouts/Mega-Display Advanced/{layout.nut, scripts/*}`,
   `scraper/@/overview/*`, 각 에뮬레이터의 입력·화면 설정(`emulators/*/`), `intro/*`.
@@ -308,6 +353,7 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 대응은 두 가지를 같이 쓴다.
 
 1. `attract.bat` — `attract.exe --logfile "%~dp0last_run.log"` 로 로그를 되살린다.
+   여기서 `MEDNAFEN_HOME` 도 함께 걸어 준다(4.9절) — 직접 실행하면 Saturn 이 죽는다.
 2. `attract.cfg`의 `hide_console yes` — 콘솔 창을 숨긴다.
    이 설정은 소스에서 `#ifdef WINDOWS_CONSOLE` 안에 있어 **2.6.2에선 무시되던 값**이고,
    2.7.0에서 비로소 동작한다.
@@ -343,6 +389,23 @@ PSXMAME 자신이 `use_gpu_plugin` 이 켜져 있을 때 타는 것과 **같은 
 > 위치가 안 맞으면 다른 빌드다. `ui.c`의 `if (!first_time || (str > 0 && str < 60*5) || …)` 분기를
 > 무조건 성립으로 바꾸는 것이 목적이므로, 상수 `300`(`cmp eax,0x12A`)과 그 앞의 `je` 를 찾아 같은 방식으로 처리한다.
 > 되돌리려면 `git checkout -- emulators/PSXMAME/mame.exe`.
+
+**바이너리는 `psxmame_fixed_snd` 판이다 (2026-09-08 교체).**
+PSXMAME 은 2009년에 개발이 멈춰 더 새로운 버전이 없다. 대신 같은 2009-09-03 빌드에
+**사운드 수정 12바이트**가 들어간 변종(`psxmame_fixed_snd`, 파일 날짜 2021-12-26)이 돌아다닌다.
+그것으로 갈고 위 1바이트 패치를 다시 얹었다 — 지금 `mame.exe` 는 **20090903 대비 13바이트**
+(사운드 12 + 패치 1) 다르다.
+
+| 판 | MD5 | 비고 |
+|---|---|---|
+| `psxmame_20090903` | `0c1c69681f6187c0ec308ddd0c452440` | 원본 |
+| `psxmame_fixed_snd` | `6a8376c24feeeaf601f4deaaa3b300a6` | 사운드 수정 12바이트. **현재 기반** |
+
+바뀐 12바이트는 파일 오프셋 `0x2EAFAF`·`0x2F14DB` 근처라 **패치 위치(`0x1039C1`)와 겹치지 않는다.**
+교체 전후로 Zinc 목록 38개를 전수 구동해 **둘 다 38/38 PASS** 임을 확인했다(회귀 없음).
+
+> 배포본에 딸려 온 새 GPU 플러그인(`gpuBladeSoft-1.64`, 2019)은 넣지 않았다 —
+> `mame.ini` 가 `use_gpu_plugin 0` 이라 쓰이지 않는다. 쓸 일이 생기면 그때 넣는다.
 
 `emulators/Mame`의 MAME 0.289는 경고 화면 억제가 UI 옵션 `skip_warnings`(0.226부터)인데,
 예전에는 `EKMAME64.exe` 와 `ui.ini` 를 공유해 넣지 못했는데, 2026-09-07 폴더를 나누면서 넣었다(4.7절).
@@ -419,19 +482,19 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 |---|---|---|---|
 | `Mame` | **0.289** | 2026-07-30 | 2026-09-07 갱신. 롬 세트가 버전에 묶인다(4.7절 (2)). 세트 이름도 판마다 바뀐다 |
 | `EKMAME` | EKMAME **0.224** | 2024-04-04 | 2026-09-07 분리 + 갱신. 지원 셋 8,740 -> 16,304 (4.7절) |
-| `PSXMAME` | MAME 0.139 계열 | 2026-09-05 | ⚠️ **`mame.exe` 에 1바이트 패치**(4.6절). 교체하면 사라진다 |
-| `SuperModel` | (0.3a-WIP · `revision.txt` 는 svn r757 까지) | 2018-11-28 | ⚠️ **개조 빌드다** — `revision.txt` 에 "sr2 music fix" 패치를 넣었다고 적혀 있다 |
-| `Demul` | | 2018-04-28 | `-run=<플랫폼> -rom=` 인자 체계 |
+| `PSXMAME` | MAME 0.139 계열 (2009-09-03 빌드 · `fixed_snd` 판) | 2026-09-08 | **더 새 버전 없음.** ⚠️ `mame.exe` 에 1바이트 패치(4.6절) — 교체하면 사라진다 |
+| `SuperModel` | 0.3a (**git b7d8acd**) | 2026-07-27 | 2026-09-08 갱신. 예전 개조 빌드의 "sr2 music fix" 는 상위의 `Config\Music.xml` 로 대체됐다 |
+| `Demul` | | 2018-04-28 | **마지막 공개 빌드. 갱신 대상 아님**(ISSUES 64번). `-run=<플랫폼> -rom=` 인자 체계 |
 | `M2` | | 2018-10-14 | 인자가 `[name]` 하나뿐이라 갱신 여파가 작다 |
-| `PCSX2` | | 2020-05-07 | ⚠️ **최신판은 CLI 가 다르다.** 지금 쓰는 `--nogui --portable` 이 그대로 있는지 먼저 확인 |
-| `ePSXe` | | 2018-11-14 | `-loadmemc0 "memcards\epsxe000.mcr"` 가 메모리카드를 직접 가리킨다 |
-| `Dolphin` | | 2019-01-06 | `-b -e` 인자와 `Sys/`·`User/` 구조 |
-| `Project64` | 3.0.1 | 2021-07-30 | `Config/`·`Save/` |
-| `Cemu` | | 2022-02-18 | ⚠️ 인자가 `-f -g "<롬>\code\<롬>.rpx"` 라 **롬 폴더 구조에 묶여 있다** |
-| `Mednafen` | 1.29.0 | 2022-01-18 | `firmware/` 의 BIOS 파일 이름이 고정이다 |
-| `RetroArch` | | 2022-05-03 | `cores/` 는 gitignore. 코어와 본체의 ABI 가 맞아야 한다 |
-| `PPSSPP` | 1.13.1 | 2022-07-28 | |
-| `TeknoParrot` | 1.0.0.804 | 2022-08-01 | `UserProfiles/` 형식이 판마다 바뀐다 |
+| `PCSX2` | 1.6 계열 | 2020-05-07 | ⚠️ **갱신 보류** — 2.x 는 실행파일·CLI·설정·메모리카드가 전부 다르다(ISSUES 65번) |
+| `ePSXe` | **2.0.18** | 2025-12 | 2026-09-08 갱신(2.0.0 → 2.0.18). `-loadmemc0 "memcards\epsxe000.mcr"` 가 메모리카드를 직접 가리킨다 |
+| `Dolphin` | **5.0-12188** | 2026-08-11 | 2026-09-08 갱신. ⚠️ **MSVC 14.44 런타임 필요**(ISSUES 61번). `-b -e` 인자. 설정은 `portable.txt` 로 `User\` 에 둔다(4.10절) |
+| `Project64` | 3.0.1 (**2023-10-13 빌드**) | 2023-10-13 | 2026-09-08 갱신. 버전 문자열은 그대로라 **PE 빌드 타임스탬프로 구분**한다. `Config/`·`Save/` |
+| `Cemu` | **2.6** | 2025-02-06 | 2026-09-08 갱신(1.26.2f -> 2.6). 설정은 `portable\` 로 저장소 안에 둔다(4.11절). 인자가 `-f -g "<롬>\code\<롬>.rpx"` 라 **롬 폴더 구조에 묶여 있다** |
+| `Mednafen` | **1.32.1** | 2024-03-15 | 2026-09-08 갱신. ⚠️ 베이스 디렉터리가 저장소 밖을 본다 — 4.9절 |
+| `RetroArch` | **1.22.2** | 2025-11-20 | 2026-09-08 갱신(1.10.3 → 1.22.2). `cores/` 는 gitignore. 코어와 본체의 ABI 가 맞아야 한다 |
+| `PPSSPP` | **1.20.4** | 2026-05-16 | 2026-09-08 갱신. `assets\` 를 exe 와 같은 판으로 함께 바꾼다 |
+| `TeknoParrot` | 1.0.0.804 | 2022-08-01 | ⚠️ **갱신 보류** — 2.0 win-x64 zip 은 Avalonia 런타임이 빠져 단독 실행 불가, 1.0.0.2078 은 프로필 스키마가 바뀐다(ISSUES 70번). `UserProfiles/` 형식이 판마다 바뀌고 **`<GamePath>` 가 절대경로**라 설치 경로가 바뀌면 32개가 통째로 죽는다(ISSUES 68번). 단일 인스턴스라 전수 점검 불가 |
 
 > ⚠️ **교체하면 이 저장소의 손질이 사라지는 바이너리가 둘 있다** — `PSXMAME/mame.exe`(4.6절)와
 > `SuperModel/Supermodel.exe`. 둘 다 `.gitignore` 대상이 아니라 **git 추적 중**이므로
@@ -472,6 +535,127 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 > 나눈 뒤 **EKMAME 활성 11개를 전부 띄워 확인했다**(`test-roms.cmd -Launch -Emulator EKMAME*` → 11/11 PASS).
 > 경로가 하나만 어긋나도 `Unknown system` 대화상자로 끝나는데, 그것은 정적 점검에 안 잡힌다.
 
+
+### 4.9 Mednafen — ⚠️ 베이스 디렉터리가 저장소 밖을 가리킨다
+
+Mednafen 은 설정·BIOS·세이브를 **"베이스 디렉터리"** 아래에서 찾는다. 그 위치는
+`MEDNAFEN_HOME` → `HOME` 순으로 정해지고, 둘 다 없으면 **`%USERPROFILE%\.mednafen`** 이다.
+**명령행 옵션은 없다.** 환경변수뿐이다.
+
+그래서 아무 조치 없이 실행하면 저장소의 `emulators\Mednafen\mednafen.cfg` 와 `firmware\` 를
+**읽지 않는다.** Saturn 은 BIOS 를 못 찾아 대화상자를 띄우고 멈춘다.
+
+```
+Error opening file "C:\Users\admin\.mednafen\firmware\sega_101.bin": No such file or directory
+```
+
+`filesys.path_firmware` 같은 경로 설정도 베이스 디렉터리 기준이라 **소용이 없다** —
+그 설정이 들어 있는 `mednafen.cfg` 자체를 안 읽기 때문이다.
+
+**조치 (2026-09-08)** — `attract.bat` 이 환경변수를 걸고 시작한다. `attract.exe` 가 띄우는
+자식 프로세스가 그대로 물려받는다.
+
+```bat
+set "MEDNAFEN_HOME=%~dp0emulators\Mednafen"
+```
+
+`tools\test-roms.ps1` 도 같은 값을 걸어 준다 — 안 그러면 점검 결과가 실제 구동과 달라진다.
+
+> **`attract.exe` 를 직접 실행하면 이 변수가 없어 Saturn 이 다시 죽는다.** 4.5절이
+> `attract.bat` 으로 실행하라고 하는 이유가 하나 더 늘었다(로그·콘솔 창에 이어 세 번째).
+
+> 이 문제로 Saturn 8개가 **오랫동안 전부 실행 불가였다**(`docs/ISSUES.md` 56번).
+> `validate.ps1` 은 롬 파일 존재만 보므로 못 잡았고, 실제로 띄우는 `test-roms.cmd` 가 잡았다.
+
+### 4.10 Dolphin — 설정을 `portable.txt` 로 저장소 안에 둔다
+
+Dolphin 은 기본적으로 설정·세이브를 **`%USERPROFILE%\Documents\Dolphin Emulator`** 에 둔다.
+저장소 밖이라 컨트롤러 매핑·그래픽 설정·Wii 세이브가 git 으로 따라가지 않았다.
+
+**조치 (2026-09-08)** — `emulators/Dolphin/portable.txt`(빈 파일)를 두면 Dolphin 이
+**실행파일 옆 `User\`** 를 쓴다. 기존 설정을 그리로 옮겼다.
+
+```
+emulators\Dolphin\portable.txt        ★ 이 파일이 있어야 User\ 를 쓴다. 지우지 말 것
+emulators\Dolphin\User\Config\        Dolphin.ini · GCPadNew.ini · WiimoteNew.ini …
+emulators\Dolphin\User\GC\            게임큐브 메모리카드 (.gci)
+emulators\Dolphin\User\Wii\           Wii NAND — title\ 에 세이브가 들어 있다
+```
+
+**재생성물은 `.gitignore` 로 뺐다** — `Cache\` · `Dump\` · `Logs\` · `Load\` ·
+`ScreenShots\` · `Shaders\` · `Wii\sd.raw`(134MB 가상 SD) · `Wii\tmp\`(30MB).
+그래서 추적되는 것은 **4.1MB / 67개**뿐이다.
+
+> 옮기기 전 원본은 `%USERPROFILE%\Documents\Dolphin Emulator` 에 그대로 남겨 두었다.
+> Dolphin 이 이제 그쪽을 보지 않으므로 지워도 되지만, 되돌릴 일이 있을 수 있어 두었다.
+
+> **새 장비에서는 `User\` 가 git 으로 따라온다.** 예전에는 컨트롤러가 매핑되지 않은 채
+> 게임만 뜨는 상태였다(4.9절의 Mednafen 과 같은 성격의 문제였다).
+
+### 4.11 Cemu — ⚠️ 첫 실행 마법사 · `[romext]` 함정 · `portable\` 설정
+
+**Wii U 4개가 오랫동안 전부 실행 불가였다**(`docs/ISSUES.md` 66번). 원인이 셋이었다.
+
+**(1) `args` 의 `[romext]` 가 빈 문자열이 된다**
+
+```
+args   -f -g "[rompath][name]\code\[name][romext]"     ← 예전
+        -> -g "roms\OPU3\code\OPU3"                     확장자가 없다
+```
+
+`romext` 에 `<DIR>` 이 들어 있어서 AM 이 롬을 **폴더로 매칭**한다. 폴더에는 확장자가 없으므로
+`[romext]` 가 빈 문자열이 되고, Cemu 는 `Unknown file type. It is not a valid Wii U executable` 로 거절한다.
+**`.rpx` 를 고정으로 적어야 한다.**
+
+```
+args   -f -g "[rompath][name]\code\[name].rpx"          ← 지금
+```
+
+**(2) 첫 실행 마법사가 매번 뜬다 — `settings.xml` 의 `gp_download`**
+
+`<gp_download>false</gp_download>` 이면 Cemu 가 실행할 때마다 **"Getting started"** 창을 띄우고
+게임이 시작되지 않는다. `true` 로 두면 안 뜬다. `<GamePaths>` 도 비어 있으면 안 된다.
+
+```xml
+<gp_download>true</gp_download>
+<GamePaths><Entry>Roms</Entry></GamePaths>
+```
+
+> `settings.xml` 은 예전에 `.gitignore` 대상이었다. 그래서 이 설정이 장비로 따라가지 않았다.
+> 2026-09-08 에 추적으로 돌렸다. 셰이더 캐시(`shaderCache\driver` · `precompiled` · `transferable`)만 무시한다.
+
+**(3) 롬 폴더 구조가 `<이름>\code\<이름>.rpx` 여야 한다**
+
+`args` 가 `[name]` 을 두 번 쓰므로 **폴더 이름과 `.rpx` 파일 이름이 같아야 한다.**
+`.+필독.txt` 가 `Roms\Tekken` 을 `Roms\Tekken Tag Tournament 2` 로 개명하라고 했는데
+**안에 있는 `Tekken.rpx` 는 그대로 두어** 경로가 어긋나 있었다. 파일도 같이 개명해야 한다.
+`OPU3` 는 `OPU3\data\code\...` 처럼 `data\` 가 한 겹 더 있어서 그것도 걷어냈다.
+
+**(4) 2.6 으로 올리면서 사용자 데이터가 `portable\` 안으로 들어갔다 (2026-09-08)**
+
+Cemu 2.x 는 기본적으로 설정·세이브를 **`%USERPROFILE%\AppData\Roaming\Cemu`** 에 둔다.
+저장소 밖이라 4.9절 Mednafen · 4.10절 Dolphin 과 똑같은 문제가 된다.
+**실행파일 옆에 `portable` 이라는 폴더가 있으면** Cemu 가 그것을 데이터 디렉터리로 쓴다.
+
+```
+emulators\Cemu\
+├─ Cemu.exe  resources\  gameProfiles\   벤더 배포본. 갱신할 때 통째로 덮는다
+├─ Roms\                                 롬 (gitignore)
+└─ portable\                         ★ 이 폴더가 있어야 저장소 안을 쓴다. 지우지 말 것
+    ├─ settings.xml  keys.txt  controllerProfiles\  graphicPacks\
+    ├─ mlc01\usr\save\                   Wii U 세이브
+    └─ shaderCache\                      driver·precompiled·transferable 만 gitignore
+```
+
+- **CLI 는 그대로다** — `-f`(fullscreen) · `-g`(game) 둘 다 2.6 에 있다. `args` 를 고칠 필요가 없었다.
+- **`settings.xml` 형식도 그대로 읽는다.** 1.26 이 쓰던 파일을 옮기기만 하고 4개 전부 PASS 를 확인했다.
+  `gp_download` · `GamePaths` 도 2.6 이 그대로 보존해 다시 쓴다.
+- `gameProfiles\*.ini` 236개가 2.x 에서 **`gameProfiles\default\` 아래로 내려갔다.** 벤더 배포본을 따랐다.
+- `resources\{WinGamingInput.dll, libusb-1.0.dll}` 은 본체에 정적 링크돼 **사라졌다.**
+- **렌더러 기본값이 OpenGL → Vulkan 으로 바뀌었다.** `settings.xml` 에 해당 키가 없어 기본값을 탄다.
+  Vulkan 을 못 쓰는 장비에서는 Cemu 설정에서 OpenGL 로 되돌린다.
+- 배포본의 `resources\ar\` 파일명에는 **보이지 않는 RTL 마크(U+200F) 두 개**가 앞에 붙어 있다(업스트림 버그).
+  그대로 커밋하면 `git status` 가 깨져 보이고 플랫폼마다 다르게 풀리므로 `ar\cemu.mo` 로 정규화했다.
 
 ## 5. 자주 하는 작업 레시피
 
@@ -702,7 +886,7 @@ $fs.Position=0x3C; $pe=$br.ReadInt32(); $fs.Position=$pe+0x5C; $br.ReadUInt16() 
 - 모든 **롬/ISO/디스크 이미지** (`emulators/*/Roms/`, `Game ISO/`, `isos/`, `Disc Image/` …)
 - **MAME 실행파일**(`mame64.exe`, `EKMAME64.exe`, `.sym`)과 `hash/`, `artwork/`, `nvram/`, `roms/`
 - **아트웍 전체** (`menu-art/`), MAME 아트(`flyer/ marquee/ snap/ title/ video/ wheel/`)
-- RetroArch `cores/`, `system/` · Cemu 캐시/키 · `last_run.log`, `script.nv`
+- RetroArch `cores/`, `system/` · Cemu `portable/` 의 캐시·키 · `last_run.log`, `script.nv`
 
 즉 **이 저장소를 클론하는 것만으로는 실행되지 않는다.** 롬·코어·아트웍은 별도로 옮겨야 한다.
 
