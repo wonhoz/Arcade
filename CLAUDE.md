@@ -218,6 +218,7 @@ D:\AttractMode\
 ├─ tools\reset-runtime.ps1             ★ 런타임 파일 초기화 스크립트 (7.3절)
 ├─ tools\smoke-run.ps1                 ★ 실행 점검 — 지정 디스플레이·레이아웃으로 AM 을 띄워 로그 확인 (7.4절)
 ├─ tools\test-roms.ps1                 ★ 롬 구동 검증 — romlist 전 항목의 실행 명령 조립·실행 (7.5절)
+├─ tools\patch-mame-warnings.ps1       ★ MAME 시작 경고 화면 제거 1바이트 패치 (4.7절) — exe 가 미추적이라 장비마다 실행
 │                                       PowerShell 도구는 전부 tools\ 에 둔다. 루트에는 런처 cmd 만.
 ├─ docs\                               ASSETS.md(자산 정책) / ISSUES.md(과제 목록)
 ├─ logs\                               검증 보고서 CSV (gitignored, test-roms.ps1 이 생성)
@@ -463,17 +464,54 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 > `pcktgalk`→ 본가에 없어 `EKMAME Adult` 로 이관. 앞의 넷은 0.246 에서도 이미 없던 이름이라
 > 여태 실행되지 않고 있었다.
 
-**경고 화면 — ⚠️ 0.289 에서는 완전히 끌 수 없다.** MAME 은 드라이버에 `imperfect`/`unemulated` 플래그가 있으면
-"There are known problems with this system … 아무 키를 누르면 진행합니다" 화면을 띄우고 **키를 누를 때까지 기다린다**
-(40초를 두고 봐도 스스로 닫히지 않는다 — 2026-09-08 실측). romlist 의 MAME 계열 항목 중 **187개**가 이 대상이다.
+**경고 화면 — ⚠️ `mame64.exe` 에 1바이트 패치가 들어가 있다 (2026-09-08).**
 
-UI 옵션 `skip_warnings`(0.226+)는 이름과 달리 **"이미 한 번 확인한 게임을 7일 이내에 다시 띄울 때"만** 건너뛴다.
-상태는 `cfg/<게임>.cfg` 의 `<ui_warnings launched= warned=>` 에 남고, 마지막 실행 7일·마지막 경고 14일이 지나면 다시 뜬다
-(`src/frontend/mame/ui/ui.cpp`). 롬 로드 경고(`best available`)가 있는 셋은 아예 건너뛰지 않는다.
-`emulators/Mame/ui.ini` 에 `skip_warnings 1` 을 넣어 두었지만(2026-09-08 — 그 전에는 문서만 "넣었다"고 돼 있었다),
-**첫 실행에는 반드시 한 번 뜬다.** 캐비닛에서는 아무 버튼이나 한 번 누르면 된다. 완전히 없애려면 PSXMAME 처럼
-`display_startup_screens()` 의 `str < 300` 분기를 뒤집는 바이너리 패치뿐인데, `mame64.exe` 는 **미추적**이라 장비마다 다시 해야 한다.
-`PSXMAME`(0.139)에는 이 옵션이 없어 1바이트 패치로 처리한다(4.6절).
+MAME 은 드라이버에 `imperfect`/`preliminary` 플래그가 있으면 "There are known problems with this system …
+아무 키를 누르면 진행합니다" 화면을 띄우고 **키를 누를 때까지 기다린다**(40초를 두고 봐도 안 닫힌다 — 실측).
+romlist 의 MAME 계열 항목 중 **187개**가 이 대상이라 캐비닛에서 매번 걸린다.
+
+**UI 옵션 `skip_warnings`(0.226+)로는 못 막는다.** 이름과 달리 "이미 확인한 게임을 7일 이내에 다시 띄울 때"만
+건너뛴다. 상태는 `cfg/<게임>.cfg` 의 `<ui_warnings launched= warned=>` 에 남고 마지막 실행 7일·마지막 경고 14일이
+지나면 다시 뜬다(`src/frontend/mame/ui/ui.cpp`). 넣어 두긴 했지만 첫 실행은 못 막는다.
+
+그래서 PSXMAME(4.6절)과 같은 방식으로 바이너리를 고쳤다. `display_startup_screens()` 의
+
+```cpp
+if (!first_time || (str > 0 && str < 60*5) || &system == &___empty || debug_flags || video_none)
+    show_gameinfo = show_warnings = false;
+```
+
+다섯 조건이 전부 같은 "비활성" 블록으로 분기하므로, **첫 분기(`!first_time`)를 무조건 점프로 바꾸면** 항상 그
+블록을 타서 경고 화면이 만들어지지 않는다. `show_gameinfo` 도 같이 꺼지지만 `args` 에 `-skip_gameinfo` 가 이미
+있어 변화가 없고, 필수 미디어(파일 매니저) 화면은 별도 조건이라 영향받지 않는다.
+
+| 파일 오프셋(0.289 이 빌드) | 원래 | 패치 후 |
+|---|---|---|
+| `0xAABCEA0` (`test bl,bl` 다음) | `74` (`jz`) | `EB` (`jmp`) |
+
+**오프셋은 빌드마다 바뀌므로 시그니처로 찾는다.** 도구가 그것을 한다.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\patch-mame-warnings.ps1          # 상태만 확인
+powershell -ExecutionPolicy Bypass -File tools\patch-mame-warnings.ps1 -Apply   # 적용
+powershell -ExecutionPolicy Bypass -File tools\patch-mame-warnings.ps1 -Revert  # 되돌리기
+```
+
+> ⚠️ **`mame64.exe` 는 `.gitignore` 대상이라 이 패치는 git 으로 따라가지 않는다.**
+> 장비마다 한 번씩 직접 돌려야 한다(`.+필독.txt` 8절). 되돌릴 원본이 저장소에 없으므로
+> 갱신 전 원본을 저장소 밖에 백업해 둔다 — 이번 것은 `backup-mame64-0.289-20260908\mame64.exe.orig`.
+
+| 판 | MD5 |
+|---|---|
+| 0.289 원본 | `523b054a400704d9ec50698e8e0cb8b8` |
+| 패치 후 (현재) | `7c13939f53d15638b3407bafd8cafada` |
+
+`asterix`(imperfect graphics) · `galpani2`(preliminary protection) · `rungun`(imperfect 3종) ·
+`sf2`(정상) 넷을 창 모드로 띄워 경고 없이 바로 부팅하는 것을 확인했다.
+
+> **EKMAME(0.224)은 패치 대상이 아니다.** 같은 시그니처가 없고, 실제로 띄워 보면 경고 화면 없이 그대로 진행한다(실측).
+
+`PSXMAME`(0.139)에는 `skip_warnings` 옵션 자체가 없어 역시 1바이트 패치로 처리한다(4.6절).
 
 **`mame.ini` 의 `rompath` 가 실제 롬 탐색을 담당한다 — 폴더명이 한 글자만 달라도 전부 실패**
 
@@ -488,7 +526,7 @@ UI 옵션 `skip_warnings`(0.226+)는 이름과 달리 **"이미 한 번 확인�
 
 | 폴더 | 버전 | 파일 날짜 | 갱신할 때 걸리는 것 |
 |---|---|---|---|
-| `Mame` | **0.289** | 2026-07-30 | 2026-09-07 갱신. 롬 세트가 버전에 묶인다(4.7절 (2)). 세트 이름도 판마다 바뀐다 |
+| `Mame` | **0.289** | 2026-07-30 | 2026-09-07 갱신. 롬 세트가 버전에 묶인다(4.7절 (2)). 세트 이름도 판마다 바뀐다. ⚠️ **경고 화면 제거 1바이트 패치**(4.7절) — 미추적이라 교체하면 사라지고 장비마다 다시 해야 한다 |
 | `EKMAME` | EKMAME **0.224** | 2024-04-04 | 2026-09-07 분리 + 갱신. 지원 셋 8,740 -> 16,304 (4.7절) |
 | `PSXMAME` | MAME 0.139 계열 (2009-09-03 빌드 · `fixed_snd` 판) | 2026-09-08 | **더 새 버전 없음.** ⚠️ `mame.exe` 에 1바이트 패치(4.6절) — 교체하면 사라진다 |
 | `SuperModel` | 0.3a (**git b7d8acd**) | 2026-07-27 | 2026-09-08 갱신. 예전 개조 빌드의 "sr2 music fix" 는 상위의 `Config\Music.xml` 로 대체됐다 |
@@ -811,6 +849,7 @@ MAME 가 다시 써 낸 cfg 에 **실제로 매칭된 것만** 남는다.
   켤 수 있는 정상 자산이라 지우지 않는다.
 - `layouts/Mega-Display` — 어떤 display도 쓰지 않지만 AM 레이아웃 메뉴에서 선택 가능한 예비 테마다.
 - `emulators/PSXMAME/mame.exe` — **1바이트 패치가 들어가 있다**(4.6절). 새 빌드로 교체하면 시작 확인 창이 다시 뜬다.
+- `emulators/Mame/mame64.exe` — **경고 화면 제거 1바이트 패치**(4.7절). 미추적이라 `git checkout` 으로 못 되돌린다. 교체했으면 `tools\patch-mame-warnings.ps1 -Apply` 를 다시 돌린다.
 - `emulators/EKMAME/mame.ini` — **UTF-8 BOM 이 없으면 EKMAME 이 통째로 무시한다**(4.7절). 편집할 때 BOM 유지.
   `writeconfig 0` 도 지우지 말 것 — 지우면 깨진 `plugin.ini` 를 스스로 써 놓고 다음 실행에서 멈춘다.
 
