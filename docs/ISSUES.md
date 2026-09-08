@@ -7,7 +7,7 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **52건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
+**진행 현황** — 처리 **66건** / 미해결 **2건**(13번 · 65번) · 보류 3건 · 재분류 3건 · 개선 포인트 8건
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
 42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일.
 **46~49번은 2026-09-06 전수 구동 점검(E)의 실패 106건을 파고들어 나온 것** —
@@ -1304,6 +1304,513 @@ romlist 에는 아직 넣지 않았다(넣으면 대화상자에서 멈춘다). 
 
 같은 이유로 `redearth`(`cap-wzd-5` SHA1 불일치)와 `raycris`(SHA1 불일치)도 `verifyroms` 는 `is bad` 지만,
 **둘 다 실제로는 구동된다**(`redearth` PASS, `raycris` 는 비활성). 급하지 않다.
+### - [x] 55. PSXMAME 을 `fixed_snd` 판으로 교체 — **처리 완료 (2026-09-08)**
+
+에뮬레이터 순차 갱신의 첫 항목. **PSXMAME 은 2009년에 개발이 멈춰 더 새로운 버전이 없다.**
+받은 두 배포본을 바이트 단위로 비교해 성격을 갈랐다.
+
+| 배포본 | `mame.exe` MD5 | 파일 날짜 | 판정 |
+|---|---|---|---|
+| `psxmame_20090903.7z` | `0c1c69681f6187c0ec308ddd0c452440` | 2009-09-03 | **현재 설치본과 동일**(우리 1바이트 패치를 되돌리면 일치). 갱신 아님 |
+| `psxmame_fixed_snd.zip` | `6a8376c24feeeaf601f4deaaa3b300a6` | 2021-12-26 | 같은 빌드 + **사운드 수정 12바이트**. 채택 |
+
+12바이트 차이는 파일 오프셋 `0x2EAFAF` · `0x2F14DB` 근처로 **1바이트 패치 위치(`0x1039C1`)와 겹치지 않는다.**
+그래서 `fixed_snd` 의 `mame.exe` 에 패치를 다시 얹어 넣었다(20090903 대비 13바이트 = 사운드 12 + 패치 1).
+
+**교체 전후 Zinc 목록 38개를 전수 구동해 둘 다 38/38 PASS 로 회귀가 없음을 확인했다.**
+기준선을 먼저 잡고 바꾼 뒤 다시 돌리는 방식이다 — 안 그러면 실패가 새로 생긴 것인지 원래 그런 것인지 가릴 수 없다.
+
+배포본에 딸려 온 새 GPU 플러그인(`gpuBladeSoft-1.64`, 2019)은 넣지 않았다.
+`mame.ini` 가 `use_gpu_plugin 0` 이라 쓰이지 않기 때문이다.
+
+> **에뮬레이터를 갱신할 때의 절차** — 이번에 세운 것.
+> 1. 배포본의 실행파일을 꺼내 **현재본과 해시로 비교한다.** 같으면 갱신이 아니다.
+> 2. 다르면 **어디가 다른지** 본다(`cmp -l`). 손질(패치)한 자리와 겹치는지 확인한다.
+> 3. **바꾸기 전에 그 에뮬레이터의 romlist 항목을 전수 구동해 기준선을 잡는다.**
+> 4. 교체하고 손질을 다시 얹은 뒤 같은 점검을 돌려 **기준선과 대조한다.**
+> 5. 회귀가 있으면 되돌린다(`git checkout -- <경로>`).
+### - [x] 56. SEGA Saturn 8개가 전부 실행 불가였다 — Mednafen 베이스 디렉터리 — **처리 완료 (2026-09-08)**
+
+Mednafen 갱신 전 기준선을 잡으려고 Saturn 목록을 띄워 봤더니 **8개가 전부 `DIALOG`** 였다.
+
+```
+Error opening file "C:\Users\admin\.mednafen\firmware\sega_101.bin": No such file or directory
+```
+
+Mednafen 은 설정·BIOS·세이브를 **베이스 디렉터리** 아래에서 찾는데, 그 위치가
+`MEDNAFEN_HOME` → `HOME` → **`%USERPROFILE%\.mednafen`** 순으로 정해진다. 명령행 옵션은 없다.
+그래서 저장소의 `emulators\Mednafen\mednafen.cfg` 와 `firmware\` 를 **아예 읽지 않고 있었다** —
+Saturn BIOS 설정(`ss.bios_jp` 등)도 같이 무시됐다.
+
+**조치** — `attract.bat` 이 `MEDNAFEN_HOME` 을 걸고 시작한다. 자식 프로세스가 물려받는다.
+`tools\test-roms.ps1` 에도 같은 값을 넣었다(점검이 실제 구동과 달라지지 않도록).
+이 한 가지로 **0/8 → 8/8 PASS** 가 됐다.
+
+> **언제부터 깨져 있었는지** — `emulators/Mednafen/` 에 `mednafen.cfg`·`firmware`·`sav`·`mcs` 가
+> 갖춰져 있는 것으로 보아 예전 Mednafen 은 실행파일 폴더를 베이스로 삼았다.
+> 1.29.0 으로 올린 2022-01-18 이후로 계속 죽어 있었을 가능성이 높다.
+> `validate.ps1` 은 롬 파일 존재만 보므로 4년 넘게 못 잡았고, 실제로 띄우는 `test-roms.cmd` 가 잡았다.
+
+### - [x] 57. Mednafen 1.29.0 -> 1.32.1 — **처리 완료 (2026-09-08)**
+
+56번을 고쳐 기준선을 8/8 로 만든 뒤 갱신했다.
+
+| | 이전 | 이후 |
+|---|---|---|
+| 버전 | 1.29.0 (2022-01-12) | **1.32.1 (2024-03-15)** |
+| DLL | 10개 | 4개 (`SDL2` `libcharset-1` `libgcc_s_seh-1` `libiconv-2`) |
+
+`mednafen.exe` 의 import 를 확인해 **1.32.1 이 더 이상 쓰지 않는 DLL 6개**
+(`libFLAC-8` `libogg-0` `libsndfile-1` `libstdc++-6` `libvorbis-0` `libvorbisenc-2`)는 저장소 밖 백업으로 옮겼다.
+`firmware\` · `sav\` · `mcs\` · `mcm\` · `b\` · `mednafen.cfg` 는 그대로 두고 배포본에 있는 것만 덮었다.
+
+갱신 후 Saturn 8개 전수 구동 **8/8 PASS**. `Starting Mednafen 1.32.1` 로 버전도 확인했다.
+### - [x] 58. PPSSPP 1.13.1 -> 1.20.4 — **처리 완료 (2026-09-08)**
+
+| | 이전 | 이후 |
+|---|---|---|
+| 버전 | v1.13.1 (2022-07-28) | **v1.20.4 (2026-05-16)** |
+
+`PPSSPPWindows64.exe` 와 **`assets\`** 를 함께 바꿨다 — 이 둘은 판이 맞아야 한다.
+`memstick\`(설정·세이브)·`Game ISO\`·`d3dcompiler_47.dll` 은 그대로 뒀다.
+배포본에 없는 32비트판(`PPSSPPWindows.exe`)은 쓰지 않으므로 넣지 않았다.
+
+`args` 의 `--fullscreen` 이 1.20.4 에도 있는지 바이너리 문자열로 확인했다
+(`--fullscreen` · `--windowed` · `--pause-menu` 모두 존재).
+
+기준선 18/18 -> 갱신 후 **18/18 PASS**. 회귀 없음.
+### - [x] 59. Project64 — 첫 실행 마법사가 N64 27개를 막고 있었다 + 2023 빌드로 갱신 — **처리 완료 (2026-09-08)**
+
+갱신 전 기준선을 잡으려고 N64 65개를 띄웠더니 **27개가 "Project64 - Welcome" 마법사**에서 멈췄다
+(언어 · 게임 폴더 · 비디오 플러그인을 고르라는 첫 실행 창).
+사용자가 확인을 누른 뒤부터는 안 떴다. 원인은 설정에 **`Current Language` 가 없어서**였다.
+
+> `tools\reset-runtime.ps1 -Config` 가 `emulators/Project64/Config` 를 커밋 상태로 되돌리는데,
+> 그 커밋 상태에 이 키가 없었다. 그래서 **정리할 때마다 마법사가 되살아난다.**
+> 새 장비에서도 첫 게임에서 똑같이 막혔을 것이다.
+
+**여기서 진짜 문제가 드러났다 — 그래픽 플러그인.** 마법사가 기본값인 GLideN64 로 바꾸면서
+그동안 안 보이던 것이 보였다. 변수를 하나씩 갈라 네 조합을 실측했다.
+
+| 조합 | 결과 |
+|---|---|
+| 2021 빌드 + Jabo's Direct3D8 (원래) | `Battle for Naboo` · `Rogue Squadron` 실패 — 마법사에 가려 여태 안 보였다 |
+| 2021 빌드 + GLideN64 | **64 PASS / 1** |
+| 2023 빌드 + Jabo's Direct3D8 | 62 PASS / 3 |
+| **2023 빌드 + GLideN64** ← 채택 | **64 PASS / 1** |
+
+두 게임은 Factor 5 의 **커스텀 마이크로코드**(`crc d5c4dc96` · `86b1593e`)를 쓰는데
+Jabo's Direct3D8 이 이를 지원하지 않아 `Unsupported uCode!` 로 멈춘다. **exe 버전과 무관하다.**
+처음에는 exe 교체가 회귀를 냈다고 오판했는데, 되돌려도 두 게임이 계속 실패해서
+원인이 exe 가 아니라 내가 되돌린 플러그인 선택이었음을 알았다.
+
+**조치**
+- `Project64.exe` 를 2021-07-30 빌드 → **2023-10-13 빌드**로 교체.
+  버전 문자열(`.0.1.5664-2df3434`)과 파일 크기가 같아서 **PE 빌드 타임스탬프**로 구분했다(코드 249KB 차이).
+  구동 결과는 중립이지만 더 새 빌드라 채택했다.
+- 그래픽 플러그인을 **Jabo's Direct3D8 → GLideN64** 로 바꿨다. 이게 실질적인 개선이다.
+- `Current Language=English` 를 설정에 넣어 마법사를 없앴다.
+- 배포본의 플러그인 DLL 5개는 넣지 않았다 — 설정이 특정 버전을 지목하고 있어 건드리면 재선택이 일어난다.
+
+`Monster Truck Madness 64` 는 네 조합 모두에서 `Fatal Error: Stopping emulation` 이다. 게임 자체 문제로 남긴다.
+### - [x] 60. ePSXe 2.0.0 -> 2.0.18 — **처리 완료 (2026-09-08)**
+
+배포본 이름(`ePSXe2018.zip`)이 연도처럼 보이지만 **버전 2.0.18** 이었다.
+동봉 문서에 `ePSXe v2.0.18, released on 12.xx.2025 — Updated the emulator core to version 2.0.18 …
+Support for ISOs in CHD format` 이라고 적혀 있다.
+
+| | 이전 | 이후 |
+|---|---|---|
+| 버전 | 2.0.0 (2016-04-16 빌드) | **2.0.18 (2025-12)** |
+| 파일 | 6,210,560 바이트 (비압축) | 1,448,448 바이트 (UPX) |
+
+**버전 판별이 까다로웠다.** ePSXe 는 버전 리소스가 없고 배포본은 UPX 로 압축돼 있어
+바이너리에서 버전 문자열을 못 읽는다. 창 제목에도 버전이 없다.
+결국 **동봉 문서의 변경 이력**으로 갈랐다. 현재본은 비압축이라 `2.0.0` 문자열이 그대로 읽혔다.
+
+`ePSXe205.zip`(2.0.5, 2016-06-22 빌드)도 같이 받았지만 2.0.18 이 더 새 것이라 그쪽을 썼다.
+
+`ePSXe.exe` 와 `docs`·`epsxe.chm` 만 바꿨다 — `bios\` · `memcards\` · `plugins\` · `shaders\` · `isos\` 는 그대로다.
+배포본의 `plugins\` 에는 `remove.me` 뿐이라 우리 플러그인(`gpuPeteOpenGL2` · `spuEternal` 등)이 유지된다.
+
+기준선 33/33 -> 갱신 후 **33/33 PASS**. 회귀 없음.
+### - [x] 61. Dolphin 최신 빌드는 MSVC 런타임이 모자라 못 쓴다 — **처리 완료 (2026-09-08)**
+
+> **해결.** 사용자가 `vc_redist.x64.exe`(VS 2022 재배포 패키지)를 설치했다.
+> `System32` 의 런타임이 **14.30.30704 -> 14.44.35211.0** 으로 올라가 요구 버전과 정확히 맞았고,
+> 그러자 5.0-12188 이 정상 기동했다. **50/50 PASS.**
+>
+> 설치는 관리자 권한이 필요하지만 **한 번뿐**이고, 그 뒤로는 일반 권한으로 실행되는
+> Attract-Mode 가 그냥 쓴다. **AM 을 관리자로 실행할 필요는 없다.**
+>
+> 바꾼 것: `Dolphin.exe` · `DSPTool.exe` · `DolphinTool.exe`(신규) · `Updater.exe` ·
+> **Qt5 -> Qt6** DLL · `QtPlugins\` · `Languages\` · `Sys\`(우리 추가분 27개는 남김) · `qt.conf`.
+> 옛 Qt5 DLL 은 저장소 밖 백업으로 옮겼다.
+>
+> ⚠️ **첫 실행에 "사용 통계 보고 허용" 창이 뜬다.** 그대로 두면 게임이 시작되지 않는다.
+> `User\Config\Dolphin.ini` 의 `[Analytics] PermissionAsked` 를 `True` 로 두어 껐다
+> (`Enabled` 는 `False` 그대로). 이 설정은 4.10절 덕분에 저장소에 남아 장비로 따라간다.
+
+
+`dolphin-2606a-x64.7z`(**5.0-12188**, 2026-08-11)을 넣어 봤더니 **50개가 전부 즉시 CRASH** 했다.
+종료 코드 `-1073741819`(`0xC0000005`, 액세스 위반)로 2초 만에 죽는다.
+
+원인은 **Visual C++ 런타임 버전**이다. 배포본의 `build_info.txt` 가 요구 버전을 적어 두었다.
+
+```
+VCToolsVersion=14.44.35211.0
+VCToolsUpdateURL=https://aka.ms/vs/17/release/vc_redist.x64.exe
+```
+
+이 PC 의 `System32` 에 있는 것은 **14.30.30704** 다(`msvcp140.dll` · `vcruntime140.dll` ·
+`vcruntime140_1.dll` · `msvcp140_atomic_wait.dll` 모두). 그래서 로드 시점에 죽는다.
+
+| | 현재 | 배포본 |
+|---|---|---|
+| 버전 | 5.0-9299 (2019-01-06) | 5.0-12188 (2026-08-11) |
+| Qt | Qt5 | Qt6 |
+| MSVC 런타임 | 이 PC 로 충분 | **14.44 필요** |
+
+**되돌렸다.** 기준선 50/50 -> 교체 후 0/50 이었으므로 적용할 수 없다.
+원복 뒤 표본 6개로 정상 동작을 확인했다.
+
+**적용하려면** 각 장비에 `vc_redist.x64.exe`(VS 2022 재배포 패키지)를 설치해야 한다.
+관리자 권한이 필요하고 **장비 5대 전부**에 해야 하므로 `.+필독.txt` 항목이 하나 늘어난다.
+설치 후 다시 시도하면 된다 — 백업은 저장소 밖 `backup-mame-0.246-20260907\dolphin-5.0-9299\` 에 있다.
+
+> **여기서 같이 알게 된 것 — Dolphin 설정이 저장소 밖에 있다.**
+> `emulators/Dolphin` 에 `portable.txt` 도 `User\` 도 없어서, Dolphin 은 설정을
+> **`%USERPROFILE%\Documents\Dolphin Emulator`** 에 둔다. 컨트롤러 매핑·그래픽 설정이
+> git 으로 따라가지 않는다는 뜻이다(Mednafen 의 4.9절과 같은 성격의 문제).
+> `portable.txt` 를 두면 실행파일 옆 `User\` 를 쓰게 만들 수 있다. 지금 설정을 그리로 옮기는 작업이 따라온다.
+### - [x] 62. Dolphin 설정이 저장소 밖에 있었다 — `portable.txt` 로 이관 — **처리 완료 (2026-09-08)**
+
+61번을 조사하다 알게 됐다. `emulators/Dolphin` 에 `portable.txt` 도 `User\` 도 없어서
+Dolphin 이 설정을 **`%USERPROFILE%\Documents\Dolphin Emulator`** 에 두고 있었다.
+컨트롤러 매핑 · 그래픽 설정 · 게임큐브 메모리카드 · Wii 세이브가 전부 git 밖이었다는 뜻이다.
+새 장비에서는 **컨트롤러가 매핑되지 않은 채 게임만 뜨는** 상태였을 것이다.
+
+**조치** — 빈 `portable.txt` 를 두고 기존 설정을 `emulators/Dolphin/User/` 로 옮겼다.
+Dolphin 이 실제로 그쪽을 쓰는 것을 확인했다(실행 후 `User\Config\Qt.ini` 와
+`User\Wii\shared2\sys\SYSCONF` 가 갱신되고 `User\Cache\` 가 새로 생겼다).
+
+| 옮긴 것 | 크기 |
+|---|---|
+| `User\Config\` | 6개 — `Dolphin.ini` · `GCPadNew.ini` · `WiimoteNew.ini` · `GCKeyNew.ini` · `Qt.ini` · `btdinf.bak` |
+| `User\GC\` | 게임큐브 메모리카드 2개 (`.gci`) |
+| `User\Wii\` | NAND 57개 — `title\` 에 세이브가 들어 있다 |
+
+**재생성물은 `.gitignore` 로 뺐다** — `Cache\` · `Dump\` · `Logs\` · `Load\` · `ScreenShots\` ·
+`Shaders\` · `Wii\sd.raw`(134MB 가상 SD) · `Wii\tmp\`(30MB).
+그래서 추적되는 것은 **4.1MB / 67개**뿐이다. 원본 폴더는 되돌릴 일에 대비해 남겨 두었다.
+
+이관 후 GC·Wii 표본 8개 구동 **8/8 PASS**.
+### - [x] 63. SuperModel 2018 개조 빌드 -> 2026-07-27 상위 빌드 — **처리 완료 (2026-09-08)**
+
+| | 이전 | 이후 |
+|---|---|---|
+| 빌드 | 2018-11-28 · 1,806,336 바이트 | **2026-07-27 (git b7d8acd)** · 6,981,632 바이트 |
+| 버전 | 0.3a | 0.3a (8년치 커밋) |
+
+**개조 빌드를 버려도 되는지가 관건이었다.** `revision.txt` 에
+`I've just added my little patch for sr2 music fix, that's all` 라고 적혀 있어
+교체하면 그 손질이 사라진다(CLAUDE.md 4.8절의 경고 대상 둘 중 하나였다).
+
+배포본에 **`Config\Music.xml`** 이 들어 있고 그 안에 scud/sr2 항목이 4건 있다.
+상위가 음악 처리를 정식 기능으로 흡수했다는 뜻이라 커스텀 패치는 필요 없어졌다고 보고 교체했다.
+
+`args` 의 옵션(`-quad-rendering` · `-fullscreen` · `-res=`)이 새 빌드에도 있는지
+바이너리 문자열로 먼저 확인했다. 넷 다 있다.
+
+`supermodel.exe` · `Config\{Games.xml,Music.xml}` · `Assets\` · 문서만 바꿨다.
+`Config\Supermodel.ini`(우리 설정) · `NVRAM\` · `Saves\` · `ROMs\` 는 그대로다.
+
+기준선 19/19 -> 갱신 후 **19/19 PASS**.
+
+> ⚠️ **음악은 구동 점검으로 확인할 수 없다.** 프로세스가 살아 있는지만 보기 때문이다.
+> 캐비닛에서 **스커드 레이스(`scud` · `scudp`)를 직접 띄워 BGM 이 나오는지** 한 번 들어 보는 것이 좋다.
+> 문제가 있으면 `backup-mame-0.246-20260907\supermodel-2018\` 에 옛 exe 와 `revision.txt` 가 있다.
+### - [x] 64. Demul — 이미 최신이라 갱신할 것이 없다 — **확인 완료 (2026-09-08)**
+
+`demul07_280418.7z` 를 풀어 파일별로 해시를 비교했다. **`demul.exe` 가 현재본과 완전히 동일하다.**
+`d3dcompiler_47.dll` · `libchd.dll` · `kailleraclient.dll` 등 바이너리도 전부 같다.
+
+다른 것은 **전부 우리 설정**이라 덮으면 안 된다.
+
+| 파일 | 성격 |
+|---|---|
+| `padDemul.ini` | 조이스틱 매핑 — 장비별 설정 |
+| `gpuDX11.ini` · `spuDemul.ini` · `gdrCHD.ini` | 그래픽·사운드·CD 플러그인 설정 |
+| `arcade_compat.txt` | 호환성 목록 (참고용 텍스트) |
+
+Demul 은 2018-04-28 이 마지막 공개 빌드다. **갱신 대상이 아니다.**
+### - [ ] 65. PCSX2 1.6 -> 2.8.2 는 드롭인 교체가 아니다 — ⏳ **갱신 보류**
+
+넣어 보고 되돌렸다. **기동 자체는 된다**(런타임 문제는 없었다). 막은 것은 **세이브와 조작**이다.
+
+**드롭인이 아닌 이유 — 바뀐 것이 넷이다**
+
+| | 1.6 (현재) | 2.8.2 |
+|---|---|---|
+| 실행파일 | `pcsx2.exe` | **`pcsx2-qt.exe`** |
+| 인자 | `"[rom]" --fullscreen --nogui --portable` | **`-batch -fullscreen -nogui "[rom]"`** (단일 하이픈) |
+| 포터블 표시 | `portable.ini` | **`portable.txt`** |
+| 설정 | `inis/PCSX2_ui.ini` + 플러그인별 ini | **`inis/PCSX2.ini` 하나** (`SettingsVersion = 1` 이 없으면 "Settings failed to load" 대화상자) |
+
+**메모리카드 — 앞서 적어 둔 것이 틀렸다 (2026-09-08 실측 정정)**
+
+"1.6 이 게임별 카드 8개를 쓰고 있다"고 적었는데 **사실이 아니다.**
+`memcards\` 에 `.ps2` 파일이 8개 있는 것은 맞지만, **PCSX2 1.6 에는 게임별 카드 기능 자체가 없다.**
+`inis\PCSX2_ui.ini` 를 열어 보면 슬롯 두 개를 전역으로 고정해 쓰고 있다.
+
+```ini
+[MemoryCards]
+Slot1_Enable=enabled   Slot1_Filename=Tekken 4.ps2
+Slot2_Enable=enabled   Slot2_Filename=Tekken 5.ps2
+UseDefaultMemoryCards=disabled
+```
+
+`bartop` · `desktop` · `desktop-MSI-Sword` 세 장비 브랜치도 **전부 같은 값**이다.
+나머지 6개(`Silent Hill 3 (K).ps2` 등)는 파일만 남아 있고 어디에도 물려 있지 않다 —
+`--nogui` 로 띄우는 이 환경에서는 UI 로 갈아 끼울 수도 없으니 **여태 쓰이지 않았다.**
+
+그래서 이 항목은 **캐비닛이 필요 없다.** 2.x 의 `inis\PCSX2.ini` 에 네 줄이면 끝난다.
+
+```ini
+[MemoryCards]
+Slot1_Type = File      Slot1_Filename = Tekken 4.ps2
+Slot2_Type = File      Slot2_Filename = Tekken 5.ps2
+```
+
+**진짜로 남는 것은 입력이다 — 그리고 처음 적은 것보다 크다.**
+
+아케이드 패널 매핑은 **장비 브랜치마다 다르고, 네 곳에 따로 들어 있다.**
+`develop` 에서 보이는 설정은 키보드 + XInput 기본값이라 패널 매핑이 아예 없다.
+
+| 브랜치 | 바인딩 수 | 패널 장치 | 비고 |
+|---|---|---|---|
+| `develop` · `desktop-ASUS-TUF` | 122 | 없음 | 키보드 + XInput 기본값뿐 |
+| `bartop` | 106 | `DX Generic USB Joystick` ×2 | 패널 + 키보드 + XInput |
+| `desktop` · `desktop-MSI-Sword-DriveWheel` | 24 | `DX Generic USB Joystick` ×2 | 패널만 |
+| `desktop-MSI-Sword` | 24 | XInput Pad ×2 | DirectInput 이 아니다 |
+
+**같은 6버튼 패널인데 버튼 번호가 브랜치마다 다르다** — PSXMAME 의 `cfg/`(45번)와 같은 상황이다.
+
+| 물리 입력 | `bartop` | `desktop` · DriveWheel |
+|---|---|---|
+| 버튼 0 · 1 | ✕ · ○ | ✕ · ○ |
+| 버튼 2 | **R1** | **□** |
+| 버튼 3 | **□** | **△** |
+| 버튼 4 | **△** | **L1** |
+| 버튼 5 | **L1** | **R1** |
+| 버튼 6 · 7 | Select · Start | Select · Start |
+| 축 0 −/+ | Left / Right | Left / Right |
+| 축 1 −/+ | Up / Down | Up / Down |
+
+> LilyPad 의 `Binding N=0xTTAAIIII, <패드>, <컨트롤>, …` 에서
+> `0x0004` = 버튼 · `0x0102` = 축 양방향 · `0x0202` = 축 음방향이고, 뒤 4자리가 인덱스다.
+> 컨트롤 번호는 **PS2 프로토콜 비트 순서 + 16** 이다 —
+> 16 Select · 17 L3 · 18 R3 · 19 Start · 20 Up · 21 Right · 22 Down · 23 Left ·
+> 24 L2 · 25 R2 · 26 L1 · 27 R1 · 28 △ · 29 ○ · 30 ✕ · 31 □.
+> 위 표는 이 규칙으로 실제 파일을 해독한 것이다. 2.x 로 옮길 때 그대로 옮겨 적으면 된다.
+
+**측정에서도 걸린 것** — 2.x 는 창을 띄우기까지 12초로 부족하다.
+기본 대기(12초)로는 `NOWIN` 이 무더기로 나오고, `-Seconds 25` 로 올리면 `PASS` 가 된다.
+갱신하게 되면 `test-roms` 기본값을 손보거나 PS2 만 따로 돌려야 한다.
+
+기준선은 **1.6 으로 98/98 PASS** 다. 되돌린 뒤 표본 4개로 정상 동작을 확인했다.
+
+**갱신하려면 이 순서다** (3번이 캐비닛 없이 되는 것으로 바뀌었다)
+1. `pcsx2-qt.exe` 설치 + `portable.txt` + `inis/PCSX2.ini`(`SettingsVersion = 1`)
+2. 두 cfg 의 `executable`·`args` 교체
+3. `inis/PCSX2.ini` 의 `[MemoryCards]` 두 슬롯 지정 — **텍스트 편집으로 끝. 캐비닛 불필요**
+4. **입력 매핑을 장비 브랜치 4곳에 각각** — 위 해독표를 2.x 의 `[Pad1]`/`[Pad2]` 로 옮긴 뒤
+   **각 캐비닛에서 확인해야 한다.** 2.x 는 SDL 로 장치를 잡아 인덱스가 DirectInput 순서와
+   다를 수 있어서, 표만으로는 어느 장치가 `SDL-0` 인지 단정할 수 없다
+5. `test-roms -Seconds 25` 로 98개 전수 확인
+
+**4번이 유일한 잔여 작업이고, 그것만이 캐비닛을 요구한다.**
+지금 1.6 이 98/98 로 돌고 있으므로 서두를 이유는 없다.
+
+백업은 저장소 밖 `backup-mame-0.246-20260907\pcsx2-1.6\`(exe · inis · plugins · portable.ini)에 있다.
+
+### - [x] 66. Wii U 4개가 전부 실행 불가였다 — Cemu 세 가지 원인 — **처리 완료 (2026-09-08)**
+
+Cemu 갱신 전 기준선을 잡으려 띄웠더니 **4개가 전부 실패**했다(DIALOG 3 · EXIT0 1).
+원인이 셋이었고 전부 고쳐 **4/4 PASS** 가 됐다. CLAUDE.md 4.11절에 정리했다.
+
+**(1) `args` 의 `[romext]` 가 빈 문자열이 된다**
+
+`romext` 에 `<DIR>` 이 있어 AM 이 롬을 폴더로 매칭하고, 폴더에는 확장자가 없어
+`[romext]` 가 비어 버린다. 실제로 넘어간 인자는 이랬다.
+
+```
+-f -g "roms\Tekken Tag Tournament 2\code\Tekken Tag Tournament 2"    ← .rpx 가 없다
+```
+
+Cemu 는 `Unknown file type. It is not a valid Wii U executable (.rpx) or disc image (.wud/.wux)` 로 거절한다.
+`args` 에 **`.rpx` 를 고정**으로 적어 해결했다.
+
+**(2) 첫 실행 마법사가 매번 떴다**
+
+`settings.xml` 의 `<gp_download>false</gp_download>` 때문에 실행할 때마다 **"Getting started"** 창이 뜨고
+게임이 시작되지 않았다. `true` 로 바꾸니 사라졌다. `<GamePaths>` 도 비어 있어 `Roms` 를 채웠다.
+
+> **`settings.xml` 이 `.gitignore` 대상이었다.** 그래서 이 설정이 장비로 따라가지 않는다.
+> 추적으로 돌렸고, 셰이더 캐시(`shaderCache\driver` · `precompiled`)만 무시한다.
+> `tools/reset-runtime.ps1` 에도 `settings.xml` 과 `controllerProfiles` 를 넣었다.
+
+**(3) 롬 폴더 구조가 어긋나 있었다**
+
+`args` 가 `[name]` 을 두 번 쓰므로 폴더명과 `.rpx` 파일명이 같아야 한다.
+
+| 게임 | 있던 것 | 고친 것 |
+|---|---|---|
+| `Tekken Tag Tournament 2` | `code\Tekken.rpx` | `code\Tekken Tag Tournament 2.rpx` |
+| `OPU3` | `OPU3\data\code\OPU3.rpx` | `data\` 한 겹을 걷어내 `OPU3\code\OPU3.rpx` |
+| `ferrum_app` | 정상 | — |
+
+> **`.+필독.txt` 가 원인을 하나 만들었다.** `Roms\Tekken` 을 `Roms\Tekken Tag Tournament 2` 로
+> 개명하라고만 적혀 있어서 **안의 `Tekken.rpx` 는 그대로 남았다.** 파일도 같이 개명해야 한다.
+> 롬은 `.gitignore` 대상이라 각 장비에서 직접 해야 한다 — `.+필독.txt` 를 고쳤다.
+### - [x] 67. RetroArch 1.10.3 -> 1.22.2 — **처리 완료 (2026-09-08)**
+
+| | 이전 | 이후 |
+|---|---|---|
+| 버전 | 1.10.3 (2022-05-03) | **1.22.2 (2025-11-20)** |
+| 크기 | 15,926,870 바이트 | 18,641,482 바이트 |
+
+`retroarch.exe` 와 동봉 DLL(Qt5 · SDL2 · ffmpeg 계열 등)만 바꿨다.
+`cores\` · `system\` · `retroarch.cfg` · `saves\` · `states\` 는 그대로다.
+
+> **관건은 코어 ABI 였다.** `cores\fbneo_libretro.dll` 은 2022년 것이고 본체만 3년 반 앞선다.
+> libretro ABI 가 안정적이라 그대로 물린다고 보고 넣었고, **10/10 PASS** 로 확인했다.
+> 배포본에는 `fbneo_libretro.dll` 이 없고 `info\fbneo_libretro.info` 만 들어 있어
+> 코어를 덮어쓸 위험도 없었다.
+
+기준선 10/10 -> 갱신 후 **10/10 PASS**.
+### - [x] 68. TeknoParrot 32개가 전부 실행 불가였다 — 프로필의 옛 설치 경로 — **처리 완료 (2026-09-08)**
+
+갱신 전 기준선을 잡으려 띄웠더니 전부 이 대화상자에서 멈췄다.
+
+```
+Cannot find game exe at:
+D:\attract-v2.6.2-win64\emulators\TeknoParrot\Games\...\LGI_RingW_F_safe.exe
+```
+
+`emulators/TeknoParrot/UserProfiles/*.xml` 의 `<GamePath>` 가 **예전 설치 경로**
+`D:\attract-v2.6.2-win64` 를 가리키고 있었다. **32개 전부**가 그랬고 현재 경로를 쓰는 것은 하나도 없었다.
+게임 파일 자체는 `Games\` 에 32개 다 있었다.
+
+**조치** — 32개 프로필의 `D:\attract-v2.6.2-win64` 를 `D:\AttractMode` 로 바꾸고,
+바꾼 뒤 각 `<GamePath>` 가 실제로 존재하는지 전수 확인했다(**실행파일 없는 프로필 0개**).
+`Cannot find game exe` 는 사라졌고, 실행하면 `GameRunning` 상태로 게임 프로세스가 뜬다.
+
+> ⚠️ **TeknoParrot 은 전수 구동 점검을 할 수 없다.** 단일 인스턴스 런처라
+> 앞 게임이 살아 있으면 `TeknoParrotUI seems to already be running` 대화상자를 띄운다.
+> `test-roms` 는 `TeknoParrotUi.exe` 만 종료시키고 그것이 띄운 게임 프로세스
+> (`BudgieLoader` · `OpenParrotLoader64` · 게임 exe)는 남기기 때문에 연속 실행이 막힌다.
+> **확인은 한 번에 하나씩 수동으로** 한다.
+
+> ⚠️ **`<GamePath>` 는 절대경로다.** 설치 경로가 `D:\AttractMode` 가 아닌 장비에서는
+> 다시 고쳐야 한다. `UserProfiles\` 는 git 추적 대상이라 이 수정 자체는 장비로 따라간다.
+
+### - [x] 69. Cemu 1.26.2f -> 2.6 — 사용자 데이터가 저장소 밖으로 나갈 뻔했다 — **처리 완료 (2026-09-08)**
+
+66번으로 Wii U 4개를 되살린 직후의 갱신이다. 기준선은 **4/4 PASS**였다.
+
+**걸린 것은 버전이 아니라 데이터 디렉터리였다.** Cemu 2.x 는 기본적으로 설정·세이브를
+`%USERPROFILE%\AppData\Roaming\Cemu` 에 둔다. 그대로 올렸으면 `settings.xml`(66번에서 겨우 고친
+`gp_download`·`GamePaths`)·컨트롤러 프로필·Wii U 세이브가 전부 저장소 밖으로 나가
+**56번 Mednafen · 61번 Dolphin 과 똑같은 "장비로 따라가지 않는 설정"** 이 될 뻔했다.
+
+**조치** — 실행파일 옆에 `portable\` 폴더를 만들고 사용자 데이터를 그리로 옮겼다.
+Cemu 2.x 는 이 폴더가 있으면 그것을 데이터 디렉터리로 쓴다(Dolphin 의 `portable.txt` 와 같은 성격).
+
+```
+emulators\Cemu\
+├─ Cemu.exe  resources\  gameProfiles\   벤더 배포본
+├─ Roms\                                 롬 (gitignore)
+└─ portable\  settings.xml · keys.txt · controllerProfiles\ · graphicPacks\
+              mlc01\usr\save\ (Wii U 세이브) · shaderCache\
+```
+
+`.gitignore` 와 `tools/reset-runtime.ps1` 의 Cemu 경로도 같이 옮겼고,
+`portable/mlc01` 을 **세이브** 갈래에 넣었다(설정과 함께 되돌아가면 게임 진행이 날아간다).
+
+**호환은 문제가 없었다.**
+
+| 확인한 것 | 결과 |
+|---|---|
+| CLI `-f` · `-g` | 2.6 에도 그대로 있다. `Nintendo Wii U.cfg` 의 `args` 무수정 |
+| `settings.xml` 형식 | 1.26 이 쓰던 파일을 그대로 읽고 `gp_download`·`GamePaths` 를 보존해 다시 쓴다 |
+| 첫 실행 마법사 | 안 뜬다(`gp_download true` 유지) |
+| 구동 | **4/4 PASS**. 로그로 `Run title` 까지 도달한 것을 확인했다 |
+
+**바뀐 것 넷** — `gameProfiles\*.ini` 236개가 `gameProfiles\default\` 아래로 내려갔고,
+`resources\{WinGamingInput.dll, libusb-1.0.dll}` 은 본체에 정적 링크돼 사라졌고,
+렌더러 기본값이 **OpenGL -> Vulkan** 으로 바뀌었고(이 PC 는 NVIDIA 라 30 FPS 로 정상),
+배포본 `resources\ar\` 파일명 앞에 **보이지 않는 RTL 마크(U+200F) 두 개**가 붙어 있어
+`ar\cemu.mo` 로 정규화했다(업스트림 패키징 버그. 그대로 커밋하면 플랫폼마다 다르게 풀린다).
+
+> **Vulkan 을 못 쓰는 장비에서는** Cemu 설정에서 OpenGL 로 되돌린다.
+> `settings.xml` 에 렌더러 키가 없어 기본값을 타므로 장비마다 다를 수 있다.
+
+
+### - [ ] 70. TeknoParrot 2.0.0.127 은 단독으로 실행되지 않는다 — ⏳ **갱신 보류 (2026-09-08)**
+
+68번으로 32개를 되살린 뒤 갱신을 시도했다. **받아 둔 zip 은 공식 배포본이 맞는데(17.1MB, GitHub
+릴리스와 크기 일치) 그것만으로는 절대 실행되지 않는다.**
+
+```
+Unhandled exception. System.IO.FileNotFoundException: Could not load file or assembly
+'Avalonia.Controls, Version=12.0.5.0, ...'
+   at TeknoParrotUi.Avalonia.Program.Main(String[] args)
+```
+
+2.0 은 UI 를 **WPF -> Avalonia** 로 갈아엎었는데, win-x64 zip 에는 그 Avalonia 런타임이
+**하나도 안 들어 있다**(`Avalonia.Controls.WebView.dll` 만 있고 `.deps.json` 조차 없다.
+같은 릴리스의 linux zip 은 45.4MB 로 다 들어 있다). 즉 **thin 패키지**다.
+
+같이 들어 있는 `ParrotPatcher.exe` 를 돌려 봤지만 그것은 **에뮬레이션 코어만** 본다.
+
+```
+[17:03:55] Checking what needs to be updated...
+[17:03:55] No cores to update!
+[17:03:55] Restarting TeknoParrotUI...     -> 다시 같은 Avalonia 예외로 죽는다
+```
+
+공식 다운로드 페이지가 안내하는 윈도우 설치 경로는 **웹 설치기(TPBootStrapper)** 하나뿐이고,
+그것은 실행 때마다 스스로를 갱신한다. **저장소가 에뮬레이터 폴더를 통째로 추적해 5개 장비로
+전파하는 이 구조와 정면으로 어긋난다** — 런처가 자기 DLL 을 덮어쓰기 시작하면 장비마다
+내용이 갈리고 부팅할 때마다 `git status` 가 더러워진다.
+
+> .NET 8 런타임(8.0.30)은 이 PC 에 설치했다. 그것은 문제가 아니었다.
+
+**2.0.0.127 은 Pre-release 다. 유지되는 "Latest" 는 `1.0.0.2078`(2026-04-04)** 이고
+현재 설치본(1.0.0.804, 2022-08)과 **같은 구조**(.NET Framework + WPF)에 145MB 완전 오프라인
+패키지다. 그것도 받아서 시험했는데 두 가지가 걸렸다.
+
+| | 확인한 것 |
+|---|---|
+| 프로필 스키마 | `GameName` · `GameGenre` · `IconName` · `ResetHint` · `FieldMin` · `FieldMax` 가 빠지고 `ExecutableName` · `ExtraParameters` 가 생겼다. **2.0 과 똑같은 변화** — 즉 스키마는 1.0 안에서 이미 바뀌었다. `UserProfiles` 32개를 전부 다시 만들어야 한다 |
+| 첫 실행 | **`Privacy Notice` 대화상자가 떠서 게임이 시작되지 않는다.** `ParrotData.xml` 에 `FirstRun false` · `PoliciesAccept true` 를 넣어 봤지만 그대로 뜬다. 설정 파일로 미리 동의시키는 방법을 못 찾았다 |
+
+여기에 68번의 제약이 겹친다 — **TeknoParrot 은 전수 구동 점검이 불가능하다.**
+바꾸면 32개를 손으로 하나씩 확인해야 하는데, **지금 32개가 전부 정상 동작한다.**
+그래서 `1.0.0.804` 를 유지한다. 64번(Demul) · 65번(PCSX2)과 같은 판단이다.
+
+**갱신하기로 하면 이 순서다**
+1. `1.0.0.2078` 오프라인 zip 을 푼다(2.0 이 아니라 이쪽). 후킹 코어(`OpenParrot*` · `SegaTools` ·
+   `TeknoParrot` · `N2`)는 zip 에 없으므로 **지금 저장소에 있는 것을 그대로 둔다**
+2. `Privacy Notice` 를 한 번 손으로 눌러 통과시키고, 그때 바뀐 설정 파일을 찾아 추적에 넣는다
+3. 2078 의 `GameProfiles\<이름>.xml` 을 틀로 `UserProfiles` 32개를 다시 만들고 `GamePath` 를 채운다
+4. 32개를 **한 번에 하나씩** 띄워 확인한다(연속 실행 불가 — 68번)
+
+> 곁가지로 알게 된 것: **TeknoParrot 은 게임 NVRAM 을 `%APPDATA%\TeknoParrot` 에 쓴다**
+> (`SBJJ_sram.bin` 같은 것 수십 개). 저장소 밖이라 장비로 따라가지 않는다.
+> 56번(Mednafen) · 61번(Dolphin) · 69번(Cemu)과 같은 성격인데, 이쪽은 경로를 옮기는 옵션이 없다.
+
 ---
 
 ## 개선 제안

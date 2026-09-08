@@ -2,58 +2,56 @@ Supermodel v0.3a-WIP Error Log
 ------------------------------
 
 Started as:
-  argv[0] = emulators\SuperModel\Supermodel.exe
-  argv[1] = Roms\vf3.zip
+  argv[0] = D:\AttractMode\emulators\supermodel\supermodel.exe
+  argv[1] = roms\harley.zip
   argv[2] = -res=1024,768
   argv[3] = -fullscreen
   argv[4] = -quad-rendering
 
-Opened Roms\vf3.zip.
-vf3c:
+Opened roms\harley.zip.
+harley:
   banked_crom: stride=zu, chunk size=zu, byte swap=8
-    mpr-19196.4, crc32=0xf386b850, offset=0x00000000
-    mpr-19195.3, crc32=0xbd5e27a3, offset=0x00000002
-    mpr-19194.2, crc32=0x66254702, offset=0x00000004
-    mpr-19193.1, crc32=0x7bab33d2, offset=0x00000006
-    mpr-19200.8, crc32=0x74941091, offset=0x01000000
-    mpr-19199.7, crc32=0x9f80d6fe, offset=0x01000002
-    mpr-19198.6, crc32=0xd8ee5032, offset=0x01000004
-    mpr-19197.5, crc32=0xa22d76c9, offset=0x01000006
-    mpr-19204.12, crc32=0x2f93310a, offset=0x02000000
-    mpr-19203.11, crc32=0x0afa6334, offset=0x02000002
-    mpr-19202.10, crc32=0xaaa086c6, offset=0x02000004
-    mpr-19201.9, crc32=0x7c4a8c31, offset=0x02000006
-    mpr-19208.16, crc32=0x08f30f71, offset=0x03000000
-    mpr-19207.15, crc32=0x2ce1612d, offset=0x03000002
-    mpr-19206.14, crc32=0x71a98d73, offset=0x03000004
-    mpr-19205.13, crc32=0x199c328e, offset=0x03000006
+    mpr-20364.4, crc32=0xa2a68ef2, offset=0x00000000
+    mpr-20363.3, crc32=0x3e3cc6ff, offset=0x00000002
+    mpr-20362.2, crc32=0xf7e60dfd, offset=0x00000004
+    mpr-20361.1, crc32=0xddb66c2f, offset=0x00000006
+    mpr-20368.8, crc32=0x100c9846, offset=0x01000000
+    mpr-20367.7, crc32=0x6c3f9748, offset=0x01000002
+    mpr-20366.6, crc32=0x45e3850e, offset=0x01000004
+    mpr-20365.5, crc32=0x7dd50361, offset=0x01000006
+    epr-20412.16, crc32=0x0d51bb34, offset=0x03800000
+    epr-20411.15, crc32=0x848daaf7, offset=0x03800002
+    epr-20410.14, crc32=0x98b126f2, offset=0x03800004
+    epr-20409.13, crc32=0x58caaa75, offset=0x03800006
   crom: stride=zu, chunk size=zu, byte swap=8
-    epr-19230c.20, crc32=0x736a9431, offset=0x00000000
-    epr-19229c.19, crc32=0x731b6b78, offset=0x00000002
-    epr-19228c.18, crc32=0x9c5727e2, offset=0x00000004
-    epr-19227c.17, crc32=0xa7df4d75, offset=0x00000006
+    epr-20396b.20, crc32=0x9623dea7, offset=0x00000000
+    epr-20395b.19, crc32=0x88f71d76, offset=0x00000002
+    epr-20394b.18, crc32=0xb4312135, offset=0x00000004
+    epr-20393b.17, crc32=0x7d712105, offset=0x00000006
   sound_program: stride=zu, chunk size=zu, byte swap=1
-    epr-19231.21, crc32=0xb416fe96, offset=0x00000000
+    epr-20397.21, crc32=0x5b20b54a, offset=0x00000000
   sound_samples: stride=zu, chunk size=zu, byte swap=1
-    mpr-19209.22, crc32=0x3715e38c, offset=0x00000000
-    mpr-19210.24, crc32=0xc03d6502, offset=0x00400000
+    mpr-20373.22, crc32=0xc684e8a3, offset=0x00000000
+    mpr-20375.24, crc32=0x906ace86, offset=0x00400000
+    mpr-20374.23, crc32=0xfcf6ea21, offset=0x00800000
+    mpr-20376.25, crc32=0xdeeed366, offset=0x00c00000
   vrom: stride=zu, chunk size=zu, byte swap=32
-    mpr-19211.26, crc32=0x9c8f5df1, offset=0x00000000
-    mpr-19212.27, crc32=0x75036234, offset=0x00000002
-    mpr-19213.28, crc32=0x67b123cf, offset=0x00000004
-    mpr-19214.29, crc32=0xa6f5576b, offset=0x00000006
-    mpr-19215.30, crc32=0xc6fd9f0d, offset=0x00000008
-    mpr-19216.31, crc32=0x201bb1ed, offset=0x0000000a
-    mpr-19217.32, crc32=0x4dadd41a, offset=0x0000000c
-    mpr-19218.33, crc32=0xcff91953, offset=0x0000000e
-    mpr-19219.34, crc32=0xc610d521, offset=0x00000010
-    mpr-19220.35, crc32=0xe62924d0, offset=0x00000012
-    mpr-19221.36, crc32=0x24f83e3c, offset=0x00000014
-    mpr-19222.37, crc32=0x61a6aa7d, offset=0x00000016
-    mpr-19223.38, crc32=0x1a8c1980, offset=0x00000018
-    mpr-19224.39, crc32=0x0a79a1bd, offset=0x0000001a
-    mpr-19225.40, crc32=0x91a985eb, offset=0x0000001c
-    mpr-19226.41, crc32=0x00091722, offset=0x0000001e
+    mpr-20377.26, crc32=0x4d2887e5, offset=0x00000000
+    mpr-20378.27, crc32=0x5ad7c0ec, offset=0x00000002
+    mpr-20379.28, crc32=0x1e51c9f0, offset=0x00000004
+    mpr-20380.29, crc32=0xe10d35ae, offset=0x00000006
+    mpr-20381.30, crc32=0x76cd36a2, offset=0x00000008
+    mpr-20382.31, crc32=0xf089ae37, offset=0x0000000a
+    mpr-20383.32, crc32=0x9e96d3be, offset=0x0000000c
+    mpr-20384.33, crc32=0x5bdfbb52, offset=0x0000000e
+    mpr-20385.34, crc32=0x12db1729, offset=0x00000010
+    mpr-20386.35, crc32=0xdb2ccaf8, offset=0x00000012
+    mpr-20387.36, crc32=0xc5dde91b, offset=0x00000014
+    mpr-20388.37, crc32=0xaeaa862e, offset=0x00000016
+    mpr-20389.38, crc32=0x49bb6593, offset=0x00000018
+    mpr-20390.39, crc32=0x1d4a8efe, offset=0x0000001a
+    mpr-20391.40, crc32=0x5dc452dc, offset=0x0000001c
+    mpr-20392.41, crc32=0x892208cb, offset=0x0000001e
 Runtime configuration:
   GameXMLFile=Config/Games.xml
   InitStateFile=
@@ -99,10 +97,10 @@ Runtime configuration:
   port_in=1970
   port_out=1971
   addr_out=127.0.0.1
-  InputStart1=KEY_1,JOY1_BUTTON10
-  InputStart2=KEY_2,JOY2_BUTTON10
-  InputCoin1=KEY_3,JOY1_BUTTON9
-  InputCoin2=KEY_4,JOY2_BUTTON9
+  InputStart1=KEY_1,JOY1_BUTTON8
+  InputStart2=KEY_2,JOY2_BUTTON8
+  InputCoin1=KEY_3,JOY1_BUTTON7
+  InputCoin2=KEY_4,JOY2_BUTTON7
   InputServiceA=KEY_5
   InputServiceB=KEY_7
   InputTestA=KEY_6
@@ -252,11 +250,13 @@ Runtime configuration:
   InputFishingCast=KEY_Z,JOY1_BUTTON1
   InputFishingSelect=KEY_X,JOY1_BUTTON2
 
+Unable to create DirectInput mouse device (error -2147221164) - mouse input will be unavailable.
+
 OpenGL information:
-  Vendor                   : Intel
-  Renderer                 : Intel(R) UHD Graphics 620
-  Version                  : 4.5.0 - Build 25.20.100.6444
-  Shading Language Version : 4.50 - Build 25.20.100.6444
+  Vendor                   : NVIDIA Corporation
+  Renderer                 : NVIDIA GeForce GTX 950/PCIe/SSE2
+  Version                  : 4.6.0 NVIDIA 536.23
+  Shading Language Version : 4.60 NVIDIA
   Maximum Vertex Array Size: 1048576 vertices
   Maximum Texture Size     : 16384 texels
   Maximum Vertex Attributes: 16
