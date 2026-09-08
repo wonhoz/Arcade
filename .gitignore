@@ -87,3 +87,5 @@ emulators/Mame/cheat/output.json
 emulators/Mame/cheat/output.xml
 stats/
 logs/
+emulators/PCSX2/logs/
+emulators/Project64/Logs/
