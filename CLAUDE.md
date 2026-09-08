@@ -438,7 +438,7 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 | `Mame` | **0.289** | 2026-07-30 | 2026-09-07 갱신. 롬 세트가 버전에 묶인다(4.7절 (2)). 세트 이름도 판마다 바뀐다 |
 | `EKMAME` | EKMAME **0.224** | 2024-04-04 | 2026-09-07 분리 + 갱신. 지원 셋 8,740 -> 16,304 (4.7절) |
 | `PSXMAME` | MAME 0.139 계열 (2009-09-03 빌드 · `fixed_snd` 판) | 2026-09-08 | **더 새 버전 없음.** ⚠️ `mame.exe` 에 1바이트 패치(4.6절) — 교체하면 사라진다 |
-| `SuperModel` | (0.3a-WIP · `revision.txt` 는 svn r757 까지) | 2018-11-28 | ⚠️ **개조 빌드다** — `revision.txt` 에 "sr2 music fix" 패치를 넣었다고 적혀 있다 |
+| `SuperModel` | 0.3a (**git b7d8acd**) | 2026-07-27 | 2026-09-08 갱신. 예전 개조 빌드의 "sr2 music fix" 는 상위의 `Config\Music.xml` 로 대체됐다 |
 | `Demul` | | 2018-04-28 | `-run=<플랫폼> -rom=` 인자 체계 |
 | `M2` | | 2018-10-14 | 인자가 `[name]` 하나뿐이라 갱신 여파가 작다 |
 | `PCSX2` | | 2020-05-07 | ⚠️ **최신판은 CLI 가 다르다.** 지금 쓰는 `--nogui --portable` 이 그대로 있는지 먼저 확인 |
