@@ -7,7 +7,7 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **66건** / 미해결 **1건**(13번) · 보류 3건 · 재분류 3건 · 개선 포인트 8건
+**진행 현황** — 처리 **66건** / 미해결 **2건**(13번 · 65번) · 보류 3건 · 재분류 3건 · 개선 포인트 8건
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
 42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일.
 **46~49번은 2026-09-06 전수 구동 점검(E)의 실패 106건을 파고들어 나온 것** —
@@ -1544,6 +1544,96 @@ Dolphin 이 실제로 그쪽을 쓰는 것을 확인했다(실행 후 `User\Conf
 | `arcade_compat.txt` | 호환성 목록 (참고용 텍스트) |
 
 Demul 은 2018-04-28 이 마지막 공개 빌드다. **갱신 대상이 아니다.**
+### - [ ] 65. PCSX2 1.6 -> 2.8.2 는 드롭인 교체가 아니다 — ⏳ **갱신 보류**
+
+넣어 보고 되돌렸다. **기동 자체는 된다**(런타임 문제는 없었다). 막은 것은 **세이브와 조작**이다.
+
+**드롭인이 아닌 이유 — 바뀐 것이 넷이다**
+
+| | 1.6 (현재) | 2.8.2 |
+|---|---|---|
+| 실행파일 | `pcsx2.exe` | **`pcsx2-qt.exe`** |
+| 인자 | `"[rom]" --fullscreen --nogui --portable` | **`-batch -fullscreen -nogui "[rom]"`** (단일 하이픈) |
+| 포터블 표시 | `portable.ini` | **`portable.txt`** |
+| 설정 | `inis/PCSX2_ui.ini` + 플러그인별 ini | **`inis/PCSX2.ini` 하나** (`SettingsVersion = 1` 이 없으면 "Settings failed to load" 대화상자) |
+
+**메모리카드 — 앞서 적어 둔 것이 틀렸다 (2026-09-08 실측 정정)**
+
+"1.6 이 게임별 카드 8개를 쓰고 있다"고 적었는데 **사실이 아니다.**
+`memcards\` 에 `.ps2` 파일이 8개 있는 것은 맞지만, **PCSX2 1.6 에는 게임별 카드 기능 자체가 없다.**
+`inis\PCSX2_ui.ini` 를 열어 보면 슬롯 두 개를 전역으로 고정해 쓰고 있다.
+
+```ini
+[MemoryCards]
+Slot1_Enable=enabled   Slot1_Filename=Tekken 4.ps2
+Slot2_Enable=enabled   Slot2_Filename=Tekken 5.ps2
+UseDefaultMemoryCards=disabled
+```
+
+`bartop` · `desktop` · `desktop-MSI-Sword` 세 장비 브랜치도 **전부 같은 값**이다.
+나머지 6개(`Silent Hill 3 (K).ps2` 등)는 파일만 남아 있고 어디에도 물려 있지 않다 —
+`--nogui` 로 띄우는 이 환경에서는 UI 로 갈아 끼울 수도 없으니 **여태 쓰이지 않았다.**
+
+그래서 이 항목은 **캐비닛이 필요 없다.** 2.x 의 `inis\PCSX2.ini` 에 네 줄이면 끝난다.
+
+```ini
+[MemoryCards]
+Slot1_Type = File      Slot1_Filename = Tekken 4.ps2
+Slot2_Type = File      Slot2_Filename = Tekken 5.ps2
+```
+
+**진짜로 남는 것은 입력이다 — 그리고 처음 적은 것보다 크다.**
+
+아케이드 패널 매핑은 **장비 브랜치마다 다르고, 네 곳에 따로 들어 있다.**
+`develop` 에서 보이는 설정은 키보드 + XInput 기본값이라 패널 매핑이 아예 없다.
+
+| 브랜치 | 바인딩 수 | 패널 장치 | 비고 |
+|---|---|---|---|
+| `develop` · `desktop-ASUS-TUF` | 122 | 없음 | 키보드 + XInput 기본값뿐 |
+| `bartop` | 106 | `DX Generic USB Joystick` ×2 | 패널 + 키보드 + XInput |
+| `desktop` · `desktop-MSI-Sword-DriveWheel` | 24 | `DX Generic USB Joystick` ×2 | 패널만 |
+| `desktop-MSI-Sword` | 24 | XInput Pad ×2 | DirectInput 이 아니다 |
+
+**같은 6버튼 패널인데 버튼 번호가 브랜치마다 다르다** — PSXMAME 의 `cfg/`(45번)와 같은 상황이다.
+
+| 물리 입력 | `bartop` | `desktop` · DriveWheel |
+|---|---|---|
+| 버튼 0 · 1 | ✕ · ○ | ✕ · ○ |
+| 버튼 2 | **R1** | **□** |
+| 버튼 3 | **□** | **△** |
+| 버튼 4 | **△** | **L1** |
+| 버튼 5 | **L1** | **R1** |
+| 버튼 6 · 7 | Select · Start | Select · Start |
+| 축 0 −/+ | Left / Right | Left / Right |
+| 축 1 −/+ | Up / Down | Up / Down |
+
+> LilyPad 의 `Binding N=0xTTAAIIII, <패드>, <컨트롤>, …` 에서
+> `0x0004` = 버튼 · `0x0102` = 축 양방향 · `0x0202` = 축 음방향이고, 뒤 4자리가 인덱스다.
+> 컨트롤 번호는 **PS2 프로토콜 비트 순서 + 16** 이다 —
+> 16 Select · 17 L3 · 18 R3 · 19 Start · 20 Up · 21 Right · 22 Down · 23 Left ·
+> 24 L2 · 25 R2 · 26 L1 · 27 R1 · 28 △ · 29 ○ · 30 ✕ · 31 □.
+> 위 표는 이 규칙으로 실제 파일을 해독한 것이다. 2.x 로 옮길 때 그대로 옮겨 적으면 된다.
+
+**측정에서도 걸린 것** — 2.x 는 창을 띄우기까지 12초로 부족하다.
+기본 대기(12초)로는 `NOWIN` 이 무더기로 나오고, `-Seconds 25` 로 올리면 `PASS` 가 된다.
+갱신하게 되면 `test-roms` 기본값을 손보거나 PS2 만 따로 돌려야 한다.
+
+기준선은 **1.6 으로 98/98 PASS** 다. 되돌린 뒤 표본 4개로 정상 동작을 확인했다.
+
+**갱신하려면 이 순서다** (3번이 캐비닛 없이 되는 것으로 바뀌었다)
+1. `pcsx2-qt.exe` 설치 + `portable.txt` + `inis/PCSX2.ini`(`SettingsVersion = 1`)
+2. 두 cfg 의 `executable`·`args` 교체
+3. `inis/PCSX2.ini` 의 `[MemoryCards]` 두 슬롯 지정 — **텍스트 편집으로 끝. 캐비닛 불필요**
+4. **입력 매핑을 장비 브랜치 4곳에 각각** — 위 해독표를 2.x 의 `[Pad1]`/`[Pad2]` 로 옮긴 뒤
+   **각 캐비닛에서 확인해야 한다.** 2.x 는 SDL 로 장치를 잡아 인덱스가 DirectInput 순서와
+   다를 수 있어서, 표만으로는 어느 장치가 `SDL-0` 인지 단정할 수 없다
+5. `test-roms -Seconds 25` 로 98개 전수 확인
+
+**4번이 유일한 잔여 작업이고, 그것만이 캐비닛을 요구한다.**
+지금 1.6 이 98/98 로 돌고 있으므로 서두를 이유는 없다.
+
+백업은 저장소 밖 `backup-mame-0.246-20260907\pcsx2-1.6\`(exe · inis · plugins · portable.ini)에 있다.
+
 ### - [x] 66. Wii U 4개가 전부 실행 불가였다 — Cemu 세 가지 원인 — **처리 완료 (2026-09-08)**
 
 Cemu 갱신 전 기준선을 잡으려 띄웠더니 **4개가 전부 실패**했다(DIALOG 3 · EXIT0 1).
