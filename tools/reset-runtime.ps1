@@ -89,6 +89,8 @@ $ConfigPaths = @(
     'emulators/PPSSPP/memstick/PSP/SYSTEM'      # PPSSPP 설정·입력
     'emulators/Mednafen/mednafen.cfg'           # Mednafen 설정 (종료할 때마다 다시 쓴다)
     'emulators/Dolphin/User/Config'             # Dolphin 설정·입력 (portable.txt, 4.10절)
+    'emulators/Cemu/portable/settings.xml'      # Cemu 설정 (gp_download·GamePaths, 4.11절)
+    'emulators/Cemu/portable/controllerProfiles' # Cemu 입력
 )
 
 # 세이브 — 되돌리면 게임 진행이 사라진다
@@ -113,6 +115,7 @@ $SavePaths = @(
     'emulators/Demul/nvram'
     'emulators/RetroArch/saves'
     'emulators/RetroArch/states'
+    'emulators/Cemu/portable/mlc01'             # Wii U 세이브 (mlc01\usr\save)
 )
 
 # 미추적 산출물 — 삭제 대상

@@ -7,7 +7,7 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **63건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
+**진행 현황** — 처리 **65건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
 42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일.
 **46~49번은 2026-09-06 전수 구동 점검(E)의 실패 106건을 파고들어 나온 것** —
@@ -1544,6 +1544,45 @@ Dolphin 이 실제로 그쪽을 쓰는 것을 확인했다(실행 후 `User\Conf
 | `arcade_compat.txt` | 호환성 목록 (참고용 텍스트) |
 
 Demul 은 2018-04-28 이 마지막 공개 빌드다. **갱신 대상이 아니다.**
+### - [x] 66. Wii U 4개가 전부 실행 불가였다 — Cemu 세 가지 원인 — **처리 완료 (2026-09-08)**
+
+Cemu 갱신 전 기준선을 잡으려 띄웠더니 **4개가 전부 실패**했다(DIALOG 3 · EXIT0 1).
+원인이 셋이었고 전부 고쳐 **4/4 PASS** 가 됐다. CLAUDE.md 4.11절에 정리했다.
+
+**(1) `args` 의 `[romext]` 가 빈 문자열이 된다**
+
+`romext` 에 `<DIR>` 이 있어 AM 이 롬을 폴더로 매칭하고, 폴더에는 확장자가 없어
+`[romext]` 가 비어 버린다. 실제로 넘어간 인자는 이랬다.
+
+```
+-f -g "roms\Tekken Tag Tournament 2\code\Tekken Tag Tournament 2"    ← .rpx 가 없다
+```
+
+Cemu 는 `Unknown file type. It is not a valid Wii U executable (.rpx) or disc image (.wud/.wux)` 로 거절한다.
+`args` 에 **`.rpx` 를 고정**으로 적어 해결했다.
+
+**(2) 첫 실행 마법사가 매번 떴다**
+
+`settings.xml` 의 `<gp_download>false</gp_download>` 때문에 실행할 때마다 **"Getting started"** 창이 뜨고
+게임이 시작되지 않았다. `true` 로 바꾸니 사라졌다. `<GamePaths>` 도 비어 있어 `Roms` 를 채웠다.
+
+> **`settings.xml` 이 `.gitignore` 대상이었다.** 그래서 이 설정이 장비로 따라가지 않는다.
+> 추적으로 돌렸고, 셰이더 캐시(`shaderCache\driver` · `precompiled`)만 무시한다.
+> `tools/reset-runtime.ps1` 에도 `settings.xml` 과 `controllerProfiles` 를 넣었다.
+
+**(3) 롬 폴더 구조가 어긋나 있었다**
+
+`args` 가 `[name]` 을 두 번 쓰므로 폴더명과 `.rpx` 파일명이 같아야 한다.
+
+| 게임 | 있던 것 | 고친 것 |
+|---|---|---|
+| `Tekken Tag Tournament 2` | `code\Tekken.rpx` | `code\Tekken Tag Tournament 2.rpx` |
+| `OPU3` | `OPU3\data\code\OPU3.rpx` | `data\` 한 겹을 걷어내 `OPU3\code\OPU3.rpx` |
+| `ferrum_app` | 정상 | — |
+
+> **`.+필독.txt` 가 원인을 하나 만들었다.** `Roms\Tekken` 을 `Roms\Tekken Tag Tournament 2` 로
+> 개명하라고만 적혀 있어서 **안의 `Tekken.rpx` 는 그대로 남았다.** 파일도 같이 개명해야 한다.
+> 롬은 `.gitignore` 대상이라 각 장비에서 직접 해야 한다 — `.+필독.txt` 를 고쳤다.
 ### - [x] 67. RetroArch 1.10.3 -> 1.22.2 — **처리 완료 (2026-09-08)**
 
 | | 이전 | 이후 |
@@ -1560,6 +1599,47 @@ Demul 은 2018-04-28 이 마지막 공개 빌드다. **갱신 대상이 아니�
 > 코어를 덮어쓸 위험도 없었다.
 
 기준선 10/10 -> 갱신 후 **10/10 PASS**.
+### - [x] 69. Cemu 1.26.2f -> 2.6 — 사용자 데이터가 저장소 밖으로 나갈 뻔했다 — **처리 완료 (2026-09-08)**
+
+66번으로 Wii U 4개를 되살린 직후의 갱신이다. 기준선은 **4/4 PASS**였다.
+
+**걸린 것은 버전이 아니라 데이터 디렉터리였다.** Cemu 2.x 는 기본적으로 설정·세이브를
+`%USERPROFILE%\AppData\Roaming\Cemu` 에 둔다. 그대로 올렸으면 `settings.xml`(66번에서 겨우 고친
+`gp_download`·`GamePaths`)·컨트롤러 프로필·Wii U 세이브가 전부 저장소 밖으로 나가
+**56번 Mednafen · 61번 Dolphin 과 똑같은 "장비로 따라가지 않는 설정"** 이 될 뻔했다.
+
+**조치** — 실행파일 옆에 `portable\` 폴더를 만들고 사용자 데이터를 그리로 옮겼다.
+Cemu 2.x 는 이 폴더가 있으면 그것을 데이터 디렉터리로 쓴다(Dolphin 의 `portable.txt` 와 같은 성격).
+
+```
+emulators\Cemu\
+├─ Cemu.exe  resources\  gameProfiles\   벤더 배포본
+├─ Roms\                                 롬 (gitignore)
+└─ portable\  settings.xml · keys.txt · controllerProfiles\ · graphicPacks\
+              mlc01\usr\save\ (Wii U 세이브) · shaderCache\
+```
+
+`.gitignore` 와 `tools/reset-runtime.ps1` 의 Cemu 경로도 같이 옮겼고,
+`portable/mlc01` 을 **세이브** 갈래에 넣었다(설정과 함께 되돌아가면 게임 진행이 날아간다).
+
+**호환은 문제가 없었다.**
+
+| 확인한 것 | 결과 |
+|---|---|
+| CLI `-f` · `-g` | 2.6 에도 그대로 있다. `Nintendo Wii U.cfg` 의 `args` 무수정 |
+| `settings.xml` 형식 | 1.26 이 쓰던 파일을 그대로 읽고 `gp_download`·`GamePaths` 를 보존해 다시 쓴다 |
+| 첫 실행 마법사 | 안 뜬다(`gp_download true` 유지) |
+| 구동 | **4/4 PASS**. 로그로 `Run title` 까지 도달한 것을 확인했다 |
+
+**바뀐 것 넷** — `gameProfiles\*.ini` 236개가 `gameProfiles\default\` 아래로 내려갔고,
+`resources\{WinGamingInput.dll, libusb-1.0.dll}` 은 본체에 정적 링크돼 사라졌고,
+렌더러 기본값이 **OpenGL -> Vulkan** 으로 바뀌었고(이 PC 는 NVIDIA 라 30 FPS 로 정상),
+배포본 `resources\ar\` 파일명 앞에 **보이지 않는 RTL 마크(U+200F) 두 개**가 붙어 있어
+`ar\cemu.mo` 로 정규화했다(업스트림 패키징 버그. 그대로 커밋하면 플랫폼마다 다르게 풀린다).
+
+> **Vulkan 을 못 쓰는 장비에서는** Cemu 설정에서 OpenGL 로 되돌린다.
+> `settings.xml` 에 렌더러 키가 없어 기본값을 타므로 장비마다 다를 수 있다.
+
 ---
 
 ## 개선 제안

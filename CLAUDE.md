@@ -445,7 +445,7 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 | `ePSXe` | **2.0.18** | 2025-12 | 2026-09-08 갱신(2.0.0 → 2.0.18). `-loadmemc0 "memcards\epsxe000.mcr"` 가 메모리카드를 직접 가리킨다 |
 | `Dolphin` | **5.0-12188** | 2026-08-11 | 2026-09-08 갱신. ⚠️ **MSVC 14.44 런타임 필요**(ISSUES 61번). `-b -e` 인자. 설정은 `portable.txt` 로 `User\` 에 둔다(4.10절) |
 | `Project64` | 3.0.1 (**2023-10-13 빌드**) | 2023-10-13 | 2026-09-08 갱신. 버전 문자열은 그대로라 **PE 빌드 타임스탬프로 구분**한다. `Config/`·`Save/` |
-| `Cemu` | | 2022-02-18 | ⚠️ 인자가 `-f -g "<롬>\code\<롬>.rpx"` 라 **롬 폴더 구조에 묶여 있다** |
+| `Cemu` | **2.6** | 2025-02-06 | 2026-09-08 갱신(1.26.2f -> 2.6). 설정은 `portable\` 로 저장소 안에 둔다(4.11절). 인자가 `-f -g "<롬>\code\<롬>.rpx"` 라 **롬 폴더 구조에 묶여 있다** |
 | `Mednafen` | **1.32.1** | 2024-03-15 | 2026-09-08 갱신. ⚠️ 베이스 디렉터리가 저장소 밖을 본다 — 4.9절 |
 | `RetroArch` | **1.22.2** | 2025-11-20 | 2026-09-08 갱신(1.10.3 → 1.22.2). `cores/` 는 gitignore. 코어와 본체의 ABI 가 맞아야 한다 |
 | `PPSSPP` | **1.20.4** | 2026-05-16 | 2026-09-08 갱신. `assets\` 를 exe 와 같은 판으로 함께 바꾼다 |
@@ -546,6 +546,71 @@ emulators\Dolphin\User\Wii\           Wii NAND — title\ 에 세이브가 들�
 
 > **새 장비에서는 `User\` 가 git 으로 따라온다.** 예전에는 컨트롤러가 매핑되지 않은 채
 > 게임만 뜨는 상태였다(4.9절의 Mednafen 과 같은 성격의 문제였다).
+
+### 4.11 Cemu — ⚠️ 첫 실행 마법사 · `[romext]` 함정 · `portable\` 설정
+
+**Wii U 4개가 오랫동안 전부 실행 불가였다**(`docs/ISSUES.md` 66번). 원인이 셋이었다.
+
+**(1) `args` 의 `[romext]` 가 빈 문자열이 된다**
+
+```
+args   -f -g "[rompath][name]\code\[name][romext]"     ← 예전
+        -> -g "roms\OPU3\code\OPU3"                     확장자가 없다
+```
+
+`romext` 에 `<DIR>` 이 들어 있어서 AM 이 롬을 **폴더로 매칭**한다. 폴더에는 확장자가 없으므로
+`[romext]` 가 빈 문자열이 되고, Cemu 는 `Unknown file type. It is not a valid Wii U executable` 로 거절한다.
+**`.rpx` 를 고정으로 적어야 한다.**
+
+```
+args   -f -g "[rompath][name]\code\[name].rpx"          ← 지금
+```
+
+**(2) 첫 실행 마법사가 매번 뜬다 — `settings.xml` 의 `gp_download`**
+
+`<gp_download>false</gp_download>` 이면 Cemu 가 실행할 때마다 **"Getting started"** 창을 띄우고
+게임이 시작되지 않는다. `true` 로 두면 안 뜬다. `<GamePaths>` 도 비어 있으면 안 된다.
+
+```xml
+<gp_download>true</gp_download>
+<GamePaths><Entry>Roms</Entry></GamePaths>
+```
+
+> `settings.xml` 은 예전에 `.gitignore` 대상이었다. 그래서 이 설정이 장비로 따라가지 않았다.
+> 2026-09-08 에 추적으로 돌렸다. 셰이더 캐시(`shaderCache\driver` · `precompiled` · `transferable`)만 무시한다.
+
+**(3) 롬 폴더 구조가 `<이름>\code\<이름>.rpx` 여야 한다**
+
+`args` 가 `[name]` 을 두 번 쓰므로 **폴더 이름과 `.rpx` 파일 이름이 같아야 한다.**
+`.+필독.txt` 가 `Roms\Tekken` 을 `Roms\Tekken Tag Tournament 2` 로 개명하라고 했는데
+**안에 있는 `Tekken.rpx` 는 그대로 두어** 경로가 어긋나 있었다. 파일도 같이 개명해야 한다.
+`OPU3` 는 `OPU3\data\code\...` 처럼 `data\` 가 한 겹 더 있어서 그것도 걷어냈다.
+
+**(4) 2.6 으로 올리면서 사용자 데이터가 `portable\` 안으로 들어갔다 (2026-09-08)**
+
+Cemu 2.x 는 기본적으로 설정·세이브를 **`%USERPROFILE%\AppData\Roaming\Cemu`** 에 둔다.
+저장소 밖이라 4.9절 Mednafen · 4.10절 Dolphin 과 똑같은 문제가 된다.
+**실행파일 옆에 `portable` 이라는 폴더가 있으면** Cemu 가 그것을 데이터 디렉터리로 쓴다.
+
+```
+emulators\Cemu\
+├─ Cemu.exe  resources\  gameProfiles\   벤더 배포본. 갱신할 때 통째로 덮는다
+├─ Roms\                                 롬 (gitignore)
+└─ portable\                         ★ 이 폴더가 있어야 저장소 안을 쓴다. 지우지 말 것
+    ├─ settings.xml  keys.txt  controllerProfiles\  graphicPacks\
+    ├─ mlc01\usr\save\                   Wii U 세이브
+    └─ shaderCache\                      driver·precompiled·transferable 만 gitignore
+```
+
+- **CLI 는 그대로다** — `-f`(fullscreen) · `-g`(game) 둘 다 2.6 에 있다. `args` 를 고칠 필요가 없었다.
+- **`settings.xml` 형식도 그대로 읽는다.** 1.26 이 쓰던 파일을 옮기기만 하고 4개 전부 PASS 를 확인했다.
+  `gp_download` · `GamePaths` 도 2.6 이 그대로 보존해 다시 쓴다.
+- `gameProfiles\*.ini` 236개가 2.x 에서 **`gameProfiles\default\` 아래로 내려갔다.** 벤더 배포본을 따랐다.
+- `resources\{WinGamingInput.dll, libusb-1.0.dll}` 은 본체에 정적 링크돼 **사라졌다.**
+- **렌더러 기본값이 OpenGL → Vulkan 으로 바뀌었다.** `settings.xml` 에 해당 키가 없어 기본값을 탄다.
+  Vulkan 을 못 쓰는 장비에서는 Cemu 설정에서 OpenGL 로 되돌린다.
+- 배포본의 `resources\ar\` 파일명에는 **보이지 않는 RTL 마크(U+200F) 두 개**가 앞에 붙어 있다(업스트림 버그).
+  그대로 커밋하면 `git status` 가 깨져 보이고 플랫폼마다 다르게 풀리므로 `ar\cemu.mo` 로 정규화했다.
 
 ## 5. 자주 하는 작업 레시피
 
@@ -776,7 +841,7 @@ $fs.Position=0x3C; $pe=$br.ReadInt32(); $fs.Position=$pe+0x5C; $br.ReadUInt16() 
 - 모든 **롬/ISO/디스크 이미지** (`emulators/*/Roms/`, `Game ISO/`, `isos/`, `Disc Image/` …)
 - **MAME 실행파일**(`mame64.exe`, `EKMAME64.exe`, `.sym`)과 `hash/`, `artwork/`, `nvram/`, `roms/`
 - **아트웍 전체** (`menu-art/`), MAME 아트(`flyer/ marquee/ snap/ title/ video/ wheel/`)
-- RetroArch `cores/`, `system/` · Cemu 캐시/키 · `last_run.log`, `script.nv`
+- RetroArch `cores/`, `system/` · Cemu `portable/` 의 캐시·키 · `last_run.log`, `script.nv`
 
 즉 **이 저장소를 클론하는 것만으로는 실행되지 않는다.** 롬·코어·아트웍은 별도로 옮겨야 한다.
 
