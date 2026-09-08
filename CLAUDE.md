@@ -448,7 +448,7 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 | `Cemu` | | 2022-02-18 | ⚠️ 인자가 `-f -g "<롬>\code\<롬>.rpx"` 라 **롬 폴더 구조에 묶여 있다** |
 | `Mednafen` | **1.32.1** | 2024-03-15 | 2026-09-08 갱신. ⚠️ 베이스 디렉터리가 저장소 밖을 본다 — 4.9절 |
 | `RetroArch` | | 2022-05-03 | `cores/` 는 gitignore. 코어와 본체의 ABI 가 맞아야 한다 |
-| `PPSSPP` | 1.13.1 | 2022-07-28 | |
+| `PPSSPP` | **1.20.4** | 2026-05-16 | 2026-09-08 갱신. `assets\` 를 exe 와 같은 판으로 함께 바꾼다 |
 | `TeknoParrot` | 1.0.0.804 | 2022-08-01 | `UserProfiles/` 형식이 판마다 바뀐다 |
 
 > ⚠️ **교체하면 이 저장소의 손질이 사라지는 바이너리가 둘 있다** — `PSXMAME/mame.exe`(4.6절)와
