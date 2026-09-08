@@ -1,0 +1,302 @@
+[Info]  Supermodel Version 0.3a-20260726-git-b7d8acd
+[Info]  Started as:
+[Info]    argv[0] = D:\AttractMode\emulators\supermodel\supermodel.exe
+[Info]    argv[1] = roms\harley.zip
+[Info]    argv[2] = -res=1024,768
+[Info]    argv[3] = -fullscreen
+[Info]    argv[4] = -quad-rendering
+[Info]  Opened roms\harley.zip.
+[Info]  harley:
+[Info]    banked_crom: stride=8, chunk size=2, byte layout=10325476
+[Info]      mpr-20364.4, crc32=0xa2a68ef2, offset=0x00000000
+[Info]      mpr-20363.3, crc32=0x3e3cc6ff, offset=0x00000002
+[Info]      mpr-20362.2, crc32=0xf7e60dfd, offset=0x00000004
+[Info]      mpr-20361.1, crc32=0xddb66c2f, offset=0x00000006
+[Info]      mpr-20368.8, crc32=0x100c9846, offset=0x01000000
+[Info]      mpr-20367.7, crc32=0x6c3f9748, offset=0x01000002
+[Info]      mpr-20366.6, crc32=0x45e3850e, offset=0x01000004
+[Info]      mpr-20365.5, crc32=0x7dd50361, offset=0x01000006
+[Info]      epr-20412.16, crc32=0x0d51bb34, offset=0x03800000
+[Info]      epr-20411.15, crc32=0x848daaf7, offset=0x03800002
+[Info]      epr-20410.14, crc32=0x98b126f2, offset=0x03800004
+[Info]      epr-20409.13, crc32=0x58caaa75, offset=0x03800006
+[Info]    crom: stride=8, chunk size=2, byte layout=10325476
+[Info]      epr-20396b.20, crc32=0x9623dea7, offset=0x00000000
+[Info]      epr-20395b.19, crc32=0x88f71d76, offset=0x00000002
+[Info]      epr-20394b.18, crc32=0xb4312135, offset=0x00000004
+[Info]      epr-20393b.17, crc32=0x7d712105, offset=0x00000006
+[Info]    sound_program: stride=2, chunk size=2, byte layout=10
+[Info]      epr-20397.21, crc32=0x5b20b54a, offset=0x00000000
+[Info]    sound_samples: stride=2, chunk size=2, byte layout=10
+[Info]      mpr-20373.22, crc32=0xc684e8a3, offset=0x00000000
+[Info]      mpr-20375.24, crc32=0x906ace86, offset=0x00400000
+[Info]      mpr-20374.23, crc32=0xfcf6ea21, offset=0x00800000
+[Info]      mpr-20376.25, crc32=0xdeeed366, offset=0x00c00000
+[Info]    vrom: stride=32, chunk size=2, byte layout=
+[Info]      mpr-20377.26, crc32=0x4d2887e5, offset=0x00000000
+[Info]      mpr-20378.27, crc32=0x5ad7c0ec, offset=0x00000002
+[Info]      mpr-20379.28, crc32=0x1e51c9f0, offset=0x00000004
+[Info]      mpr-20380.29, crc32=0xe10d35ae, offset=0x00000006
+[Info]      mpr-20381.30, crc32=0x76cd36a2, offset=0x00000008
+[Info]      mpr-20382.31, crc32=0xf089ae37, offset=0x0000000a
+[Info]      mpr-20383.32, crc32=0x9e96d3be, offset=0x0000000c
+[Info]      mpr-20384.33, crc32=0x5bdfbb52, offset=0x0000000e
+[Info]      mpr-20385.34, crc32=0x12db1729, offset=0x00000010
+[Info]      mpr-20386.35, crc32=0xdb2ccaf8, offset=0x00000012
+[Info]      mpr-20387.36, crc32=0xc5dde91b, offset=0x00000014
+[Info]      mpr-20388.37, crc32=0xaeaa862e, offset=0x00000016
+[Info]      mpr-20389.38, crc32=0x49bb6593, offset=0x00000018
+[Info]      mpr-20390.39, crc32=0x1d4a8efe, offset=0x0000001a
+[Info]      mpr-20391.40, crc32=0x5dc452dc, offset=0x0000001c
+[Info]      mpr-20392.41, crc32=0x892208cb, offset=0x0000001e
+[Info]  Runtime configuration:
+[Info]    GameXMLFile=Config/Games.xml
+[Info]    InitStateFile=
+[Info]    PowerPCFrequency=0
+[Info]    MultiThreaded=1
+[Info]    GPUMultiThreaded=1
+[Info]    MultiTexture=0
+[Info]    VertexShader=
+[Info]    FragmentShader=
+[Info]    EmulateSound=1
+[Info]    Balance=0
+[Info]    BalanceLeftRight=0
+[Info]    BalanceFrontRear=0
+[Info]    NbSoundChannels=4
+[Info]    SoundFreq=57.6
+[Info]    EmulateDSB=1
+[Info]    SoundVolume=100
+[Info]    MusicVolume=100
+[Info]    LegacySoundDSP=0
+[Info]    ForceFeedback=0
+[Info]    New3DEngine=1
+[Info]    QuadRendering=1
+[Info]    XResolution=1024
+[Info]    YResolution=768
+[Info]    WindowXPosition=<empty>
+[Info]    WindowYPosition=<empty>
+[Info]    FullScreen=1
+[Info]    BorderlessWindow=0
+[Info]    Supersampling=1
+[Info]    CRTcolors=0
+[Info]    UpscaleMode=2
+[Info]    WideScreen=0
+[Info]    Stretch=0
+[Info]    WideBackground=0
+[Info]    VSync=1
+[Info]    Throttle=1
+[Info]    RefreshRate=60
+[Info]    ShowFrameRate=0
+[Info]    Crosshairs=0
+[Info]    CrosshairStyle=vector
+[Info]    NoWhiteFlash=0
+[Info]    FlipStereo=0
+[Info]    InputSystem=dinput
+[Info]    DirectInputConstForceLeftMax=100
+[Info]    DirectInputConstForceRightMax=100
+[Info]    DirectInputSelfCenterMax=100
+[Info]    DirectInputFrictionMax=100
+[Info]    DirectInputVibrateMax=100
+[Info]    XInputConstForceThreshold=30
+[Info]    XInputConstForceMax=100
+[Info]    XInputVibrateMax=100
+[Info]    XInputStereoVibration=1
+[Info]    SDLConstForceMax=100
+[Info]    SDLSelfCenterMax=100
+[Info]    SDLFrictionMax=100
+[Info]    SDLVibrateMax=100
+[Info]    SDLConstForceThreshold=30
+[Info]    Network=0
+[Info]    SimulateNet=1
+[Info]    PortIn=1970
+[Info]    PortOut=1971
+[Info]    AddressOut=127.0.0.1
+[Info]    Outputs=none
+[Info]    OutputsWithLF=0
+[Info]    OutputsTCPPort=8000
+[Info]    OutputsUDPBroadcastPort=8001
+[Info]    DumpMemory=0
+[Info]    DumpTextures=0
+[Info]    InputDigitalSensitivity=25
+[Info]    InputDigitalDecaySpeed=50
+[Info]    InputKeySensitivity=25
+[Info]    InputKeyDecaySpeed=50
+[Info]    InputMouseXDeadZone=0
+[Info]    InputMouseYDeadZone=0
+[Info]    InputMouseZDeadZone=0
+[Info]    InputStart1=KEY_1,JOY1_BUTTON8
+[Info]    InputStart2=KEY_2,JOY2_BUTTON8
+[Info]    InputCoin1=KEY_3,JOY1_BUTTON7
+[Info]    InputCoin2=KEY_4,JOY2_BUTTON7
+[Info]    InputServiceA=KEY_5
+[Info]    InputServiceB=KEY_7
+[Info]    InputTestA=KEY_6
+[Info]    InputTestB=KEY_8
+[Info]    InputJoyUp=KEY_UP,JOY1_UP
+[Info]    InputJoyDown=KEY_DOWN,JOY1_DOWN
+[Info]    InputJoyLeft=KEY_LEFT,JOY1_LEFT
+[Info]    InputJoyRight=KEY_RIGHT,JOY1_RIGHT
+[Info]    InputJoyUp2=JOY2_UP
+[Info]    InputJoyDown2=JOY2_DOWN
+[Info]    InputJoyLeft2=JOY2_LEFT
+[Info]    InputJoyRight2=JOY2_RIGHT
+[Info]    InputPunch=KEY_A,JOY1_BUTTON1
+[Info]    InputKick=KEY_S,JOY1_BUTTON2
+[Info]    InputGuard=KEY_D,JOY1_BUTTON3
+[Info]    InputEscape=KEY_F,JOY1_BUTTON4
+[Info]    InputPunch2=JOY2_BUTTON1
+[Info]    InputKick2=JOY2_BUTTON2
+[Info]    InputGuard2=JOY2_BUTTON3
+[Info]    InputEscape2=JOY2_BUTTON4
+[Info]    InputShift=KEY_A,JOY1_BUTTON1
+[Info]    InputBeat=KEY_S,JOY1_BUTTON2
+[Info]    InputCharge=KEY_D,JOY1_BUTTON3
+[Info]    InputJump=KEY_F,JOY1_BUTTON4
+[Info]    InputShortPass=KEY_A,JOY1_BUTTON1
+[Info]    InputLongPass=KEY_S,JOY1_BUTTON2
+[Info]    InputShoot=KEY_D,JOY1_BUTTON3
+[Info]    InputShortPass2=JOY2_BUTTON1
+[Info]    InputLongPass2=JOY2_BUTTON2
+[Info]    InputShoot2=JOY2_BUTTON3
+[Info]    InputSteeringLeft=KEY_LEFT
+[Info]    InputSteeringRight=KEY_RIGHT
+[Info]    InputSteering=JOY1_XAXIS
+[Info]    InputAccelerator=KEY_UP,JOY1_UP
+[Info]    InputBrake=KEY_DOWN,JOY1_DOWN
+[Info]    InputGearShiftUp=KEY_Y
+[Info]    InputGearShiftDown=KEY_H
+[Info]    InputGearShift1=KEY_Q,JOY1_BUTTON5
+[Info]    InputGearShift2=KEY_W,JOY1_BUTTON6
+[Info]    InputGearShift3=KEY_E,JOY1_BUTTON7
+[Info]    InputGearShift4=KEY_R,JOY1_BUTTON8
+[Info]    InputGearShiftN=KEY_T
+[Info]    InputVR1=KEY_A,JOY1_BUTTON1
+[Info]    InputVR2=KEY_S,JOY1_BUTTON2
+[Info]    InputVR3=KEY_D,JOY1_BUTTON3
+[Info]    InputVR4=KEY_F,JOY1_BUTTON4
+[Info]    InputViewChange=KEY_A,JOY1_BUTTON1
+[Info]    InputHandBrake=KEY_S,JOY1_BUTTON2
+[Info]    InputRearBrake=KEY_S,JOY1_BUTTON2
+[Info]    InputMusicSelect=KEY_D,JOY1_BUTTON3
+[Info]    InputTwinJoyTurnLeft=KEY_Q,JOY1_RXAXIS_NEG
+[Info]    InputTwinJoyTurnRight=KEY_W,JOY1_RXAXIS_POS
+[Info]    InputTwinJoyForward=KEY_UP,JOY1_YAXIS_NEG
+[Info]    InputTwinJoyReverse=KEY_DOWN,JOY1_YAXIS_POS
+[Info]    InputTwinJoyStrafeLeft=KEY_LEFT,JOY1_XAXIS_NEG
+[Info]    InputTwinJoyStrafeRight=KEY_RIGHT,JOY1_XAXIS_POS
+[Info]    InputTwinJoyJump=KEY_E,JOY1_BUTTON1
+[Info]    InputTwinJoyCrouch=KEY_R,JOY1_BUTTON2
+[Info]    InputTwinJoyLeft1=NONE
+[Info]    InputTwinJoyLeft2=NONE
+[Info]    InputTwinJoyRight1=NONE
+[Info]    InputTwinJoyRight2=NONE
+[Info]    InputTwinJoyUp1=NONE
+[Info]    InputTwinJoyUp2=NONE
+[Info]    InputTwinJoyDown1=NONE
+[Info]    InputTwinJoyDown2=NONE
+[Info]    InputTwinJoyShot1=KEY_A,JOY1_BUTTON5
+[Info]    InputTwinJoyShot2=KEY_S,JOY1_BUTTON6
+[Info]    InputTwinJoyTurbo1=KEY_Z,JOY1_BUTTON7
+[Info]    InputTwinJoyTurbo2=KEY_X,JOY1_BUTTON8
+[Info]    InputAnalogJoyLeft=KEY_LEFT
+[Info]    InputAnalogJoyRight=KEY_RIGHT
+[Info]    InputAnalogJoyUp=KEY_UP
+[Info]    InputAnalogJoyDown=KEY_DOWN
+[Info]    InputAnalogJoyX=JOY_XAXIS,MOUSE_XAXIS
+[Info]    InputAnalogJoyY=JOY_YAXIS,MOUSE_YAXIS
+[Info]    InputAnalogJoyTrigger=KEY_A,JOY_BUTTON1,MOUSE_LEFT_BUTTON
+[Info]    InputAnalogJoyEvent=KEY_S,JOY_BUTTON2,MOUSE_RIGHT_BUTTON
+[Info]    InputAnalogJoyTrigger2=KEY_D,JOY_BUTTON2
+[Info]    InputAnalogJoyEvent2=NONE
+[Info]    InputGunLeft=KEY_LEFT
+[Info]    InputGunRight=KEY_RIGHT
+[Info]    InputGunUp=KEY_UP
+[Info]    InputGunDown=KEY_DOWN
+[Info]    InputGunX=MOUSE_XAXIS,JOY1_XAXIS
+[Info]    InputGunY=MOUSE_YAXIS,JOY1_YAXIS
+[Info]    InputTrigger=KEY_A,JOY1_BUTTON1,MOUSE_LEFT_BUTTON
+[Info]    InputOffscreen=KEY_S,JOY1_BUTTON2,MOUSE_RIGHT_BUTTON
+[Info]    InputAutoTrigger=0
+[Info]    InputGunLeft2=NONE
+[Info]    InputGunRight2=NONE
+[Info]    InputGunUp2=NONE
+[Info]    InputGunDown2=NONE
+[Info]    InputGunX2=JOY2_XAXIS
+[Info]    InputGunY2=JOY2_YAXIS
+[Info]    InputTrigger2=JOY2_BUTTON1
+[Info]    InputOffscreen2=JOY2_BUTTON2
+[Info]    InputAutoTrigger2=0
+[Info]    InputAnalogGunLeft=KEY_LEFT
+[Info]    InputAnalogGunRight=KEY_RIGHT
+[Info]    InputAnalogGunUp=KEY_UP
+[Info]    InputAnalogGunDown=KEY_DOWN
+[Info]    InputAnalogGunX=MOUSE_XAXIS,JOY1_XAXIS
+[Info]    InputAnalogGunY=MOUSE_YAXIS,JOY1_YAXIS
+[Info]    InputAnalogTriggerLeft=KEY_A,JOY1_BUTTON1,MOUSE_LEFT_BUTTON
+[Info]    InputAnalogTriggerRight=KEY_S,JOY1_BUTTON2,MOUSE_RIGHT_BUTTON
+[Info]    InputAnalogGunLeft2=NONE
+[Info]    InputAnalogGunRight2=NONE
+[Info]    InputAnalogGunUp2=NONE
+[Info]    InputAnalogGunDown2=NONE
+[Info]    InputAnalogGunX2=NONE
+[Info]    InputAnalogGunY2=NONE
+[Info]    InputAnalogTriggerLeft2=NONE
+[Info]    InputAnalogTriggerRight2=NONE
+[Info]    InputSkiLeft=KEY_LEFT
+[Info]    InputSkiRight=KEY_RIGHT
+[Info]    InputSkiUp=KEY_UP
+[Info]    InputSkiDown=KEY_DOWN
+[Info]    InputSkiX=JOY1_XAXIS
+[Info]    InputSkiY=JOY1_YAXIS
+[Info]    InputSkiPollLeft=KEY_A,JOY1_BUTTON1
+[Info]    InputSkiPollRight=KEY_S,JOY1_BUTTON2
+[Info]    InputSkiSelect1=KEY_Q,JOY1_BUTTON3
+[Info]    InputSkiSelect2=KEY_W,JOY1_BUTTON4
+[Info]    InputSkiSelect3=KEY_E,JOY1_BUTTON5
+[Info]    InputMagicalLeverUp1=KEY_UP
+[Info]    InputMagicalLeverDown1=KEY_DOWN
+[Info]    InputMagicalLeverUp2=NONE
+[Info]    InputMagicalLeverDown2=NONE
+[Info]    InputMagicalLever1=JOY1_YAXIS
+[Info]    InputMagicalLever2=JOY2_YAXIS
+[Info]    InputMagicalPedal1=KEY_A,JOY1_BUTTON1
+[Info]    InputMagicalPedal2=KEY_S,JOY2_BUTTON1
+[Info]    InputFishingRodLeft=KEY_LEFT
+[Info]    InputFishingRodRight=KEY_RIGHT
+[Info]    InputFishingRodUp=KEY_UP
+[Info]    InputFishingRodDown=KEY_DOWN
+[Info]    InputFishingStickLeft=KEY_A
+[Info]    InputFishingStickRight=KEY_D
+[Info]    InputFishingStickUp=KEY_W
+[Info]    InputFishingStickDown=KEY_S
+[Info]    InputFishingRodX=JOY1_XAXIS
+[Info]    InputFishingRodY=JOY1_YAXIS
+[Info]    InputFishingStickX=JOY1_RXAXIS
+[Info]    InputFishingStickY=JOY1_RYAXIS
+[Info]    InputFishingReel=KEY_SPACE,JOY1_ZAXIS_POS
+[Info]    InputFishingCast=KEY_Z,JOY1_BUTTON1
+[Info]    InputFishingSelect=KEY_X,JOY1_BUTTON2
+[Info]    InputFishingTension=KEY_T,JOY1_ZAXIS_NEG
+[Info]    EmulateNet=0
+[Info]    port_in=1970
+[Info]    port_out=1971
+[Info]    addr_out=127.0.0.1
+[Info]    LogOutput=Supermodel.log
+[Info]    LogLevel=info
+[Info]  
+[Error] Unable to create DirectInput mouse device (error -2147221164) - mouse input will be unavailable.
+
+[Info]  Loaded NVRAM from 'NVRAM/harley.nv'.
+[Info]  OpenGL information:
+[Info]    Vendor                   : NVIDIA Corporation
+[Info]    Renderer                 : NVIDIA GeForce GTX 950/PCIe/SSE2
+[Info]    Version                  : 4.5.0 NVIDIA 536.23
+[Info]    Shading Language Version : 4.50 NVIDIA
+[Info]    Maximum Vertex Array Size: 1048576 vertices
+[Info]    Maximum Texture Size     : 16384 texels
+[Info]    Maximum Vertex Attributes: 16
+[Info]    Maximum Vertex Uniforms  : 4096
+[Info]    Maximum Texture Img Units: 32
+[Info]  
+[Info]  Saved NVRAM to 'NVRAM/harley.nv'.
+[Info]  Program terminated normally.

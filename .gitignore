@@ -1,16 +1,28 @@
-emulators/Cemu/keys.txt
-emulators/Cemu/log.txt
-emulators/Cemu/mlc01/sys/title/0005001b/1005c000/content/
-emulators/Cemu/mlc01/usr/save/00050000/10110000/
 emulators/Cemu/Roms/
-emulators/Cemu/settings.bin
-emulators/Cemu/settings.xml
-emulators/Cemu/shaderCache/driver/nvidia/GLCache/c18b09d9c69329b41cdbbf3de627bc9f/5ab02615e80a3ab4/
-emulators/Cemu/shaderCache/transferable/
+emulators/Cemu/portable/keys.txt
+emulators/Cemu/portable/log.txt
+emulators/Cemu/portable/settings.bin
+emulators/Cemu/portable/cache/
+emulators/Cemu/portable/dumps/
+emulators/Cemu/portable/mlc01/sys/title/0005001b/1005c000/content/
+emulators/Cemu/portable/mlc01/usr/save/00050000/10110000/
+emulators/Cemu/portable/shaderCache/driver/
+emulators/Cemu/portable/shaderCache/precompiled/
+emulators/Cemu/portable/shaderCache/transferable/
+emulators/Cemu/portable/title_list_cache.xml
+emulators/Cemu/portable/mlc01/usr/save/system/pdm/
 emulators/Demul/Disc Image/
 emulators/Demul/Roms/
 emulators/Demul/scache/
 emulators/Dolphin/Game ISO/
+emulators/Dolphin/User/Cache/
+emulators/Dolphin/User/Dump/
+emulators/Dolphin/User/Logs/
+emulators/Dolphin/User/Load/
+emulators/Dolphin/User/ScreenShots/
+emulators/Dolphin/User/Shaders/
+emulators/Dolphin/User/Wii/sd.raw
+emulators/Dolphin/User/Wii/tmp/
 emulators/ePSXe/isos/
 emulators/M2/Roms/
 emulators/Mame/.mamepgui/cache/gamelist.cache
@@ -45,6 +57,7 @@ emulators/Mednafen/ISO/
 emulators/PCSX2/Game ISO/
 emulators/PCSX2/memcards/Soul Calibur III (K).ps2
 emulators/PPSSPP/Game ISO/
+emulators/PPSSPP/memstick/PSP/SYSTEM/CACHE/
 emulators/Project64_v1.7/Roms/
 emulators/Project64/Roms/
 emulators/PSXMAME/roms/

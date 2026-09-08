@@ -1,14 +1,75 @@
-Starting Mednafen 1.21.3
+Starting Mednafen 1.32.1
  Build information:
    Compiled with gcc 4.9.4
-   Running with MinGW-W64 Runtime 5.0 (alpha - rev. 0) 0000-00-00
-   Compiled against zlib 1.2.8, running with zlib 1.2.8(flags=0x00000065)
+   Running with MinGW-W64 Runtime 5.0.5 (alpha - rev. 0) 0000-00-00
+   Compiled against zlib 1.2.13, running with zlib 1.2.13(flags=0x00000065)
    Compiled against libiconv 15.1, running with libiconv 15.1
-   Compiled against SDL 2.0.8(hg-11835:f622a4457a25), running with SDL 2.0.8(hg-11835:f622a4457a25)
-   Running with libsndfile-1.0.28
- Base directory: D:\Torrent\mednafen-1.21.3-win64
- Emulation modules: nes snes gb gba pce lynx md pcfx ngp psx ss ssfplay vb wswan sms gg snes_faust pce_fast demo cdplay
+   Compiled against SDL 2.28.5(SDL-release-2.28.5-0-g15ead9a40 (mednafen-x86_64-000)), running with SDL 2.28.5(SDL-release-2.28.5-0-g15ead9a40 (mednafen-x86_64-000))
+   Running with libFLAC 1.3.4
+ Base directory: D:\AttractMode\emulators\Mednafen
+ Emulation modules: apple2 nes snes gb gba pce lynx md pcfx ngp psx ss ssfplay vb wswan sms gg sasplay snes_faust pce_fast demo cdplay
  Opening lockfile...
- Loading settings from "D:\Torrent\mednafen-1.21.3-win64\mednafen-09x.cfg"...
-  Failed: Error opening file "D:\Torrent\mednafen-1.21.3-win64\mednafen-09x.cfg": No such file or directory
-No command-line arguments specified.
+ Loading settings from "D:\AttractMode\emulators\Mednafen\mednafen.cfg"...
+  Loaded 7904 valid settings and 1 unknown settings.
+ Initializing joysticks...
+  ID: 0x00060079000000000000504944564944 - Generic   USB  Joystick  
+  ID: 0x00060079000000000000504944564945 - Generic   USB  Joystick  
+ Loading "iso\ss\Panzer Dragoon 2 Zwei.ccd"...
+
+   CD 1 TOC:
+    Disc Type: 0x00 (CD-DA or Mode 1)
+    First Track:  1
+    Last Track:   4
+    Track  1, MSF: 00:02:00, LBA:      0  DATA
+    Track  2, MSF: 40:35:33, LBA: 182508  AUDIO
+    Track  3, MSF: 41:29:47, LBA: 186572  AUDIO
+    Track  4, MSF: 42:03:47, LBA: 189122  AUDIO
+    Leadout: 202085  AUDIO
+
+ Using module: ss(Sega Saturn)
+  Loading override settings from "D:\AttractMode\emulators\Mednafen\ss.cfg"...
+   Failed: Error opening file "D:\AttractMode\emulators\Mednafen\ss.cfg" for reading: No such file or directory
+  Loading override settings from "D:\AttractMode\emulators\Mednafen\pgconfig\Panzer Dragoon 2 Zwei.ss.cfg"...
+   Failed: Error opening file "D:\AttractMode\emulators\Mednafen\pgconfig\Panzer Dragoon 2 Zwei.ss.cfg" for reading: No such file or directory
+
+  SGID: GS-9049
+  SGNAME: PANZER DRAGOON  ZWEI
+  SGAREA: JT
+  CPU Cache Emulation Mode: Data only
+  Region: 0x1
+  Cart: Backup Memory
+
+  Displayed scanlines: [0,239]
+  Correct Aspect Ratio: Enabled
+  Show H Overscan: Enabled
+  H Blend: Enabled
+
+  Multitap on Saturn Port 1: Disabled
+  Multitap on Saturn Port 2: Disabled
+
+ Loading cheats from "D:\AttractMode\emulators\Mednafen\cheats\ss.cht"...
+  Error opening file "D:\AttractMode\emulators\Mednafen\cheats\ss.cht" for reading: No such file or directory
+
+ Initializing sound...
+  Using "WASAPI(Shared mode)" audio driver with SexyAL's default device selection.
+   Format: 16 bits(signed, 2 bytes, little-endian)
+   Rate: 48000
+   Channels: 2
+   Buffer size: 1536 sample frames(32.000000 ms)
+   Latency: 1536 sample frames(32.000000 ms)
+ Initializing video...
+  Driver: OpenGL
+  Display Mode: 1280 x 1024 x 24 bpp @ 60Hz  (Window: 1280 x 1024)
+  Shader: goat (pat=goatron, hdiv=0.500000, vdiv=0.500000, tp=0.500000, slen=1, fprog=0)
+  Fullscreen: Yes
+  Special Scaler: None
+  Scanlines: Off
+  Destination Rectangle: X=0, Y=2, W=1280, H=1017
+  OpenGL Implementation: NVIDIA Corporation NVIDIA GeForce GTX 950/PCIe/SSE2 4.6.0 NVIDIA 536.23
+  Checking extensions:
+   GL_ARB_texture_non_power_of_two found.
+   GL_ARB_sync found.
+  Using power-of-2 sized textures.
+  Checking maximum texture size...
+   Apparently it is at least: 16384 x 16384
+  Using GL_RGBA - GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV for texture source data.
