@@ -11,6 +11,14 @@ emulators/Demul/Disc Image/
 emulators/Demul/Roms/
 emulators/Demul/scache/
 emulators/Dolphin/Game ISO/
+emulators/Dolphin/User/Cache/
+emulators/Dolphin/User/Dump/
+emulators/Dolphin/User/Logs/
+emulators/Dolphin/User/Load/
+emulators/Dolphin/User/ScreenShots/
+emulators/Dolphin/User/Shaders/
+emulators/Dolphin/User/Wii/sd.raw
+emulators/Dolphin/User/Wii/tmp/
 emulators/ePSXe/isos/
 emulators/M2/Roms/
 emulators/Mame/.mamepgui/cache/gamelist.cache

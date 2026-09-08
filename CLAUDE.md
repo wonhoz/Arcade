@@ -443,7 +443,7 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 | `M2` | | 2018-10-14 | 인자가 `[name]` 하나뿐이라 갱신 여파가 작다 |
 | `PCSX2` | | 2020-05-07 | ⚠️ **최신판은 CLI 가 다르다.** 지금 쓰는 `--nogui --portable` 이 그대로 있는지 먼저 확인 |
 | `ePSXe` | **2.0.18** | 2025-12 | 2026-09-08 갱신(2.0.0 → 2.0.18). `-loadmemc0 "memcards\epsxe000.mcr"` 가 메모리카드를 직접 가리킨다 |
-| `Dolphin` | | 2019-01-06 | `-b -e` 인자와 `Sys/`·`User/` 구조 |
+| `Dolphin` | **5.0-12188** | 2026-08-11 | 2026-09-08 갱신. ⚠️ **MSVC 14.44 런타임 필요**(ISSUES 61번). `-b -e` 인자. 설정은 `portable.txt` 로 `User\` 에 둔다(4.10절) |
 | `Project64` | 3.0.1 (**2023-10-13 빌드**) | 2023-10-13 | 2026-09-08 갱신. 버전 문자열은 그대로라 **PE 빌드 타임스탬프로 구분**한다. `Config/`·`Save/` |
 | `Cemu` | | 2022-02-18 | ⚠️ 인자가 `-f -g "<롬>\code\<롬>.rpx"` 라 **롬 폴더 구조에 묶여 있다** |
 | `Mednafen` | **1.32.1** | 2024-03-15 | 2026-09-08 갱신. ⚠️ 베이스 디렉터리가 저장소 밖을 본다 — 4.9절 |
@@ -521,6 +521,31 @@ set "MEDNAFEN_HOME=%~dp0emulators\Mednafen"
 
 > 이 문제로 Saturn 8개가 **오랫동안 전부 실행 불가였다**(`docs/ISSUES.md` 56번).
 > `validate.ps1` 은 롬 파일 존재만 보므로 못 잡았고, 실제로 띄우는 `test-roms.cmd` 가 잡았다.
+
+### 4.10 Dolphin — 설정을 `portable.txt` 로 저장소 안에 둔다
+
+Dolphin 은 기본적으로 설정·세이브를 **`%USERPROFILE%\Documents\Dolphin Emulator`** 에 둔다.
+저장소 밖이라 컨트롤러 매핑·그래픽 설정·Wii 세이브가 git 으로 따라가지 않았다.
+
+**조치 (2026-09-08)** — `emulators/Dolphin/portable.txt`(빈 파일)를 두면 Dolphin 이
+**실행파일 옆 `User\`** 를 쓴다. 기존 설정을 그리로 옮겼다.
+
+```
+emulators\Dolphin\portable.txt        ★ 이 파일이 있어야 User\ 를 쓴다. 지우지 말 것
+emulators\Dolphin\User\Config\        Dolphin.ini · GCPadNew.ini · WiimoteNew.ini …
+emulators\Dolphin\User\GC\            게임큐브 메모리카드 (.gci)
+emulators\Dolphin\User\Wii\           Wii NAND — title\ 에 세이브가 들어 있다
+```
+
+**재생성물은 `.gitignore` 로 뺐다** — `Cache\` · `Dump\` · `Logs\` · `Load\` ·
+`ScreenShots\` · `Shaders\` · `Wii\sd.raw`(134MB 가상 SD) · `Wii\tmp\`(30MB).
+그래서 추적되는 것은 **4.1MB / 67개**뿐이다.
+
+> 옮기기 전 원본은 `%USERPROFILE%\Documents\Dolphin Emulator` 에 그대로 남겨 두었다.
+> Dolphin 이 이제 그쪽을 보지 않으므로 지워도 되지만, 되돌릴 일이 있을 수 있어 두었다.
+
+> **새 장비에서는 `User\` 가 git 으로 따라온다.** 예전에는 컨트롤러가 매핑되지 않은 채
+> 게임만 뜨는 상태였다(4.9절의 Mednafen 과 같은 성격의 문제였다).
 
 ## 5. 자주 하는 작업 레시피
 

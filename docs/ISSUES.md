@@ -7,7 +7,7 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **58건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
+**진행 현황** — 처리 **60건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
 42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일.
 **46~49번은 2026-09-06 전수 구동 점검(E)의 실패 106건을 파고들어 나온 것** —
@@ -1434,6 +1434,77 @@ Support for ISOs in CHD format` 이라고 적혀 있다.
 배포본의 `plugins\` 에는 `remove.me` 뿐이라 우리 플러그인(`gpuPeteOpenGL2` · `spuEternal` 등)이 유지된다.
 
 기준선 33/33 -> 갱신 후 **33/33 PASS**. 회귀 없음.
+### - [x] 61. Dolphin 최신 빌드는 MSVC 런타임이 모자라 못 쓴다 — **처리 완료 (2026-09-08)**
+
+> **해결.** 사용자가 `vc_redist.x64.exe`(VS 2022 재배포 패키지)를 설치했다.
+> `System32` 의 런타임이 **14.30.30704 -> 14.44.35211.0** 으로 올라가 요구 버전과 정확히 맞았고,
+> 그러자 5.0-12188 이 정상 기동했다. **50/50 PASS.**
+>
+> 설치는 관리자 권한이 필요하지만 **한 번뿐**이고, 그 뒤로는 일반 권한으로 실행되는
+> Attract-Mode 가 그냥 쓴다. **AM 을 관리자로 실행할 필요는 없다.**
+>
+> 바꾼 것: `Dolphin.exe` · `DSPTool.exe` · `DolphinTool.exe`(신규) · `Updater.exe` ·
+> **Qt5 -> Qt6** DLL · `QtPlugins\` · `Languages\` · `Sys\`(우리 추가분 27개는 남김) · `qt.conf`.
+> 옛 Qt5 DLL 은 저장소 밖 백업으로 옮겼다.
+>
+> ⚠️ **첫 실행에 "사용 통계 보고 허용" 창이 뜬다.** 그대로 두면 게임이 시작되지 않는다.
+> `User\Config\Dolphin.ini` 의 `[Analytics] PermissionAsked` 를 `True` 로 두어 껐다
+> (`Enabled` 는 `False` 그대로). 이 설정은 4.10절 덕분에 저장소에 남아 장비로 따라간다.
+
+
+`dolphin-2606a-x64.7z`(**5.0-12188**, 2026-08-11)을 넣어 봤더니 **50개가 전부 즉시 CRASH** 했다.
+종료 코드 `-1073741819`(`0xC0000005`, 액세스 위반)로 2초 만에 죽는다.
+
+원인은 **Visual C++ 런타임 버전**이다. 배포본의 `build_info.txt` 가 요구 버전을 적어 두었다.
+
+```
+VCToolsVersion=14.44.35211.0
+VCToolsUpdateURL=https://aka.ms/vs/17/release/vc_redist.x64.exe
+```
+
+이 PC 의 `System32` 에 있는 것은 **14.30.30704** 다(`msvcp140.dll` · `vcruntime140.dll` ·
+`vcruntime140_1.dll` · `msvcp140_atomic_wait.dll` 모두). 그래서 로드 시점에 죽는다.
+
+| | 현재 | 배포본 |
+|---|---|---|
+| 버전 | 5.0-9299 (2019-01-06) | 5.0-12188 (2026-08-11) |
+| Qt | Qt5 | Qt6 |
+| MSVC 런타임 | 이 PC 로 충분 | **14.44 필요** |
+
+**되돌렸다.** 기준선 50/50 -> 교체 후 0/50 이었으므로 적용할 수 없다.
+원복 뒤 표본 6개로 정상 동작을 확인했다.
+
+**적용하려면** 각 장비에 `vc_redist.x64.exe`(VS 2022 재배포 패키지)를 설치해야 한다.
+관리자 권한이 필요하고 **장비 5대 전부**에 해야 하므로 `.+필독.txt` 항목이 하나 늘어난다.
+설치 후 다시 시도하면 된다 — 백업은 저장소 밖 `backup-mame-0.246-20260907\dolphin-5.0-9299\` 에 있다.
+
+> **여기서 같이 알게 된 것 — Dolphin 설정이 저장소 밖에 있다.**
+> `emulators/Dolphin` 에 `portable.txt` 도 `User\` 도 없어서, Dolphin 은 설정을
+> **`%USERPROFILE%\Documents\Dolphin Emulator`** 에 둔다. 컨트롤러 매핑·그래픽 설정이
+> git 으로 따라가지 않는다는 뜻이다(Mednafen 의 4.9절과 같은 성격의 문제).
+> `portable.txt` 를 두면 실행파일 옆 `User\` 를 쓰게 만들 수 있다. 지금 설정을 그리로 옮기는 작업이 따라온다.
+### - [x] 62. Dolphin 설정이 저장소 밖에 있었다 — `portable.txt` 로 이관 — **처리 완료 (2026-09-08)**
+
+61번을 조사하다 알게 됐다. `emulators/Dolphin` 에 `portable.txt` 도 `User\` 도 없어서
+Dolphin 이 설정을 **`%USERPROFILE%\Documents\Dolphin Emulator`** 에 두고 있었다.
+컨트롤러 매핑 · 그래픽 설정 · 게임큐브 메모리카드 · Wii 세이브가 전부 git 밖이었다는 뜻이다.
+새 장비에서는 **컨트롤러가 매핑되지 않은 채 게임만 뜨는** 상태였을 것이다.
+
+**조치** — 빈 `portable.txt` 를 두고 기존 설정을 `emulators/Dolphin/User/` 로 옮겼다.
+Dolphin 이 실제로 그쪽을 쓰는 것을 확인했다(실행 후 `User\Config\Qt.ini` 와
+`User\Wii\shared2\sys\SYSCONF` 가 갱신되고 `User\Cache\` 가 새로 생겼다).
+
+| 옮긴 것 | 크기 |
+|---|---|
+| `User\Config\` | 6개 — `Dolphin.ini` · `GCPadNew.ini` · `WiimoteNew.ini` · `GCKeyNew.ini` · `Qt.ini` · `btdinf.bak` |
+| `User\GC\` | 게임큐브 메모리카드 2개 (`.gci`) |
+| `User\Wii\` | NAND 57개 — `title\` 에 세이브가 들어 있다 |
+
+**재생성물은 `.gitignore` 로 뺐다** — `Cache\` · `Dump\` · `Logs\` · `Load\` · `ScreenShots\` ·
+`Shaders\` · `Wii\sd.raw`(134MB 가상 SD) · `Wii\tmp\`(30MB).
+그래서 추적되는 것은 **4.1MB / 67개**뿐이다. 원본 폴더는 되돌릴 일에 대비해 남겨 두었다.
+
+이관 후 GC·Wii 표본 8개 구동 **8/8 PASS**.
 ---
 
 ## 개선 제안
