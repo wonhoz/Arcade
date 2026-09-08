@@ -15,7 +15,7 @@
 | 원격 | https://github.com/wonhoz/Arcade (**public**) |
 | 프론트엔드 | Attract-Mode v2.7.0 (Windows, SFML 2.5.1) — `attract.exe` (실행은 `attract.bat`, 4.5절) |
 | 설치 경로 | `D:\AttractMode` (절대경로 의존 있음 → 4.4절) |
-| 추적 파일 | 23,554개 / `.git` 1.2GB (size-pack 1.17GiB, 2026-09-04 실측 — `docs/ISSUES.md` 2번과 같은 수치) |
+| 추적 파일 | 24,052개 / `.git` 1.3GB (size-pack 1.28GiB, 2026-09-08 실측 — 에뮬레이터 11종 갱신 뒤) |
 | 현재 브랜치 | `develop` (공통 작업 브랜치, `main` 기반) |
 | 커밋 메시지 | 한국어. 최근 스타일은 `영역 | 내용` (예: `retroarch | args 에서 -H 제거`) |
 
@@ -192,7 +192,7 @@ D:\AttractMode\
 ├─ attract.am                          런타임 상태(마지막 선택/레이아웃). 실행할 때마다 변함
 ├─ default-{display,emulator,filter}.cfg  AM 기본 템플릿(수정 금지)
 ├─ emulators\
-│   ├─ *.cfg                           ★ 에뮬레이터 정의 35개 (= romlist의 Emulator 필드 값)
+│   ├─ *.cfg                           ★ 에뮬레이터 정의 36개 (= romlist의 Emulator 필드 값)
 │   ├─ Mame\ Demul\ M2\ SuperModel\ PCSX2\ ePSXe\ PPSSPP\ Dolphin\
 │   │  Project64\ Project64_v1.7\ Cemu\ Mednafen\ RetroArch\ PSXMAME\
 │   │  TeknoParrot\ "Taito Type X"\ "PC Game"\      실제 에뮬레이터 바이너리
@@ -291,7 +291,7 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 - **MAME 계열은 `mame.ini`의 `rompath`가 실제 롬 탐색을 담당**하므로, cfg의 `rompath`는
   주로 목록 생성/`[romfilename]` 치환용이다. (`emulators/Mame/mame.ini:11` 참고)
 
-**에뮬레이터 정의 목록 (35개)**
+**에뮬레이터 정의 목록 (36개)**
 
 | 계열 | cfg |
 |---|---|
@@ -451,8 +451,9 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 
 **한글 롬은 EKMAME 전용이 아니다.** 49개 중 36개는 MAME 본가에 정식 클론으로 등재된
 한국 발매판이라 0.289 로 그대로 돈다. 그래서 `EKMAME`→`MAME`, `EKMAME Vertical`→`MAME Vertical` 로 옮겼고
-`EKMAME Vertical` 정의는 참조가 0 이 되어 지웠다. EKMAME 이 계속 필요한 것은
-**MAME 본가에 없는 팬 한글화("Korean Translator") 14개뿐**이다.
+그 뒤 한글화 패치 게임을 확충해(`docs/ISSUES.md` 52·53번) 지금 EKMAME 계열 활성 항목은 **30개**
+(`EKMAME` 27 · `EKMAME Vertical` 2 · `EKMAME Adult` 1)다. EKMAME 이 필요한 것은
+**MAME 본가에 없는 팬 한글화("Korean Translator") 롬뿐**이다.
 
 > ⚠️ **`EKMAME\roms\Korean` 은 어떤 롬셋으로도 다시 만들 수 없다.** MAME 에 등재되지 않은 개조 롬이라
 > 배포되는 세트에 존재하지 않는다. 지금 있는 파일이 유일본이다 — 갱신·정리할 때 절대 덮지 말 것.
@@ -462,10 +463,17 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 > `pcktgalk`→ 본가에 없어 `EKMAME Adult` 로 이관. 앞의 넷은 0.246 에서도 이미 없던 이름이라
 > 여태 실행되지 않고 있었다.
 
-**경고 화면 억제** — 0.289 는 UI 옵션 `skip_warnings`(0.226+)를 지원한다.
-폴더를 나눠 `ui.ini` 를 EKMAME 과 공유하지 않게 됐으므로 `emulators/Mame/ui.ini` 에 `skip_warnings 1` 을 넣었다.
-불완전 덤프 셋(`is best available`)에서 뜨던 빨간 경고 화면을 넘긴다 — 실제 창으로 띄워 대기 없이 끝나는 것을 확인했다.
-`PSXMAME`(0.139)에는 이 옵션이 없어 여전히 1바이트 패치로 처리한다(4.6절).
+**경고 화면 — ⚠️ 0.289 에서는 완전히 끌 수 없다.** MAME 은 드라이버에 `imperfect`/`unemulated` 플래그가 있으면
+"There are known problems with this system … 아무 키를 누르면 진행합니다" 화면을 띄우고 **키를 누를 때까지 기다린다**
+(40초를 두고 봐도 스스로 닫히지 않는다 — 2026-09-08 실측). romlist 의 MAME 계열 항목 중 **187개**가 이 대상이다.
+
+UI 옵션 `skip_warnings`(0.226+)는 이름과 달리 **"이미 한 번 확인한 게임을 7일 이내에 다시 띄울 때"만** 건너뛴다.
+상태는 `cfg/<게임>.cfg` 의 `<ui_warnings launched= warned=>` 에 남고, 마지막 실행 7일·마지막 경고 14일이 지나면 다시 뜬다
+(`src/frontend/mame/ui/ui.cpp`). 롬 로드 경고(`best available`)가 있는 셋은 아예 건너뛰지 않는다.
+`emulators/Mame/ui.ini` 에 `skip_warnings 1` 을 넣어 두었지만(2026-09-08 — 그 전에는 문서만 "넣었다"고 돼 있었다),
+**첫 실행에는 반드시 한 번 뜬다.** 캐비닛에서는 아무 버튼이나 한 번 누르면 된다. 완전히 없애려면 PSXMAME 처럼
+`display_startup_screens()` 의 `str < 300` 분기를 뒤집는 바이너리 패치뿐인데, `mame64.exe` 는 **미추적**이라 장비마다 다시 해야 한다.
+`PSXMAME`(0.139)에는 이 옵션이 없어 1바이트 패치로 처리한다(4.6절).
 
 **`mame.ini` 의 `rompath` 가 실제 롬 탐색을 담당한다 — 폴더명이 한 글자만 달라도 전부 실패**
 
@@ -532,7 +540,7 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 | `tools/reset-runtime.ps1` | `emulators/Mame/{cfg,ui.ini,nvram,…}` | ✔ `emulators/EKMAME/{cfg,ui.ini,nvram}` 추가 |
 | `emulators/Mame/plugins-none/` | EKMAME 용 우회 | ✔ 삭제 |
 
-> 나눈 뒤 **EKMAME 활성 11개를 전부 띄워 확인했다**(`test-roms.cmd -Launch -Emulator EKMAME*` → 11/11 PASS).
+> 나눈 직후 EKMAME 활성 11개를 전부 띄워 확인했고(`test-roms.cmd -Launch -Emulator EKMAME*` → 11/11 PASS), 한글화 게임을 확충한 뒤 다시 **30/30 PASS** 였다(2026-09-07).
 > 경로가 하나만 어긋나도 `Unknown system` 대화상자로 끝나는데, 그것은 정적 점검에 안 잡힌다.
 
 
@@ -1095,6 +1103,6 @@ romlist 한 줄 한 줄에 대해 그대로 조립한다. `emulators/<Emulator>.
 ### 미해결 중 가장 큰 것
 
 - **S1**: 공개 저장소에 PS2/PS1/새턴 BIOS와 상용 롬이 커밋되어 있다 (저작권 위험).
-- **S2**: `.git`이 1.2GB. 에뮬레이터 바이너리 전량이 추적 중이다.
+- **S2**: `.git`이 1.3GB. 에뮬레이터 바이너리 전량이 추적 중이다.
 
 둘 다 히스토리 재작성이 필요하고 브랜치 7개와 `archive/*` 태그 11개 전부에 영향을 주므로, **손대기 전에 전체 백업**한다.

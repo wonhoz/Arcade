@@ -7,7 +7,7 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **66건** / 미해결 **2건**(13번 · 65번) · 보류 3건 · 재분류 3건 · 개선 포인트 8건
+**진행 현황** — 처리 **66건** / 미해결 **2건**(13번 · 65번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 5차 재점검 2026-09-08
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
 42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일.
 **46~49번은 2026-09-06 전수 구동 점검(E)의 실패 106건을 파고들어 나온 것** —
@@ -896,6 +896,9 @@ PSXMAME 은 여기에 자체 개조를 넣어 뒀다 — **`use_gpu_plugin` 이 
 `emulators/Mame` 의 MAME 0.246 은 경고 화면 억제가 UI 옵션 `skip_warnings`(0.226+)인데, 같은 폴더의 `EKMAME64.exe` 가 0.212 라
 공용 `ui.ini` 에 넣으면 EKMAME 쪽에서 미지원 옵션이 된다. 그래서 건드리지 않았다(0.246 은 같은 경고를 일정 기간 다시 띄우지 않는 로직을 자체적으로 갖고 있다).
 
+> **5차 재점검(2026-09-08) 정정** — 위의 "0.246 은 같은 경고를 일정 기간 다시 띄우지 않는 로직을 자체적으로 갖고 있다"가 정확한 서술이다.
+> 50번이 이것을 "`ui.ini` 에 `skip_warnings` 를 넣어 넘긴다"로 키워 적은 것은 사실이 아니었다 — 71번.
+
 ### - [x] 45. PSXMAME 격투게임의 버튼이 캐비닛 6버튼 배열과 어긋난다 — **처리 완료**
 
 사용자 지시(2026-09-04). 철권류는 MAME 공장 기본값(`P1 Button1~4` = 조이스틱 버튼 1~4, 즉 **아랫줄부터**)이라
@@ -1037,8 +1040,8 @@ romlists 가 참조하는 것만 **1,005개**로 추려 넣었다. 추린 기준
 - **셋 이름 4개 정정** — `acedrvrw`->`acedrive`, `raveracw`->`raverace`, `getstar`->`grdian`, `kof99nd`->`kof99ka`.
   넷 다 0.246 에서도 이미 없던 이름이라 여태 실행되지 않고 있었다.
 - **`pcktgalk`** 는 본가에 없는 한글화 롬이라 `EKMAME Adult` 정의를 새로 만들어 옮겼다.
-- **`emulators/Mame/ui.ini` 에 `skip_warnings 1`** — 불완전 덤프 셋의 빨간 경고 화면을 넘긴다.
-  0.226+ 옵션이고, EKMAME 을 폴더째 분리해 `ui.ini` 를 공유하지 않게 되면서 넣을 수 있게 됐다.
+- ~~**`emulators/Mame/ui.ini` 에 `skip_warnings 1`** — 불완전 덤프 셋의 빨간 경고 화면을 넘긴다.~~
+  **5차 재점검(2026-09-08) 정정: 이 줄은 사실이 아니었다.** 히스토리 어디에도 `skip_warnings` 가 없었고(`git log -S`), 넣더라도 경고를 없애는 옵션이 아니다 — 71번.
 
 교체 전 상태는 저장소 밖 `D:\AttractMode emulators updates\backup-mame-0.246-20260907\` 에 있다
 (`roms` 12GB · `mame64.exe` 0.246 · `hash` · `mame.ini.0.246`).
@@ -1711,6 +1714,9 @@ D:\attract-v2.6.2-win64\emulators\TeknoParrot\Games\...\LGI_RingW_F_safe.exe
 > `test-roms` 는 `TeknoParrotUi.exe` 만 종료시키고 그것이 띄운 게임 프로세스
 > (`BudgieLoader` · `OpenParrotLoader64` · 게임 exe)는 남기기 때문에 연속 실행이 막힌다.
 > **확인은 한 번에 하나씩 수동으로** 한다.
+>
+> **2026-09-08 5차 재점검에서 해소(74번).** `test-roms` 가 런처가 띄운 `emulators\` 아래 새 프로세스를 찾아
+> 창 판정에 넣고 종료 때 같이 끝내게 고쳤다. TeknoParrot 3건 연속 구동 **3/3 PASS · 잔여 프로세스 0**.
 
 > ⚠️ **`<GamePath>` 는 절대경로다.** 설치 경로가 `D:\AttractMode` 가 아닌 장비에서는
 > 다시 고쳐야 한다. `UserProfiles\` 는 git 추적 대상이라 이 수정 자체는 장비로 따라간다.
@@ -1796,7 +1802,7 @@ Unhandled exception. System.IO.FileNotFoundException: Could not load file or ass
 | 프로필 스키마 | `GameName` · `GameGenre` · `IconName` · `ResetHint` · `FieldMin` · `FieldMax` 가 빠지고 `ExecutableName` · `ExtraParameters` 가 생겼다. **2.0 과 똑같은 변화** — 즉 스키마는 1.0 안에서 이미 바뀌었다. `UserProfiles` 32개를 전부 다시 만들어야 한다 |
 | 첫 실행 | **`Privacy Notice` 대화상자가 떠서 게임이 시작되지 않는다.** `ParrotData.xml` 에 `FirstRun false` · `PoliciesAccept true` 를 넣어 봤지만 그대로 뜬다. 설정 파일로 미리 동의시키는 방법을 못 찾았다 |
 
-여기에 68번의 제약이 겹친다 — **TeknoParrot 은 전수 구동 점검이 불가능하다.**
+여기에 68번의 제약이 겹친다 — **TeknoParrot 은 전수 구동 점검이 불가능하다**(5차에서 해소 — 74번. 다만 32개 손확인이 필요하다는 판단은 그대로다).
 바꾸면 32개를 손으로 하나씩 확인해야 하는데, **지금 32개가 전부 정상 동작한다.**
 그래서 `1.0.0.804` 를 유지한다. 64번(Demul) · 65번(PCSX2)과 같은 판단이다.
 
@@ -1810,6 +1816,64 @@ Unhandled exception. System.IO.FileNotFoundException: Could not load file or ass
 > 곁가지로 알게 된 것: **TeknoParrot 은 게임 NVRAM 을 `%APPDATA%\TeknoParrot` 에 쓴다**
 > (`SBJJ_sram.bin` 같은 것 수십 개). 저장소 밖이라 장비로 따라가지 않는다.
 > 56번(Mednafen) · 61번(Dolphin) · 69번(Cemu)과 같은 성격인데, 이쪽은 경로를 옮기는 옵션이 없다.
+
+### - [x] 71. `ui.ini` 의 `skip_warnings` 는 넣은 적이 없었고, 넣어도 경고 화면을 없애지 못한다 — **처리 완료·정정 (2026-09-08)**
+
+50번과 CLAUDE.md 4.7절이 "`emulators/Mame/ui.ini` 에 `skip_warnings 1` 을 넣었다 — 실제 창으로 띄워 대기 없이 끝나는 것을
+확인했다"고 적었는데, `git log -S skip_warnings -- emulators/Mame/ui.ini` 가 **비어 있다.** 한 번도 들어간 적이 없다.
+그래서 실제로 어떻게 되는지 띄워 봤다(`asterix`, 창 모드 스크린샷).
+
+- 첫 실행: "There are known problems with this system / 에뮬레이션이 불완전한 특성: 그래픽 / 아무 키를 누르면 진행합니다" —
+  **40초를 두고 봐도 스스로 닫히지 않는다.**
+- romlist 의 MAME 계열 항목 중 **187개**가 `imperfect`/`preliminary` 플래그라 이 화면을 띄운다(`-listxml` 대조).
+  `best available` 롬(202개)은 romlist 와 교집합 0 — 롬 경고가 아니라 **드라이버 플래그** 문제다.
+- `skip_warnings` 의 실제 의미(`src/frontend/mame/ui/ui.cpp`): 같은 게임을 **7일 이내에 다시** 띄울 때, 지난번 경고를
+  확인했고(14일 이내) 기능 플래그가 그대로이고 롬 로드 경고가 없으면 건너뛴다. 상태는 `cfg/<게임>.cfg` 의 `<ui_warnings>`.
+  바이너리의 옵션 설명도 "display fewer **repeated** warnings about imperfect emulation" 이다.
+
+**조치** — `ui.ini` 에 `skip_warnings 1` 을 실제로 넣었다(반복 실행에서 덜 뜬다). 첫 실행의 한 번은 MAME 설계상 피할 수 없다 —
+캐비닛에서는 아무 버튼이나 한 번 누르면 된다. 완전히 없애려면 PSXMAME 식 바이너리 패치뿐인데 `mame64.exe` 가 미추적이라
+장비마다 다시 해야 해서 보류. CLAUDE.md 4.7절을 실측 기준으로 다시 썼고 `.+필독.txt` 에 한 줄 넣었다.
+
+> 확인 뒤 재실행에서 건너뛰는 것은 이 해너스에서 재현하지 못했다(주입한 키를 모달 화면이 받지 않았다). 그 부분은 소스 기준 서술이다.
+
+### - [x] 72. `cfg/default.cfg` 의 D-pad·햇스위치 토큰 14개를 0.289 가 버린다 — **처리 완료 (2026-09-08)**
+
+MAME 콘솔 창에 `Input: Dropping invalid input token JOYCODE_1_DPADUP` … `JOYCODE_1_햇스위치U` 가 14줄 찍힌다.
+0.246 시절 이 PC 의 장치·로케일에서 만들어진 토큰이라 0.289 가 모른다. P1/P2 방향은 `OR JOYCODE_n_YAXIS_*_SWITCH` 가
+남아 스틱은 되지만 **D-pad 가 죽고**, P3 방향(햇스위치)·`UI_SAVE/LOAD_STATE` 조합은 통째로 사라진다.
+
+실측: `HAT1UP/DOWN/LEFT/RIGHT` 는 받고 `DPAD*`·`POV*`·`HATSWITCH*`·비ASCII 는 버린다. 14개를 `HAT1*` 로 바꾸니 버리는 토큰 0.
+`Mame/cfg` 는 장비 전용이다 — `bartop` 의 default.cfg 는 BUTTON7/8 만 써서 무관(버려지는 토큰 0 실측),
+`desktop`·`desktop-MSI-Sword`·`DriveWheel` 은 자기 파일에 같은 DPAD 4개가 있어 전파 때 각 브랜치에서 같은 치환을 했다.
+
+> ⚠️ MAME 는 정상 종료 때 `default.cfg` 를 **통째로 다시 쓴다**(포트 순서·구조가 바뀐다). 점검용 실행은 `-cfg_directory` 로
+> 격리해야 저장소 파일이 안 더러워진다 — 이번에 두 번 되돌렸다.
+
+audit.ps1 `cfg` 섹션에 이 토큰 검사를 넣었다.
+
+### - [x] 73. 런타임 산출물 1,060개가 추적 중이었다 — **처리 완료 (2026-09-08)**
+
+`git ls-files -i -c --exclude-standard` 가 1,060개를 냈다.
+
+| 경로 | 개수 | 어쩌다 |
+|---|---|---|
+| `emulators/Demul/scache/` | 1,052 (6.3MB) | 2022-06-28 추적된 같은 날 무시 규칙이 생겼지만 인덱스에서 빼지 않아(`--cached`) 규칙이 무의미했다 |
+| `emulators/PCSX2/logs/` | 5 | 규칙 없음. **이번 범위에서 `emuLog.txt` 가 실제로 커밋됐다** |
+| `emulators/Project64/Logs/` | 3 | 규칙 없음 |
+
+셋 다 인덱스에서 추적 해제(`git rm --cached`), 뒤 둘은 `.gitignore` 에 추가. audit.ps1 `junk` 섹션에 "추적 ∩ 무시" 검사를 넣었다 —
+기존 검사는 고정 목록 4개만 봐서 못 잡았다.
+
+### - [x] 74. `test-roms` 가 런처형 정의의 자식 프로세스를 못 봐 TeknoParrot 연속 점검이 막혔다 — **처리 완료 (2026-09-08)**
+
+68·70번의 "전수 점검 불가"는 도구 한계였다. 런처(`TeknoParrotUi`·`cmd /c`)는 게임을 다른 프로세스로 띄우는데
+스크립트는 런처의 창만 보고(→ `NOWIN`) 런처만 끝냈다(→ 게임 exe 잔류 → 다음 항목이 "already running").
+
+실행 전 전체 PID 를 찍어 두고, 끝난 뒤 **`emulators\` 아래 실행파일의 새 프로세스**를 자식으로 잡아
+(1) 창·대화상자 판정에 넣고 (2) ESC 대상에 넣고 (3) 남으면 끝낸다. `emulators\` 밖은 안 잡는다 —
+점검 중 우연히 뜬 다른 프로그램을 죽이지 않기 위해. TeknoParrot 3건 연속 **3/3 PASS · 잔여 프로세스 0**.
+곁가지로 `MEDNAFEN_HOME` 설정을 항목마다 하던 것을 루프 밖으로 옮겼다.
 
 ---
 
