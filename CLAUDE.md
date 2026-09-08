@@ -449,7 +449,7 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 | `Mednafen` | **1.32.1** | 2024-03-15 | 2026-09-08 갱신. ⚠️ 베이스 디렉터리가 저장소 밖을 본다 — 4.9절 |
 | `RetroArch` | **1.22.2** | 2025-11-20 | 2026-09-08 갱신(1.10.3 → 1.22.2). `cores/` 는 gitignore. 코어와 본체의 ABI 가 맞아야 한다 |
 | `PPSSPP` | **1.20.4** | 2026-05-16 | 2026-09-08 갱신. `assets\` 를 exe 와 같은 판으로 함께 바꾼다 |
-| `TeknoParrot` | 1.0.0.804 | 2022-08-01 | `UserProfiles/` 형식이 판마다 바뀐다 |
+| `TeknoParrot` | 1.0.0.804 | 2022-08-01 | ⚠️ **갱신 보류** — 2.0 win-x64 zip 은 Avalonia 런타임이 빠져 단독 실행 불가, 1.0.0.2078 은 프로필 스키마가 바뀐다(ISSUES 70번). `UserProfiles/` 형식이 판마다 바뀌고 **`<GamePath>` 가 절대경로**라 설치 경로가 바뀌면 32개가 통째로 죽는다(ISSUES 68번). 단일 인스턴스라 전수 점검 불가 |
 
 > ⚠️ **교체하면 이 저장소의 손질이 사라지는 바이너리가 둘 있다** — `PSXMAME/mame.exe`(4.6절)와
 > `SuperModel/Supermodel.exe`. 둘 다 `.gitignore` 대상이 아니라 **git 추적 중**이므로

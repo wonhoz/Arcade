@@ -7,7 +7,7 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **65건** / 미해결 **1건**(13번) · 보류 2건 · 재분류 3건 · 개선 포인트 8건
+**진행 현황** — 처리 **66건** / 미해결 **1건**(13번) · 보류 3건 · 재분류 3건 · 개선 포인트 8건
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
 42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일.
 **46~49번은 2026-09-06 전수 구동 점검(E)의 실패 106건을 파고들어 나온 것** —
@@ -1599,6 +1599,32 @@ Cemu 는 `Unknown file type. It is not a valid Wii U executable (.rpx) or disc i
 > 코어를 덮어쓸 위험도 없었다.
 
 기준선 10/10 -> 갱신 후 **10/10 PASS**.
+### - [x] 68. TeknoParrot 32개가 전부 실행 불가였다 — 프로필의 옛 설치 경로 — **처리 완료 (2026-09-08)**
+
+갱신 전 기준선을 잡으려 띄웠더니 전부 이 대화상자에서 멈췄다.
+
+```
+Cannot find game exe at:
+D:\attract-v2.6.2-win64\emulators\TeknoParrot\Games\...\LGI_RingW_F_safe.exe
+```
+
+`emulators/TeknoParrot/UserProfiles/*.xml` 의 `<GamePath>` 가 **예전 설치 경로**
+`D:\attract-v2.6.2-win64` 를 가리키고 있었다. **32개 전부**가 그랬고 현재 경로를 쓰는 것은 하나도 없었다.
+게임 파일 자체는 `Games\` 에 32개 다 있었다.
+
+**조치** — 32개 프로필의 `D:\attract-v2.6.2-win64` 를 `D:\AttractMode` 로 바꾸고,
+바꾼 뒤 각 `<GamePath>` 가 실제로 존재하는지 전수 확인했다(**실행파일 없는 프로필 0개**).
+`Cannot find game exe` 는 사라졌고, 실행하면 `GameRunning` 상태로 게임 프로세스가 뜬다.
+
+> ⚠️ **TeknoParrot 은 전수 구동 점검을 할 수 없다.** 단일 인스턴스 런처라
+> 앞 게임이 살아 있으면 `TeknoParrotUI seems to already be running` 대화상자를 띄운다.
+> `test-roms` 는 `TeknoParrotUi.exe` 만 종료시키고 그것이 띄운 게임 프로세스
+> (`BudgieLoader` · `OpenParrotLoader64` · 게임 exe)는 남기기 때문에 연속 실행이 막힌다.
+> **확인은 한 번에 하나씩 수동으로** 한다.
+
+> ⚠️ **`<GamePath>` 는 절대경로다.** 설치 경로가 `D:\AttractMode` 가 아닌 장비에서는
+> 다시 고쳐야 한다. `UserProfiles\` 는 git 추적 대상이라 이 수정 자체는 장비로 따라간다.
+
 ### - [x] 69. Cemu 1.26.2f -> 2.6 — 사용자 데이터가 저장소 밖으로 나갈 뻔했다 — **처리 완료 (2026-09-08)**
 
 66번으로 Wii U 4개를 되살린 직후의 갱신이다. 기준선은 **4/4 PASS**였다.
@@ -1639,6 +1665,61 @@ emulators\Cemu\
 
 > **Vulkan 을 못 쓰는 장비에서는** Cemu 설정에서 OpenGL 로 되돌린다.
 > `settings.xml` 에 렌더러 키가 없어 기본값을 타므로 장비마다 다를 수 있다.
+
+
+### - [ ] 70. TeknoParrot 2.0.0.127 은 단독으로 실행되지 않는다 — ⏳ **갱신 보류 (2026-09-08)**
+
+68번으로 32개를 되살린 뒤 갱신을 시도했다. **받아 둔 zip 은 공식 배포본이 맞는데(17.1MB, GitHub
+릴리스와 크기 일치) 그것만으로는 절대 실행되지 않는다.**
+
+```
+Unhandled exception. System.IO.FileNotFoundException: Could not load file or assembly
+'Avalonia.Controls, Version=12.0.5.0, ...'
+   at TeknoParrotUi.Avalonia.Program.Main(String[] args)
+```
+
+2.0 은 UI 를 **WPF -> Avalonia** 로 갈아엎었는데, win-x64 zip 에는 그 Avalonia 런타임이
+**하나도 안 들어 있다**(`Avalonia.Controls.WebView.dll` 만 있고 `.deps.json` 조차 없다.
+같은 릴리스의 linux zip 은 45.4MB 로 다 들어 있다). 즉 **thin 패키지**다.
+
+같이 들어 있는 `ParrotPatcher.exe` 를 돌려 봤지만 그것은 **에뮬레이션 코어만** 본다.
+
+```
+[17:03:55] Checking what needs to be updated...
+[17:03:55] No cores to update!
+[17:03:55] Restarting TeknoParrotUI...     -> 다시 같은 Avalonia 예외로 죽는다
+```
+
+공식 다운로드 페이지가 안내하는 윈도우 설치 경로는 **웹 설치기(TPBootStrapper)** 하나뿐이고,
+그것은 실행 때마다 스스로를 갱신한다. **저장소가 에뮬레이터 폴더를 통째로 추적해 5개 장비로
+전파하는 이 구조와 정면으로 어긋난다** — 런처가 자기 DLL 을 덮어쓰기 시작하면 장비마다
+내용이 갈리고 부팅할 때마다 `git status` 가 더러워진다.
+
+> .NET 8 런타임(8.0.30)은 이 PC 에 설치했다. 그것은 문제가 아니었다.
+
+**2.0.0.127 은 Pre-release 다. 유지되는 "Latest" 는 `1.0.0.2078`(2026-04-04)** 이고
+현재 설치본(1.0.0.804, 2022-08)과 **같은 구조**(.NET Framework + WPF)에 145MB 완전 오프라인
+패키지다. 그것도 받아서 시험했는데 두 가지가 걸렸다.
+
+| | 확인한 것 |
+|---|---|
+| 프로필 스키마 | `GameName` · `GameGenre` · `IconName` · `ResetHint` · `FieldMin` · `FieldMax` 가 빠지고 `ExecutableName` · `ExtraParameters` 가 생겼다. **2.0 과 똑같은 변화** — 즉 스키마는 1.0 안에서 이미 바뀌었다. `UserProfiles` 32개를 전부 다시 만들어야 한다 |
+| 첫 실행 | **`Privacy Notice` 대화상자가 떠서 게임이 시작되지 않는다.** `ParrotData.xml` 에 `FirstRun false` · `PoliciesAccept true` 를 넣어 봤지만 그대로 뜬다. 설정 파일로 미리 동의시키는 방법을 못 찾았다 |
+
+여기에 68번의 제약이 겹친다 — **TeknoParrot 은 전수 구동 점검이 불가능하다.**
+바꾸면 32개를 손으로 하나씩 확인해야 하는데, **지금 32개가 전부 정상 동작한다.**
+그래서 `1.0.0.804` 를 유지한다. 64번(Demul) · 65번(PCSX2)과 같은 판단이다.
+
+**갱신하기로 하면 이 순서다**
+1. `1.0.0.2078` 오프라인 zip 을 푼다(2.0 이 아니라 이쪽). 후킹 코어(`OpenParrot*` · `SegaTools` ·
+   `TeknoParrot` · `N2`)는 zip 에 없으므로 **지금 저장소에 있는 것을 그대로 둔다**
+2. `Privacy Notice` 를 한 번 손으로 눌러 통과시키고, 그때 바뀐 설정 파일을 찾아 추적에 넣는다
+3. 2078 의 `GameProfiles\<이름>.xml` 을 틀로 `UserProfiles` 32개를 다시 만들고 `GamePath` 를 채운다
+4. 32개를 **한 번에 하나씩** 띄워 확인한다(연속 실행 불가 — 68번)
+
+> 곁가지로 알게 된 것: **TeknoParrot 은 게임 NVRAM 을 `%APPDATA%\TeknoParrot` 에 쓴다**
+> (`SBJJ_sram.bin` 같은 것 수십 개). 저장소 밖이라 장비로 따라가지 않는다.
+> 56번(Mednafen) · 61번(Dolphin) · 69번(Cemu)과 같은 성격인데, 이쪽은 경로를 옮기는 옵션이 없다.
 
 ---
 
