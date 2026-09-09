@@ -1181,13 +1181,35 @@ powershell -ExecutionPolicy Bypass -File tools\smoke-run.ps1 -All               
 test-roms.cmd                                          인자 없이 실행하면 메뉴 (캐비닛에서 더블클릭)
 test-roms.cmd -Launch -List MAME -Sample 3             인자를 주면 그대로 tools\test-roms.ps1 에 넘어간다
 
-powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1              # 정적 점검 (전체 1,079개, 수 초)
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1              # 정적 점검 (전체 1,098개, 수 초)
 powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Sample 1   # 에뮬레이터별 1개씩 실제 실행
-powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch             # ★ 전수 점검 (1,079개 전부 실행)
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch             # ★ 전수 점검 (1,098개 전부 실행 — 10시간)
 powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Resume     # 중단된 전수 점검 이어서
 powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Name tekken
 powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Failed     # 직전 보고서의 실패 항목만
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Fast        # ★ 빠른 전수 점검 (약 2시간)
 ```
+
+> ⚠️ **전수 점검을 `-Fast` 없이 돌리면 10시간짜리다.** `-Fast` 는 **약 2시간**으로 줄인다(2026-09-10 실측).
+> 판정 기준은 그대로 두고 **낭비만** 걷어낸 것이라 결과가 달라지지 않는다. 세 가지를 바꿨다.
+>
+> | 무엇 | 전 | 후 |
+> |---|---|---|
+> | **판정 대기** | `-Seconds`(12초)를 **항상 꽉 채웠다** — 1,098건 전부 12.0~12.3초 | 창이 750ms 이상 안정되면 곧바로 끝낸다(최소 2.5초). 실측 중앙값 **2.7초** |
+> | **MAME 계열 종료** | ESC 를 최대 6번 보내며 사다리를 오른다 — 부팅 중 ESC 를 씹어 **평균 16초** | `-str`(seconds_to_run)을 붙여 **스스로 깨끗이 끝나게** 한다. 종료 처리 **0초** |
+> | **그 밖의 종료** | 에뮬레이터가 ESC 를 받든 안 받든 매번 같은 사다리 | ESC 로 두 번 연속 못 끝낸 에뮬레이터는 **기억해 두고 건너뛴다**. Demul 실측 11.9초 → **2.65초** |
+>
+> **`-str` 은 MAME 계열에만 붙는다**(`emulators\Mame` · `EKMAME` · `PSXMAME`). 이 계열은 강제 종료하면
+> `cfg\default.cfg` 가 0바이트로 잘리는데(5.5절), `-str` 로 스스로 끝내면 그 위험 자체가 사라진다 —
+> **빨라지면서 동시에 안전해진 유일한 항목**이다. `-StrSeconds`(기본 2)로 조절한다.
+>
+> **`-Fast` 가 바꾸지 않는 것** — `Exe`/`Args` 열은 여전히 AM 이 실제로 실행할 명령 그대로다
+> (`-str` 을 붙인 경우 `Detail` 에 그렇게 적힌다). `#32770` 판정도, 상태 값의 뜻도 같다.
+>
+> **한계** — 관찰 시간이 12초에서 2.5초로 줄었으므로 **3~12초 사이에 죽는 것을 놓칠 수 있다.**
+> 다만 2026-09-08 전수(12초)에서 그 구간에 죽은 항목은 **0건**이었고(전부 12초를 채웠다),
+> 실제로 문제가 됐던 TeknoParrot 의 자연 종료는 **18초**라 12초로도 못 잡았다(77번).
+> 오래 지켜봐야 할 때는 `-Fast` 없이 `-Seconds 30` 처럼 명시한다.
 
 메뉴는 `[1]` 빠른(정적) 점검, `[2]` 표본 · `[3]` 전수 · `[4]` 이어하기 · `[5]` 목록 지정 ·
 `[6]` 이름으로 · `[7]` 실패만 다시(구동), `[8]`·`[9]` 보고서 순이다.
@@ -1196,6 +1218,9 @@ powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Failed    
 romlist 한 줄 한 줄에 대해 그대로 조립한다. `emulators/<Emulator>.cfg` 의 `executable`·`rompath`·`romext`·`args` 를
 읽어 `[romfilename]`·`[rompath]`·`[romext]`·`[name]` 을 AM 과 같은 방식으로 치환하므로,
 결과 CSV 의 `Exe`/`Args` 열이 곧 **캐비닛에서 게임을 고를 때 실행될 명령 그 자체**다.
+
+CSV 에는 진단용 계측도 함께 남는다 — `ElapsedMs`(판정까지), `WindowMs`(창이 처음 뜬 시각),
+`ShutdownMs`(종료 처리), `StrUsed`(`-str` 을 붙였는가). 느린 항목을 찾을 때 `ShutdownMs` 부터 본다.
 
 | 상태 | 뜻 |
 |---|---|
