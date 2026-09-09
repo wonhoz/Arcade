@@ -731,7 +731,7 @@ if ($Resume) {
             Disabled = ($r.Disabled -eq 'True'); Status = $r.Status; Detail = $r.Detail
             Exe = $r.Exe; Args = $r.Args; ElapsedMs = [int]$r.ElapsedMs
             WindowMs = [int]$r.WindowMs; ShutdownMs = [int]$r.ShutdownMs; StrUsed = ($r.StrUsed -eq 'True')
-            Fingerprint = $r.Fingerprint
+            Fingerprint = $r.Fingerprint; Skipped = ($r.Skipped -eq 'True')
         })
         $done[($r.List + "`t" + $r.Name)] = $true
     }
@@ -764,9 +764,16 @@ if ($Adaptive) {
         if (-not [IO.Path]::IsPathRooted($Baseline)) { $Baseline = Join-Path $Root $Baseline }
         if (Test-Path -LiteralPath $Baseline) { $bf = Get-Item -LiteralPath $Baseline }
     } else {
-        $bf = Get-ChildItem -LiteralPath $logDir -Filter '*.csv' -ErrorAction SilentlyContinue |
+        # 기본 보고서 이름(rom-test-*)을 먼저 찾는다. logs\ 에는 임시로 만든 작은 CSV 도 섞여 있어서,
+        # 그냥 "가장 최근 CSV"로 잡으면 몇 건짜리 실험 결과를 기준으로 삼는 사고가 난다.
+        $bf = Get-ChildItem -LiteralPath $logDir -Filter 'rom-test-*.csv' -ErrorAction SilentlyContinue |
               Where-Object { $_.FullName -ne $csvPath } |
               Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        if (-not $bf) {
+            $bf = Get-ChildItem -LiteralPath $logDir -Filter '*.csv' -ErrorAction SilentlyContinue |
+                  Where-Object { $_.FullName -ne $csvPath } |
+                  Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        }
     }
     if (-not $bf) {
         Write-Host "-Adaptive : 비교할 보고서가 없습니다. 전부 검사합니다." -ForegroundColor Yellow
@@ -893,7 +900,7 @@ foreach ($it in $items) {
     $i++
     $status = 'OK'; $detail = ''; $exePath = ''; $argStr = ''; $elapsed = 0; $exe = $null
     $winFirstMs = 0; $strUsed = $false; $script:LastShutdownMs = 0
-    $fingerprint = ''; $baseRow = $null
+    $fingerprint = ''; $baseRow = $null; $skipped = $false
 
     $cfg = $emulators[$it.Emulator]
     if (-not $cfg) {
@@ -925,8 +932,14 @@ foreach ($it in $items) {
                     if (-not $Launch) { $okBase = @('PASS', 'OK', 'NOCHK') }
                     if ($baseRow -and $baseRow.Fingerprint -and $baseRow.Fingerprint -eq $fingerprint -and
                         ($okBase -contains $baseRow.Status)) {
-                        $status = 'SKIP'
-                        $detail = "입력이 그대로다 — 직전 $($baseRow.Status) 그대로 둔다"
+                        # 상태는 직전 것을 그대로 물려받는다. SKIP 으로 적어 버리면
+                        # 이 보고서가 다음 실행의 기준이 되지 못한다 — 매일 돌리려면 연쇄돼야 한다.
+                        $status  = $baseRow.Status
+                        $skipped = $true
+                        $detail  = "건너뜀 — 입력이 직전과 같다"
+                        $winFirstMs = [int]$baseRow.WindowMs
+                        $strUsed = ($baseRow.StrUsed -eq 'True')
+                        $script:LastShutdownMs = [int]$baseRow.ShutdownMs
                     }
                 }
             }
@@ -934,7 +947,7 @@ foreach ($it in $items) {
     }
 
     # --- 구동 점검
-    if ($Launch -and ($status -eq 'OK' -or $status -eq 'NOCHK')) {
+    if ($Launch -and -not $skipped -and ($status -eq 'OK' -or $status -eq 'NOCHK')) {
         $base = [IO.Path]::GetFileNameWithoutExtension($exePath)
         $pre = @(Get-Process -Name $base -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
         # 런처형 정의는 게임을 다른 프로세스로 띄운다. 그것을 알아보려면 실행 전 전체 PID 가 필요하다.
@@ -1061,15 +1074,17 @@ foreach ($it in $items) {
         Disabled = $it.Disabled; Status = $status; Detail = $detail
         Exe = $exePath; Args = $argStr; ElapsedMs = $elapsed
         WindowMs = $winFirstMs; ShutdownMs = $script:LastShutdownMs; StrUsed = $strUsed
-        Fingerprint = $fingerprint
+        Fingerprint = $fingerprint; Skipped = $skipped
     })
 
     $isFail = ($FailStatus -contains $status)
     $isWarn = ($WarnStatus -contains $status)
     if ($isFail -or $isWarn -or -not $Quiet) {
-        $color = if ($isFail) { 'Red' } elseif ($isWarn) { 'Yellow' } elseif ($SkipStatus -contains $status) { 'DarkGray' } else { 'Green' }
+        $color = if ($isFail) { 'Red' } elseif ($isWarn) { 'Yellow' } elseif ($skipped -or ($SkipStatus -contains $status)) { 'DarkGray' } else { 'Green' }
         $prefix = if ($Launch) { "[{0,4}/{1}]" -f $i, $items.Count } else { "" }
-        $msg = "{0} {1,-9} {2,-22} {3}" -f $prefix, $status, $it.List, $it.Name
+        $tag = $status
+        if ($skipped) { $tag = "$status~" }   # ~ = 이번에 띄우지 않고 직전 결과를 물려받았다
+        $msg = "{0} {1,-9} {2,-22} {3}" -f $prefix, $tag, $it.List, $it.Name
         if ($detail) { $msg += "  -- $detail" }
         Write-Host $msg -ForegroundColor $color
     } elseif ($Launch) {
@@ -1095,6 +1110,10 @@ Write-Host ("=" * 78)
 foreach ($g in ($results | Group-Object Status | Sort-Object Count -Descending)) {
     $color = if ($FailStatus -contains $g.Name) { 'Red' } elseif ($WarnStatus -contains $g.Name) { 'Yellow' } else { 'Green' }
     Write-Host ("{0,-10} {1,5}건" -f $g.Name, $g.Count) -ForegroundColor $color
+}
+$skipCount = @($results | Where-Object { "$($_.Skipped)" -eq 'True' }).Count
+if ($skipCount -gt 0) {
+    Write-Host ("  그중 건너뜀 {0,5}건 — 입력이 직전과 같아 다시 띄우지 않았다(-Adaptive)" -f $skipCount) -ForegroundColor DarkGray
 }
 Write-Host ("보고서: {0}" -f $csvPath) -ForegroundColor DarkGray
 if (-not $NoHtml) {
