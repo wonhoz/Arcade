@@ -31,6 +31,7 @@ echo.
 echo    --- 실제로 실행해 보는 구동 점검 (화면을 에뮬레이터가 차지한다) ---
 echo.
 echo    [2] 표본 점검      에뮬레이터별 1개씩                        (약 10분)
+echo    [A] 증분 점검      직전 점검 이후 바뀐 것만                    (보통 수 분)
 echo    [3] 전수 점검      모든 목록의 모든 롬                       (약 2시간)
 echo    [4] 이어하기       중단된 전수 점검을 이어서 
 echo    [5] 목록 지정      목록 하나를 골라 전부
@@ -53,6 +54,7 @@ if "%sel%"=="5" goto :bylist
 if "%sel%"=="6" goto :byname
 if "%sel%"=="7" goto :failed
 if "%sel%"=="8" goto :last
+if /i "%sel%"=="A" goto :adaptive
 if /i "%sel%"=="T" goto :fullslow
 if "%sel%"=="9" goto :logs
 if "%sel%"=="0" goto :end
@@ -64,6 +66,12 @@ goto :pause
 
 :sample
 %PS% -Launch -Sample 1 -Open
+goto :pause
+
+:adaptive
+rem 직전 보고서와 비교해 romlist 줄 / 에뮬레이터 cfg / 실행파일 / 롬이 그대로인 항목은 건너뛴다.
+rem 평소 점검은 이것으로 충분하다. 에뮬레이터나 롬을 갈았을 때만 [3] 전수 점검.
+%PS% -Launch -Fast -Adaptive -Open
 goto :pause
 
 :full
@@ -127,4 +135,5 @@ goto :menu
 
 :end
 endlocal
+ 
  
