@@ -530,7 +530,7 @@ powershell -ExecutionPolicy Bypass -File tools\patch-mame-warnings.ps1 -Revert  
 | `EKMAME` | EKMAME **0.224** | 2024-04-04 | 2026-09-07 분리 + 갱신. 지원 셋 8,740 -> 16,304 (4.7절) |
 | `PSXMAME` | MAME 0.139 계열 (2009-09-03 빌드 · `fixed_snd` 판) | 2026-09-08 | **더 새 버전 없음.** ⚠️ `mame.exe` 에 1바이트 패치(4.6절) — 교체하면 사라진다 |
 | `SuperModel` | 0.3a (**git b7d8acd**) | 2026-07-27 | 2026-09-08 갱신. 예전 개조 빌드의 "sr2 music fix" 는 상위의 `Config\Music.xml` 로 대체됐다 |
-| `Demul` | | 2018-04-28 | **마지막 공개 빌드. 갱신 대상 아님**(ISSUES 64번). `-run=<플랫폼> -rom=` 인자 체계 |
+| `Demul` | | 2018-04-28 | **마지막 공개 빌드. 갱신 대상 아님**(ISSUES 64번). `-run=<플랫폼> -rom=` 인자 체계 — 4.12절 |
 | `M2` | | 2018-10-14 | 인자가 `[name]` 하나뿐이라 갱신 여파가 작다 |
 | `PCSX2` | 1.6 계열 | 2020-05-07 | ⚠️ **갱신 보류** — 2.x 는 실행파일·CLI·설정·메모리카드가 전부 다르다(ISSUES 65번) |
 | `ePSXe` | **2.0.18** | 2025-12 | 2026-09-08 갱신(2.0.0 → 2.0.18). `-loadmemc0 "memcards\epsxe000.mcr"` 가 메모리카드를 직접 가리킨다 |
@@ -702,6 +702,49 @@ emulators\Cemu\
   Vulkan 을 못 쓰는 장비에서는 Cemu 설정에서 OpenGL 로 되돌린다.
 - 배포본의 `resources\ar\` 파일명에는 **보이지 않는 RTL 마크(U+200F) 두 개**가 앞에 붙어 있다(업스트림 버그).
   그대로 커밋하면 `git status` 가 깨져 보이고 플랫폼마다 다르게 풀리므로 `ar\cemu.mo` 로 정규화했다.
+
+### 4.12 Demul — ⚠️ 마우스가 없으면 60개가 전부 죽고, 이름이 틀리면 조용히 선택 창을 띄운다
+
+**(1) `padDemul` 이 시작할 때 조건 없이 마우스를 연다**
+
+캐비닛에 마우스가 하나도 없으면 게임마다 아래 상자가 뜨고, 닫아도 **27번 반복**한 뒤 끝난다.
+
+```
+padDemul
+Error! (HRESULT = 80040154)     ← COM 의 REGDB_E_CLASSNOTREG 이자 DirectInput 의 DIERR_DEVICENOTREG
+IDirectInput CreateDevice mouse FAILED
+```
+
+`Get-PnpDevice -Class Mouse` 의 **연결됨이 0** 이면 이것이다. 원격 데스크톱의 마우스는
+Windows 레벨이라 DirectInput 에는 장치가 보이지 않는다. **USB 마우스를 꽂으면 해결된다.**
+
+> 블루투스 마우스만 꽂았을 때 같은 오류가 한동안 계속된 사례가 있다 — **키보드까지 연결하니** 정상이 됐다.
+> 캐비닛에는 유선 마우스 + 유선 키보드를 상시로 꽂아 두는 것이 확실하다(`docs/ISSUES.md` 76번).
+
+**(2) `-rom=` 에 모르는 이름이 오면 오류가 아니라 `Select ROM` 목록 창을 띄우고 기다린다**
+
+```
+demul.exe -run=awave -rom=srtshot    -> #32770 "Select ROM"  +  main window "Demul"   ← 게임 안 뜸
+demul.exe -run=awave -rom=sprtshot   -> window "gpuDX11hw | FPS: 56 RPS: 56 | Sports Shooting USA"
+```
+
+`test-roms.cmd` 는 이것을 `DIALOG` 로 잡지만, **점검 중에 사람이 목록에서 골라 주면 `PASS` 가 된다**
+(`docs/ISSUES.md` 78번). 점검이 도는 동안 화면을 클릭하지 않는다.
+
+**(3) 롬셋 이름과 파일명이 다를 수 있다 — 파일 존재만으로 판정하면 안 된다**
+
+GD-ROM 계열은 롬셋 이름이 클론이어도 파일은 **부모셋 이름**으로 놓인다.
+
+```
+cvs2mf  ->  roms\cvs2.zip (PIC 키)  +  roms\cvs2\gdl-0007a.chd (디스크)
+```
+
+Demul 정의 4개(`SEGA NAOMI` `Sammy Atomiswave` `SEGA Hikaru` `CAVE`)는 `args` 가 `-rom="[name]"` 뿐이라
+**`romext` 가 없고**, 그래서 `validate.ps1`·`test-roms.ps1` 이 롬 존재를 정적으로 확인하지 못한다(`NOCHK`).
+
+대신 **Demul 자신의 롬셋표 `emulators/Demul/arcade_compat.txt`(287개)** 와 대조한다.
+`audit.ps1 -Section demul` 이 이 일을 한다 — 표에 있거나 `roms\<이름>.{7z,zip}` 이 있으면 정상으로 본다.
+표가 좀 낡아서 `mushitam`·`blokpong` 이 빠져 있으므로 **둘 중 하나만 맞으면 통과**로 둔 것이다.
 
 ## 5. 자주 하는 작업 레시피
 
@@ -1002,6 +1045,7 @@ powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\aud
 | `dupes` | NEVATO↔Console Box 공용 폴더 어긋남, 참조 없는 배경 변형, 바이트 동일 중복(두 레이아웃의 의도된 쌍은 INFO) |
 | `fonts` · `glyph` | 참조 폰트 해석 가능 여부, **표시 텍스트 ↔ 폰트 글리프** |
 | `cfg` · `case` | 값 끝 공백, 형제 cfg 일치, `layout_config` 값, romlist·.gitignore 대소문자, `layout.nut` 철자 |
+| `demul` | romlist Name 이 Demul 이 아는 롬셋인지 — `arcade_compat.txt` 등재 **또는** `roms\<이름>.{7z,zip}` 존재 (4.12절) |
 | `branch` · `video` · `junk` | 장비 브랜치 전파, mp4 해상도·비트레이트, `(2)`·`bak/`·`.psd`·추적된 런타임 산출물 |
 
 출력 태그는 `ISSUE`(보고) / `OK`(측정했고 이상 없음) / `INFO`. 읽기 전용이다.
@@ -1100,6 +1144,10 @@ romlist 한 줄 한 줄에 대해 그대로 조립한다. `emulators/<Emulator>.
   하나라도 있으면 `DIALOG`(실패), 대화상자가 아닌 창이 있으면 `PASS` 로 한다.
   `Process.MainWindowHandle` 만으로는 그 창이 게임 화면인지 오류 상자인지 구별하지 못한다 —
   실제로 EKMAME 45개가 이 때문에 첫 전수 점검에서 `PASS` 로 잡혔다(`docs/ISSUES.md` 46번).
+- 🚨 **점검이 도는 동안 화면을 클릭하지 않는다.** 판정은 그 순간의 창만 본다 —
+  사람이 대화상자를 닫거나 선택 목록에서 게임을 골라 주면 **실패가 `PASS` 로 기록되고 흔적이 남지 않는다.**
+  실제로 `srtshot`(존재하지 않는 롬셋 이름)이 Demul 의 `Select ROM` 창을 띄웠는데
+  사람이 골라 준 탓에 `PASS` 가 됐다(`docs/ISSUES.md` 78번). 조작이 필요하면 그 항목만 따로 다시 돌린다.
 - 결과는 `logs\rom-test-<날짜시각>.{csv,html}` 두 벌. **HTML 쪽이 사람이 볼 보고서**다 —
   상태별 카드로 필터, 목록·에뮬레이터별 집계, 검색, 행을 누르면 실제 실행 명령이 펼쳐진다.
   캐비닛에 인터넷이 없어도 되도록 CSS·JS·데이터를 전부 파일 안에 넣은 단일 파일이고,
