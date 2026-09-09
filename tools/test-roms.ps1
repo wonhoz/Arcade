@@ -48,6 +48,20 @@
     -Launch 실행 전 확인을 묻지 않는다.
 .PARAMETER Quiet
     통과 항목을 출력하지 않고 실패만 보여준다.
+.PARAMETER Fast
+    판정이 서면 곧바로 끝낸다. 12초를 꽉 채우지 않고, 종료 경로도 에뮬레이터별로 학습한다.
+    MAME 계열에는 -str 을 붙여 스스로 깨끗이 끝나게 한다. 전수 점검 10시간 -> 2시간.
+.PARAMETER Observe
+    창이 떠 있어도 최소 이만큼(초)은 지켜본 뒤 PASS 로 본다. 기본 2.5.
+    -Fast 의 기준 시간이다. 크게 잡을수록 늦게 죽는 것을 잡을 확률이 오르고 그만큼 느려진다.
+.PARAMETER StrSeconds
+    -Fast 에서 MAME 계열에 붙이는 seconds_to_run(에뮬레이트 초). 기본 2. 0 이면 안 붙인다.
+.PARAMETER Adaptive
+    직전 보고서와 비교해 입력(romlist 줄 . 에뮬레이터 cfg . 실행파일 . 롬 파일)이
+    그대로인 항목은 건너뛴다. 건너뛰지 않는 항목도 그 보고서의 실측(창이 뜬 시각)에
+    맞춰 마감을 조정하므로, 느린 항목이 마감에 걸려 NOWIN 이 되는 일이 줄어든다.
+.PARAMETER Baseline
+    -Adaptive 가 비교할 보고서. 생략하면 logs\ 의 가장 최근 CSV.
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1
     powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -List MAME -Sample 3
@@ -82,7 +96,15 @@ param(
     #         MAME 계열에는 -str 을 붙여 스스로 깨끗이 끝나게 한다(ESC 사다리가 통째로 사라진다).
     [switch]$Fast,
     # -Fast 에서 MAME 계열에 붙이는 seconds_to_run 값(에뮬레이트 초). 0 이면 붙이지 않는다.
-    [int]$StrSeconds = 2
+    [int]$StrSeconds = 2,
+    # -Observe : 창이 떠 있어도 최소 이만큼(초)은 지켜본 뒤에 PASS 로 본다. -Fast 의 기준 시간.
+    #            크게 잡을수록 늦게 죽는 것을 잡을 확률이 오르고, 그만큼 느려진다.
+    [double]$Observe = 2.5,
+    # -Adaptive : 직전 정상 보고서와 비교해 입력이 그대로인 항목은 건너뛴다.
+    #             건너뛰지 않는 항목도 그 보고서의 실측(창이 뜬 시각)에 맞춰 마감을 조정한다.
+    [switch]$Adaptive,
+    # -Baseline : 비교 대상 보고서. 없으면 logs\ 의 가장 최근 CSV 를 쓴다.
+    [string]$Baseline
 )
 
 $ErrorActionPreference = 'Stop'
@@ -110,6 +132,8 @@ $BOM = [char]0xFEFF
 #               "살아 있으면 PASS" 로만 보면 이것을 정상으로 세게 된다(실제로 그랬다 — ISSUES 46번).
 $FailStatus = @('NOEMU', 'NOEXE', 'NOROM', 'EXIT0', 'CRASH', 'LAUNCHERR', 'DIALOG')
 $WarnStatus = @('NOWIN')
+# SKIP : -Adaptive 에서 입력이 그대로라 건너뛴 항목. 실패도 경고도 아니다.
+$SkipStatus = @('NOCHK', 'SKIP')
 
 # ESC 를 에뮬레이터에 보내기 위한 것. 두 가지가 필요하다.
 #   1. 포그라운드 창의 소유 프로세스 확인 — 엉뚱한 창(터미널)에 ESC 를 보내지 않기 위해(ISSUES 45번).
@@ -316,12 +340,77 @@ function Expand-AmArgs([string]$Template, [string]$RomName, [string]$Title, [str
 #   그래서 ESC -> 창 닫기 -> 강제 종료 순으로 올라간다.
 # 이번 실행으로 새로 생긴, emulators\ 아래 실행파일의 프로세스. 런처형 정의가 띄운 게임이 여기 잡힌다.
 #   Root 전체가 아니라 emulators\ 아래로 한정한다 — 점검 중 우연히 뜬 다른 프로그램을 잡지 않기 위해.
-function Get-NewEmuProcs($PreIds, [int]$MainId) {
-    $emuRoot = (Join-Path $Root 'emulators').TrimEnd('\') + '\'
+# $ExtraRoots : emulators\ 밖에 설치된 게임을 잡기 위한 추가 경로.
+#   PC Game / Taito Type X 정의는 cmd /c 로 바로가기를 실행하고, 그 대상은 D:\Games\... 처럼
+#   저장소 밖에 있다. emulators\ 만 보면 게임 프로세스를 못 찾아 판정도 정리도 실패한다 —
+#   철권 7 이 전수 점검 뒤에도 계속 떠 있었던 이유다(2026-09-10).
+function Get-NewEmuProcs($PreIds, [int]$MainId, [string[]]$ExtraRoots) {
+    $roots = @((Join-Path $Root 'emulators').TrimEnd('\') + '\')
+    foreach ($r in @($ExtraRoots)) { if ($r) { $roots += ($r.TrimEnd('\') + '\') } }
     @(Get-Process | Where-Object { $_.Id -ne $MainId -and $PreIds -notcontains $_.Id } | Where-Object {
         $p = $null; try { $p = $_.Path } catch {}
-        $p -and $p.StartsWith($emuRoot, [StringComparison]::OrdinalIgnoreCase)
+        if (-not $p) { return $false }
+        $hit = $false
+        foreach ($r in $roots) { if ($p.StartsWith($r, [StringComparison]::OrdinalIgnoreCase)) { $hit = $true; break } }
+        return $hit
     })
+}
+
+# 런처형 정의(cmd /c <바로가기>)가 실제로 띄울 프로그램의 폴더를 알아낸다.
+#   .lnk 는 WScript.Shell 로 대상을 읽고, .bat 은 안에 적힌 절대경로를 찾는다.
+function Resolve-LauncherRoots([string]$ArgLine) {
+    $roots = @()
+    foreach ($m in [regex]::Matches($ArgLine, '"([^"]+\.(?:lnk|bat|cmd))"')) {
+        $t = $m.Groups[1].Value
+        if (-not [IO.Path]::IsPathRooted($t)) { $t = Join-Path $Root $t }
+        if (-not (Test-Path -LiteralPath $t)) { continue }
+        if ($t -match '\.lnk$') {
+            try {
+                $sh = New-Object -ComObject WScript.Shell
+                $tp = $sh.CreateShortcut($t).TargetPath
+                if ($tp) { $roots += (Split-Path -Parent $tp) }
+            } catch {}
+        } else {
+            foreach ($line in @(Get-Content -LiteralPath $t -ErrorAction SilentlyContinue)) {
+                foreach ($mm in [regex]::Matches($line, '([A-Za-z]:\\[^"''<>|]+?\.exe)')) {
+                    $roots += (Split-Path -Parent $mm.Groups[1].Value)
+                }
+            }
+        }
+    }
+    return @($roots | Where-Object { $_ } | Sort-Object -Unique)
+}
+
+# 이 항목의 "입력"을 한 줄로 요약한다. 이것이 그대로면 다시 띄워 볼 이유가 없다.
+#   romlist 줄 · 에뮬레이터 cfg 내용 · 실행파일 · 롬 파일(크기+수정시각)
+# 롬은 폴더일 수도(<DIR>) 아예 못 찾을 수도 있다 — 그럴 때는 있는 재료만으로 만든다.
+$script:FpCache = @{}
+function Get-Fingerprint([string]$Raw, [string]$EmuName, [string]$ExePath, [string]$RomPath) {
+    $parts = New-Object System.Collections.Generic.List[string]
+    [void]$parts.Add($Raw)
+    if (-not $script:FpCache.ContainsKey("cfg:$EmuName")) {
+        $cf = Join-Path $Root "emulators\$EmuName.cfg"
+        $h = ''
+        if (Test-Path -LiteralPath $cf) { $h = (Get-FileHash -LiteralPath $cf -Algorithm MD5).Hash }
+        $script:FpCache["cfg:$EmuName"] = $h
+    }
+    [void]$parts.Add($script:FpCache["cfg:$EmuName"])
+    foreach ($f in @($ExePath, $RomPath)) {
+        if (-not $f) { continue }
+        if (-not $script:FpCache.ContainsKey("f:$f")) {
+            $v = ''
+            try {
+                $it = Get-Item -LiteralPath $f -ErrorAction Stop
+                if ($it.PSIsContainer) { $v = "D:$($it.LastWriteTimeUtc.Ticks)" }
+                else { $v = "$($it.Length):$($it.LastWriteTimeUtc.Ticks)" }
+            } catch {}
+            $script:FpCache["f:$f"] = $v
+        }
+        [void]$parts.Add($f + '|' + $script:FpCache["f:$f"])
+    }
+    $md5 = [Security.Cryptography.MD5]::Create()
+    $bytes = [Text.Encoding]::UTF8.GetBytes(($parts -join "`n"))
+    return (($md5.ComputeHash($bytes) | ForEach-Object { $_.ToString('x2') }) -join '').Substring(0, 16)
 }
 
 # ESC 로 끝난 적이 있는지 에뮬레이터별로 기억한다. -Fast 에서 사다리를 건너뛸지 정하는 근거다.
@@ -499,7 +588,7 @@ code{background:var(--skipbg);border-radius:5px;padding:1px 5px;font-size:12px}
 </div>
 </div><script>
 const ROWS = __ROWS__, META = __META__;
-const KIND = {OK:'ok',PASS:'ok',NOCHK:'skip',NOWIN:'warn'};
+const KIND = {OK:'ok',PASS:'ok',NOCHK:'skip',SKIP:'skip',NOWIN:'warn'};
 const kind = s => KIND[s] || 'fail';
 const ORDER = {fail:0,warn:1,skip:2,ok:3};
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -642,6 +731,7 @@ if ($Resume) {
             Disabled = ($r.Disabled -eq 'True'); Status = $r.Status; Detail = $r.Detail
             Exe = $r.Exe; Args = $r.Args; ElapsedMs = [int]$r.ElapsedMs
             WindowMs = [int]$r.WindowMs; ShutdownMs = [int]$r.ShutdownMs; StrUsed = ($r.StrUsed -eq 'True')
+            Fingerprint = $r.Fingerprint
         })
         $done[($r.List + "`t" + $r.Name)] = $true
     }
@@ -662,6 +752,34 @@ if ($Failed) {
     if ($retry.Count -eq 0) {
         Write-Host "직전 보고서에 실패 항목이 없습니다." -ForegroundColor Green
         exit 0
+    }
+}
+
+# --- -Adaptive : 직전 정상 보고서를 읽어 (지문, 상태, 실측)을 항목별로 들고 있는다.
+$baseMap = @{}
+if ($Adaptive) {
+    $bf = $null
+    if ($Baseline) {
+        if ($Baseline -notmatch '\.csv$') { $Baseline = "$Baseline.csv" }
+        if (-not [IO.Path]::IsPathRooted($Baseline)) { $Baseline = Join-Path $Root $Baseline }
+        if (Test-Path -LiteralPath $Baseline) { $bf = Get-Item -LiteralPath $Baseline }
+    } else {
+        $bf = Get-ChildItem -LiteralPath $logDir -Filter '*.csv' -ErrorAction SilentlyContinue |
+              Where-Object { $_.FullName -ne $csvPath } |
+              Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    }
+    if (-not $bf) {
+        Write-Host "-Adaptive : 비교할 보고서가 없습니다. 전부 검사합니다." -ForegroundColor Yellow
+    } else {
+        $withFp = 0
+        foreach ($r in (Import-Csv -LiteralPath $bf.FullName -Encoding UTF8)) {
+            $baseMap[($r.List + "`t" + $r.Name)] = $r
+            if ($r.PSObject.Properties.Name -contains 'Fingerprint' -and $r.Fingerprint) { $withFp++ }
+        }
+        Write-Host ("기준 보고서: {0} — {1}건, 지문 있는 것 {2}건" -f $bf.Name, $baseMap.Count, $withFp) -ForegroundColor DarkGray
+        if ($withFp -eq 0) {
+            Write-Host "  지문이 없는 옛 보고서다. 이번에는 전부 검사하고 지문을 남긴다 — 다음부터 건너뛴다." -ForegroundColor Yellow
+        }
     }
 }
 
@@ -707,7 +825,7 @@ foreach ($rf in (Get-ChildItem -LiteralPath (Join-Path $Root 'romlists') -Filter
 
         [void]$items.Add([pscustomobject]@{
             List = $listName; Line = $lineNo; Name = $romName; Title = $title
-            Emulator = $emuName; Disabled = $disabled
+            Emulator = $emuName; Disabled = $disabled; Raw = $line
         })
     }
 }
@@ -775,6 +893,7 @@ foreach ($it in $items) {
     $i++
     $status = 'OK'; $detail = ''; $exePath = ''; $argStr = ''; $elapsed = 0; $exe = $null
     $winFirstMs = 0; $strUsed = $false; $script:LastShutdownMs = 0
+    $fingerprint = ''; $baseRow = $null
 
     $cfg = $emulators[$it.Emulator]
     if (-not $cfg) {
@@ -794,6 +913,22 @@ foreach ($it in $items) {
                 if (-not $hasToken) { $status = 'NOCHK'; $detail = '고정 실행형 정의(인자에 롬 토큰 없음)' }
                 elseif (-not $rom.Checked) { $status = 'NOCHK'; $detail = "romext 가 없어 롬 존재 확인 불가 -> $($rom.Dir)" }
                 $argStr = Expand-AmArgs $cfg['args'] $it.Name $it.Title $it.Emulator $rom $cfg
+                # 지문은 항상 남긴다 — 그래야 이번 보고서가 다음 -Adaptive 의 기준이 된다.
+                $fingerprint = Get-Fingerprint $it.Raw $it.Emulator $exePath $rom.File
+                if ($Adaptive) {
+                    $baseRow = $baseMap["$($it.List)`t$($it.Name)"]
+                    # 무엇을 "통과"로 볼지는 이번 실행이 구동 점검인지에 달렸다.
+                    #   구동 점검(-Launch)이면 직전에도 실제로 떴어야(PASS) 건너뛴다.
+                    #   정적 점검이면 조립이 됐다는 것(OK/NOCHK)으로 충분하다.
+                    #   정적 OK 를 구동 통과로 오인하면 한 번도 안 띄워 본 항목을 건너뛰게 된다.
+                    $okBase = @('PASS')
+                    if (-not $Launch) { $okBase = @('PASS', 'OK', 'NOCHK') }
+                    if ($baseRow -and $baseRow.Fingerprint -and $baseRow.Fingerprint -eq $fingerprint -and
+                        ($okBase -contains $baseRow.Status)) {
+                        $status = 'SKIP'
+                        $detail = "입력이 그대로다 — 직전 $($baseRow.Status) 그대로 둔다"
+                    }
+                }
             }
         }
     }
@@ -815,6 +950,11 @@ foreach ($it in $items) {
             $launchArgs = ($launchArgs + " -str $StrSeconds").Trim()
             $strUsed = $true
         }
+
+        # cmd /c 로 띄우는 정의는 게임이 다른 프로세스, 그것도 저장소 밖에 있을 수 있다.
+        $isLauncher = ([IO.Path]::GetFileNameWithoutExtension($exePath) -eq 'cmd')
+        $extraRoots = @()
+        if ($isLauncher) { $extraRoots = @(Resolve-LauncherRoots $argStr) }
 
         $script:LastShutdownMs = 0
         $sw = [Diagnostics.Stopwatch]::StartNew()
@@ -838,22 +978,32 @@ foreach ($it in $items) {
             # -str 을 붙였으면 MAME 이 스스로 끝나는 것이 정상 경로다. 조기 판정으로 빠져나가면
             # 살아 있는 채로 Stop-Emulator 를 타서 ESC 사다리 비용이 그대로 남는다 — 끝날 때까지 기다린다.
             if ($strUsed) { $stableNeed = 0 }
-            $minObserveMs = 2500
+            $minObserveMs = [int]($Observe * 1000)
             $deadlineMs = $Seconds * 1000
+            # 직전 보고서가 "이 항목은 창이 뜨는 데 이만큼 걸린다"고 알려 주면 그만큼 여유를 준다.
+            # RaidenIII 처럼 느린 항목이 마감에 걸려 NOWIN 이 되는 것을 막는다.
+            if ($Adaptive -and $baseRow -and [int]$baseRow.WindowMs -gt 0) {
+                $want = [int]$baseRow.WindowMs * 2 + 4000
+                if ($want -gt $deadlineMs) { $deadlineMs = [math]::Min($want, 45000) }
+            }
             while (-not $proc.HasExited -and $sw.Elapsed.TotalMilliseconds -lt $deadlineMs) {
                 Start-Sleep -Milliseconds 250
                 try { $proc.Refresh() } catch { break }
                 if ($proc.HasExited) { break }
                 $elMs = [int]$sw.Elapsed.TotalMilliseconds
                 # 자식 프로세스 열거는 Get-Process 전체를 훑어 비싸다. 1초에 한 번만.
-                if (($elMs - $lastKidMs) -ge 1000) { $kids = @(Get-NewEmuProcs $preAll $proc.Id); $lastKidMs = $elMs }
+                if (($elMs - $lastKidMs) -ge 1000) { $kids = @(Get-NewEmuProcs $preAll $proc.Id $extraRoots); $lastKidMs = $elMs }
                 $d = $null
                 try { $d = [AmInput]::DialogText($proc.Id) } catch {}
                 if (-not $d) { foreach ($k in $kids) { try { $d = [AmInput]::DialogText($k.Id) } catch {}; if ($d) { break } } }
                 if ($d) { if ($dlgFirstMs -eq 0) { $dlgFirstMs = $elMs }; $dlg = $d; break }
                 $hw = $false
-                try { $hw = [AmInput]::HasRealWindow($proc.Id) } catch {}
-                if (-not $hw) { try { $hw = ($proc.MainWindowHandle -ne [IntPtr]::Zero) } catch {} }
+                # cmd /c 로 띄우는 런처형은 cmd 자신의 콘솔 창을 갖는다. 그것을 게임 창으로 세면
+                # 게임이 안 떠도 PASS 가 된다 — 철권 7 이 그랬다(2026-09-10). 런처는 자식 창만 본다.
+                if (-not $isLauncher) {
+                    try { $hw = [AmInput]::HasRealWindow($proc.Id) } catch {}
+                    if (-not $hw) { try { $hw = ($proc.MainWindowHandle -ne [IntPtr]::Zero) } catch {} }
+                }
                 if (-not $hw) {
                     foreach ($k in $kids) {
                         try { if ([AmInput]::HasRealWindow($k.Id)) { $hw = $true; $childNote = "런처가 띄운 $($k.ProcessName)"; break } } catch {}
@@ -878,7 +1028,7 @@ foreach ($it in $items) {
                 elseif ($code -eq 0) { $status = 'EXIT0'; $detail = "$sec 초 만에 스스로 종료(코드 0)" }
                 else { $status = 'CRASH'; $detail = "$sec 초 만에 종료, 코드 $code" }
             } else {
-                if (-not $kids -or $kids.Count -eq 0) { $kids = @(Get-NewEmuProcs $preAll $proc.Id) }
+                if (-not $kids -or $kids.Count -eq 0) { $kids = @(Get-NewEmuProcs $preAll $proc.Id $extraRoots) }
                 if ($dlg) {
                     $status = 'DIALOG'
                     $detail = '오류 대화상자: ' + ($dlg -replace '\s+', ' ')
@@ -901,7 +1051,7 @@ foreach ($it in $items) {
         # NOWIN 으로 잡혔던 이유다(단독으로는 4초에 창이 뜬다). 비었는지 확인하고 넘어간다.
         $drain = [Diagnostics.Stopwatch]::StartNew()
         while ($drain.Elapsed.TotalSeconds -lt 5) {
-            if (@(Get-NewEmuProcs $preAll -1).Count -eq 0) { break }
+            if (@(Get-NewEmuProcs $preAll -1 $extraRoots).Count -eq 0) { break }
             Start-Sleep -Milliseconds 250
         }
     }
@@ -911,12 +1061,13 @@ foreach ($it in $items) {
         Disabled = $it.Disabled; Status = $status; Detail = $detail
         Exe = $exePath; Args = $argStr; ElapsedMs = $elapsed
         WindowMs = $winFirstMs; ShutdownMs = $script:LastShutdownMs; StrUsed = $strUsed
+        Fingerprint = $fingerprint
     })
 
     $isFail = ($FailStatus -contains $status)
     $isWarn = ($WarnStatus -contains $status)
     if ($isFail -or $isWarn -or -not $Quiet) {
-        $color = if ($isFail) { 'Red' } elseif ($isWarn) { 'Yellow' } elseif ($status -eq 'NOCHK') { 'DarkGray' } else { 'Green' }
+        $color = if ($isFail) { 'Red' } elseif ($isWarn) { 'Yellow' } elseif ($SkipStatus -contains $status) { 'DarkGray' } else { 'Green' }
         $prefix = if ($Launch) { "[{0,4}/{1}]" -f $i, $items.Count } else { "" }
         $msg = "{0} {1,-9} {2,-22} {3}" -f $prefix, $status, $it.List, $it.Name
         if ($detail) { $msg += "  -- $detail" }
