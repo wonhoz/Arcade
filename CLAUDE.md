@@ -540,7 +540,7 @@ powershell -ExecutionPolicy Bypass -File tools\patch-mame-warnings.ps1 -Revert  
 | `Mednafen` | **1.32.1** | 2024-03-15 | 2026-09-08 갱신. ⚠️ 베이스 디렉터리가 저장소 밖을 본다 — 4.9절 |
 | `RetroArch` | **1.22.2** | 2025-11-20 | 2026-09-08 갱신(1.10.3 → 1.22.2). `cores/` 는 gitignore. 코어와 본체의 ABI 가 맞아야 한다 |
 | `PPSSPP` | **1.20.4** | 2026-05-16 | 2026-09-08 갱신. `assets\` 를 exe 와 같은 판으로 함께 바꾼다 |
-| `TeknoParrot` | 1.0.0.804 | 2022-08-01 | ⚠️ **갱신 보류** — 2.0 win-x64 zip 은 Avalonia 런타임이 빠져 단독 실행 불가, 1.0.0.2078 은 프로필 스키마가 바뀐다(ISSUES 70번). `UserProfiles/` 형식이 판마다 바뀌고 **`<GamePath>` 가 절대경로**라 설치 경로가 바뀌면 32개가 통째로 죽는다(ISSUES 68번). 단일 인스턴스라 전수 점검 불가 |
+| `TeknoParrot` | 1.0.0.804 | 2022-08-01 | ⚠️ **갱신 보류** — 2.0 win-x64 zip 은 Avalonia 런타임이 빠져 단독 실행 불가, 1.0.0.2078 은 프로필 스키마가 바뀐다(ISSUES 70번). `UserProfiles/` 형식이 판마다 바뀌고 **`<GamePath>` 가 절대경로**라 설치 경로가 바뀌면 32개가 통째로 죽는다(ISSUES 68번). 단일 인스턴스라 항목마다 잔여 프로세스를 정리해야 한다(74번). Raw Thrills F&F 4종은 게임 폴더에 **winmm 프록시 DLL** 이 있어야 산다(4.13절) |
 
 > ⚠️ **교체하면 이 저장소의 손질이 사라지는 바이너리가 둘 있다** — `PSXMAME/mame.exe`(4.6절)와
 > `SuperModel/Supermodel.exe`. 둘 다 `.gitignore` 대상이 아니라 **git 추적 중**이므로
@@ -745,6 +745,60 @@ Demul 정의 4개(`SEGA NAOMI` `Sammy Atomiswave` `SEGA Hikaru` `CAVE`)는 `args
 대신 **Demul 자신의 롬셋표 `emulators/Demul/arcade_compat.txt`(287개)** 와 대조한다.
 `audit.ps1 -Section demul` 이 이 일을 한다 — 표에 있거나 `roms\<이름>.{7z,zip}` 이 있으면 정상으로 본다.
 표가 좀 낡아서 `mushitam`·`blokpong` 이 빠져 있으므로 **둘 중 하나만 맞으면 통과**로 둔 것이다.
+
+### 4.13 TeknoParrot — ⚠️ Raw Thrills F&F 4종은 `winmm.dll` 프록시가 있어야 산다
+
+`FNF` · `FNFSB` · `FNFSC` · `FNFDrift` 는 시작 **18초쯤에 `sdaemon.exe` 안에서 액세스 위반**으로 죽는다.
+로더까지는 성공한다(`Loading core... Success! / Have fun :)`) — 그 뒤에 죽으므로 로그만 보면 정상으로 보인다.
+
+**게임이 자기 크래시 덤프를 남긴다** — `Games\<게임>\errorlog.txt`. 진단은 여기서 시작한다.
+
+```
+sdaemon caused an Access Violation in module sdaemon.exe at 0023:0044b54c.
+Write to location 0000120e caused an access violation.        EAX=00000000
+Bytes at CS:EIP:  66 c7 80 0e 12 00 00 09 00   ->  mov word ptr [eax+0x120E], 9
+```
+
+**원인** — 레거시 winmm 조이스틱 열거의 불일치다. 시스템 `winmm.dll` 은 `joyGetNumDevs()` 로 **16** 을
+돌려주는데 실제 장치는 id 0·1 둘뿐이고 id 2 부터는 `JOYERR_PARMS(165)` 다. 게임은 `0 .. n-1` 을 돌며
+장치 객체를 만들고, 없는 id 에서 NULL 로 남은 포인터에 값을 쓴다.
+
+```
+                   joyGetNumDevs()   id 0     id 1     id 2
+시스템 winmm.dll         16          정상     정상    JOYERR_PARMS(165)   <- 죽는다
+프록시 winmm.dll          6          정상     정상    'Xidi: Player 1'    <- 범위가 전부 유효
+```
+
+**조치** — `FNFDrift` 폴더에 이미 들어 있는 프록시 `winmm.dll` 을 나머지 셋에 복사한다.
+
+```cmd
+cd /d D:\AttractMode\emulators\TeknoParrot\Games
+copy "The Fast and the Furious Drift\winmm.dll" "The Fast and the Furious\"
+copy "The Fast and the Furious Drift\winmm.dll" "The Fast and the Furious Super Bikes\"
+copy "The Fast and the Furious Drift\winmm.dll" "The Fast & Furious SuperCars\"
+```
+
+> ⚠️ **`emulators/TeknoParrot/Games/` 는 `.gitignore` 대상이라 이 수정은 git 으로 따라가지 않는다.**
+> 장비마다 직접 해야 한다(`.+필독.txt` 7절 (7)).
+
+> 같은 폴더의 `dinput.dll` 은 복사하지 않는다 — 키보드·커서 훅(`SetWindowsHookExW`·`GetRawInputData`·
+> `SetSystemCursor`)이 들어 있어 캐비닛 입력에 영향을 줄 수 있고, `winmm.dll` 하나로 해결된다(실측).
+
+**넷이 같은 결함이다.** `FNFDrift` 만 통과했던 것은 그 폴더에 프록시가 이미 있었기 때문이고,
+그것을 빼면 `FNFDrift` 도 19.1초 만에 같은 액세스 위반으로 죽는다(`docs/ISSUES.md` 77번).
+
+**해상도·프로필 설정은 원인이 아니다.** `Windowed=1` 로 바꿔도 크래시 주소만 바뀔 뿐 그대로 죽고,
+넷의 `ConfigValues` 는 사실상 동일하다. `FNFSC` 가 가끔 띄우는
+`D3D INVALIDCALL. Failed to create 1360 x 768 window.` 는 이 모니터에 그 모드가 없는 것이 맞지만
+**매번 나오지 않으며 종료를 설명하지 못한다.**
+
+**`WMMT6` 은 별개다.** `wmn6r.exe` 가 다른 로더로 이미 패치돼 있어 TeknoParrot 이
+`Replace the following patched files by the originals` **Yes/No 상자**를 띄우고 답할 때까지 멈춘다.
+패치되지 않은 원본으로 교체해야 한다(`docs/ISSUES.md` 80번).
+그 상자는 `#32770` 이지만 **`IDOK`(1)이 아니라 `IDYES`(6)** 라 자동 응답 도구가 `IDOK` 만 보내면 무한히 다시 뜬다.
+
+**`IDZ` 의 `NOWIN` 은 실패가 아니다** — SegaTools 콘솔에 `amdaemon Ver.2425` 초기화가 정상으로 찍힌다.
+런처형 정의는 게임이 콘솔만 갖거나 창을 늦게 만들 수 있어 `NOWIN` 을 경고로만 센다(7.5절).
 
 ## 5. 자주 하는 작업 레시피
 

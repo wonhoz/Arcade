@@ -248,6 +248,30 @@
 
       menu-art\demul\video\sprtshot.mp4 는 이미 있으므로 srtshot.mp4 는 지워도 된다.
 
+  (7) TeknoParrot F&F 3종에 winmm.dll 넣기          ★ 없으면 18초 뒤 스스로 죽는다
+
+      FNF / FNFSB / FNFSC 는 시작 18초쯤에 sdaemon.exe 안에서 액세스 위반으로 죽는다.
+      레거시 winmm 조이스틱 열거가 어긋나서다 - 시스템 winmm 은 장치가 16개라고
+      답하는데 실제로는 2개뿐이라, 없는 장치 객체(NULL)에 값을 쓰다 죽는다.
+
+      FNFDrift 폴더에는 이 문제를 막는 winmm 프록시 DLL 이 이미 들어 있다.
+      그것을 나머지 셋에 복사하면 된다. Games\ 는 git 밖이라 장비마다 해야 한다.
+
+          cd /d D:\AttractMode\emulators\TeknoParrot\Games
+          copy "The Fast and the Furious Drift\winmm.dll" "The Fast and the Furious\"
+          copy "The Fast and the Furious Drift\winmm.dll" "The Fast and the Furious Super Bikes\"
+          copy "The Fast and the Furious Drift\winmm.dll" "The Fast & Furious SuperCars\"
+
+      같은 폴더의 dinput.dll 은 복사하지 않는다. 키보드/커서 훅이 들어 있어
+      캐비닛 입력에 영향을 줄 수 있고, winmm.dll 하나로 해결된다.
+
+      확인:  test-roms.cmd -Launch -Emulator TeknoParrot     (31/32 여야 한다)
+             남는 하나 IDZ 는 창이 판정에 안 잡히는 것뿐, 실제로는 뜬다.
+
+      WMMT6 은 별개다 - wmn6r.exe 가 다른 로더로 이미 패치돼 있어 TeknoParrot 이
+      "Replace the following patched files by the originals" 상자를 띄운다.
+      패치되지 않은 원본 wmn6r.exe 로 바꿔야 한다.
+
 --------------------------------------------------------------------------------
   8.  MAME 경고 화면 없애기          ★ exe 는 git 으로 안 따라온다
 --------------------------------------------------------------------------------
@@ -321,4 +345,4 @@
         docs\ISSUES.md     알려진 문제와 개선 과제
 
 ================================================================================
-    
+     

@@ -7,10 +7,10 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **70건** / 미해결 **3건**(13 · 65 · 77번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 5차 재점검 2026-09-08~09
+**진행 현황** — 처리 **71건** / 미해결 **3건**(13 · 65 · 80번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 5차 재점검 2026-09-08~09
 
 > **첫 전수 구동 점검 완료 (2026-09-09)** — DIALOG 판정을 갖춘 뒤 33종 1,098건을 처음으로 전부 띄웠다.
-> **1,098건 중 1,093건 통과(99.5%)**. 남은 5건은 전부 TeknoParrot(77번)이다.
+> **1,098건 중 1,097건 통과(99.9%)**. 남은 하나는 `IDZ` 의 `NOWIN` 인데 실제로는 뜬다 — 도구 한계다.
 > 처음에는 Demul 60건이 무더기로 실패했는데 원인이 **캐비닛에 마우스가 없는 것**이었고(76번), 꽂자 62/62 로 돌아섰다.
 > 롬 6종은 사용자가 온전한 세트를 구해 와 교체했다. srtshot 은 romlist 의 이름 오타였다(78번).
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
@@ -1986,40 +1986,86 @@ Get-PnpDevice -Class HIDClass    연결됨  10 / 전체 117   (아케이드 패�
 | `zombrvn` | `epr-21707a.ic22` | 88MB zip · PASS |
 | `blokpong` | 롬 자체가 없었음 | 27MB zip 추가 · PASS |
 
-**최종** — 1,098건 중 **1,093건 PASS (99.5%)**. 남은 5건은 전부 TeknoParrot(77번).
+**최종** — 1,098건 중 **1,097건 PASS (99.9%)**. 나머지 하나(``IDZ``)는 ``NOWIN`` 이지만 실제로는 뜬다(77번).
 
-### - [ ] 77. TeknoParrot 32개 중 5개가 이 캐비닛에서 안 뜬다 — ⏳ **장비 확인 필요 (2026-09-09)**
+### - [x] 77. TeknoParrot 의 F&F 4종이 18초 뒤 스스로 죽는다 — **winmm 프록시 DLL 부재** — ✅ **완료 (2026-09-09)**
 
-74번으로 연속 점검이 가능해진 뒤 32개를 전수로 돌려 **27/32 통과**. 나머지를 깨끗한 상태에서 하나씩 다시 봤다.
+`FNF` · `FNFSB` · `FNFSC` 가 로더까지 성공한 뒤(`Loading game... Success! / Loading core... Success! / Have fun :)`)
+**17~24초 사이에 스스로 종료**했다. 시간이 일정한 것이 단서였다.
 
-| 게임 | 전수 점검 | 개별 재시도(단독 실행) | 판정 |
+**게임 자신이 크래시 덤프를 남긴다** — `Games\<게임>\errorlog.txt`. 점검을 돌린 시각과 정확히 일치했다.
+
+```
+sdaemon caused an Access Violation in module sdaemon.exe at 0023:0044b54c.
+Write to location 0000120e caused an access violation.
+EAX=00000000 ...
+Bytes at CS:EIP:  66 c7 80 0e 12 00 00 09 00      mov word ptr [eax+0x120E], 9
+```
+
+| 게임 | EIP | 접근 위치 | 명령 |
 |---|---|---|---|
-| `IDZ` (이니셜 D Zero) | NOWIN | NOWIN | **실제로는 뜬다.** SegaTools 콘솔에 `idz_pre_startup` → `amdaemon Ver.2425` → GPIO/EEPROM/SRAM 초기화가 정상으로 찍힌다. 창이 판정에 안 잡히는 것뿐 — 도구 한계, 실패 아님 |
-| `FNF` (F&F) | EXIT0 | EXIT0 **18.7초** | 재현됨 |
-| `FNFSB` (F&F SuperBikes) | EXIT0 | EXIT0 **18.6 / 18.9초** | 재현됨 |
-| `FNFSC` (F&F SuperCars) | D3D 대화상자 | EXIT0 **18.6 / 23.8초** (대화상자는 가끔만) | 재현됨 |
-| `WMMT6` | 대화상자("이미 실행 중") | EXIT0 **17.2초** | 재현됨 |
-| `FNFDrift` | PASS | PASS | 정상 — 같은 sdaemon 계열인데 이것만 통과한다 |
-| `RaidenIII` | NOWIN | **PASS** | 일시적 — 앞 항목의 잔여 프로세스 영향. 문제 아님 |
+| `FNFSB` | `0044b54c` | 쓰기 `0000120e` | `mov word ptr [eax+0x120E], 9` · EAX=0 |
+| `FNFSC`(창 모드) | `00463b7f` | 쓰기 `00001212` | `mov word ptr [eax+0x1212], si` · EAX=0, ESI=9 |
+| `FNF` | `36353273` | 읽기 — EIP 가 문자열 영역 | 호출 자체가 깨졌다 |
 
-**공통 양상** — 넷 다 로더까지는 성공한다(`Loading game... Success! / Loading core... Success! / Have fun :)`).
-그 뒤 **17~24초 사이에 스스로 종료**한다. 시간이 일정한 것은 무언가를 기다리다 타임아웃한다는 뜻이다.
+**셋이 같은 코드 모양이다** — `mov eax,[전역]; mov word [eax+0x121x], 9`. 그 전역이 **NULL** 이다.
+장치별 객체가 만들어지지 않았는데 그 안에 쓴다.
 
-**확인한 것 / 배제한 것**
-- `<GamePath>` 5개 전부 실재한다. **처음에 `FNFSC` 를 "경로 없음"으로 잡은 것은 오탐** —
-  `UserProfiles/*.xml` 이 `The Fast &amp; Furious SuperCars` 로 저장하는데 grep 으로 `&` 를 찾아 어긋났다.
-  `[xml]` 로 디코딩해 확인해야 한다.
-- `FNFSC` 의 `D3D INVALIDCALL. Failed to create 1360 x 768 window.` 는 **매번 나오지 않는다.**
-  이 캐비닛이 1280×1024(5:4)라 1360×768 모드가 없는 것은 맞지만, 그것만으로는 EXIT0 를 설명하지 못한다.
-- `emulators/TeknoParrot/exception.txt` 에 `System.NullReferenceException … TeknoParrotUi.Views.GameRunning.<CreateGameProcess>b__36_0()`
-  가 남는다. 미추적 런타임 산출물이라 `.gitignore` 에 넣었다.
+**원인 — 레거시 winmm 조이스틱 열거의 불일치**
 
-**다음에 볼 것** — 이 넷은 전부 **sdaemon/amdaemon 계열 네트워크 보드 에뮬레이션**을 쓴다.
-`FNFDrift` 만 통과하는 것이 갈림길이므로, 통과하는 프로필과 실패하는 프로필의 `UserProfiles/*.xml` 을
-항목별로 대조하는 것이 가장 빠르다. 캐비닛에서 직접 손으로 띄워 무엇을 기다리는지 보는 것이 확실하다.
+시스템 `winmm.dll` 은 `joyGetNumDevs()` 로 **16** 을 돌려주는데 실제로 존재하는 것은 id 0·1 둘뿐이고
+id 2 부터는 `JOYERR_PARMS(165)` 다. 게임은 `0 .. n-1` 을 돌며 장치 객체를 만드는데, 없는 id 에서
+객체가 NULL 로 남고 그 뒤 그 포인터에 쓴다.
 
-> `IDZ` 때문에 `NOWIN` 을 실패로 세지 않는 것이 맞다는 것이 다시 확인됐다 — 런처형 정의는
-> 게임이 콘솔만 갖거나 창을 늦게 만들 수 있다. 도구는 이미 `NOWIN` 을 경고로만 센다.
+```
+                     joyGetNumDevs()   id 0        id 1        id 2
+시스템 winmm.dll          16          정상        정상      JOYERR_PARMS(165)   ← 게임이 죽는다
+프록시 winmm.dll           6          정상        정상      'Xidi: Player 1'    ← 범위가 전부 유효
+```
+
+**`FNFDrift` 만 통과했던 이유는 그 게임 폴더에 이미 프록시 `winmm.dll` 이 들어 있었기 때문이다.**
+(제품 문자열 `Xidi` — XInput 컨트롤러를 DirectInput·레거시 조이스틱 API 로 비추는 래퍼.)
+
+**양방향으로 확인했다**
+
+| 실험 | 결과 |
+|---|---|
+| `FNFDrift` 의 `winmm.dll` 을 셋에 복사 | `FNF`·`FNFSB`·`FNFSC` **전부 PASS** |
+| `dinput.dll` 만 넣고 `winmm.dll` 제거 | 셋 다 다시 `EXIT0` — **`winmm.dll` 이 결정적** |
+| `winmm.dll` 만 넣고 `dinput.dll` 제거 | 셋 다 **PASS** — `winmm.dll` 하나로 충분 |
+| **`FNFDrift` 에서 `winmm.dll` 제거** | **19.1초 만에 같은 Access Violation** — 넷이 같은 결함이다 |
+
+`dinput.dll` 은 넣지 않았다. 키보드·커서 훅(`SetWindowsHookExW`, `GetRawInputData`, `SetSystemCursor`)이
+들어 있어 캐비닛 입력에 영향을 줄 수 있고, `winmm.dll` 하나로 문제가 해결되기 때문이다.
+
+**배제한 것**
+- 해상도 아님 — `Windowed=1` 로 바꿔도 똑같이 죽는다(크래시 주소만 바뀐다).
+  `FNFSC` 의 `D3D INVALIDCALL. Failed to create 1360 x 768 window.`(이 모니터에 그 모드가 없는 것은 사실)는
+  **매번 나오지 않으며 EXIT0 를 설명하지 못한다.**
+- 프로필 설정 아님 — 넷의 `ConfigValues` 가 사실상 동일하다(`Input API=DirectInput`, `RawThrillsFNF`, `sdaemon.exe`).
+- OpenParrot 주입 실패 아님 — 넷 다 `OpenParrotLoader.exe → OpenParrot.dll 1.0.0.599` 로 동일하게 주입되고
+  `Loading core... Success!` 를 찍는다.
+- 오디오 장치 부재 아님 — `waveOutGetNumDevs()` = 2.
+- `<GamePath>` 아님 — 5개 경로 전부 실재한다(아래 오탐 참고).
+
+**조치 — 장비마다 파일 하나를 복사한다. `emulators/TeknoParrot/Games/` 는 `.gitignore` 대상이라 git 으로 안 따라간다.**
+
+```cmd
+cd /d D:\AttractMode\emulators\TeknoParrot\Games
+copy "The Fast and the Furious Drift\winmm.dll" "The Fast and the Furious\"
+copy "The Fast and the Furious Drift\winmm.dll" "The Fast and the Furious Super Bikes\"
+copy "The Fast and the Furious Drift\winmm.dll" "The Fast & Furious SuperCars\"
+```
+
+`.+필독.txt` 7절 (7)에 적었다.
+
+**최종 — TeknoParrot 32개 중 31 PASS.** 남은 하나는 `IDZ` 의 `NOWIN` 인데 실패가 아니다
+(SegaTools 콘솔에 `idz_pre_startup` → `amdaemon Ver.2425` → GPIO·EEPROM·SRAM 초기화가 정상으로 찍힌다.
+창이 판정에 안 잡히는 도구 한계). `WMMT6` 은 80번으로 분리했다.
+
+> **오탐 기록** — 처음에 `FNFSC` 의 `<GamePath>` 를 "없음"으로 잡았다. `UserProfiles/*.xml` 이
+> `The Fast &amp; Furious SuperCars` 로 저장하는데 grep 으로 `&` 를 찾아 어긋난 것이다.
+> **XML 은 XML 파서로 읽는다** — `[xml]` 로 디코딩하면 5개 경로 전부 실재한다.
 
 ### - [x] 78. `srtshot` 은 존재하지 않는 롬셋 이름이었다 — Demul 이 조용히 선택 창을 띄운다 — ✅ **완료 (2026-09-09)**
 
@@ -2075,6 +2121,27 @@ Get-Content      ggisuka;湲명떚湲곗뼱 ?댁닔移?Sammy Atomiswave;;2003;..
 `tools/validate.ps1`·`tools/test-roms.ps1` 은 처음부터 `[System.IO.File]::ReadAllLines` 라 무사했다.
 `audit.ps1` 의 남아 있던 `Get-Content` 3곳(`.gitignore`·형제 cfg·새 demul 섹션)도 전부 바꿨고,
 스크립트 머리말에 이 함정을 적어 두었다.
+
+### - [ ] 80. `WMMT6` 의 `wmn6r.exe` 가 이미 다른 로더로 패치돼 있다 — ⏳ **원본 파일 필요 (2026-09-09)**
+
+TeknoParrot 이 실행 전에 아래 Yes/No 상자를 띄우고 **답할 때까지 멈춘다.**
+
+```
+It seems you have another emulator already in use. This will most likely cause problems.
+Replace the following patched files by the originals:
+wmn6r.exe
+Continue?                                    [ 예(Y) ]  [ 아니요(N) ]
+```
+
+TeknoParrot 은 게임 실행파일에 자기 패치를 얹는데, 이미 **다른 로더가 패치해 둔 파일**이라 충돌을 경고하는 것이다.
+
+- 32개 전수 점검에서는 `PASS` 로 지나갔는데, 따로 돌리면 이 상자가 뜬다 — **재현이 일정하지 않다.**
+- `예` 를 눌러도 TeknoParrot 이 종료 코드 0 으로 끝나고 게임이 뜨지 않았다.
+- 이 상자는 `#32770` 이지만 **Yes/No 라 `IDOK`(1) 이 아니라 `IDYES`(6)** 다 — 자동 응답 도구를 쓸 때 주의.
+
+**조치** — 패치되지 않은 원본 `wmn6r.exe` 를 구해 교체하면 TeknoParrot 이 자기 패치를 정상으로 얹는다.
+77번의 winmm 문제와는 **무관하다**(WMMT6 은 64비트 `NamcoWmmt5` 프로필이라 32비트 프록시가 애초에 안 붙는다).
+
 
 ---
 
