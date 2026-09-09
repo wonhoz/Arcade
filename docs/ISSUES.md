@@ -7,10 +7,12 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **67건** / 미해결 **4건**(13 · 65 · 76 · 77번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 5차 재점검 2026-09-08~09
+**진행 현황** — 처리 **70건** / 미해결 **3건**(13 · 65 · 77번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 5차 재점검 2026-09-08~09
 
 > **첫 전수 구동 점검 완료 (2026-09-09)** — DIALOG 판정을 갖춘 뒤 33종 1,098건을 처음으로 전부 띄웠다.
-> **Demul 제외 1,036건 중 1,032 통과(99.6%)**. 실패는 Demul 60건(76번, 마우스 부재)과 TeknoParrot 2건(77번)뿐이다.
+> **1,098건 중 1,093건 통과(99.5%)**. 남은 5건은 전부 TeknoParrot(77번)이다.
+> 처음에는 Demul 60건이 무더기로 실패했는데 원인이 **캐비닛에 마우스가 없는 것**이었고(76번), 꽂자 62/62 로 돌아섰다.
+> 롬 6종은 사용자가 온전한 세트를 구해 와 교체했다. srtshot 은 romlist 의 이름 오타였다(78번).
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
 42·43번은 사용자 지적으로 마스코트 2종을 다시 손본 것, 44·45번은 사용자 지시로 PSXMAME 의 확인 창 제거와 버튼 배열 통일.
 **46~49번은 2026-09-06 전수 구동 점검(E)의 실패 106건을 파고들어 나온 것** —
@@ -1937,10 +1939,10 @@ if (!first_time || (str > 0 && str < 60*5) || &system == &___empty || debug_flag
 
 > **EKMAME(0.224)은 대상이 아니다.** 같은 시그니처가 없고, `kof97kt` 을 띄워 보니 경고 화면 없이 그대로 진행한다.
 
-### - [ ] 76. Demul 60개가 전부 실행 불가 — 이 캐비닛에 마우스가 없다 — ⏳ **하드웨어 대기 (2026-09-09)**
+### - [x] 76. Demul 60개가 전부 실행 불가 — 이 캐비닛에 마우스가 없었다 — ✅ **완료 (2026-09-09)**
 
 DIALOG 판정을 갖춘 뒤 처음 돌린 전수 구동 점검(1,098건)에서 **Demul 계열 62개 중 60개가 실패**했다.
-같은 대화상자가 게임마다 뜨고, 닫아도 **27번 반복**된 뒤 게임이 끝내 시작되지 않는다.
+같은 대화상자가 게임마다 뜨고, 닫아도 **27번 반복**된 뒤 게임이 끝내 시작되지 않았다.
 
 ```
 padDemul
@@ -1950,7 +1952,7 @@ IDirectInput CreateDevice mouse FAILED
 
 **원인** — `0x80040154` 는 COM 의 `REGDB_E_CLASSNOTREG` 이면서 동시에 DirectInput 의
 **`DIERR_DEVICENOTREG`**("그 장치 인스턴스가 DirectInput 에 등록돼 있지 않다")와 같은 값이다.
-padDemul 은 초기화할 때 조건 없이 마우스 장치를 여는데, **이 PC 에 열 마우스가 하나도 없다.**
+padDemul 은 초기화할 때 조건 없이 마우스 장치를 여는데, **이 PC 에 열 마우스가 하나도 없었다.**
 
 ```
 Get-PnpDevice -Class Mouse       연결됨   0 / 전체  21   (전부 Unknown = 끊긴 유령)
@@ -1958,49 +1960,121 @@ Get-PnpDevice -Class Keyboard    연결됨   0 / 전체  25
 Get-PnpDevice -Class HIDClass    연결됨  10 / 전체 117   (아케이드 패널 2개는 정상)
 ```
 
-사용자 확인: "이 컴퓨터에는 마우스 키보드 없어." 캐비닛이라 원격으로 조작한다 —
-원격 입력은 Windows 레벨이라 DirectInput 에는 장치가 보이지 않는다.
+**배제한 것** — 설정 아님(`padDemul.ini` 를 치우고 기본값으로 만들어도 동일) · DirectX 런타임 아님
+(DX9 재배포판 설치돼 있고 DirectInput CLSID 4개가 32/64비트 모두 정상 등록) ·
+대체 플러그인 없음(`plugins\` 에 `padDemul.dll` 하나뿐) ·
+이번 갱신의 회귀 아님(Demul 바이너리 무변경, `scache\` 에 2022년 셰이더 캐시 1,052개 = 그때는 돌았다).
 
-**배제한 것**
-- 설정 아님 — `padDemul.ini` 를 치우고 기본값으로 만들어도 동일
-- DirectX 런타임 아님 — DX9 재배포판 설치돼 있고(`d3dx9_43`·`xinput1_3`·`d3dx9_31`),
-  DirectInput CLSID 4개가 32/64비트 모두 `SysWOW64\dinput.dll`·`dinput8.dll` 로 정상 등록
-- 대체 플러그인 없음 — `plugins\` 에 `padDemul.dll` 하나뿐 (gpu 는 DX11/DX11old 둘 다 있다)
-- **이번 갱신의 회귀 아님** — Demul 바이너리는 안 바꿨고(64번), `scache\` 에 2022년 셰이더 캐시가
-  1,052개 있어 그때는 돌았다. 그 뒤 마우스를 뗀 것이 원인이다
+**조치 — 마우스를 꽂아 해결했다. 62/62 PASS.**
 
-**조치** — 캐비닛 USB 포트에 마우스를 아무거나 꽂으면 된다(무선 리시버든 유선이든). 꽂아 두기만 하면
-padDemul 이 장치를 찾는다. 꽂은 뒤 `test-roms.cmd -Launch -Emulator "SEGA NAOMI","Sammy Atomiswave","SEGA Dreamcast","SEGA Hikaru","CAVE"` 로 확인한다.
+> ⚠️ **마우스만으로는 부족할 수 있다. 키보드도 같이 꽂는다.**
+> 사용자 실측: "블루투스 마우스를 연결시켰었는데 처음에 같은 오류가 나오면서 정상적으로 실행이 되지 않는 것 같아서
+> 블루투스 키보드도 연결시켰더니 그 다음부터는 또 제대로 실행 되는 것 같았어."
+> 블루투스 장치는 페어링만으로는 DirectInput 에 device instance 가 서지 않는 구간이 있다.
+> **캐비닛에는 유선 마우스 + 유선 키보드를 상시로 꽂아 두는 것이 확실하다**(`.+필독.txt` 7절).
 
-> 곁가지 — 이 중 6개는 마우스와 무관하게 **롬이 불완전**하다. 컨테이너는 있는데 안의 파일이 다른 판이다.
->
-> | 셋 | 컨테이너 | 없는 파일 |
-> |---|---|---|
-> | `ngbc` | 175MB | `ax3301en_p01.fmem1` |
-> | `basschal` | 67MB | `vera.u3` |
-> | `gunsur2` | 101MB | `bhf2vere.2f` |
-> | `deathcox` | 41MB | `epr-23524a.ic22` |
-> | `zombrvn` | 69MB | `epr-21707a.ic22` |
-> | `blokpong` · `srtshot` | **없음** | — (E 항목이 "NOCHK 라 확인 불가"로 두었던 것 — 실제로 롬이 없다) |
+**곁가지로 함께 해결한 롬 6종** — 컨테이너는 있는데 안의 파일이 다른 판이었다.
+사용자가 온전한 세트를 구해 와 `emulators/Demul/roms/` 를 교체했다(옛 파일은
+`D:\AttractMode emulators updates\backup-demul-roms-20260909\` 에 보관). 6종 전부 PASS.
 
-### - [ ] 77. TeknoParrot 32개 중 2개가 이 캐비닛에서 안 뜬다 — ⏳ **장비 확인 필요 (2026-09-09)**
+| 셋 | 없던 파일 | 교체 후 |
+|---|---|---|
+| `ngbc` | `ax3301en_p01.fmem1` | 208MB zip · PASS |
+| `basschal` | `vera.u3` | 104MB zip · PASS |
+| `gunsur2` | `bhf2vere.2f` | 166MB zip · PASS |
+| `deathcox` | `epr-23524a.ic22` | 53MB zip · PASS |
+| `zombrvn` | `epr-21707a.ic22` | 88MB zip · PASS |
+| `blokpong` | 롬 자체가 없었음 | 27MB zip 추가 · PASS |
 
-74번으로 연속 점검이 가능해진 뒤 32개를 전수로 돌려 **28/32 통과**. 나머지 넷을 하나씩 다시 봤다.
+**최종** — 1,098건 중 **1,093건 PASS (99.5%)**. 남은 5건은 전부 TeknoParrot(77번).
 
-| 게임 | 전수 점검 | 개별 재시도 | 판정 |
+### - [ ] 77. TeknoParrot 32개 중 5개가 이 캐비닛에서 안 뜬다 — ⏳ **장비 확인 필요 (2026-09-09)**
+
+74번으로 연속 점검이 가능해진 뒤 32개를 전수로 돌려 **27/32 통과**. 나머지를 깨끗한 상태에서 하나씩 다시 봤다.
+
+| 게임 | 전수 점검 | 개별 재시도(단독 실행) | 판정 |
 |---|---|---|---|
+| `IDZ` (이니셜 D Zero) | NOWIN | NOWIN | **실제로는 뜬다.** SegaTools 콘솔에 `idz_pre_startup` → `amdaemon Ver.2425` → GPIO/EEPROM/SRAM 초기화가 정상으로 찍힌다. 창이 판정에 안 잡히는 것뿐 — 도구 한계, 실패 아님 |
+| `FNF` (F&F) | EXIT0 | EXIT0 **18.7초** | 재현됨 |
+| `FNFSB` (F&F SuperBikes) | EXIT0 | EXIT0 **18.6 / 18.9초** | 재현됨 |
+| `FNFSC` (F&F SuperCars) | D3D 대화상자 | EXIT0 **18.6 / 23.8초** (대화상자는 가끔만) | 재현됨 |
+| `WMMT6` | 대화상자("이미 실행 중") | EXIT0 **17.2초** | 재현됨 |
+| `FNFDrift` | PASS | PASS | 정상 — 같은 sdaemon 계열인데 이것만 통과한다 |
 | `RaidenIII` | NOWIN | **PASS** | 일시적 — 앞 항목의 잔여 프로세스 영향. 문제 아님 |
-| `IDZ` (이니셜 D Zero) | 대화상자(관리자 권한) | NOWIN | **실제로는 뜬다.** SegaTools 콘솔에 `idz_pre_startup` → `amdaemon Ver.2425` → GPIO/EEPROM/SRAM 초기화가 정상으로 찍힌다. 게임 창이 판정에 안 잡히는 것뿐 — 도구 한계 |
-| `WMMT6` | 대화상자("다른 에뮬레이터가 이미 실행 중") | EXIT0 (18.7초 뒤 스스로 종료) | 확인 필요 |
-| `FNFSC` (F&F SuperCars) | `D3D INVALIDCALL. Failed to create 1360 x 768 window.` | 동일 | **해상도 문제** |
 
-`FNFSC` 는 로더까지 성공한다(`Loading game... Success! / Loading core... Success! / Have fun :)`).
-그 뒤 게임이 1360×768 창을 만들려다 실패하는데, **이 캐비닛 화면이 1280×1024(5:4)** 라 그 모드가 없다.
-같은 sdaemon 계열인 `FNF`·`FNFDrift`·`FNFSB` 는 전부 통과하므로 SuperCars 만의 설정이다.
-게임 쪽 설정에서 해상도를 1280×1024(또는 1024×768)로 낮추면 될 가능성이 높다.
+**공통 양상** — 넷 다 로더까지는 성공한다(`Loading game... Success! / Loading core... Success! / Have fun :)`).
+그 뒤 **17~24초 사이에 스스로 종료**한다. 시간이 일정한 것은 무언가를 기다리다 타임아웃한다는 뜻이다.
+
+**확인한 것 / 배제한 것**
+- `<GamePath>` 5개 전부 실재한다. **처음에 `FNFSC` 를 "경로 없음"으로 잡은 것은 오탐** —
+  `UserProfiles/*.xml` 이 `The Fast &amp; Furious SuperCars` 로 저장하는데 grep 으로 `&` 를 찾아 어긋났다.
+  `[xml]` 로 디코딩해 확인해야 한다.
+- `FNFSC` 의 `D3D INVALIDCALL. Failed to create 1360 x 768 window.` 는 **매번 나오지 않는다.**
+  이 캐비닛이 1280×1024(5:4)라 1360×768 모드가 없는 것은 맞지만, 그것만으로는 EXIT0 를 설명하지 못한다.
+- `emulators/TeknoParrot/exception.txt` 에 `System.NullReferenceException … TeknoParrotUi.Views.GameRunning.<CreateGameProcess>b__36_0()`
+  가 남는다. 미추적 런타임 산출물이라 `.gitignore` 에 넣었다.
+
+**다음에 볼 것** — 이 넷은 전부 **sdaemon/amdaemon 계열 네트워크 보드 에뮬레이션**을 쓴다.
+`FNFDrift` 만 통과하는 것이 갈림길이므로, 통과하는 프로필과 실패하는 프로필의 `UserProfiles/*.xml` 을
+항목별로 대조하는 것이 가장 빠르다. 캐비닛에서 직접 손으로 띄워 무엇을 기다리는지 보는 것이 확실하다.
 
 > `IDZ` 때문에 `NOWIN` 을 실패로 세지 않는 것이 맞다는 것이 다시 확인됐다 — 런처형 정의는
 > 게임이 콘솔만 갖거나 창을 늦게 만들 수 있다. 도구는 이미 `NOWIN` 을 경고로만 센다.
+
+### - [x] 78. `srtshot` 은 존재하지 않는 롬셋 이름이었다 — Demul 이 조용히 선택 창을 띄운다 — ✅ **완료 (2026-09-09)**
+
+`romlists/Sammy Atomiswave.txt` 의 Name 이 **`srtshot`** 인데 Demul 의 롬셋 이름과 파일명은 둘 다
+**`sprtshot`** 이다(오타 — `sp` 의 `p` 가 빠졌다). Demul 은 모르는 이름을 받으면 **오류를 내지 않고
+`Select ROM` 목록 창을 띄우고 사람을 기다린다.**
+
+```
+demul.exe -run=awave -rom=srtshot    -> #32770 "Select ROM"  +  main window "Demul"
+demul.exe -run=awave -rom=sprtshot   -> window "gpuDX11hw | FPS: 56 RPS: 56 | Sports Shooting USA"
+```
+
+**왜 전수 점검이 이걸 통과시켰나** — `test-roms.ps1` 의 판정 자체는 옳다(`#32770` 이 있으면 `DIALOG`).
+그런데 **점검이 도는 동안 사람이 그 선택 창에서 게임을 직접 골랐다.** 게임이 실제로 떴으니
+판정 시점에는 대화상자가 없고 진짜 창만 있어 `PASS` 로 기록됐다.
+사용자 확인: "srtshot 은 바로 실행 안되고 게임 선택 창 나와서 내가 선택해서 실행된거야."
+
+> 🚨 **전수 구동 점검 중에는 창을 클릭하지 않는다.** 클릭 한 번이 실패를 통과로 바꿔 놓고,
+> 보고서에는 흔적이 남지 않는다. 조작이 필요하면 그 항목만 따로 다시 돌린다.
+
+**조치**
+1. `romlists/Sammy Atomiswave.txt` 의 Name 을 `sprtshot` 으로 고쳤다.
+2. 아트웍은 Name 으로 찾으므로 같이 개명했다(`menu-art` 는 gitignore — **장비마다 해야 한다**).
+   `menu-art/demul/flyer/srtshot.jpg` → `sprtshot.jpg`, `menu-art/demul/wheel/srtshot.png` → `sprtshot.png`.
+   `video/sprtshot.mp4` 는 이미 있었으므로 `srtshot.mp4` 는 백업 폴더로 옮겼다.
+3. `audit.ps1` 에 **`demul` 섹션**을 넣었다 — 다음부터는 스크립트가 잡는다.
+
+**검사 규칙** — 이름이 `emulators/Demul/arcade_compat.txt`(Demul 자신의 롬셋표, 287개)에 있거나
+`roms\<이름>.{7z,zip}` 이 있으면 정상. **파일 존재만으로 판정하면 안 된다** — GD-ROM 계열은
+롬셋 이름과 파일명이 다르다(`cvs2mf` → `cvs2.zip` + `cvs2\gdl-0007a.chd`).
+반대로 `arcade_compat.txt` 는 좀 낡아서 `mushitam`·`blokpong` 이 빠져 있다. **둘 중 하나만 맞으면 정상**으로 본다.
+
+> **오탐 기록** — 처음에 "파일이 없다"만으로 훑어 `cvs2mf` 를 결함으로 잡았다. 실제로 띄워 보니
+> `Capcom vs SNK 2 Millionaire Fighting 2001 (Rev. A) (GDL-0007A)` 로 정상 구동한다. `mushitam`·`blokpong` 도 정상이었다.
+> 실제 결함은 `srtshot` 하나뿐이었다.
+
+### - [x] 79. PowerShell 5.1 `Get-Content` 가 romlist 한 줄을 20필드로 읽는다 — ✅ **완료 (2026-09-09)**
+
+78번의 검사를 처음 짤 때 `Get-Content` 로 romlist 를 읽었더니 **활성 59건 중 45건만** 셌다.
+PS 5.1 의 `Get-Content` 는 BOM 없는 파일을 **ANSI 코드페이지(이 PC 는 CP949)** 로 디코딩하는데,
+한글 문자의 끝 바이트가 **뒤따르는 `;` 를 함께 삼킨다.**
+
+```
+파일 원본        ggisuka;길티기어 이수카;Sammy Atomiswave;;2003;...      세미콜론 20개 = 21필드
+Get-Content      ggisuka;湲명떚湲곗뼱 ?댁닔移?Sammy Atomiswave;;2003;... 세미콜론 19개 = 20필드
+                                              ^^^ ';' 가 사라졌다
+[IO.File]::ReadAllLines  (UTF-8 기본)          세미콜론 20개 = 21필드   ✔
+```
+
+`$f[2]`(Emulator)가 빈 문자열이 되어 그 줄이 **조용히 검사 대상에서 빠진다.** 오류도 경고도 없다.
+
+**규칙 — 저장소 파일은 `[IO.File]::ReadAllLines` 로 읽는다. `Get-Content` 를 쓰지 않는다.**
+`tools/validate.ps1`·`tools/test-roms.ps1` 은 처음부터 `[System.IO.File]::ReadAllLines` 라 무사했다.
+`audit.ps1` 의 남아 있던 `Get-Content` 3곳(`.gitignore`·형제 cfg·새 demul 섹션)도 전부 바꿨고,
+스크립트 머리말에 이 함정을 적어 두었다.
 
 ---
 
@@ -2108,7 +2182,7 @@ tools\test-roms.ps1 -Launch -Resume            중단된 전수 점검을 이어
 
 | 확인 불가 4건 | 왜 |
 |---|---|
-| `blokpong`, `srtshot`, `cvs2mf` | **2026-09-09 확인: 실제로 롬이 없다**(76번). Demul 정의는 `-rom="[name]"` 이라 **`romext` 가 없다.** 확장자를 모르니 존재를 단정할 수 없는데, `.zip`/`.7z`/`.chd` 로 훑어도 안 나온다 — **실제로 롬이 없을 가능성이 높다.** `validate.ps1` 도 같은 이유로 이 셋을 못 본다 |
+| `blokpong`, `srtshot`, `cvs2mf` | **2026-09-09 해소.** Demul 정의는 `-rom="[name]"` 이라 **`romext` 가 없어** 정적으로 존재를 단정할 수 없었다. 실제로는 `blokpong` 만 롬이 없었고(사용자가 구해 와 추가), `srtshot` 은 **이름 오타**(→ `sprtshot`, 78번), `cvs2mf` 는 GD-ROM 이라 파일명이 부모셋(`cvs2.zip`)이라서 안 보였던 것뿐이다 — 셋 다 지금 PASS. 이제 `audit.ps1 -Section demul` 이 `arcade_compat.txt` 와 대조해 잡는다 |
 | `The BishiBashi` | 인자에 롬 토큰이 없는 고정 실행형 정의. 정상 |
 
 **여기서 실측으로 알게 된 것 두 가지** (45번의 ESC 교훈을 코드로 옮기다 나왔다)

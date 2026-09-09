@@ -7,9 +7,15 @@
       OK     - checked, nothing found (kept so the report can say "measured")
       INFO   - numbers / context for the report
     ASCII-only on purpose (PowerShell 5.1 reads BOM-less UTF-8 source as ANSI).
+
+    Read repo files with [IO.File]::ReadAllLines (UTF-8 by default), never Get-Content:
+    PS 5.1's Get-Content decodes a BOM-less file with the ANSI code page (CP949 here) and a
+    Korean character's trailing byte then swallows the following ';' - a romlist row silently
+    parses as 20 fields instead of 21 and the row is skipped. Cost 14 of 59 Demul rows on
+    2026-09-09 before it was noticed.
 .PARAMETER Root      repo root (default: 4 levels up from this script = repo root)
 .PARAMETER Section   run one section only:
-                     layout|dispimg|mascot|dupes|fonts|glyph|cfg|case|branch|video|junk
+                     layout|dispimg|mascot|dupes|fonts|glyph|cfg|demul|case|branch|video|junk
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\audit.ps1
     powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\audit.ps1 -Section mascot
@@ -371,7 +377,7 @@ if (Want 'cfg') {
     $diffs = 0
     foreach ($g in $groups.Keys) {
         $norm = @{}
-        foreach ($f in $groups[$g]) { $norm[$f.BaseName] = ((Get-Content -LiteralPath $f.FullName | Where-Object { $_ -match '^artwork' } | ForEach-Object { ($_ -replace '\s+', ' ').Trim() } | Sort-Object) -join "`n") }
+        foreach ($f in $groups[$g]) { $norm[$f.BaseName] = (([IO.File]::ReadAllLines($f.FullName) | Where-Object { $_ -match '^artwork' } | ForEach-Object { ($_ -replace '\s+', ' ').Trim() } | Sort-Object) -join "`n") }
         $vals = @($norm.Values | Select-Object -Unique)
         if ($vals.Count -gt 1) { "ISSUE  artwork differs within group '$g': " + (($norm.Keys | Sort-Object) -join ', '); $diffs++ }
     }
@@ -389,6 +395,49 @@ if (Want 'cfg') {
     foreach ($k in $layoutCfg.Keys) { foreach ($key in @('select_character', 'boximage_type', 'spinwheelArt', 'bg_art', 'cabScreenType', 'marquee_type', 'enable_flyer', 'bg_media')) { if ($layoutCfg[$k].ContainsKey($key)) { "INFO   $k.$key = $($layoutCfg[$k][$key])" } } }
 }
 
+# ---------------------------------------------------------------- 7b. Demul romset names
+# Demul takes the set name on the command line (-rom=<name>); the ROM files on disk may be
+# named after the PARENT set (GD-ROM: cvs2mf -> cvs2.zip + cvs2\*.chd), so "file exists" alone
+# is not a valid test. A wrong name is not a crash either - Demul opens a "Select ROM" picker
+# and waits. test-roms.ps1 scores that DIALOG only if nobody clicks it; srtshot -> sprtshot
+# (2026-09-09) recorded PASS because an operator dismissed the picker mid-run.
+# Rule: a name is fine if arcade_compat.txt lists it OR an archive of that name exists.
+if (Want 'demul') {
+    Hdr "demul: romlist Name vs Demul's own set list (emulators\Demul\arcade_compat.txt)"
+    $compat = Join-Path $Root 'emulators\Demul\arcade_compat.txt'
+    if (-not (Test-Path -LiteralPath $compat)) { "INFO   arcade_compat.txt not present - skipped" }
+    else {
+        $sets = @{}
+        foreach ($line in [IO.File]::ReadAllLines($compat)) {
+            if ($line -match '^\|\s*([a-z0-9_]+)\s*\|') { $sets[$Matches[1]] = 1 }
+        }
+        $byName = @{}
+        Get-ChildItem -LiteralPath "$Root\emulators" -Filter *.cfg | ForEach-Object {
+            $a = ([IO.File]::ReadAllLines($_.FullName) | Where-Object { $_ -match '^args\s' }) -join ' '
+            if ($a -match '-run=' -and $a -match '-rom=') { $byName[$_.BaseName] = 1 }
+        }
+        $romDir = Join-Path $Root 'emulators\Demul\roms'
+        $bad = 0; $checked = 0
+        Get-ChildItem -LiteralPath "$Root\romlists" -Filter *.txt | ForEach-Object {
+            $rl = $_.Name
+            [IO.File]::ReadAllLines($_.FullName) | Select-Object -Skip 1 | ForEach-Object {
+                $f = $_ -split ';'
+                if ($f.Count -lt 3) { return }
+                $n = $f[0]
+                if ($n -eq '' -or $n.StartsWith('#') -or -not $byName.ContainsKey($f[2])) { return }
+                $checked++
+                $onDisk = (Test-Path -LiteralPath (Join-Path $romDir "$n.7z")) -or (Test-Path -LiteralPath (Join-Path $romDir "$n.zip"))
+                if (-not $sets.ContainsKey($n) -and -not $onDisk) {
+                    $bad++
+                    "ISSUE  $rl : '$n' ($($f[2])) is in neither arcade_compat.txt nor roms\ - Demul opens the ROM picker"
+                }
+            }
+        }
+        "INFO   $($byName.Count) Demul-style definitions, $checked active entries, $($sets.Count) sets listed"
+        if ($bad -eq 0) { "OK     every active Demul entry resolves to a set Demul knows" }
+    }
+}
+
 # ---------------------------------------------------------------- 8. exact-case consistency
 if (Want 'case') {
     Hdr "case: attract.cfg romlist names vs romlists/*.txt exact case (Windows hides this, Linux does not)"
@@ -404,7 +453,7 @@ if (Want 'case') {
 
     Hdr "case: .gitignore entries whose case differs from the real path"
     $n = 0
-    foreach ($p in (Get-Content -LiteralPath "$Root\.gitignore")) {
+    foreach ($p in [IO.File]::ReadAllLines("$Root\.gitignore")) {
         $p = $p.Trim(); if (-not $p -or $p.StartsWith('#') -or $p -match '[\*\[]') { continue }
         $d = $p.TrimEnd('/'); $parent = Split-Path $d -Parent; $base = Split-Path $d -Leaf
         if ($parent -and (Test-Path -LiteralPath $parent)) {
