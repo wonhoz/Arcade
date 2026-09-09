@@ -7,10 +7,10 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **71건** / 미해결 **3건**(13 · 65 · 80번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 5차 재점검 2026-09-08~09
+**진행 현황** — 처리 **72건** / 미해결 **2건**(13 · 65번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 5차 재점검 2026-09-08~09
 
 > **첫 전수 구동 점검 완료 (2026-09-09)** — DIALOG 판정을 갖춘 뒤 33종 1,098건을 처음으로 전부 띄웠다.
-> **1,098건 중 1,097건 통과(99.9%)**. 남은 하나는 `IDZ` 의 `NOWIN` 인데 실제로는 뜬다 — 도구 한계다.
+> **1,098건 중 1,097건 통과(99.9%)**. 남은 하나 `IDZ` 는 프로필이 `RequiresAdmin=true` 라 AM 을 관리자 권한으로 띄워야 한다(77번).
 > 처음에는 Demul 60건이 무더기로 실패했는데 원인이 **캐비닛에 마우스가 없는 것**이었고(76번), 꽂자 62/62 로 돌아섰다.
 > 롬 6종은 사용자가 온전한 세트를 구해 와 교체했다. srtshot 은 romlist 의 이름 오타였다(78번).
 (28~36번은 2026-09-04에 항목별로 한 커밋씩 처리. 37~41번은 4차 재점검이 3차 처리분을 재검증해 찾은 것 — 같은 날 항목별 한 커밋씩 처리.
@@ -2059,9 +2059,20 @@ copy "The Fast and the Furious Drift\winmm.dll" "The Fast & Furious SuperCars\"
 
 `.+필독.txt` 7절 (7)에 적었다.
 
-**최종 — TeknoParrot 32개 중 31 PASS.** 남은 하나는 `IDZ` 의 `NOWIN` 인데 실패가 아니다
-(SegaTools 콘솔에 `idz_pre_startup` → `amdaemon Ver.2425` → GPIO·EEPROM·SRAM 초기화가 정상으로 찍힌다.
-창이 판정에 안 잡히는 도구 한계). `WMMT6` 은 80번으로 분리했다.
+**최종 — TeknoParrot 32개 중 31 PASS.** 남은 하나는 `IDZ` 다. `WMMT6` 은 80번으로 분리했다.
+
+> **`IDZ` 는 관리자 권한이 필요하다 — 2026-09-09 확인.** 이 게임만 프로필에 `RequiresAdmin=true` 가 들어 있고
+> (`UserProfiles/*.xml` 32개 중 유일), 권한 없이 띄우면 TeknoParrot 이 아래 상자를 띄운다.
+>
+> ```
+> Seems like you are not running TeknoParrotUI as Administrator!
+> The game Initial D: Arcade Stage Zero requires the UI to be running
+> as Administrator to function properly. Continue?
+> ```
+>
+> 그래서 실행 상황에 따라 `NOWIN` 으로도 `DIALOG` 로도 잡힌다. SegaTools 콘솔에는
+> `idz_pre_startup` → `amdaemon Ver.2425` → GPIO·EEPROM·SRAM 초기화까지 정상으로 찍히지만 거기서 더 못 간다.
+> **캐비닛에서 IDZ 를 쓰려면 `attract.bat` 바로가기를 "관리자 권한으로 실행" 으로 두어야 한다** — 저장소로 안 따라가는 장비 설정이다.
 
 > **오탐 기록** — 처음에 `FNFSC` 의 `<GamePath>` 를 "없음"으로 잡았다. `UserProfiles/*.xml` 이
 > `The Fast &amp; Furious SuperCars` 로 저장하는데 grep 으로 `&` 를 찾아 어긋난 것이다.
@@ -2122,9 +2133,9 @@ Get-Content      ggisuka;湲명떚湲곗뼱 ?댁닔移?Sammy Atomiswave;;2003;..
 `audit.ps1` 의 남아 있던 `Get-Content` 3곳(`.gitignore`·형제 cfg·새 demul 섹션)도 전부 바꿨고,
 스크립트 머리말에 이 함정을 적어 두었다.
 
-### - [ ] 80. `WMMT6` 의 `wmn6r.exe` 가 이미 다른 로더로 패치돼 있다 — ⏳ **원본 파일 필요 (2026-09-09)**
+### - [x] 80. `WMMT6` 은 TeknoParrot 용 덤프가 아니었다 — 자체 로더로 직접 실행하도록 바꿨다 — ✅ **완료 (2026-09-09)**
 
-TeknoParrot 이 실행 전에 아래 Yes/No 상자를 띄우고 **답할 때까지 멈춘다.**
+TeknoParrot 이 실행 전에 Yes/No 상자를 띄우고 **답할 때까지 멈췄다.**
 
 ```
 It seems you have another emulator already in use. This will most likely cause problems.
@@ -2133,15 +2144,70 @@ wmn6r.exe
 Continue?                                    [ 예(Y) ]  [ 아니요(N) ]
 ```
 
-TeknoParrot 은 게임 실행파일에 자기 패치를 얹는데, 이미 **다른 로더가 패치해 둔 파일**이라 충돌을 경고하는 것이다.
+**메시지가 `wmn6r.exe` 를 지목하지만 방아쇠는 그 파일이 아니다.**
+`wmn6r.exe` 의 임포트 테이블은 깨끗하고 외부 로더 문자열도 없다.
+TeknoParrotUi.exe 안의 문자열을 보면 **게임 폴더에서 다른 로더의 파일을 정규식으로 찾는다.**
 
-- 32개 전수 점검에서는 `PASS` 로 지나갔는데, 따로 돌리면 이 상자가 뜬다 — **재현이 일정하지 않다.**
-- `예` 를 눌러도 TeknoParrot 이 종료 코드 0 으로 끝나고 게임이 뜨지 않았다.
-- 이 상자는 `#32770` 이지만 **Yes/No 라 `IDOK`(1) 이 아니라 `IDYES`(6)** 다 — 자동 응답 도구를 쓸 때 주의.
+```
+detoured\.dll     jconfig.*\.exe     jvsemu.*\.dll     jvs_loader\.exe
+es3_patch\.dll    bnusio.dll         DumbJVSManager.exe
+```
 
-**조치** — 패치되지 않은 원본 `wmn6r.exe` 를 구해 교체하면 TeknoParrot 이 자기 패치를 정상으로 얹는다.
-77번의 winmm 문제와는 **무관하다**(WMMT6 은 64비트 `NamcoWmmt5` 프로필이라 32비트 프록시가 애초에 안 붙는다).
+이 게임 폴더에는 `sv\JConfigWM6.exe` 와 `sv\JVSEmuWM6.dll` 이 있어 두 패턴에 걸린다.
 
+**이 덤프는 애초에 TeknoParrot 용이 아니다.** 함께 들어 있는 `README.txt` 가 그렇게 적어 놨다.
+
+```
+This dump isn't for commercial use but for entertainment only
+TeknoParrot is not welcome to use it, don't be a sucker!
+```
+
+`sv\JVSEmuWM6.dll` · `JConfigWM6.exe`(JVSEmu 로더) · dgVoodoo 계열 `D3D8/9/Imm.dll` · `DDraw.dll` ·
+아케이드 기판의 부팅 스크립트(`init.ps1` · `project.ps1` — BitLocker 해제와 방화벽 규칙까지 들어 있다)가
+같이 들어 있는 **JVSEmu 로더용 리팩**이다.
+
+**되돌릴 "원본" 이 이 사본 안에 없다.** 백업본(`*.bak` · `*.orig`)도 없다.
+
+**그 둘을 치우면 상자는 사라지지만 이번엔 TeknoParrot 쪽이 죽는다**
+
+두 파일을 폴더 밖으로 옮기니 경고는 사라지고 게임이 실제로 뜨기 시작했다
+(`OpenParrotLoader64.exe` → `wmn6r.exe`, `OpenParrot64.dll` 주입, 모듈 55개).
+그런데 3.7초 뒤 크래시했다. 윈도 이벤트 로그가 지점을 정확히 알려 준다.
+
+```
+오류가 있는 응용 프로그램 이름: wmn6r.exe, 타임스탬프: 0x5bacb621
+오류가 있는 모듈 이름: OpenParrot64.dll, 버전: 1.0.0.599, 타임스탬프: 0x62e0cf22
+예외 코드: 0xc0000005      오류 오프셋: 0x0000000000008b7c
+```
+
+**TeknoParrot 1.0.0.804 가 들고 있는 OpenParrot 1.0.0.599 가 이 덤프를 감당하지 못한다.** 두 번 재현했다.
+
+**조치 — 자체 로더로 직접 실행한다. 다운로드가 필요 없다.**
+
+`wmn6r.exe` 를 그냥 실행하면 **45초 넘게 안정적으로 돈다**
+(창 제목 `湾岸ミッドナイト MAXIMUM TUNE 6`, 메모리 ~640MB, CPU 꾸준히 증가, 창 응답 정상).
+그래서 이 게임만 TeknoParrot 을 거치지 않는 정의를 새로 뒀다.
+
+| 대상 | 전 | 후 |
+|---|---|---|
+| `romlists/TeknoParrot.txt` 의 `WMMT6` Emulator 필드 | `TeknoParrot` | **`TeknoParrot WMMT6`** |
+| 정의 | `TeknoParrot.cfg`(`TeknoParrotUi.exe --profile=`) | **`TeknoParrot WMMT6.cfg`**(`...\Games\Wangan Midnight Maximum Tune 6\wmn6r` 직접) |
+
+`Taito Type X The BishiBashi` 와 같은 **고정 실행형** 정의다(`args` 없음, `rompath .`, `romext .exe`).
+아트웍 6줄은 `TeknoParrot.cfg` 와 같은 경로를 쓰므로 휠·플라이어가 그대로 나온다.
+
+> ⚠️ **이 게임은 작업 디렉터리가 자기 폴더여야 한다.** 밖에서 띄우면 5초 안에 `0x80000003` 으로 끝난다(실측).
+> AM 과 `tools/test-roms.ps1` 은 **실행파일이 있는 폴더**를 작업 디렉터리로 잡으므로(`test-roms.ps1:783`)
+> 정의만 만들면 되고, 별도 조치가 필요 없다.
+
+**검증** — 새 정의로 2회 연속 `PASS`. 이전과 달리 **ESC 로 정상 종료**되어 강제 종료 기록도 남지 않는다.
+
+> `sv\JConfigWM6.exe` · `sv\JVSEmuWM6.dll` 은 **그대로 두었다** — 이 로더가 게임을 돌리는 주체다.
+> 같은 폴더의 `sv\BK_*.bin` 은 게임 세이브다. 지우지 말 것.
+> (검증하느라 잠시 옮겼던 사본은 `D:\AttractMode emulators updates\backup-wmmt6-jvsemu-20260909\` 에 있다.)
+
+> **`emulators/TeknoParrot/Games/` 는 `.gitignore` 대상이지만 이번 조치는 `.cfg` 와 romlist 뿐이라 git 으로 전파된다.**
+> 장비에서 따로 할 일이 없다 — 단, 그 장비의 WMMT6 사본도 같은 JVSEmu 리팩이어야 한다.
 
 ---
 
