@@ -1188,6 +1188,7 @@ powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Resume    
 powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Name tekken
 powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Failed     # 직전 보고서의 실패 항목만
 powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Fast        # ★ 빠른 전수 점검 (약 2시간)
+powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Fast -Adaptive   # ★ 증분 점검 (보통 수십 초)
 ```
 
 > ⚠️ **전수 점검을 `-Fast` 없이 돌리면 10시간짜리다.** `-Fast` 는 **약 2시간**으로 줄인다(2026-09-10 실측).
@@ -1211,7 +1212,28 @@ powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Fast      
 > 실제로 문제가 됐던 TeknoParrot 의 자연 종료는 **18초**라 12초로도 못 잡았다(77번).
 > 오래 지켜봐야 할 때는 `-Fast` 없이 `-Seconds 30` 처럼 명시한다.
 
-메뉴는 `[1]` 빠른(정적) 점검, `[2]` 표본 · `[3]` 전수 · `[4]` 이어하기 · `[5]` 목록 지정 ·
+> **평소 점검은 `-Adaptive` 다 — 실측 65초.** 항목마다 **입력의 지문**(romlist 줄 · 에뮬레이터 cfg 내용 ·
+> 실행파일 · 롬 파일의 크기와 수정시각)을 CSV 의 `Fingerprint` 열에 남기고, 다음 실행에서 그대로면 건너뛴다.
+> 지문은 `-Adaptive` 없이 돌려도 항상 남으므로 **이번 보고서가 다음 실행의 기준**이 된다.
+>
+> | | 전수(기존) | 전수(`-Fast`) | 증분(`-Adaptive`) |
+> |---|---|---|---|
+> | 소요 | 10시간 12분 | 1시간 53분 | **65초** (1,097건 건너뜀) |
+>
+> **무엇을 "통과"로 볼지는 실행 방식에 따라 다르다.** 구동 점검(`-Launch`)이면 직전에도 **실제로 떴어야**(`PASS`)
+> 건너뛴다. 정적 점검이면 조립이 됐다는 것(`OK`/`NOCHK`)으로 충분하다 —
+> 정적 `OK` 를 구동 통과로 오인하면 한 번도 안 띄워 본 항목을 건너뛰게 된다.
+>
+> 기준 보고서의 `WindowMs` 를 보고 그 항목의 마감을 `WindowMs × 2 + 4초`(최대 45초)로 늘린다 —
+> `RaidenIII` 처럼 느린 항목이 마감에 걸려 `NOWIN` 이 되는 일이 줄어든다.
+>
+> ⚠️ **기준 보고서는 `logs\` 에 있고 `logs\` 는 `.gitignore` 대상이다.** 지문에 롬의 수정시각이 들어가므로
+> **어차피 장비마다 달라야 한다.** 새 장비에서는 전수 점검을 한 번 돌려 자기 기준을 만든 뒤 `-Adaptive` 를 쓴다.
+>
+> 세밀 조정: `-Observe <초>`(창이 떠 있어도 최소 이만큼 지켜본다, 기본 2.5) ·
+> `-StrSeconds <초>`(MAME 계열에 붙일 seconds_to_run, 기본 2) · `-Baseline <보고서>`.
+
+메뉴는 `[1]` 빠른(정적) 점검, `[A]` 증분 · `[2]` 표본 · `[3]` 전수 · `[T]` 정밀 전수 · `[4]` 이어하기 · `[5]` 목록 지정 ·
 `[6]` 이름으로 · `[7]` 실패만 다시(구동), `[8]`·`[9]` 보고서 순이다.
 
 `validate.ps1`(7.1절)이 **설정끼리 앞뒤가 맞는지**를 본다면, 이쪽은 **AM 이 실제로 만들어 낼 실행 명령**을
@@ -1220,7 +1242,8 @@ romlist 한 줄 한 줄에 대해 그대로 조립한다. `emulators/<Emulator>.
 결과 CSV 의 `Exe`/`Args` 열이 곧 **캐비닛에서 게임을 고를 때 실행될 명령 그 자체**다.
 
 CSV 에는 진단용 계측도 함께 남는다 — `ElapsedMs`(판정까지), `WindowMs`(창이 처음 뜬 시각),
-`ShutdownMs`(종료 처리), `StrUsed`(`-str` 을 붙였는가). 느린 항목을 찾을 때 `ShutdownMs` 부터 본다.
+`ShutdownMs`(종료 처리), `StrUsed`(`-str` 을 붙였는가), `Fingerprint`(입력의 지문 — `-Adaptive` 가 이걸로 갈라낸다).
+느린 항목을 찾을 때 `ShutdownMs` 부터 본다.
 
 | 상태 | 뜻 |
 |---|---|
@@ -1231,6 +1254,7 @@ CSV 에는 진단용 계측도 함께 남는다 — `ElapsedMs`(판정까지), `
 | `EXIT0`/`CRASH` | 실행 직후 스스로 종료. 롬을 못 읽고 조용히 닫히는 경우가 대부분 |
 | `DIALOG` | 살아 있지만 떠 있는 것이 **오류 대화상자**다. 게임은 시작되지 않았다. 상자 안 문구가 `Detail` 에 들어간다 |
 | `NOWIN` | 살아 있으나 창이 없음. 런처가 다른 프로세스를 띄운 경우(경고) |
+| `SKIP` | `-Adaptive` 에서 **입력이 직전과 같아 건너뛴 것**. 실패도 경고도 아니다 |
 
 - **"살아 있으면 통과"로 보면 안 된다.** 오류 대화상자를 띄운 채 서 있는 프로세스도 살아 있다.
   그래서 판정은 프로세스의 **보이는 최상위 창을 전부 훑어** 창 클래스가 `#32770`(윈도우 표준 대화상자)인 것이
