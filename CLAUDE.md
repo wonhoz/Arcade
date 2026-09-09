@@ -192,7 +192,7 @@ D:\AttractMode\
 ├─ attract.am                          런타임 상태(마지막 선택/레이아웃). 실행할 때마다 변함
 ├─ default-{display,emulator,filter}.cfg  AM 기본 템플릿(수정 금지)
 ├─ emulators\
-│   ├─ *.cfg                           ★ 에뮬레이터 정의 36개 (= romlist의 Emulator 필드 값)
+│   ├─ *.cfg                           ★ 에뮬레이터 정의 37개 (= romlist의 Emulator 필드 값)
 │   ├─ Mame\ Demul\ M2\ SuperModel\ PCSX2\ ePSXe\ PPSSPP\ Dolphin\
 │   │  Project64\ Project64_v1.7\ Cemu\ Mednafen\ RetroArch\ PSXMAME\
 │   │  TeknoParrot\ "Taito Type X"\ "PC Game"\      실제 에뮬레이터 바이너리
@@ -292,7 +292,7 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 - **MAME 계열은 `mame.ini`의 `rompath`가 실제 롬 탐색을 담당**하므로, cfg의 `rompath`는
   주로 목록 생성/`[romfilename]` 치환용이다. (`emulators/Mame/mame.ini:11` 참고)
 
-**에뮬레이터 정의 목록 (36개)**
+**에뮬레이터 정의 목록 (37개)**
 
 | 계열 | cfg |
 |---|---|
@@ -302,7 +302,7 @@ artwork <라벨> <경로1>;<경로2>              앞에서부터 탐색, 없으
 | SEGA | `SEGA MODEL 2`(M2 emulator_multicpu), `SEGA MODEL 3`(SuperModel) |
 | Sony | `Sony PlayStation {CUE,CCD,PBP}`(ePSXe), `Sony PlayStation 2 {ISO,GZ}`(PCSX2), `Sony PlayStation Portable`(PPSSPP) |
 | Nintendo | `Nintendo 64`(Project64), `Nintendo GameCube {ISO,GCZ}` / `Nintendo Wii {WBFS,GCZ}`(Dolphin), `Nintendo Wii U`(Cemu) |
-| 기타 | `SEGA Saturn {CUE,CCD,TOC}` / `NEC PC-Engine CD {GECD,SCDSYS}`(Mednafen·MAME), `Taito Type X` 4종, `TeknoParrot`, `PC Game` |
+| 기타 | `SEGA Saturn {CUE,CCD,TOC}` / `NEC PC-Engine CD {GECD,SCDSYS}`(Mednafen·MAME), `Taito Type X` 4종, `TeknoParrot`, `TeknoParrot WMMT6`(자체 로더로 직접 실행 — 4.13절), `PC Game` |
 
 > 같은 시스템이라도 **롬 컨테이너 형식별로 cfg를 나눠 두는 것이 이 저장소의 방식**이다
 > (`Sony PlayStation CUE` / `CCD` / `PBP` …). romext 우선순위만 다르다.
@@ -792,13 +792,27 @@ copy "The Fast and the Furious Drift\winmm.dll" "The Fast & Furious SuperCars\"
 `D3D INVALIDCALL. Failed to create 1360 x 768 window.` 는 이 모니터에 그 모드가 없는 것이 맞지만
 **매번 나오지 않으며 종료를 설명하지 못한다.**
 
-**`WMMT6` 은 별개다.** `wmn6r.exe` 가 다른 로더로 이미 패치돼 있어 TeknoParrot 이
-`Replace the following patched files by the originals` **Yes/No 상자**를 띄우고 답할 때까지 멈춘다.
-패치되지 않은 원본으로 교체해야 한다(`docs/ISSUES.md` 80번).
-그 상자는 `#32770` 이지만 **`IDOK`(1)이 아니라 `IDYES`(6)** 라 자동 응답 도구가 `IDOK` 만 보내면 무한히 다시 뜬다.
+**`WMMT6` 은 TeknoParrot 을 거치지 않는다 — 정의를 따로 뒀다(`TeknoParrot WMMT6.cfg`).**
+이 덤프는 **JVSEmu 로더용 리팩**이라 TeknoParrot 과 맞지 않는다(같이 들어 있는 `README.txt` 가
+"TeknoParrot is not welcome to use it" 이라고 적어 놨다). 자세한 것은 `docs/ISSUES.md` 80번.
 
-**`IDZ` 의 `NOWIN` 은 실패가 아니다** — SegaTools 콘솔에 `amdaemon Ver.2425` 초기화가 정상으로 찍힌다.
-런처형 정의는 게임이 콘솔만 갖거나 창을 늦게 만들 수 있어 `NOWIN` 을 경고로만 센다(7.5절).
+- TeknoParrot 은 게임 폴더에서 **다른 로더의 파일을 정규식으로 찾는다**
+  (`jconfig.*\.exe` · `jvsemu.*\.dll` · `jvs_loader\.exe` · `es3_patch\.dll` · `detoured\.dll` · `DumbJVSManager.exe` · `bnusio.dll`).
+  `sv\JConfigWM6.exe` 와 `sv\JVSEmuWM6.dll` 이 걸려 `Replace the following patched files by the originals` 상자가 뜬다.
+  **메시지는 `wmn6r.exe` 를 지목하지만 방아쇠는 옆에 있는 파일이다.**
+- 그 둘을 치우면 상자는 사라지지만, 이번엔 **`OpenParrot64.dll` 1.0.0.599 안 `+0x8b7c` 에서 액세스 위반**으로 죽는다(재현됨).
+- **덤프 자체는 멀쩡하다** — `wmn6r.exe` 를 직접 실행하면 45초 넘게 안정적으로 돈다(메모리 ~640MB, 창 응답 정상).
+
+> ⚠️ **이 게임은 작업 디렉터리가 자기 폴더여야 한다.** 밖에서 띄우면 5초 안에 `0x80000003` 로 끝난다.
+> AM 과 `test-roms.ps1` 은 실행파일이 있는 폴더를 작업 디렉터리로 잡으므로 정의만 만들면 된다.
+
+그 경고 상자는 `#32770` 이지만 **`IDOK`(1)이 아니라 `IDYES`(6)** 라, 자동 응답 도구가 `IDOK` 만 보내면 무한히 다시 뜬다(실측 20회).
+
+**`IDZ` 는 관리자 권한이 필요하다.** `UserProfiles/*.xml` 32개 중 **이 게임만 `RequiresAdmin=true`** 이고,
+권한 없이 띄우면 TeknoParrot 이 `Seems like you are not running TeknoParrotUI as Administrator!` 상자를 띄운다.
+그래서 실행 상황에 따라 `NOWIN` 으로도 `DIALOG` 로도 잡힌다. SegaTools 콘솔에는 `amdaemon Ver.2425` 초기화까지
+정상으로 찍히지만 거기서 더 못 간다. **캐비닛에서 쓰려면 `attract.bat` 바로가기를 "관리자 권한으로 실행" 으로 둔다.**
+런처형 정의는 게임이 콘솔만 갖거나 창을 늦게 만들 수 있어 `NOWIN` 은 경고로만 센다(7.5절).
 
 ## 5. 자주 하는 작업 레시피
 
