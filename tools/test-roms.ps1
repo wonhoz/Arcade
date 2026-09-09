@@ -77,7 +77,12 @@ param(
     [switch]$NoHtml,
     [switch]$Open,
     [switch]$Force,
-    [switch]$Quiet
+    [switch]$Quiet,
+    # -Fast : 판정이 서면 곧바로 끝낸다. 12초를 꽉 채우지 않고, 종료 경로도 에뮬레이터별로 학습한다.
+    #         MAME 계열에는 -str 을 붙여 스스로 깨끗이 끝나게 한다(ESC 사다리가 통째로 사라진다).
+    [switch]$Fast,
+    # -Fast 에서 MAME 계열에 붙이는 seconds_to_run 값(에뮬레이트 초). 0 이면 붙이지 않는다.
+    [int]$StrSeconds = 2
 )
 
 $ErrorActionPreference = 'Stop'
@@ -319,19 +324,28 @@ function Get-NewEmuProcs($PreIds, [int]$MainId) {
     })
 }
 
-function Stop-Emulator($Proc, [string]$ExePath, $Preexisting, $Kids) {
+# ESC 로 끝난 적이 있는지 에뮬레이터별로 기억한다. -Fast 에서 사다리를 건너뛸지 정하는 근거다.
+$script:EscFail = @{}
+
+function Stop-Emulator($Proc, [string]$ExePath, $Preexisting, $Kids, [string]$EmuName, [bool]$Protected, [bool]$FastMode) {
     $killed = $false
     $ids = @($Proc.Id) + @($Kids | ForEach-Object { $_.Id })
-    # 로딩 중인 MAME 는 ESC 를 씹는다. 한 번 보내고 마는 대신 로딩이 끝날 때까지 몇 번 더 보낸다.
-    if (-not $Proc.HasExited) {
+    $sw = [Diagnostics.Stopwatch]::StartNew()
+
+    # 이 에뮬레이터가 두 번 연속 ESC 로 안 끝났으면 사다리를 건너뛴다.
+    #   Protected(=MAME 계열)는 예외다 — 강제 종료하면 cfg\default.cfg 가 0바이트로 잘린다(CLAUDE.md 5.5절).
+    $skipEsc = $FastMode -and (-not $Protected) -and ([int]$script:EscFail[$EmuName] -ge 2)
+    $tries   = 6
+    $escOut  = $false
+
+    if (-not $Proc.HasExited -and -not $skipEsc) {
         $wsh = $null
         try { $wsh = New-Object -ComObject WScript.Shell } catch {}
-        for ($try = 0; $try -lt 6; $try++) {
+        for ($try = 0; $try -lt $tries; $try++) {
             $Proc.Refresh()
             if ($Proc.HasExited) { break }
             # AppActivate 는 이미 포그라운드인 창에도 False 를 돌려준다(PSXMAME 로 실측).
             # 그래서 반환값이 아니라 포그라운드 PID 로 판단한다.
-            # 런처형은 게임 프로세스가 포그라운드다. 그쪽에 ESC 를 보내야 게임이 끝난다.
             try { if ($wsh) { [void]$wsh.AppActivate($Proc.Id) } } catch {}
             Start-Sleep -Milliseconds 350
             $Proc.Refresh()
@@ -339,20 +353,31 @@ function Stop-Emulator($Proc, [string]$ExePath, $Preexisting, $Kids) {
                 [AmInput]::SendEsc()
             }
             $w = [Diagnostics.Stopwatch]::StartNew()
-            while (-not $Proc.HasExited -and $w.Elapsed.TotalSeconds -lt 2.5) {
+            $cap = 2.5
+            while (-not $Proc.HasExited -and $w.Elapsed.TotalSeconds -lt $cap) {
                 Start-Sleep -Milliseconds 200; $Proc.Refresh()
             }
         }
+        $Proc.Refresh()
+        $escOut = $Proc.HasExited
     }
+
     if (-not $Proc.HasExited) {
         try { [void]$Proc.CloseMainWindow() } catch {}
         $w = [Diagnostics.Stopwatch]::StartNew()
-        while (-not $Proc.HasExited -and $w.Elapsed.TotalSeconds -lt 6) { Start-Sleep -Milliseconds 200; $Proc.Refresh() }
+        $cap = 6
+        if ($FastMode) { $cap = 2 }
+        while (-not $Proc.HasExited -and $w.Elapsed.TotalSeconds -lt $cap) { Start-Sleep -Milliseconds 200; $Proc.Refresh() }
     }
     if (-not $Proc.HasExited) {
         & taskkill.exe /PID $Proc.Id /T /F 2>&1 | Out-Null
         $killed = $true
         Start-Sleep -Milliseconds 500
+    }
+    # ESC 성적을 기억한다. MAME 계열은 어차피 건너뛰지 않으므로 세지 않는다.
+    if (-not $Protected -and $EmuName) {
+        if ($escOut) { $script:EscFail[$EmuName] = 0 }
+        elseif (-not $skipEsc) { $script:EscFail[$EmuName] = 1 + [int]$script:EscFail[$EmuName] }
     }
     # 런처형(cmd /c, TeknoParrotUi)은 자식 프로세스를 남긴다. 이번에 새로 생긴 것만 정리한다.
     $base = [IO.Path]::GetFileNameWithoutExtension($ExePath)
@@ -361,18 +386,18 @@ function Stop-Emulator($Proc, [string]$ExePath, $Preexisting, $Kids) {
             try { & taskkill.exe /PID $p.Id /T /F 2>&1 | Out-Null; $killed = $true } catch {}
         }
     }
-    # 런처가 띄운 게임 프로세스(emulators\ 아래, 이번에 새로 생긴 것). ESC 로 안 끝났으면 여기서 끝낸다 —
-    # 남겨 두면 TeknoParrot 이 다음 항목에서 "already running" 을 띄운다. 이건 강제 종료로 세지 않는다.
+    # 런처가 띄운 게임 프로세스. 남겨 두면 다음 항목이 "already running" 으로 막힌다(ISSUES 68번).
     foreach ($k in @($Kids)) {
         try { $k.Refresh(); if (-not $k.HasExited) { & taskkill.exe /PID $k.Id /T /F 2>&1 | Out-Null } } catch {}
     }
+    $script:LastShutdownMs = [int]$sw.Elapsed.TotalMilliseconds
     return $killed
 }
 
 # 결과를 한 장짜리 HTML 로 정리한다. 캐비닛 PC 에는 인터넷이 없을 수 있으므로
 # 외부 CDN·폰트를 쓰지 않고 CSS·JS 를 전부 파일 안에 넣는다.
 function Write-HtmlReport($Rows, [string]$Path, $Meta) {
-    $json = ($Rows | Select-Object List, Name, Title, Emulator, Status, Detail, Exe, Args, ElapsedMs |
+    $json = ($Rows | Select-Object List, Name, Title, Emulator, Status, Detail, Exe, Args, ElapsedMs, WindowMs, ShutdownMs |
              ConvertTo-Json -Depth 3 -Compress)
     if (-not $json.StartsWith('[')) { $json = "[$json]" }   # 1건이면 배열이 아니라 객체로 나온다
     # 롬 이름·인자에 '<' 가 섞이면 </script> 로 읽혀 문서가 끊긴다.
@@ -616,6 +641,7 @@ if ($Resume) {
             List = $r.List; Name = $r.Name; Title = $r.Title; Emulator = $r.Emulator
             Disabled = ($r.Disabled -eq 'True'); Status = $r.Status; Detail = $r.Detail
             Exe = $r.Exe; Args = $r.Args; ElapsedMs = [int]$r.ElapsedMs
+            WindowMs = [int]$r.WindowMs; ShutdownMs = [int]$r.ShutdownMs; StrUsed = ($r.StrUsed -eq 'True')
         })
         $done[($r.List + "`t" + $r.Name)] = $true
     }
@@ -748,6 +774,7 @@ try {
 foreach ($it in $items) {
     $i++
     $status = 'OK'; $detail = ''; $exePath = ''; $argStr = ''; $elapsed = 0; $exe = $null
+    $winFirstMs = 0; $strUsed = $false; $script:LastShutdownMs = 0
 
     $cfg = $emulators[$it.Emulator]
     if (-not $cfg) {
@@ -777,64 +804,113 @@ foreach ($it in $items) {
         $pre = @(Get-Process -Name $base -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
         # 런처형 정의는 게임을 다른 프로세스로 띄운다. 그것을 알아보려면 실행 전 전체 PID 가 필요하다.
         $preAll = @(Get-Process | Select-Object -ExpandProperty Id)
+
+        # MAME 계열은 강제 종료하면 cfg\default.cfg 가 잘린다. 그래서 ESC 사다리를 건너뛰지 않는다.
+        # 대신 -Fast 에서는 -str(seconds_to_run) 을 붙여 MAME 이 스스로 깨끗이 끝나게 한다 —
+        # 사다리가 통째로 사라져 항목당 20초 넘게 줄어든다.
+        $protected = ($exe.Dir -match '\\emulators\\(Mame|EKMAME|PSXMAME)(\\|$)')
+        $launchArgs = $argStr
+        $strUsed = $false
+        if ($Fast -and $protected -and $StrSeconds -gt 0 -and $launchArgs -notmatch '(^|\s)-(str|seconds_to_run)(\s|$)') {
+            $launchArgs = ($launchArgs + " -str $StrSeconds").Trim()
+            $strUsed = $true
+        }
+
+        $script:LastShutdownMs = 0
         $sw = [Diagnostics.Stopwatch]::StartNew()
         $proc = $null
         try {
             $sp = @{ FilePath = $exePath; WorkingDirectory = $exe.Dir; PassThru = $true }
-            if ($argStr) { $sp['ArgumentList'] = $argStr }
+            if ($launchArgs) { $sp['ArgumentList'] = $launchArgs }
             $proc = Start-Process @sp
         } catch {
             $status = 'LAUNCHERR'; $detail = $_.Exception.Message
         }
         if ($proc) {
-            while (-not $proc.HasExited -and $sw.Elapsed.TotalSeconds -lt $Seconds) {
-                Start-Sleep -Milliseconds 250; $proc.Refresh()
+            # 판정을 폴링으로 세운다. 두 가지를 얻는다.
+            #  (1) 판정이 서면 곧바로 끝내므로 12초를 꽉 채우지 않는다(-Fast).
+            #  (2) 대화상자를 매 폴링마다 본다 — 예전에는 마지막에 한 번만 봐서, 점검 중 사람이
+            #      상자를 닫아 버리면 실패가 PASS 로 기록되고 흔적이 남지 않았다(ISSUES 78번 srtshot).
+            $dlg = $null; $hasWin = $false; $childNote = ''; $kids = @()
+            $winFirstMs = 0; $dlgFirstMs = 0; $winStreak = 0; $lastKidMs = -99999; $extended = $false
+            $stableNeed = 0   # 0 = 조기 판정 안 함
+            if ($Fast) { $stableNeed = 3 }
+            # -str 을 붙였으면 MAME 이 스스로 끝나는 것이 정상 경로다. 조기 판정으로 빠져나가면
+            # 살아 있는 채로 Stop-Emulator 를 타서 ESC 사다리 비용이 그대로 남는다 — 끝날 때까지 기다린다.
+            if ($strUsed) { $stableNeed = 0 }
+            $minObserveMs = 2500
+            $deadlineMs = $Seconds * 1000
+            while (-not $proc.HasExited -and $sw.Elapsed.TotalMilliseconds -lt $deadlineMs) {
+                Start-Sleep -Milliseconds 250
+                try { $proc.Refresh() } catch { break }
+                if ($proc.HasExited) { break }
+                $elMs = [int]$sw.Elapsed.TotalMilliseconds
+                # 자식 프로세스 열거는 Get-Process 전체를 훑어 비싸다. 1초에 한 번만.
+                if (($elMs - $lastKidMs) -ge 1000) { $kids = @(Get-NewEmuProcs $preAll $proc.Id); $lastKidMs = $elMs }
+                $d = $null
+                try { $d = [AmInput]::DialogText($proc.Id) } catch {}
+                if (-not $d) { foreach ($k in $kids) { try { $d = [AmInput]::DialogText($k.Id) } catch {}; if ($d) { break } } }
+                if ($d) { if ($dlgFirstMs -eq 0) { $dlgFirstMs = $elMs }; $dlg = $d; break }
+                $hw = $false
+                try { $hw = [AmInput]::HasRealWindow($proc.Id) } catch {}
+                if (-not $hw) { try { $hw = ($proc.MainWindowHandle -ne [IntPtr]::Zero) } catch {} }
+                if (-not $hw) {
+                    foreach ($k in $kids) {
+                        try { if ([AmInput]::HasRealWindow($k.Id)) { $hw = $true; $childNote = "런처가 띄운 $($k.ProcessName)"; break } } catch {}
+                    }
+                }
+                if ($hw) { if ($winFirstMs -eq 0) { $winFirstMs = $elMs }; $hasWin = $true; $winStreak++ } else { $winStreak = 0 }
+                if ($stableNeed -gt 0 -and $winStreak -ge $stableNeed -and $elMs -ge $minObserveMs) { break }
+                # 런처형은 게임을 늦게 띄운다. 마감이 다 됐는데 창은 없고 런처가 뭔가를 띄워 놨으면
+                # 한 번만 마감을 늘려 준다 — RaidenIII 는 창이 뜨는 데 12초를 넘긴다(2026-09-10 실측).
+                if (-not $extended -and -not $hasWin -and $kids.Count -gt 0 -and $elMs -ge ($deadlineMs - 1000)) {
+                    $deadlineMs = [int]($Seconds * 1000 * 2.5); $extended = $true
+                }
             }
             $elapsed = [int]$sw.Elapsed.TotalMilliseconds
             $sec = [math]::Round($elapsed / 1000, 1)
             if ($proc.HasExited) {
                 $code = $proc.ExitCode
-                if ($code -eq 0) { $status = 'EXIT0'; $detail = "$sec 초 만에 스스로 종료(코드 0)" }
+                # -str 을 붙였으면 스스로 끝나는 것이 정상이다. 창을 봤다면 기동한 것이다.
+                if ($strUsed -and $code -eq 0 -and $winFirstMs -gt 0) {
+                    $status = 'PASS'; $detail = "-str $StrSeconds 로 $sec 초 만에 정상 종료".Trim()
+                }
+                elseif ($code -eq 0) { $status = 'EXIT0'; $detail = "$sec 초 만에 스스로 종료(코드 0)" }
                 else { $status = 'CRASH'; $detail = "$sec 초 만에 종료, 코드 $code" }
             } else {
-                # 살아 있다고 기동한 것이 아니다. 오류 대화상자를 띄운 채 서 있으면
-                # 프로세스는 멀쩡하지만 게임은 시작되지 않았다. 대화상자를 먼저 본다.
-                $dlg = $null; $hasWin = $false; $childNote = ''
-                try { $dlg = [AmInput]::DialogText($proc.Id) } catch {}
-                try { $hasWin = [AmInput]::HasRealWindow($proc.Id) } catch {}
-                if (-not $hasWin) {
-                    try { $hasWin = ($proc.MainWindowHandle -ne [IntPtr]::Zero) } catch {}
-                }
-                # 런처형(TeknoParrotUi · cmd /c)은 게임을 다른 프로세스로 띄운다. 그 프로세스의 창도 본다 —
-                # 안 그러면 런처는 창이 없으니 NOWIN 이고, 게임 프로세스는 남아서 다음 항목이
-                # "already running" 으로 막힌다(ISSUES 68번).
-                $kids = @(Get-NewEmuProcs $preAll $proc.Id)
-                if (-not $dlg) {
-                    foreach ($k in $kids) { try { $dlg = [AmInput]::DialogText($k.Id) } catch {}; if ($dlg) { break } }
-                }
-                if (-not $hasWin) {
-                    foreach ($k in $kids) {
-                        try { if ([AmInput]::HasRealWindow($k.Id)) { $hasWin = $true; $childNote = "런처가 띄운 $($k.ProcessName)"; break } } catch {}
-                    }
-                }
+                if (-not $kids -or $kids.Count -eq 0) { $kids = @(Get-NewEmuProcs $preAll $proc.Id) }
                 if ($dlg) {
                     $status = 'DIALOG'
                     $detail = '오류 대화상자: ' + ($dlg -replace '\s+', ' ')
                 }
                 elseif ($hasWin) { $status = 'PASS'; $detail = $childNote }
                 else { $status = 'NOWIN'; $detail = '살아 있으나 창을 찾지 못함(런처가 다른 프로세스를 띄웠을 수 있음)' }
-                if (Stop-Emulator $proc $exePath $pre $kids) {
+                if (Stop-Emulator $proc $exePath $pre $kids $it.Emulator $protected ([bool]$Fast)) {
                     $detail = ($detail + ' ESC 로 안 끝나 강제 종료함').Trim()
                 }
             }
+            # 대화상자를 봤는데 최종 판정이 PASS 면, 그 사이 누군가 상자를 닫았다는 뜻이다.
+            if ($dlgFirstMs -gt 0 -and $status -eq 'PASS') {
+                $detail = ($detail + ' ※ 점검 중 대화상자가 떴다가 사라짐 — 사람이 닫았을 수 있다').Trim()
+            }
         }
-        Start-Sleep -Milliseconds 700
+        $tailMs = 700
+        if ($Fast) { $tailMs = 250 }
+        Start-Sleep -Milliseconds $tailMs
+        # 앞 항목의 잔재가 남은 채로 다음 항목을 띄우면 런처형이 밀린다 — RaidenIII 가 전수에서만
+        # NOWIN 으로 잡혔던 이유다(단독으로는 4초에 창이 뜬다). 비었는지 확인하고 넘어간다.
+        $drain = [Diagnostics.Stopwatch]::StartNew()
+        while ($drain.Elapsed.TotalSeconds -lt 5) {
+            if (@(Get-NewEmuProcs $preAll -1).Count -eq 0) { break }
+            Start-Sleep -Milliseconds 250
+        }
     }
 
     [void]$results.Add([pscustomobject]@{
         List = $it.List; Name = $it.Name; Title = $it.Title; Emulator = $it.Emulator
         Disabled = $it.Disabled; Status = $status; Detail = $detail
         Exe = $exePath; Args = $argStr; ElapsedMs = $elapsed
+        WindowMs = $winFirstMs; ShutdownMs = $script:LastShutdownMs; StrUsed = $strUsed
     })
 
     $isFail = ($FailStatus -contains $status)
