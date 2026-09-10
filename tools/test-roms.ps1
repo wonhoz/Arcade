@@ -392,21 +392,33 @@ function Resolve-LauncherRoots([string]$ArgLine) {
 # 키는 emulators\ 바로 아래 폴더 이름(= 실행파일이 있는 곳), 값은 그 폴더 기준 상대경로.
 # [name] 은 romlist 의 Name 으로 바뀐다(TeknoParrot 처럼 항목마다 프로필이 따로인 경우).
 # 내용 해시라서 에뮬레이터가 같은 내용으로 다시 써도 지문이 흔들리지 않는다.
+#
+# 🚨 **넣을 것과 넣지 말 것의 기준은 "게임이 뜨는지를 결정하는가" 하나다.**
+#    에뮬레이터가 종료할 때마다 다시 쓰는 "상태 파일"을 넣으면, 전수 점검이 그것을 건드려 놓아
+#    바로 이어서 돌린 증분 점검이 그 에뮬레이터 항목을 통째로 다시 띄운다.
+#    2026-09-10 실측 — 아래 7개를 넣었더니 1,098건 중 220건이 다시 검사됐고, 그 내역이
+#    점검 뒤 `git status` 의 M 목록과 정확히 1:1 로 맞았다.
+#
+#      PCSX2_ui.ini 98 · Dolphin.ini 50 · EMULATOR.INI 22 · ppsspp.ini 18
+#      retroarch.cfg 10 · mednafen.cfg 8 · settings.xml 4       (= 210 + 직전 실패 10)
+#
+#    그래서 그중 여섯을 뺐다. 남은 것은 점검을 돌려도 M 이 되지 않는 것들이라 공짜다.
+#    Cemu settings.xml 만 예외로 남긴다 — 다시 쓰이지만 gp_download 가 실제로 4개를 죽인
+#    전력이 있고(ISSUES 66) 항목이 4개뿐이라 값싸다.
 $AuxConfig = @{
-    'Mame'        = @('mame.ini')
-    'EKMAME'      = @('mame.ini')
+    'Mame'        = @('mame.ini')                      # rompath 오타 -> MAME Adult 38 (ISSUES 48)
+    'EKMAME'      = @('mame.ini')                      # BOM 없으면 통째로 무시 (CLAUDE.md 4.7)
     'PSXMAME'     = @('mame.ini')
-    'Cemu'        = @('portable\settings.xml')
+    'Cemu'        = @('portable\settings.xml')         # gp_download -> 첫 실행 마법사 (ISSUES 66)
+    'Dolphin'     = @('portable.txt')                  # 설정을 어디서 읽을지 결정 (4.10절)
+    'TeknoParrot' = @('UserProfiles\[name].xml')       # <GamePath> 절대경로 -> 32개 (ISSUES 68)
     'Demul'       = @('padDemul.ini', 'gpuDX11.ini')
-    'Dolphin'     = @('portable.txt', 'User\Config\Dolphin.ini')
-    'M2'          = @('EMULATOR.INI')
-    'PCSX2'       = @('inis\PCSX2_ui.ini', 'inis\LilyPad.ini')
     'Project64'   = @('Config\Project64.cfg')
-    'RetroArch'   = @('retroarch.cfg')
-    'Mednafen'    = @('mednafen.cfg')
-    'PPSSPP'      = @('memstick\PSP\SYSTEM\ppsspp.ini')
+    'PCSX2'       = @('inis\LilyPad.ini')
     'SuperModel'  = @('Config\Supermodel.ini')
-    'TeknoParrot' = @('UserProfiles\[name].xml')
+    # 넣지 않는다(매 실행 다시 쓰인다) — Dolphin User\Config\Dolphin.ini · M2 EMULATOR.INI ·
+    # PCSX2 inis\PCSX2_ui.ini · PPSSPP ppsspp.ini · RetroArch retroarch.cfg · Mednafen mednafen.cfg.
+    # 전부 입력·화면 상태일 뿐 "게임이 뜨는가"를 가른 전력이 없다.
 }
 
 $script:AuxCache = @{}
