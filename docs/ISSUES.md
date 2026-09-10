@@ -1,13 +1,18 @@
 # 개선 과제 / 알려진 문제 (심각도순)
 
-최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 시각 자산 재스크리닝 2026-09-03 · 3차 재점검 2026-09-04 · 4차 재점검 2026-09-04 · 전수 구동 점검 2026-09-06 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
+최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 시각 자산 재스크리닝 2026-09-03 · 3차 재점검 2026-09-04 · 4차 재점검 2026-09-04 · 전수 구동 점검 2026-09-06 · 5차 재점검 2026-09-08~09 · 6차 재점검 2026-09-10 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
 근거: `attract.cfg`, `emulators/*.cfg`, `romlists/*`, `last_run.log`, `mame64 -verifyroms`, git 메타데이터 실측
 
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **76건** / 미해결 **2건**(13 · 65번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 5차 재점검 2026-09-08~09
+**진행 현황** — 처리 **80건** / 미해결 **2건**(13 · 65번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 6차 재점검 2026-09-10
+
+> **6차 재점검 (2026-09-10)** — 5차 이후 커밋 15개는 거의 전부 점검 도구 자신이었다(`-Fast` · `-Adaptive`).
+> `validate.ps1` FAIL 0 / WARN 0, `audit.ps1` 11개 섹션에도 새 `ISSUE` 가 없어 **그 도구를 뜯어봤고**,
+> **증분 점검이 조용히 무력화되는 경로 둘**(85 · 86번)과 확정 결함 하나(87번), 정리 구멍 하나(88번)를 찾아 고쳤다.
+> 손으로 찾은 것은 다음부터 `audit.ps1` 이 잡는다 — `psgotcha` 섹션 신설, `cfg`·`junk`·`glyph` 에 검사 3건 추가.
 
 > **첫 전수 구동 점검 완료 (2026-09-09)** — DIALOG 판정을 갖춘 뒤 33종 1,098건을 처음으로 전부 띄웠다.
 > **1,098건 중 1,097건 통과(99.9%)**. 남은 하나 `IDZ` 는 프로필이 `RequiresAdmin=true` 라 AM 을 관리자 권한으로 띄워야 한다(77번).
@@ -2403,12 +2408,17 @@ stderr 를 **ErrorRecord** 로 바꾸고, 스크립트가 `$ErrorActionPreferenc
 
 **조치 — 두 겹으로 막았다.**
 
-1. `Kill-Tree` 도우미 신설. `cmd /c` 안에서 리디렉션하고 `%ERRORLEVEL%` 만 돌려받는다 —
-   PowerShell 은 stderr 를 아예 보지 못한다.
+1. `Kill-Tree` 도우미 신설. `cmd /c` 안에서 리디렉션한다 — PowerShell 은 stderr 를 아예 보지 못한다.
    ```powershell
-   [void](& cmd.exe /c "taskkill /PID $ProcId /T /F >nul 2>&1 & exit /b %ERRORLEVEL%")
+   [void](& cmd.exe /c "taskkill /PID $ProcId /T /F >nul 2>&1")
    return ($LASTEXITCODE -eq 0)
    ```
+
+   > ⚠️ **처음에는 뒤에 `& exit /b %ERRORLEVEL%` 을 붙였는데, 그것이 오히려 종료 코드를 지웠다.**
+   > `cmd` 는 줄 전체를 한 번에 파싱하면서 `%…%` 를 전개하므로 `&` 로 이어 붙였어도
+   > `%ERRORLEVEL%` 은 `taskkill` 이 돌기 **전** 값(0)으로 굳는다. 그래서 이 함수가 **항상 참**을 돌려줬다.
+   > 없는 PID 로 실측 — 붙이면 `0`, 빼면 `128`. 2026-09-10 6차 재점검에서 잡아 뺐다(87번).
+   > `cmd /c` 는 마지막 명령의 종료 코드를 그대로 물려주므로 아무것도 붙이지 않는 것이 맞다.
 2. 구동 점검 구간에서는 `$ErrorActionPreference` 를 `Continue` 로 낮췄다가 끝나면 되돌린다.
    그 구간의 다른 네이티브 호출도 같은 사고를 못 내게 한다.
 
@@ -2428,6 +2438,185 @@ stderr 를 **ErrorRecord** 로 바꾸고, 스크립트가 `$ErrorActionPreferenc
 
 > `leaguemn` 처럼 창이 5.8초에 뜨는 항목은 `-Adaptive` 가 다음 실행부터 마감을
 > `5.8 × 2 + 4 = 15.6초` 로 늘려 준다(82번). 같은 실패가 반복되지 않는다.
+
+
+---
+
+### - [x] 85. 부분 점검 한 번이 `-Adaptive` 의 기준 보고서를 덮어썼다 — ✅ **완료 (2026-09-10)**
+
+6차 재점검에서 나온 것. **증분 점검이 65초에서 2시간으로 조용히 되돌아가는 경로**다.
+
+`-Adaptive` 는 비교 기준을 **파일 이름과 시각만으로** 골랐다.
+
+```powershell
+$bf = Get-ChildItem $logDir -Filter 'rom-test-*.csv' |
+      Where-Object { $_.FullName -ne $csvPath } |
+      Sort-Object LastWriteTime -Descending | Select-Object -First 1
+```
+
+"임시로 만든 작은 CSV 를 기준으로 삼는 사고"를 막으려고 `rom-test-*` 로 걸렀는데,
+**정작 부분 점검도 그 이름으로 보고서를 쓴다.** `test-roms.cmd` 의 네 항목이 전부 여기 해당한다 —
+`[2]` 표본 · `[5]` 목록 지정 · `[6]` 이름으로 · `[7]` 실패만.
+**`[3]` 전수 → `[7]` 실패만 → `[A]` 증분**은 지극히 자연스러운 순서인데, 그 `[7]` 이 기준을 한두 줄짜리로 갈아 끼운다.
+
+재점검 중에 실제로 재현됐다. 확인용으로 `test-roms.cmd -Max 1 -List MAME` 을 한 번 돌렸더니:
+
+```
+logs/rom-test-20260910-132615.csv        1 rows   <- 최신 = 다음 기준
+logs/rom-test-20260910-112122.csv     1098 rows   <- 진짜 기준
+```
+
+이 상태로 `[A]` 를 누르면 1,097건이 기준에 없어 **전부 다시 띄운다.** 화면에는 그냥 전수 점검처럼 보이고 경고가 없다.
+
+**조치 — 두 겹.**
+
+1. **필터가 걸린 실행은 보고서 이름이 `rom-test-partial-<시각>` 이고 기준 후보에서 빠진다.**
+   `-Resume` 은 "부분을 이어할 때는 부분 보고서, 전수를 이어할 때는 전수 보고서"를 집는다.
+   `-Failed` 는 부분 보고서도 본다 — `[7]` 을 연달아 눌러 좁혀 가는 쓰임이라 그쪽이 맞다.
+2. **기준이 이번 대상을 다 못 덮으면 더 오래된 보고서로 내려가며 빈자리만 메운다**(최대 6개, 최신 우선).
+   중단된 전수 점검이나 이 규칙이 생기기 전의 부분 보고서까지 자연스럽게 흡수된다.
+   덮은 비율을 실행할 때 찍고, 90% 아래면 경고한다.
+
+덤으로 **정적 점검 보고서가 구동 점검의 기준을 덮어쓰던 것**도 같이 막았다.
+최신 행이 "건너뛸 근거"가 못 되고(정적 `OK`) 더 오래된 행이 근거가 되면(`PASS`) 그쪽을 쓴다 —
+지문이 같아야 쓰이므로 안전하다. 기준을 고르는 판정과 실제로 건너뛸지 정하는 판정이
+같은 함수(`Test-SkipBase`)를 쓰도록 합쳤다.
+
+**검증**
+
+```
+전수 정적 -Adaptive 2회      -> 2회차가 1,098/1,098 건너뜀
+부분 점검(-List MAME -Max 2) -> logs\rom-test-partial-20260910-135310.csv
+그 직후 전수 -Adaptive        -> 기준 = rom-test-20260910-135251.csv  (부분 보고서 무시됨)
+                                이번 대상 1098건 중 1098건(100%) 이 건너뛸 근거를 갖는다
+```
+
+---
+
+### - [x] 86. 증분 점검의 지문이 **에뮬레이터 자신의 설정 파일**을 보지 않았다 — ✅ **완료 (2026-09-10)**
+
+85번과 같은 성격이지만 이쪽이 더 위험하다. **장비가 통째로 안 되는 상태에서도 전부 `PASS~` 로 지나간다.**
+
+`Get-Fingerprint` 가 해시에 넣는 재료는 넷뿐이었다 —
+romlist 원본 줄 · `emulators\<Emulator>.cfg` · 실행파일 · 롬 파일.
+정작 **지금까지 실행 불가가 실제로 터진 자리**는 하나도 들어 있지 않았다.
+
+| 파일 | 깨지면 | 과거 실적 |
+|---|---|---|
+| `emulators/Mame/mame.ini` | `rompath` 한 글자 오타로 롬을 못 찾는다 | MAME Adult 38개 사망 (48번) |
+| `emulators/EKMAME/mame.ini` | BOM 이 없으면 파일을 통째로 무시한다 | EKMAME 전부 (CLAUDE.md 4.7) |
+| `TeknoParrot/UserProfiles/*.xml` | `<GamePath>` 가 절대경로 — 설치 루트가 다르면 못 찾는다 | 32개 사망 (68번) |
+| `Cemu/portable/settings.xml` | `gp_download=false` 면 마법사가 뜨고 게임이 안 뜬다 | Wii U 4개 (66번) |
+| `Demul/padDemul.ini` · `Dolphin/portable.txt` | 입력·설정 위치가 바뀐다 | 4.10 · 4.12절 |
+
+이 목록은 **전부 `.+필독.txt` 가 "장비마다 손으로 해야 한다"고 적은 것**과 겹친다.
+새 장비에서 전수 점검으로 기준을 한 번 만든 뒤 `[A]` 만 돌리는 것이 문서가 권하는 사용법인데,
+그 장비에서 위 파일 하나가 어긋나도 아무 일 없는 것처럼 보인다.
+**"실패는 계속 재검사한다"는 안전장치도 한 번 `PASS` 를 받은 뒤에 깨진 경우에는 작동하지 않는다.**
+
+**조치** — `tools/test-roms.ps1` 에 `$AuxConfig` 표를 두고 지문에 더했다.
+키는 `emulators\` 바로 아래 폴더 이름(= 실행파일이 있는 곳), 값은 그 폴더 기준 상대경로.
+`[name]` 은 romlist 의 Name 으로 바뀐다(TeknoParrot 처럼 항목마다 프로필이 따로인 경우).
+
+```powershell
+'Mame' = @('mame.ini')   'EKMAME' = @('mame.ini')   'PSXMAME' = @('mame.ini')
+'Cemu' = @('portable\settings.xml')          'TeknoParrot' = @('UserProfiles\[name].xml')
+'Dolphin' = @('portable.txt', 'User\Config\Dolphin.ini')      'Demul' = @('padDemul.ini','gpuDX11.ini')
+'M2' 'PCSX2' 'Project64' 'RetroArch' 'Mednafen' 'PPSSPP' 'SuperModel' ...
+```
+
+- **내용 해시**다. 에뮬레이터가 같은 내용으로 다시 써도 지문이 흔들리지 않는다.
+- **파일이 없는 것도 상태로 센다** — Dolphin 의 `portable.txt` 가 사라지면 설정 위치가 통째로 바뀐다(4.10절).
+- `executable` 이 `cmd` 인 런처형은 디렉터리가 AM 루트라 **훑지 않는다.**
+  거기에는 실행할 때마다 바뀌는 `attract.am` 이 있어 매번 지문이 달라진다.
+
+**검증** — `emulators/Mame/mame.ini` 에 주석 한 줄을 넣고 증분 점검을 돌린 뒤 되돌렸다.
+
+```
+다시 검사한 항목:  MAME 532 · MAME Adult 38 · MAME Vertical 37   = 607
+그 밖:             0
+```
+
+그 `mame.ini` 를 읽는 세 정의만 정확히 다시 검사했다. 고치기 전에는 **한 건도** 다시 검사하지 않았다.
+
+`audit.ps1 -Section cfg` 에 **"장비를 죽여 온 설정 파일 13개가 지문 안에 있는가"** 검사를 넣었다.
+새 에뮬레이터가 들어와도 이 표에 빠지면 잡힌다.
+
+> ⚠️ **지문 재료가 늘었으므로 장비마다 한 번은 전부 다시 검사한다.** 옛 보고서의 지문과 안 맞기 때문이다.
+> 그 한 번(`test-roms.cmd` 의 `[3]` 전수, 약 2시간)을 돌리고 나면 그다음부터 다시 `[A]` 가 1분 안팎이다.
+
+---
+
+### - [x] 87. `Kill-Tree` 의 반환값이 항상 참이었고, 마감 "연장"이 마감을 줄일 수 있었다 — ✅ **완료 (2026-09-10)**
+
+84번과 82번의 잔불 둘. 6차 재점검에서 코드를 읽다 나왔다.
+
+**(1) `%ERRORLEVEL%` 가 `taskkill` 실행 전에 전개된다** — 84번에 자세히 적었다.
+실측으로 확정했다.
+
+```
+& cmd /c "taskkill /PID 999999 /T /F >nul 2>&1 & exit /b %ERRORLEVEL%"   -> 0
+& cmd /c "taskkill /PID 999999 /T /F >nul 2>&1"                          -> 128
+```
+
+**지금 동작이 달라지는 곳은 없다** — 반환값을 쓰는 자리가 잔재 정리 루프의 `$killed` 플래그 하나뿐이고
+그 자리는 고치기 전에도 무조건 참이었다. 문제는 **문서가 사실과 다르게 적혀 있던 것**과,
+다음에 이 값을 믿고 분기를 넣으면 그때 조용히 틀린다는 것이다. `& exit /b %ERRORLEVEL%` 를 뺐다.
+
+같은 함정을 다음에는 스크립트가 잡는다 — `audit.ps1 -Section psgotcha`.
+`Get-Content` 함정(79번)도 같이 본다. 일부러 그렇게 쓴 줄에는 `ps-audit-ok` 와 이유를 적어 면제한다.
+
+**(2) 마감 연장이 `[math]::Max` 가 아니라 대입이었다**
+
+```powershell
+if (-not $extended -and -not $hasWin -and $kids.Count -gt 0 -and $elMs -ge ($deadlineMs - 1000)) {
+    $deadlineMs = [int]($Seconds * 1000 * 2.5)     # <- Max 가 아니라 대입
+}
+```
+
+`-Adaptive` 가 기준 실측(`WindowMs × 2 + 4초`)으로 늘려 둔 마감이 `$Seconds × 2.5` 보다 크면,
+마감 직전에 이 줄이 걸려 **마감이 오히려 앞으로 당겨지고 그 자리에서 루프가 끝난다** —
+늘려 주려던 항목이 `NOWIN` 이 된다.
+
+기본 `-Seconds 12` 에서는 `WindowMs > 13초` 여야 하는데 최신 전수의 최대가 7,191ms(TEKKEN 7)라
+**현재 데이터로는 발동하지 않는다.** `-Seconds` 를 줄여 쓰면 재현된다(`-Seconds 5 -Adaptive` ·
+기준 7,191ms → 마감 18.4초가 12.5초로 축소). `[math]::Max` 로 바꿨다.
+
+**(3) 곁가지 둘**
+
+- 구동 점검 구간의 `$ErrorActionPreference = 'Continue'` 가 `try/finally` 로 감싸여 있지 않아,
+  그 안에서 예외가 나면 복구 줄에 닿지 못하고 남은 실행이 통째로 `Continue` 로 돌았다. 감쌌다.
+- `$SkipStatus` 의 `'SKIP'` 은 76fc0dc8 에서 상태 계승으로 바뀌며 **어디서도 대입되지 않는 죽은 값**이 됐다. 뺐다.
+
+---
+
+### - [x] 88. 전수 점검이 남긴 미추적 설정 387개를 `reset-runtime.ps1` 이 치우지 못했다 — ✅ **완료 (2026-09-10)**
+
+전수 구동 점검 직후 작업트리의 미추적 파일이 **658개**였다.
+
+```
+emulators/Mame/cfg                               351   처음 띄운 게임의 입력 설정
+emulators/Project64/Plugin/GFX/GLideN64/shaders  130   셰이더 캐시
+emulators/Project64/Save                          49
+emulators/EKMAME/cfg                              31
+emulators/PSXMAME/{nvram,cfg} · Demul/nvram · Mednafen/b …
+```
+
+`reset-runtime.ps1` 의 `-Config` 는 **"추적 중이면서 커밋 상태에서 벗어난 파일"** 만 되돌린다(`Get-Changed`).
+처음 실행한 게임의 `cfg` 는 **새로 생긴 미추적 파일**이라 `git checkout` 대상이 아니고,
+`$JunkPaths` 에도 `cfg` 디렉터리는 없다 — 있으면 추적 중인 cfg 까지 통째로 지울 위험이 있으니 맞는 선택이다.
+그래서 `CLAUDE.md` 7.5절도 **"`git status` 에 남으면 직접 지운다"** 고만 적어 놓고 있었다.
+
+**조치**
+
+- `Get-NewConfig` 신설. `$ConfigPaths` 중 **디렉터리인 것 아래의 미추적 파일만** 골라
+  `-Clean` 이 지운다(`git ls-files --others --exclude-standard`). 추적 파일은 손대지 않는다.
+  목록에 **"새 설정"** 갈래가 하나 늘었고, 인자 없이 돌리면 거기에 387건이 뜬다.
+- `emulators/Project64/Plugin/GFX/GLideN64/shaders/` 를 `.gitignore` 에 넣었다 — 셰이더 캐시다.
+- `audit.ps1 -Section junk` 이 설정 폴더에 남은 미추적 파일 수를 찍는다.
+
+> `git ls-files` 는 `core.quotepath` 가 켜져 있으면 비 ASCII 이름을 `"\355\234…"` 로 내놓는다.
+> 경로가 깨지므로 `git -c core.quotepath=false` 로 부른다.
 
 
 ---

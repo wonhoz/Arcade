@@ -538,7 +538,7 @@ cninja;케이브맨 닌자 / 죠 & 맥;MAME;0;1991;data east;Action;2;0;Joystick
 quartet;콰르텟;MAME;0;1986;SEGA;Shooting;4;0;Joystick (8-way);good;1;raster;;;;;;;;
 #kungfum;쿵후 마스터 / 스파르탄 X;MAME;0;1984;Irem;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;2;;;;
 sunaq;퀴즈 6000 아카데미 (한글판);MAME;0;1994;선아;Quiz;2;0;0;good;1;raster;0;0;0;4;;;;
-quiztvqq;퀴즈 TV 합중국 Q&Q (일본판);MAME;;1992;Dynax;Quiz;2;180;only_buttons;good;1;raster;;;;4;;;;
+quiztvqq;퀴즈 TV 합중국 Q&Q (한글판);EKMAME;;1992;Dynax;Quiz;2;180;only_buttons;good;1;raster;;;;4;;;;
 quizo;퀴즈 올림픽 (한글판);MAME;0;1985;Seoul Coin Corp.;Quiz;;;;;;;;;;;;;;
 crzcross;크레이지 크로스;MAME;0;1994;Konami;Puzzle;2;0;;good;1;;;;;;;;;
 cbuster;크루드 버스터;MAME;0;1990;data east;Action;2;0;Joystick (8-way);good;1;raster;0;0;0;3;;;;
