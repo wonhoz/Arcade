@@ -833,6 +833,14 @@ copy "The Fast and the Furious Drift\winmm.dll" "The Fast & Furious SuperCars\"
 권한 없이 띄우면 TeknoParrot 이 `Seems like you are not running TeknoParrotUI as Administrator!` 상자를 띄운다.
 그래서 실행 상황에 따라 `NOWIN` 으로도 `DIALOG` 로도 잡힌다. SegaTools 콘솔에는 `amdaemon Ver.2425` 초기화까지
 정상으로 찍히지만 거기서 더 못 간다. **캐비닛에서 쓰려면 `attract.bat` 바로가기를 "관리자 권한으로 실행" 으로 둔다.**
+2026-09-11 에 bartop 에서 실제로 켜고 승격 상태로 띄워 **`PASS`(창 3.67초)** 를 확인했다.
+승격하지 않는 평소 점검에서는 계속 `DIALOG` 로 나오는데 **그게 맞다** — 고쳐진 것은 캐비닛이 AM 을
+띄우는 방식이지 점검 도구가 아니다. 매번 재검사되는 비용은 몇 초라 그대로 둔다.
+
+> ⚠️ **시작프로그램 폴더의 바로가기에는 이 설정을 켜면 안 된다.** Windows 는 시작프로그램 항목이
+> 승격을 요구하면 로그온 때 UAC 를 띄우지도 않고 **그냥 건너뛴다** — AM 이 아예 뜨지 않는다.
+> 자동 시작과 관리자 권한을 둘 다 원하면 작업 스케줄러("가장 높은 권한으로 실행" + "로그온할 때")를 쓴다.
+> 자세한 것은 `.+필독.txt` 7절 (8).
 런처형 정의는 게임이 콘솔만 갖거나 창을 늦게 만들 수 있어 `NOWIN` 은 경고로만 센다(7.5절).
 
 ## 5. 자주 하는 작업 레시피
