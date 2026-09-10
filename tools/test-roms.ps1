@@ -416,6 +416,18 @@ function Get-Fingerprint([string]$Raw, [string]$EmuName, [string]$ExePath, [stri
 # ESC 로 끝난 적이 있는지 에뮬레이터별로 기억한다. -Fast 에서 사다리를 건너뛸지 정하는 근거다.
 $script:EscFail = @{}
 
+# taskkill 은 못 죽이는 프로세스를 만나면 stderr 에 쓴다. PowerShell 5.1 은 네이티브 명령의
+# stderr 를 ErrorRecord 로 바꾸고, $ErrorActionPreference='Stop' 아래에서는 그것이 종료성 오류가 된다.
+# 2026-09-10 전수 점검이 1,052번째 항목에서 이것 하나로 통째로 죽었다 — 몇 시간짜리 실행을
+# 종료 실패 한 번으로 잃으면 안 된다. 항상 이 함수로 부른다.
+function Kill-Tree([int]$ProcId) {
+    if ($ProcId -le 0) { return $false }
+    try {
+        [void](& cmd.exe /c "taskkill /PID $ProcId /T /F >nul 2>&1 & exit /b %ERRORLEVEL%")
+        return ($LASTEXITCODE -eq 0)
+    } catch { return $false }
+}
+
 function Stop-Emulator($Proc, [string]$ExePath, $Preexisting, $Kids, [string]$EmuName, [bool]$Protected, [bool]$FastMode) {
     $killed = $false
     $ids = @($Proc.Id) + @($Kids | ForEach-Object { $_.Id })
@@ -459,7 +471,7 @@ function Stop-Emulator($Proc, [string]$ExePath, $Preexisting, $Kids, [string]$Em
         while (-not $Proc.HasExited -and $w.Elapsed.TotalSeconds -lt $cap) { Start-Sleep -Milliseconds 200; $Proc.Refresh() }
     }
     if (-not $Proc.HasExited) {
-        & taskkill.exe /PID $Proc.Id /T /F 2>&1 | Out-Null
+        [void](Kill-Tree $Proc.Id)
         $killed = $true
         Start-Sleep -Milliseconds 500
     }
@@ -472,12 +484,12 @@ function Stop-Emulator($Proc, [string]$ExePath, $Preexisting, $Kids, [string]$Em
     $base = [IO.Path]::GetFileNameWithoutExtension($ExePath)
     foreach ($p in @(Get-Process -Name $base -ErrorAction SilentlyContinue)) {
         if ($Preexisting -notcontains $p.Id) {
-            try { & taskkill.exe /PID $p.Id /T /F 2>&1 | Out-Null; $killed = $true } catch {}
+            if (Kill-Tree $p.Id) { $killed = $true }
         }
     }
     # 런처가 띄운 게임 프로세스. 남겨 두면 다음 항목이 "already running" 으로 막힌다(ISSUES 68번).
     foreach ($k in @($Kids)) {
-        try { $k.Refresh(); if (-not $k.HasExited) { & taskkill.exe /PID $k.Id /T /F 2>&1 | Out-Null } } catch {}
+        try { $k.Refresh(); if (-not $k.HasExited) { [void](Kill-Tree $k.Id) } } catch {}
     }
     $script:LastShutdownMs = [int]$sw.Elapsed.TotalMilliseconds
     return $killed
@@ -731,7 +743,7 @@ if ($Resume) {
             Disabled = ($r.Disabled -eq 'True'); Status = $r.Status; Detail = $r.Detail
             Exe = $r.Exe; Args = $r.Args; ElapsedMs = [int]$r.ElapsedMs
             WindowMs = [int]$r.WindowMs; ShutdownMs = [int]$r.ShutdownMs; StrUsed = ($r.StrUsed -eq 'True')
-            Fingerprint = $r.Fingerprint
+            Fingerprint = $r.Fingerprint; Skipped = ($r.Skipped -eq 'True')
         })
         $done[($r.List + "`t" + $r.Name)] = $true
     }
@@ -764,9 +776,16 @@ if ($Adaptive) {
         if (-not [IO.Path]::IsPathRooted($Baseline)) { $Baseline = Join-Path $Root $Baseline }
         if (Test-Path -LiteralPath $Baseline) { $bf = Get-Item -LiteralPath $Baseline }
     } else {
-        $bf = Get-ChildItem -LiteralPath $logDir -Filter '*.csv' -ErrorAction SilentlyContinue |
+        # 기본 보고서 이름(rom-test-*)을 먼저 찾는다. logs\ 에는 임시로 만든 작은 CSV 도 섞여 있어서,
+        # 그냥 "가장 최근 CSV"로 잡으면 몇 건짜리 실험 결과를 기준으로 삼는 사고가 난다.
+        $bf = Get-ChildItem -LiteralPath $logDir -Filter 'rom-test-*.csv' -ErrorAction SilentlyContinue |
               Where-Object { $_.FullName -ne $csvPath } |
               Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        if (-not $bf) {
+            $bf = Get-ChildItem -LiteralPath $logDir -Filter '*.csv' -ErrorAction SilentlyContinue |
+                  Where-Object { $_.FullName -ne $csvPath } |
+                  Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        }
     }
     if (-not $bf) {
         Write-Host "-Adaptive : 비교할 보고서가 없습니다. 전부 검사합니다." -ForegroundColor Yellow
@@ -893,7 +912,7 @@ foreach ($it in $items) {
     $i++
     $status = 'OK'; $detail = ''; $exePath = ''; $argStr = ''; $elapsed = 0; $exe = $null
     $winFirstMs = 0; $strUsed = $false; $script:LastShutdownMs = 0
-    $fingerprint = ''; $baseRow = $null
+    $fingerprint = ''; $baseRow = $null; $skipped = $false
 
     $cfg = $emulators[$it.Emulator]
     if (-not $cfg) {
@@ -925,8 +944,14 @@ foreach ($it in $items) {
                     if (-not $Launch) { $okBase = @('PASS', 'OK', 'NOCHK') }
                     if ($baseRow -and $baseRow.Fingerprint -and $baseRow.Fingerprint -eq $fingerprint -and
                         ($okBase -contains $baseRow.Status)) {
-                        $status = 'SKIP'
-                        $detail = "입력이 그대로다 — 직전 $($baseRow.Status) 그대로 둔다"
+                        # 상태는 직전 것을 그대로 물려받는다. SKIP 으로 적어 버리면
+                        # 이 보고서가 다음 실행의 기준이 되지 못한다 — 매일 돌리려면 연쇄돼야 한다.
+                        $status  = $baseRow.Status
+                        $skipped = $true
+                        $detail  = "건너뜀 — 입력이 직전과 같다"
+                        $winFirstMs = [int]$baseRow.WindowMs
+                        $strUsed = ($baseRow.StrUsed -eq 'True')
+                        $script:LastShutdownMs = [int]$baseRow.ShutdownMs
                     }
                 }
             }
@@ -934,7 +959,11 @@ foreach ($it in $items) {
     }
 
     # --- 구동 점검
-    if ($Launch -and ($status -eq 'OK' -or $status -eq 'NOCHK')) {
+    if ($Launch -and -not $skipped -and ($status -eq 'OK' -or $status -eq 'NOCHK')) {
+        # 이 구간에서는 네이티브 명령(taskkill 등)의 stderr 가 치명적이 되지 않게 한다.
+        # 스크립트 전역은 Stop 이라 stderr 한 줄에 몇 시간짜리 실행이 통째로 죽는다(2026-09-10 실측).
+        $eapSaved = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
         $base = [IO.Path]::GetFileNameWithoutExtension($exePath)
         $pre = @(Get-Process -Name $base -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
         # 런처형 정의는 게임을 다른 프로세스로 띄운다. 그것을 알아보려면 실행 전 전체 PID 가 필요하다.
@@ -1054,6 +1083,7 @@ foreach ($it in $items) {
             if (@(Get-NewEmuProcs $preAll -1 $extraRoots).Count -eq 0) { break }
             Start-Sleep -Milliseconds 250
         }
+        $ErrorActionPreference = $eapSaved
     }
 
     [void]$results.Add([pscustomobject]@{
@@ -1061,15 +1091,17 @@ foreach ($it in $items) {
         Disabled = $it.Disabled; Status = $status; Detail = $detail
         Exe = $exePath; Args = $argStr; ElapsedMs = $elapsed
         WindowMs = $winFirstMs; ShutdownMs = $script:LastShutdownMs; StrUsed = $strUsed
-        Fingerprint = $fingerprint
+        Fingerprint = $fingerprint; Skipped = $skipped
     })
 
     $isFail = ($FailStatus -contains $status)
     $isWarn = ($WarnStatus -contains $status)
     if ($isFail -or $isWarn -or -not $Quiet) {
-        $color = if ($isFail) { 'Red' } elseif ($isWarn) { 'Yellow' } elseif ($SkipStatus -contains $status) { 'DarkGray' } else { 'Green' }
+        $color = if ($isFail) { 'Red' } elseif ($isWarn) { 'Yellow' } elseif ($skipped -or ($SkipStatus -contains $status)) { 'DarkGray' } else { 'Green' }
         $prefix = if ($Launch) { "[{0,4}/{1}]" -f $i, $items.Count } else { "" }
-        $msg = "{0} {1,-9} {2,-22} {3}" -f $prefix, $status, $it.List, $it.Name
+        $tag = $status
+        if ($skipped) { $tag = "$status~" }   # ~ = 이번에 띄우지 않고 직전 결과를 물려받았다
+        $msg = "{0} {1,-9} {2,-22} {3}" -f $prefix, $tag, $it.List, $it.Name
         if ($detail) { $msg += "  -- $detail" }
         Write-Host $msg -ForegroundColor $color
     } elseif ($Launch) {
@@ -1095,6 +1127,10 @@ Write-Host ("=" * 78)
 foreach ($g in ($results | Group-Object Status | Sort-Object Count -Descending)) {
     $color = if ($FailStatus -contains $g.Name) { 'Red' } elseif ($WarnStatus -contains $g.Name) { 'Yellow' } else { 'Green' }
     Write-Host ("{0,-10} {1,5}건" -f $g.Name, $g.Count) -ForegroundColor $color
+}
+$skipCount = @($results | Where-Object { "$($_.Skipped)" -eq 'True' }).Count
+if ($skipCount -gt 0) {
+    Write-Host ("  그중 건너뜀 {0,5}건 — 입력이 직전과 같아 다시 띄우지 않았다(-Adaptive)" -f $skipCount) -ForegroundColor DarkGray
 }
 Write-Host ("보고서: {0}" -f $csvPath) -ForegroundColor DarkGray
 if (-not $NoHtml) {
