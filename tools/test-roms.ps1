@@ -416,6 +416,18 @@ function Get-Fingerprint([string]$Raw, [string]$EmuName, [string]$ExePath, [stri
 # ESC 로 끝난 적이 있는지 에뮬레이터별로 기억한다. -Fast 에서 사다리를 건너뛸지 정하는 근거다.
 $script:EscFail = @{}
 
+# taskkill 은 못 죽이는 프로세스를 만나면 stderr 에 쓴다. PowerShell 5.1 은 네이티브 명령의
+# stderr 를 ErrorRecord 로 바꾸고, $ErrorActionPreference='Stop' 아래에서는 그것이 종료성 오류가 된다.
+# 2026-09-10 전수 점검이 1,052번째 항목에서 이것 하나로 통째로 죽었다 — 몇 시간짜리 실행을
+# 종료 실패 한 번으로 잃으면 안 된다. 항상 이 함수로 부른다.
+function Kill-Tree([int]$ProcId) {
+    if ($ProcId -le 0) { return $false }
+    try {
+        [void](& cmd.exe /c "taskkill /PID $ProcId /T /F >nul 2>&1 & exit /b %ERRORLEVEL%")
+        return ($LASTEXITCODE -eq 0)
+    } catch { return $false }
+}
+
 function Stop-Emulator($Proc, [string]$ExePath, $Preexisting, $Kids, [string]$EmuName, [bool]$Protected, [bool]$FastMode) {
     $killed = $false
     $ids = @($Proc.Id) + @($Kids | ForEach-Object { $_.Id })
@@ -459,7 +471,7 @@ function Stop-Emulator($Proc, [string]$ExePath, $Preexisting, $Kids, [string]$Em
         while (-not $Proc.HasExited -and $w.Elapsed.TotalSeconds -lt $cap) { Start-Sleep -Milliseconds 200; $Proc.Refresh() }
     }
     if (-not $Proc.HasExited) {
-        & taskkill.exe /PID $Proc.Id /T /F 2>&1 | Out-Null
+        [void](Kill-Tree $Proc.Id)
         $killed = $true
         Start-Sleep -Milliseconds 500
     }
@@ -472,12 +484,12 @@ function Stop-Emulator($Proc, [string]$ExePath, $Preexisting, $Kids, [string]$Em
     $base = [IO.Path]::GetFileNameWithoutExtension($ExePath)
     foreach ($p in @(Get-Process -Name $base -ErrorAction SilentlyContinue)) {
         if ($Preexisting -notcontains $p.Id) {
-            try { & taskkill.exe /PID $p.Id /T /F 2>&1 | Out-Null; $killed = $true } catch {}
+            if (Kill-Tree $p.Id) { $killed = $true }
         }
     }
     # 런처가 띄운 게임 프로세스. 남겨 두면 다음 항목이 "already running" 으로 막힌다(ISSUES 68번).
     foreach ($k in @($Kids)) {
-        try { $k.Refresh(); if (-not $k.HasExited) { & taskkill.exe /PID $k.Id /T /F 2>&1 | Out-Null } } catch {}
+        try { $k.Refresh(); if (-not $k.HasExited) { [void](Kill-Tree $k.Id) } } catch {}
     }
     $script:LastShutdownMs = [int]$sw.Elapsed.TotalMilliseconds
     return $killed
@@ -948,6 +960,10 @@ foreach ($it in $items) {
 
     # --- 구동 점검
     if ($Launch -and -not $skipped -and ($status -eq 'OK' -or $status -eq 'NOCHK')) {
+        # 이 구간에서는 네이티브 명령(taskkill 등)의 stderr 가 치명적이 되지 않게 한다.
+        # 스크립트 전역은 Stop 이라 stderr 한 줄에 몇 시간짜리 실행이 통째로 죽는다(2026-09-10 실측).
+        $eapSaved = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
         $base = [IO.Path]::GetFileNameWithoutExtension($exePath)
         $pre = @(Get-Process -Name $base -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
         # 런처형 정의는 게임을 다른 프로세스로 띄운다. 그것을 알아보려면 실행 전 전체 PID 가 필요하다.
@@ -1067,6 +1083,7 @@ foreach ($it in $items) {
             if (@(Get-NewEmuProcs $preAll -1 $extraRoots).Count -eq 0) { break }
             Start-Sleep -Milliseconds 250
         }
+        $ErrorActionPreference = $eapSaved
     }
 
     [void]$results.Add([pscustomobject]@{

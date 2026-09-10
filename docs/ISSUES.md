@@ -7,7 +7,7 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **75건** / 미해결 **2건**(13 · 65번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 5차 재점검 2026-09-08~09
+**진행 현황** — 처리 **76건** / 미해결 **2건**(13 · 65번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 5차 재점검 2026-09-08~09
 
 > **첫 전수 구동 점검 완료 (2026-09-09)** — DIALOG 판정을 갖춘 뒤 33종 1,098건을 처음으로 전부 띄웠다.
 > **1,098건 중 1,097건 통과(99.9%)**. 남은 하나 `IDZ` 는 프로필이 `RequiresAdmin=true` 라 AM 을 관리자 권한으로 띄워야 한다(77번).
@@ -2387,6 +2387,50 @@ powershell -File tools\test-roms.ps1 -Launch -Fast -Adaptive -Baseline logs\rom-
 
 ---
 
+### - [x] 84. 전수 점검이 `taskkill` 오류 한 줄에 통째로 죽었다 — ✅ **완료 (2026-09-10)**
+
+`-Fast` 전수 점검이 **1,052번째 항목에서 멈췄다.** 두 시간 가까이 돈 실행이 통째로 날아갔다.
+
+```
+taskkill.exe : ERROR: The process with PID 15284 (child process of PID 24760) could not be terminated.
+위치 D:\AttractMode\tools\test-roms.ps1:462 문자:9
++         & taskkill.exe /PID $Proc.Id /T /F 2>&1 | Out-Null
+```
+
+**원인** — `taskkill` 이 못 죽이는 프로세스를 만나면 stderr 에 쓴다. PowerShell 5.1 은 네이티브 명령의
+stderr 를 **ErrorRecord** 로 바꾸고, 스크립트가 `$ErrorActionPreference = 'Stop'` 이므로 그것이
+**종료성 오류**가 되어 스크립트를 끝낸다. `2>&1 | Out-Null` 은 출력을 감출 뿐 오류 승격을 막지 못한다.
+
+**조치 — 두 겹으로 막았다.**
+
+1. `Kill-Tree` 도우미 신설. `cmd /c` 안에서 리디렉션하고 `%ERRORLEVEL%` 만 돌려받는다 —
+   PowerShell 은 stderr 를 아예 보지 못한다.
+   ```powershell
+   [void](& cmd.exe /c "taskkill /PID $ProcId /T /F >nul 2>&1 & exit /b %ERRORLEVEL%")
+   return ($LASTEXITCODE -eq 0)
+   ```
+2. 구동 점검 구간에서는 `$ErrorActionPreference` 를 `Continue` 로 낮췄다가 끝나면 되돌린다.
+   그 구간의 다른 네이티브 호출도 같은 사고를 못 내게 한다.
+
+> **주기 저장이 실질적인 보호막이었다.** 5건마다 보고서를 써 두는 덕에 1,052건이 남아 있었고,
+> `-Resume` 으로 남은 46건만 262초에 마쳤다(7.3절). 그 장치가 없었으면 두 시간을 다시 돌려야 했다.
+
+**전수 재점검 결과 (2026-09-10, `-Fast`)** — **PASS 1,095 / NOWIN 2 / DIALOG 1.**
+
+| 항목 | 전수에서 | 개별 재확인 | 판정 |
+|---|---|---|---|
+| `IDZ` | DIALOG | DIALOG | 관리자 권한(77번) |
+| `RaidenIII` | NOWIN | **PASS** (창 2.8초) | 연속 실행 부하에서 늦게 뜬 것 |
+| `leaguemn` | NOWIN | **PASS** (창 5.8초) | 같음 — RetroArch 가 FBNeo 코어를 늦게 연다 |
+
+**실질 1,097 / 1,098.** 그리고 이어서 돌린 증분 점검(92초)에서 그 둘이 다시 검사돼
+`PASS` 로 돌아왔다 — **직전에 실패한 항목은 건너뛰지 않는다**는 규칙이 의도대로 동작한다.
+
+> `leaguemn` 처럼 창이 5.8초에 뜨는 항목은 `-Adaptive` 가 다음 실행부터 마감을
+> `5.8 × 2 + 4 = 15.6초` 로 늘려 준다(82번). 같은 실패가 반복되지 않는다.
+
+
+---
 
 ## 개선 제안
 
