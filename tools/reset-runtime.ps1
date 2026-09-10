@@ -15,11 +15,13 @@
       세이브 메모리카드·NVRAM·스테이트·하이스코어
             -> 되돌리면 게임 진행이 커밋 시점으로 돌아간다. 별도 스위치가 필요하다.
       산출물 로그·통계·캐시 (git 이 추적하지 않는 것)
-            -> 삭제한다.
+            -> 삭제한다. 설정 폴더에 "새로 생긴" 미추적 파일도 여기에 든다 —
+               되돌릴 커밋 상태가 없으므로 지우는 것 말고는 방법이 없다.
 
 .PARAMETER Config   설정 계열을 커밋 상태로 되돌린다.
 .PARAMETER Saves    세이브 계열까지 되돌린다. 게임 진행이 사라진다.
-.PARAMETER Clean    미추적 산출물(로그·통계·캐시)을 삭제한다.
+.PARAMETER Clean    미추적 산출물(로그·통계·캐시)과, 설정 폴더에 새로 생긴 미추적 설정
+                    파일(처음 띄운 게임의 emulators\Mame\cfg\<게임>.cfg 등)을 삭제한다.
 .PARAMETER All      -Config -Saves -Clean 을 모두 적용한다.
 .PARAMETER Force    확인 프롬프트 없이 실행한다.
 .PARAMETER Root     저장소 경로 (기본: 스크립트의 상위 폴더)
@@ -154,6 +156,21 @@ function Get-Changed([string[]]$Paths) {
     })
 }
 
+function Get-NewConfig([string[]]$Paths) {
+    # 처음 띄운 게임이 새로 만드는 설정 파일 — emulators\Mame\cfg\<게임>.cfg 같은 것.
+    #
+    # 이것은 추적 파일이 아니라서 git checkout 으로 되돌아가지 않고, 그렇다고 $JunkPaths 에
+    # 넣으면 같은 폴더의 추적 중인 cfg 까지 통째로 지워 버린다. 그래서 따로 다룬다 —
+    # $ConfigPaths 중 "디렉터리"인 것 아래의 미추적 파일만 골라 삭제 대상으로 삼는다.
+    # 전수 구동 점검(test-roms.cmd) 한 번이면 여기에 수백 개가 쌓인다(2026-09-10 실측 387개).
+    $dirs = @($Paths | Where-Object { Test-Path -LiteralPath $_ -PathType Container })
+    if (-not $dirs) { return @() }
+    # quotepath 를 끄지 않으면 비 ASCII 이름이 "\355\234..." 로 나와 경로가 깨진다.
+    $out = & git -c core.quotepath=false ls-files --others --exclude-standard -- $dirs 2>$null
+    if (-not $out) { return @() }
+    @($out | ForEach-Object { $_.Trim('"') })
+}
+
 function Get-Junk([string[]]$Paths) {
     # 존재하면서 "git 이 추적하지 않는" 것만 삭제 대상으로 삼는다.
     #
@@ -187,11 +204,13 @@ Write-Host ""
 Write-Host "런타임 파일 정리  ($Root)" -ForegroundColor Cyan
 Write-Host ("=" * 72)
 
-$cfgChanged  = Get-Changed $ConfigPaths
-$savChanged  = Get-Changed $SavePaths
-$junkFound   = Get-Junk    $JunkPaths
+$cfgChanged  = Get-Changed   $ConfigPaths
+$cfgNew      = Get-NewConfig $ConfigPaths
+$savChanged  = Get-Changed   $SavePaths
+$junkFound   = Get-Junk      $JunkPaths
 
 Show-Group "설정   (되돌려도 잃는 것 없음)" $cfgChanged 'Yellow'
+Show-Group "새 설정 (미추적 - 삭제 대상)" $cfgNew 'DarkCyan'
 Show-Group "세이브 (되돌리면 게임 진행이 사라짐)" $savChanged 'Red'
 Show-Group "산출물 (미추적 - 삭제 대상)" $junkFound 'DarkCyan'
 
@@ -213,6 +232,7 @@ if ($ListOnly) {
 $plan = @()
 if ($Config -and $cfgChanged.Count) { $plan += "설정 $($cfgChanged.Count)건을 커밋 상태로 되돌림" }
 if ($Saves  -and $savChanged.Count) { $plan += "세이브 $($savChanged.Count)건을 커밋 상태로 되돌림 (게임 진행 삭제)" }
+if ($Clean  -and $cfgNew.Count)     { $plan += "새로 생긴 설정 $($cfgNew.Count)건 삭제 (미추적)" }
 if ($Clean  -and $junkFound.Count)  { $plan += "산출물 $($junkFound.Count)건 삭제" }
 
 if ($plan.Count -eq 0) {
@@ -239,6 +259,12 @@ if ($Config -and $cfgChanged.Count) {
 if ($Saves -and $savChanged.Count) {
     & git checkout -- $savChanged
     Write-Host ("  세이브 {0}건 되돌림" -f $savChanged.Count) -ForegroundColor Green
+}
+if ($Clean -and $cfgNew.Count) {
+    foreach ($f in $cfgNew) {
+        Remove-Item -LiteralPath (Join-Path $Root $f) -Force -ErrorAction SilentlyContinue
+    }
+    Write-Host ("  새 설정 {0}건 삭제" -f $cfgNew.Count) -ForegroundColor Green
 }
 if ($Clean -and $junkFound.Count) {
     foreach ($j in $junkFound) {

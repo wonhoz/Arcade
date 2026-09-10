@@ -132,8 +132,9 @@ $BOM = [char]0xFEFF
 #               "살아 있으면 PASS" 로만 보면 이것을 정상으로 세게 된다(실제로 그랬다 — ISSUES 46번).
 $FailStatus = @('NOEMU', 'NOEXE', 'NOROM', 'EXIT0', 'CRASH', 'LAUNCHERR', 'DIALOG')
 $WarnStatus = @('NOWIN')
-# SKIP : -Adaptive 에서 입력이 그대로라 건너뛴 항목. 실패도 경고도 아니다.
-$SkipStatus = @('NOCHK', 'SKIP')
+# 실패도 경고도 아닌 상태. -Adaptive 로 건너뛴 항목은 직전 상태를 그대로 물려받으므로
+# 여기에 따로 값을 두지 않는다 — 다시 띄우지 않았다는 사실은 Skipped 열에만 남는다.
+$SkipStatus = @('NOCHK')
 
 # ESC 를 에뮬레이터에 보내기 위한 것. 두 가지가 필요하다.
 #   1. 포그라운드 창의 소유 프로세스 확인 — 엉뚱한 창(터미널)에 ESC 를 보내지 않기 위해(ISSUES 45번).
@@ -371,6 +372,7 @@ function Resolve-LauncherRoots([string]$ArgLine) {
                 if ($tp) { $roots += (Split-Path -Parent $tp) }
             } catch {}
         } else {
+            # ps-audit-ok: 저장소 밖의 배치파일이라 ANSI 로 읽는 것이 맞고, 뽑는 것도 ASCII 경로뿐이다.
             foreach ($line in @(Get-Content -LiteralPath $t -ErrorAction SilentlyContinue)) {
                 foreach ($mm in [regex]::Matches($line, '([A-Za-z]:\\[^"''<>|]+?\.exe)')) {
                     $roots += (Split-Path -Parent $mm.Groups[1].Value)
@@ -381,11 +383,62 @@ function Resolve-LauncherRoots([string]$ArgLine) {
     return @($roots | Where-Object { $_ } | Sort-Object -Unique)
 }
 
+# 에뮬레이터가 "자기 폴더에서" 읽는 설정 파일. emulators\<Emulator>.cfg 만 봐서는
+# 이것이 바뀐 것을 못 잡는데, 여태 실행 불가가 실제로 터진 자리가 대부분 여기다.
+#   mame.ini 의 rompath 오타 -> MAME Adult 38개 (ISSUES 48)
+#   EKMAME mame.ini 의 BOM 소실 -> EKMAME 전부 (CLAUDE.md 4.7)
+#   TeknoParrot 프로필의 <GamePath> 절대경로 -> 32개 (ISSUES 68)
+#   Cemu settings.xml 의 gp_download -> Wii U 4개 (ISSUES 66)
+# 키는 emulators\ 바로 아래 폴더 이름(= 실행파일이 있는 곳), 값은 그 폴더 기준 상대경로.
+# [name] 은 romlist 의 Name 으로 바뀐다(TeknoParrot 처럼 항목마다 프로필이 따로인 경우).
+# 내용 해시라서 에뮬레이터가 같은 내용으로 다시 써도 지문이 흔들리지 않는다.
+$AuxConfig = @{
+    'Mame'        = @('mame.ini')
+    'EKMAME'      = @('mame.ini')
+    'PSXMAME'     = @('mame.ini')
+    'Cemu'        = @('portable\settings.xml')
+    'Demul'       = @('padDemul.ini', 'gpuDX11.ini')
+    'Dolphin'     = @('portable.txt', 'User\Config\Dolphin.ini')
+    'M2'          = @('EMULATOR.INI')
+    'PCSX2'       = @('inis\PCSX2_ui.ini', 'inis\LilyPad.ini')
+    'Project64'   = @('Config\Project64.cfg')
+    'RetroArch'   = @('retroarch.cfg')
+    'Mednafen'    = @('mednafen.cfg')
+    'PPSSPP'      = @('memstick\PSP\SYSTEM\ppsspp.ini')
+    'SuperModel'  = @('Config\Supermodel.ini')
+    'TeknoParrot' = @('UserProfiles\[name].xml')
+}
+
+$script:AuxCache = @{}
+function Get-AuxParts([string]$ExeDir, [string]$ItemName) {
+    $parts = @()
+    if (-not $ExeDir) { return $parts }
+    $emuRoot = (Join-Path $Root 'emulators').TrimEnd('\') + '\'
+    # executable 이 cmd 인 런처형은 디렉터리가 AM 루트다. 거기에는 attract.am 처럼
+    # 실행할 때마다 바뀌는 파일이 있어 훑으면 안 된다 — emulators\ 아래일 때만 본다.
+    if (-not $ExeDir.StartsWith($emuRoot, [StringComparison]::OrdinalIgnoreCase)) { return $parts }
+    $key = ($ExeDir.Substring($emuRoot.Length) -split '\\')[0]
+    if (-not $key -or -not $AuxConfig.ContainsKey($key)) { return $parts }
+    foreach ($rel in $AuxConfig[$key]) {
+        $p = Join-Path (Join-Path $emuRoot $key) ($rel -replace '\[name\]', $ItemName)
+        if (-not $script:AuxCache.ContainsKey($p)) {
+            $h = '-'   # 없는 것도 상태다 — Dolphin 의 portable.txt 가 사라지면 설정 위치가 통째로 바뀐다
+            if (Test-Path -LiteralPath $p -PathType Leaf) {
+                try { $h = (Get-FileHash -LiteralPath $p -Algorithm MD5).Hash } catch { $h = '?' }
+            }
+            $script:AuxCache[$p] = $h
+        }
+        $parts += ($rel + '|' + $script:AuxCache[$p])
+    }
+    return $parts
+}
+
 # 이 항목의 "입력"을 한 줄로 요약한다. 이것이 그대로면 다시 띄워 볼 이유가 없다.
-#   romlist 줄 · 에뮬레이터 cfg 내용 · 실행파일 · 롬 파일(크기+수정시각)
+#   romlist 줄 · 에뮬레이터 cfg 내용 · 실행파일 · 롬 파일(크기+수정시각) · 위 보조 설정
 # 롬은 폴더일 수도(<DIR>) 아예 못 찾을 수도 있다 — 그럴 때는 있는 재료만으로 만든다.
 $script:FpCache = @{}
-function Get-Fingerprint([string]$Raw, [string]$EmuName, [string]$ExePath, [string]$RomPath) {
+function Get-Fingerprint([string]$Raw, [string]$EmuName, [string]$ExePath, [string]$RomPath,
+                         [string]$ExeDir, [string]$ItemName) {
     $parts = New-Object System.Collections.Generic.List[string]
     [void]$parts.Add($Raw)
     if (-not $script:FpCache.ContainsKey("cfg:$EmuName")) {
@@ -408,6 +461,7 @@ function Get-Fingerprint([string]$Raw, [string]$EmuName, [string]$ExePath, [stri
         }
         [void]$parts.Add($f + '|' + $script:FpCache["f:$f"])
     }
+    foreach ($a in (Get-AuxParts $ExeDir $ItemName)) { [void]$parts.Add($a) }
     $md5 = [Security.Cryptography.MD5]::Create()
     $bytes = [Text.Encoding]::UTF8.GetBytes(($parts -join "`n"))
     return (($md5.ComputeHash($bytes) | ForEach-Object { $_.ToString('x2') }) -join '').Substring(0, 16)
@@ -420,10 +474,15 @@ $script:EscFail = @{}
 # stderr 를 ErrorRecord 로 바꾸고, $ErrorActionPreference='Stop' 아래에서는 그것이 종료성 오류가 된다.
 # 2026-09-10 전수 점검이 1,052번째 항목에서 이것 하나로 통째로 죽었다 — 몇 시간짜리 실행을
 # 종료 실패 한 번으로 잃으면 안 된다. 항상 이 함수로 부른다.
+#
+# ⚠️ `& exit /b %ERRORLEVEL%` 를 붙이면 안 된다. cmd 는 줄 전체를 한 번에 파싱하면서 %…% 를
+#    전개하므로, `&` 로 이어 붙였어도 %ERRORLEVEL% 은 taskkill 이 돌기 *전* 값(0)으로 굳는다.
+#    그러면 이 함수가 항상 참을 돌려준다(없는 PID 로 실측: 붙이면 0, 빼면 128).
+#    cmd /c 는 마지막 명령의 종료 코드를 그대로 물려주므로 아무것도 붙이지 않는 것이 맞다.
 function Kill-Tree([int]$ProcId) {
     if ($ProcId -le 0) { return $false }
     try {
-        [void](& cmd.exe /c "taskkill /PID $ProcId /T /F >nul 2>&1 & exit /b %ERRORLEVEL%")
+        [void](& cmd.exe /c "taskkill /PID $ProcId /T /F >nul 2>&1")
         return ($LASTEXITCODE -eq 0)
     } catch { return $false }
 }
@@ -710,19 +769,27 @@ if (Test-Path -LiteralPath $mameRomsDir) {
 # --- 보고서 경로. -Resume 은 새로 만들지 않고 직전 보고서를 이어 쓴다.
 $logDir = Join-Path $Root 'logs'
 if (-not (Test-Path -LiteralPath $logDir)) { [void](New-Item -ItemType Directory -Path $logDir) }
-function Get-LastReport {
+# 필터가 걸린 실행은 보고서에 romlist 의 "일부"만 담긴다. 그런 보고서가 -Adaptive 의 기준으로
+# 잡히면 다음 증분 점검이 나머지를 전부 다시 띄운다(65초 -> 2시간). 그래서 이름부터 갈라 둔다.
+# test-roms.cmd 의 [2] 표본 · [5] 목록 지정 · [6] 이름으로 · [7] 실패만이 전부 여기 해당한다.
+$partialRun = [bool]($List -or $Emulator -or $Name -or $Failed -or ($Sample -gt 0) -or ($Max -gt 0))
+
+function Get-LastReport([switch]$IncludePartial) {
     Get-ChildItem -LiteralPath (Join-Path $Root 'logs') -Filter 'rom-test-*.csv' -ErrorAction SilentlyContinue |
+        Where-Object { $IncludePartial -or $_.Name -notlike 'rom-test-partial-*' } |
         Sort-Object LastWriteTime -Descending | Select-Object -First 1
 }
 if ($Report) {
     # 확장자를 붙여 줬으면 뗀다. .csv / .html 두 벌이 나온다.
     if ($Report -match '\.(csv|html?)$') { $Report = [IO.Path]::ChangeExtension($Report, $null).TrimEnd('.') }
 } elseif ($Resume) {
-    $last = Get-LastReport
+    # 부분 점검을 이어할 때는 부분 보고서를, 전수를 이어할 때는 전수 보고서를 집는다.
+    $last = Get-LastReport -IncludePartial:$partialRun
     if (-not $last) { Write-Error "logs\rom-test-*.csv 가 없습니다. -Resume 은 이어 쓸 보고서가 있어야 합니다."; exit 1 }
     $Report = [IO.Path]::Combine($last.DirectoryName, [IO.Path]::GetFileNameWithoutExtension($last.Name))
 } else {
-    $Report = Join-Path $logDir ("rom-test-{0}" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
+    $prefix = if ($partialRun) { 'rom-test-partial' } else { 'rom-test' }
+    $Report = Join-Path $logDir ("{0}-{1}" -f $prefix, (Get-Date -Format 'yyyyMMdd-HHmmss'))
 }
 $csvPath  = "$Report.csv"
 $htmlPath = "$Report.html"
@@ -751,12 +818,13 @@ if ($Resume) {
 }
 
 if ($Failed) {
-    $last = Get-LastReport
+    $last = Get-LastReport -IncludePartial
     if (-not $last) {
         Write-Error "logs\rom-test-*.csv 가 없습니다. -Failed 는 이전 실행 결과가 있어야 합니다."
         exit 1
     }
     Write-Host ("직전 보고서: {0}" -f $last.Name) -ForegroundColor DarkGray
+    # -Failed 는 부분 보고서도 본다 — [7] 을 연달아 눌러 "아직 안 고쳐진 것"만 좁혀 가는 쓰임이다.
     $retry = @{}
     foreach ($r in (Import-Csv -LiteralPath $last.FullName -Encoding UTF8)) {
         if ($FailStatus -contains $r.Status) { $retry[($r.List + "`t" + $r.Name)] = $true }
@@ -767,40 +835,8 @@ if ($Failed) {
     }
 }
 
-# --- -Adaptive : 직전 정상 보고서를 읽어 (지문, 상태, 실측)을 항목별로 들고 있는다.
+# -Adaptive 의 기준 보고서는 검사 대상이 정해진 뒤에 고른다(아래 "대상 수집" 다음).
 $baseMap = @{}
-if ($Adaptive) {
-    $bf = $null
-    if ($Baseline) {
-        if ($Baseline -notmatch '\.csv$') { $Baseline = "$Baseline.csv" }
-        if (-not [IO.Path]::IsPathRooted($Baseline)) { $Baseline = Join-Path $Root $Baseline }
-        if (Test-Path -LiteralPath $Baseline) { $bf = Get-Item -LiteralPath $Baseline }
-    } else {
-        # 기본 보고서 이름(rom-test-*)을 먼저 찾는다. logs\ 에는 임시로 만든 작은 CSV 도 섞여 있어서,
-        # 그냥 "가장 최근 CSV"로 잡으면 몇 건짜리 실험 결과를 기준으로 삼는 사고가 난다.
-        $bf = Get-ChildItem -LiteralPath $logDir -Filter 'rom-test-*.csv' -ErrorAction SilentlyContinue |
-              Where-Object { $_.FullName -ne $csvPath } |
-              Sort-Object LastWriteTime -Descending | Select-Object -First 1
-        if (-not $bf) {
-            $bf = Get-ChildItem -LiteralPath $logDir -Filter '*.csv' -ErrorAction SilentlyContinue |
-                  Where-Object { $_.FullName -ne $csvPath } |
-                  Sort-Object LastWriteTime -Descending | Select-Object -First 1
-        }
-    }
-    if (-not $bf) {
-        Write-Host "-Adaptive : 비교할 보고서가 없습니다. 전부 검사합니다." -ForegroundColor Yellow
-    } else {
-        $withFp = 0
-        foreach ($r in (Import-Csv -LiteralPath $bf.FullName -Encoding UTF8)) {
-            $baseMap[($r.List + "`t" + $r.Name)] = $r
-            if ($r.PSObject.Properties.Name -contains 'Fingerprint' -and $r.Fingerprint) { $withFp++ }
-        }
-        Write-Host ("기준 보고서: {0} — {1}건, 지문 있는 것 {2}건" -f $bf.Name, $baseMap.Count, $withFp) -ForegroundColor DarkGray
-        if ($withFp -eq 0) {
-            Write-Host "  지문이 없는 옛 보고서다. 이번에는 전부 검사하고 지문을 남긴다 — 다음부터 건너뛴다." -ForegroundColor Yellow
-        }
-    }
-}
 
 # 보고서 두 벌을 지금 상태로 써 낸다. 전수 구동 점검은 몇 시간짜리라
 # 중간에 끊겨도(Ctrl+C, 정전) 여기까지의 결과는 남아 있어야 한다.
@@ -861,6 +897,83 @@ if ($Max -gt 0 -and $items.Count -gt $Max) { $items = @($items | Select-Object -
 
 $mode = if ($Launch) { "구동 점검, 항목당 최대 $Seconds 초" } else { "정적 점검" }
 Write-Host ("검사 대상 {0}개  (모드: {1})" -f $items.Count, $mode)
+
+# --- -Adaptive : 직전 보고서를 읽어 (지문, 상태, 실측)을 항목별로 들고 있는다.
+#
+# 기준을 "가장 최근 rom-test-*.csv" 하나로만 잡으면 그 사이에 돌린 작은 점검 하나가 기준을
+# 통째로 갈아 끼운다 — 전수 -> 실패만 -> 증분 순서에서 실제로 그렇게 된다. 두 겹으로 막는다.
+#   (1) 필터가 걸린 실행은 이름이 rom-test-partial-* 이라 후보에서 빠진다(위 $partialRun).
+#   (2) 그래도 이번 대상을 다 못 덮으면 더 오래된 보고서로 내려가며 빈자리만 메운다.
+#       중단된 전수 점검이나 이 규칙이 생기기 전의 부분 보고서까지 자연스럽게 흡수된다.
+#
+# 무엇을 "통과"로 볼지는 이번 실행이 구동 점검인지에 달렸다.
+#   구동 점검(-Launch)이면 직전에도 실제로 떴어야(PASS) 건너뛴다.
+#   정적 점검이면 조립이 됐다는 것(OK/NOCHK)으로 충분하다.
+#   정적 OK 를 구동 통과로 오인하면 한 번도 안 띄워 본 항목을 건너뛰게 된다.
+$OkBase = if ($Launch) { @('PASS') } else { @('PASS', 'OK', 'NOCHK') }
+function Test-SkipBase($Row) {
+    if (-not $Row) { return $false }
+    return [bool]($Row.Fingerprint -and ($OkBase -contains $Row.Status))
+}
+function Measure-Coverage($Wanted, $Map) {
+    $n = 0
+    foreach ($k in $Wanted.Keys) { if (Test-SkipBase $Map[$k]) { $n++ } }
+    return $n
+}
+
+if ($Adaptive -and $items.Count -gt 0) {
+    $cands = @()
+    if ($Baseline) {
+        if ($Baseline -notmatch '\.csv$') { $Baseline = "$Baseline.csv" }
+        if (-not [IO.Path]::IsPathRooted($Baseline)) { $Baseline = Join-Path $Root $Baseline }
+        if (Test-Path -LiteralPath $Baseline) { $cands = @(Get-Item -LiteralPath $Baseline) }
+    } else {
+        $cands = @(Get-ChildItem -LiteralPath $logDir -Filter 'rom-test-*.csv' -ErrorAction SilentlyContinue |
+                   Where-Object { $_.FullName -ne $csvPath -and $_.Name -notlike 'rom-test-partial-*' } |
+                   Sort-Object LastWriteTime -Descending | Select-Object -First 6)
+        if (-not $cands) {
+            # 전수 보고서가 하나도 없으면 부분 보고서라도 쓴다. 없는 것보다는 낫다.
+            $cands = @(Get-ChildItem -LiteralPath $logDir -Filter 'rom-test-*.csv' -ErrorAction SilentlyContinue |
+                       Where-Object { $_.FullName -ne $csvPath } |
+                       Sort-Object LastWriteTime -Descending | Select-Object -First 6)
+        }
+    }
+    if (-not $cands) {
+        Write-Host "-Adaptive : 비교할 보고서가 없습니다. 전부 검사합니다." -ForegroundColor Yellow
+    } else {
+        $wanted = @{}
+        foreach ($q in $items) { $wanted[($q.List + "`t" + $q.Name)] = $true }
+        $used = @()
+        foreach ($bf in $cands) {
+            $added = 0
+            foreach ($r in (Import-Csv -LiteralPath $bf.FullName -Encoding UTF8)) {
+                $k = $r.List + "`t" + $r.Name
+                $old = $baseMap[$k]
+                # 최신이 이긴다. 단 하나의 예외 — 최신 행이 "건너뛸 근거가 못 되는" 것이고
+                # 더 오래된 행이 근거가 되면 그쪽을 쓴다. 정적 점검(OK)을 한 번 돌렸다고 해서
+                # 그 앞의 구동 점검(PASS) 결과까지 버릴 이유는 없다. 지문이 같아야 쓰이므로 안전하다.
+                if ($old -and ((Test-SkipBase $old) -or -not (Test-SkipBase $r))) { continue }
+                $baseMap[$k] = $r
+                if (-not $old) { $added++ }
+            }
+            if ($added -gt 0) { $used += ("{0}(+{1})" -f $bf.Name, $added) }
+            if ((Measure-Coverage $wanted $baseMap) -ge $wanted.Count) { break }
+        }
+        $covered = Measure-Coverage $wanted $baseMap
+        $withFp  = @($baseMap.Values | Where-Object { $_.Fingerprint }).Count
+        $pct = if ($wanted.Count -gt 0) { [int](100 * $covered / $wanted.Count) } else { 0 }
+        Write-Host ("기준 보고서: {0}" -f ($used -join '  +  ')) -ForegroundColor DarkGray
+        Write-Host ("  {0}건 · 지문 있는 것 {1}건 · 이번 대상 {2}건 중 {3}건({4}%) 이 건너뛸 근거를 갖는다" -f `
+                    $baseMap.Count, $withFp, $wanted.Count, $covered, $pct) -ForegroundColor DarkGray
+        if ($pct -lt 90) {
+            Write-Host "  기준이 이번 대상을 다 덮지 못한다 — 나머지는 그냥 다시 검사한다(그만큼 오래 걸린다)." -ForegroundColor Yellow
+        }
+        if ($withFp -eq 0) {
+            Write-Host "  지문이 없는 옛 보고서다. 이번에는 전부 검사하고 지문을 남긴다 — 다음부터 건너뛴다." -ForegroundColor Yellow
+        }
+    }
+}
+
 if ($items.Count -eq 0) {
     if ($Resume -and $results.Count) {
         Write-Host ("이 조건의 {0}건은 이미 전부 끝나 있습니다." -f $results.Count) -ForegroundColor Green
@@ -933,17 +1046,11 @@ foreach ($it in $items) {
                 elseif (-not $rom.Checked) { $status = 'NOCHK'; $detail = "romext 가 없어 롬 존재 확인 불가 -> $($rom.Dir)" }
                 $argStr = Expand-AmArgs $cfg['args'] $it.Name $it.Title $it.Emulator $rom $cfg
                 # 지문은 항상 남긴다 — 그래야 이번 보고서가 다음 -Adaptive 의 기준이 된다.
-                $fingerprint = Get-Fingerprint $it.Raw $it.Emulator $exePath $rom.File
+                $fingerprint = Get-Fingerprint $it.Raw $it.Emulator $exePath $rom.File $exe.Dir $it.Name
                 if ($Adaptive) {
                     $baseRow = $baseMap["$($it.List)`t$($it.Name)"]
-                    # 무엇을 "통과"로 볼지는 이번 실행이 구동 점검인지에 달렸다.
-                    #   구동 점검(-Launch)이면 직전에도 실제로 떴어야(PASS) 건너뛴다.
-                    #   정적 점검이면 조립이 됐다는 것(OK/NOCHK)으로 충분하다.
-                    #   정적 OK 를 구동 통과로 오인하면 한 번도 안 띄워 본 항목을 건너뛰게 된다.
-                    $okBase = @('PASS')
-                    if (-not $Launch) { $okBase = @('PASS', 'OK', 'NOCHK') }
-                    if ($baseRow -and $baseRow.Fingerprint -and $baseRow.Fingerprint -eq $fingerprint -and
-                        ($okBase -contains $baseRow.Status)) {
+                    # 통과의 기준($OkBase)은 기준 보고서를 고를 때와 같은 것을 쓴다(위 Test-SkipBase).
+                    if ((Test-SkipBase $baseRow) -and $baseRow.Fingerprint -eq $fingerprint) {
                         # 상태는 직전 것을 그대로 물려받는다. SKIP 으로 적어 버리면
                         # 이 보고서가 다음 실행의 기준이 되지 못한다 — 매일 돌리려면 연쇄돼야 한다.
                         $status  = $baseRow.Status
@@ -962,8 +1069,11 @@ foreach ($it in $items) {
     if ($Launch -and -not $skipped -and ($status -eq 'OK' -or $status -eq 'NOCHK')) {
         # 이 구간에서는 네이티브 명령(taskkill 등)의 stderr 가 치명적이 되지 않게 한다.
         # 스크립트 전역은 Stop 이라 stderr 한 줄에 몇 시간짜리 실행이 통째로 죽는다(2026-09-10 실측).
+        # try/finally 로 감싸는 이유: 이 안에서 예외가 나면 맨 아래 복구 줄에 닿지 못하고
+        # 남은 실행이 통째로 Continue 로 돌아 버린다. 안쪽은 들여쓰기를 그대로 두었다.
         $eapSaved = $ErrorActionPreference
         $ErrorActionPreference = 'Continue'
+        try {
         $base = [IO.Path]::GetFileNameWithoutExtension($exePath)
         $pre = @(Get-Process -Name $base -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
         # 런처형 정의는 게임을 다른 프로세스로 띄운다. 그것을 알아보려면 실행 전 전체 PID 가 필요하다.
@@ -1043,7 +1153,9 @@ foreach ($it in $items) {
                 # 런처형은 게임을 늦게 띄운다. 마감이 다 됐는데 창은 없고 런처가 뭔가를 띄워 놨으면
                 # 한 번만 마감을 늘려 준다 — RaidenIII 는 창이 뜨는 데 12초를 넘긴다(2026-09-10 실측).
                 if (-not $extended -and -not $hasWin -and $kids.Count -gt 0 -and $elMs -ge ($deadlineMs - 1000)) {
-                    $deadlineMs = [int]($Seconds * 1000 * 2.5); $extended = $true
+                    # Max 여야 한다. 대입하면 -Adaptive 가 기준 실측으로 늘려 둔 마감보다
+                    # 작아질 수 있고, 그러면 "늘려 주려던" 항목의 마감이 오히려 당겨져 NOWIN 이 된다.
+                    $deadlineMs = [math]::Max($deadlineMs, [int]($Seconds * 1000 * 2.5)); $extended = $true
                 }
             }
             $elapsed = [int]$sw.Elapsed.TotalMilliseconds
@@ -1083,7 +1195,7 @@ foreach ($it in $items) {
             if (@(Get-NewEmuProcs $preAll -1 $extraRoots).Count -eq 0) { break }
             Start-Sleep -Milliseconds 250
         }
-        $ErrorActionPreference = $eapSaved
+        } finally { $ErrorActionPreference = $eapSaved }
     }
 
     [void]$results.Add([pscustomobject]@{
