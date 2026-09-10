@@ -452,12 +452,33 @@ artpath   ..\Mame\artwork      samplepath ..\Mame\samples      cheatpath ..\Mame
 
 **한글 롬은 EKMAME 전용이 아니다.** 49개 중 36개는 MAME 본가에 정식 클론으로 등재된
 한국 발매판이라 0.289 로 그대로 돈다. 그래서 `EKMAME`→`MAME`, `EKMAME Vertical`→`MAME Vertical` 로 옮겼고
-그 뒤 한글화 패치 게임을 확충해(`docs/ISSUES.md` 52·53번) 지금 EKMAME 계열 활성 항목은 **30개**
-(`EKMAME` 27 · `EKMAME Vertical` 2 · `EKMAME Adult` 1)다. EKMAME 이 필요한 것은
+그 뒤 한글화 패치 게임을 확충해(`docs/ISSUES.md` 52·53번) 지금 EKMAME 계열 활성 항목은 **31개**
+(`EKMAME` 28 · `EKMAME Vertical` 2 · `EKMAME Adult` 1)다. EKMAME 이 필요한 것은
 **MAME 본가에 없는 팬 한글화("Korean Translator") 롬뿐**이다.
 
 > ⚠️ **`EKMAME\roms\Korean` 은 어떤 롬셋으로도 다시 만들 수 없다.** MAME 에 등재되지 않은 개조 롬이라
 > 배포되는 세트에 존재하지 않는다. 지금 있는 파일이 유일본이다 — 갱신·정리할 때 절대 덮지 말 것.
+
+> ⚠️ **직접 만든 한글화 롬은 EKMAME 에 그 셋 이름이 없을 수 있다 — 그러면 부모 이름을 그대로 쓴다.**
+> 기존 30개는 `blkdrgonk`·`tengaik` 처럼 **EKMAME 이 자기 드라이버로 갖고 있는 이름**이라
+> 원본과 나란히 목록에 둘 수 있었다. 하지만 EKMAME 에도 그 게임의 한글 셋이 없으면
+> **부모 셋 이름 말고는 쓸 수 있는 이름이 없다.** 다른 이름으로 두면 이렇게 끝난다.
+>
+> ```
+> EKMAME64.exe quiztvqq_kr   ->  종료 코드 5 · "No matching systems found for 'quiztvqq_kr'"
+> ```
+>
+> 그래서 **파일을 부모 이름으로 두고** `roms\Korean\` 에 넣는다. `rompath` 가
+> `roms;roms\Korean;..\Mame\roms\Arcade` 순이라 **한글판이 원본보다 먼저 잡히고**,
+> `emulators\Mame` 는 자기 `mame.ini` 를 따로 쓰므로 **본가 MAME 쪽은 원본 그대로 돈다.**
+>
+> **대신 romlist 에는 한 줄만 둘 수 있다** — Name 이 같아 중복이 되고 `validate.ps1` 이 FAIL 로 잡는다.
+> 원본을 목록에서 빼고 한글판으로 교체하는 것이 이 저장소의 선택이다(`wbmlkb`·`renjuk` 도 원본 없이 한글판만 있다).
+> 2026-09-10 `quiztvqq` 가 첫 사례다.
+>
+> 롬 내용이 바뀌었으니 **CRC 는 13개 전부 불일치**하고 `WARNING: the machine might not run correctly.` 가 찍힌다.
+> **EKMAME 0.224 는 그 경고 화면을 띄우지 않아** 그대로 부팅된다(실측 — 데모 화면까지 확인).
+> 같은 롬을 `emulators\Mame` 의 0.289 로 돌리면 경고 화면이 뜨는데, 그쪽은 1바이트 패치로 이미 꺼 뒀다(아래).
 
 > **셋 이름은 판마다 바뀐다.** 0.289 로 오면서 romlist 의 5개를 고쳤다 —
 > `acedrvrw`→`acedrive`, `raveracw`→`raverace`, `getstar`→`grdian`, `kof99nd`→`kof99ka`,
@@ -822,8 +843,13 @@ copy "The Fast and the Furious Drift\winmm.dll" "The Fast & Furious SuperCars\"
    Emulator 필드는 반드시 `emulators/*.cfg` 파일명과 일치.
 3. 아트웍을 `menu-art/<system>/{flyer,marquee,video,wheel}/<Name>.<ext>`에 배치
    (MAME 계열은 `emulators/Mame/{flyer,marquee,video,wheel}`). **아트웍은 git 추적 안 됨.**
-4. `attract.bat` 실행 → `last_run.log` 확인. (`attract.exe`를 직접 실행하면 로그가 안 남는다 → 4.5절)
+4. **실제로 뜨는지 확인**: `test-roms.cmd -Launch -Name <이름>` — AM 이 만들 명령 그대로 띄운다(7.5절).
+   그다음 `attract.bat` 실행 → `last_run.log` 확인. (`attract.exe`를 직접 실행하면 로그가 안 남는다 → 4.5절)
 5. 커밋: `romlists | <목록>에 <게임> 추가` 형태.
+
+> **한글화 롬을 넣을 때는 셋 이름부터 확인한다.** `EKMAME64.exe -listfull | grep <이름>` 으로
+> EKMAME 이 그 이름을 아는지 본다. 모르면 **부모 셋 이름 그대로** 써야 하고, 그러면 원본과
+> 목록에 나란히 둘 수 없다(Name 중복). 자세한 것은 4.7절.
 
 ### 5.2 에뮬레이터 추가/수정
 1. `emulators/<이름>.cfg`를 기존 파일 복사해서 작성. **UTF-8, BOM 없이 저장.**
