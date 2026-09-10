@@ -1101,7 +1101,7 @@ romlist 필드 수·중복·BOM, Emulator/layout/romlist 상호 참조, executab
 폰트 글리프, 두 레이아웃의 어긋남 같은 것은 보지 않는다. 그쪽은 저장소 안 스킬이 맡는다.
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\audit.ps1            # 11개 섹션 전부
+powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\audit.ps1            # 12개 섹션 전부
 powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\audit.ps1 -Section mascot   # 하나만
 ```
 
@@ -1112,9 +1112,10 @@ powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\aud
 | `mascot` | 480×760·알파 컷아웃 여부(투명 비율), **피사체가 직선으로 잘렸는지**(최외곽 불투명 행/열이 피사체 폭의 20% 이상) |
 | `dupes` | NEVATO↔Console Box 공용 폴더 어긋남, 참조 없는 배경 변형, 바이트 동일 중복(두 레이아웃의 의도된 쌍은 INFO) |
 | `fonts` · `glyph` | 참조 폰트 해석 가능 여부, **표시 텍스트 ↔ 폰트 글리프** |
-| `cfg` · `case` | 값 끝 공백, 형제 cfg 일치, `layout_config` 값, romlist·.gitignore 대소문자, `layout.nut` 철자 |
+| `cfg` · `case` | 값 끝 공백, 형제 cfg 일치, `layout_config` 값, romlist·.gitignore 대소문자, `layout.nut` 철자, **`-Adaptive` 지문이 장비를 죽여 온 설정 파일 13개를 덮는가** |
 | `demul` | romlist Name 이 Demul 이 아는 롬셋인지 — `arcade_compat.txt` 등재 **또는** `roms\<이름>.{7z,zip}` 존재 (4.12절) |
-| `branch` · `video` · `junk` | 장비 브랜치 전파, mp4 해상도·비트레이트, `(2)`·`bak/`·`.psd`·추적된 런타임 산출물 |
+| `psgotcha` | `tools\`·`.claude\` 의 PowerShell 이 **조용히 틀리는 두 함정**을 밟았는지 — `Get-Content`(BOM 없는 UTF-8 을 ANSI 로 읽는다) · `cmd /c "… & exit /b %ERRORLEVEL%"`(taskkill 이 돌기 전 값으로 굳는다). 일부러 그런 줄에는 같은 줄이나 바로 윗줄에 `ps-audit-ok` 와 이유를 적는다 |
+| `branch` · `video` · `junk` | 장비 브랜치 전파, mp4 해상도·비트레이트, `(2)`·`bak/`·`.psd`·추적된 런타임 산출물, **설정 폴더에 남은 미추적 파일** |
 
 출력 태그는 `ISSUE`(보고) / `OK`(측정했고 이상 없음) / `INFO`. 읽기 전용이다.
 Claude Code에서 `/arcade-audit <커밋…>`을 부르면 diff 정독 → validate → audit → 이미지 직접 열기 →
@@ -1150,6 +1151,11 @@ powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1 -All -Force
 | **설정** | `attract.am`, `Mame\cfg`(게임별 입력·딥스위치), `Mame\ui.ini`, `PSXMAME\cfg`, `RetroArch\retroarch.cfg`·`content_*.lpl`, `PCSX2\inis`, `M2\CFG`·`M2\EMULATOR.INI`, `Project64\Config`, `TeknoParrot\UserProfiles`, `Demul\*.ini`, `PPSSPP\...\SYSTEM` | 잃는 것 없음 |
 | **세이브** | `Mame\{nvram,memcard,diff,sta}`, `PCSX2\{memcards,sstates}`, `ePSXe\{memcards,sstates}`, `Project64\Save`, `SuperModel\{NVRAM,Saves}`, `Demul\nvram`, `RetroArch\{saves,states}` | **게임 진행이 사라진다** |
 | **산출물** | `last_run.log`, `script.nv`, `stats\`, `Mame\hiscore`, `Mame\data\history.db`, `Mame\cheat\output.*`, `RetroArch\screenshots` | 미추적이라 삭제 |
+| **새 설정** | 위 **설정** 폴더 안에 새로 생긴 **미추적** 파일 — 처음 띄운 게임의 `Mame\cfg\<게임>.cfg` 등 | 미추적이라 삭제 (`-Clean`) |
+
+> **"새 설정"은 `git checkout` 으로 되돌아가지 않는다.** 추적 파일이 아니라서다. 그렇다고 산출물 목록에
+> `Mame\cfg` 를 넣으면 추적 중인 cfg 까지 통째로 지운다. 그래서 **그 폴더 안의 미추적 파일만** 골라 지운다
+> (`git ls-files --others --exclude-standard`). 전수 구동 점검 한 번이면 387개가 쌓인다(2026-09-10 실측).
 
 - 인자 없이 실행하면 **아무것도 건드리지 않고 목록만** 보여준다.
 - 평소 정리는 `-Config -Clean`이면 충분하다. `-Saves`는 게임 진행이 날아가니 의식적으로 붙인다.
@@ -1213,7 +1219,8 @@ powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Fast -Adap
 > 오래 지켜봐야 할 때는 `-Fast` 없이 `-Seconds 30` 처럼 명시한다.
 
 > **평소 점검은 `-Adaptive` 다 — 실측 65초.** 항목마다 **입력의 지문**(romlist 줄 · 에뮬레이터 cfg 내용 ·
-> 실행파일 · 롬 파일의 크기와 수정시각)을 CSV 의 `Fingerprint` 열에 남기고, 다음 실행에서 그대로면 건너뛴다.
+> 실행파일 · 롬 파일의 크기와 수정시각 · **에뮬레이터가 자기 폴더에서 읽는 설정 파일의 내용 해시**)을
+> CSV 의 `Fingerprint` 열에 남기고, 다음 실행에서 그대로면 건너뛴다.
 > 지문은 `-Adaptive` 없이 돌려도 항상 남으므로 **이번 보고서가 다음 실행의 기준**이 된다.
 > 건너뛴 항목은 **직전 상태를 그대로 물려받아**(`PASS` 는 `PASS` 로) 보고서가 연쇄된다 — `Skipped` 열이 `True` 다.
 >
@@ -1225,8 +1232,25 @@ powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Fast -Adap
 > 건너뛴다. 정적 점검이면 조립이 됐다는 것(`OK`/`NOCHK`)으로 충분하다 —
 > 정적 `OK` 를 구동 통과로 오인하면 한 번도 안 띄워 본 항목을 건너뛰게 된다.
 >
+> 🚨 **에뮬레이터 설정까지 지문에 넣는 이유** — `emulators/<Emulator>.cfg` 만 보면
+> **지금까지 실제로 게임을 죽여 온 파일들**이 전부 사각지대가 된다. `mame.ini` 의 rompath 오타(48번),
+> EKMAME `mame.ini` 의 BOM 소실(4.7절), TeknoParrot 프로필의 절대경로(68번), Cemu `settings.xml` 의
+> `gp_download`(66번)가 그것이다. 이것들이 빠져 있으면 **그 장비가 통째로 안 되는 상태에서도
+> 1,098건이 전부 `PASS~` 로 지나간다.** 목록은 `tools/test-roms.ps1` 의 `$AuxConfig` 에 있고,
+> `audit.ps1 -Section cfg` 가 빠진 것이 없는지 감시한다. 새 에뮬레이터를 넣으면 여기도 같이 늘린다.
+> **내용 해시**라서 에뮬레이터가 같은 내용으로 다시 써도 지문이 흔들리지 않는다.
+>
 > 기준 보고서의 `WindowMs` 를 보고 그 항목의 마감을 `WindowMs × 2 + 4초`(최대 45초)로 늘린다 —
 > `RaidenIII` 처럼 느린 항목이 마감에 걸려 `NOWIN` 이 되는 일이 줄어든다.
+>
+> 🚨 **부분 점검의 보고서는 이름이 `rom-test-partial-*` 이고, 기준 후보에서 빠진다.**
+> 필터(`-List`·`-Name`·`-Emulator`·`-Sample`·`-Max`·`-Failed`)가 걸린 실행 —
+> 메뉴의 `[2]` 표본 · `[5]` 목록 지정 · `[6]` 이름으로 · `[7]` 실패만 — 은 romlist 의 일부만 담는데,
+> 그것이 기준으로 잡히면 **다음 증분 점검이 나머지를 전부 다시 띄운다(65초 → 2시간).**
+> `[3] 전수 → [7] 실패만 → [A] 증분` 이 그렇게 되던 것을 2026-09-10 에 고쳤다(85번).
+> 기준이 그래도 부족하면 **더 오래된 보고서로 내려가며 빈자리만 메우고**, 몇 %를 덮는지 실행할 때 찍는다.
+> 정적 점검 보고서가 구동 점검의 기준을 덮어쓰지도 않는다 — 최신 행이 "건너뛸 근거"가 못 되면
+> 더 오래된 `PASS` 행을 쓴다(지문이 같아야 쓰이므로 안전하다).
 >
 > ⚠️ **기준 보고서는 `logs\` 에 있고 `logs\` 는 `.gitignore` 대상이다.** 지문에 롬의 수정시각이 들어가므로
 > **어차피 장비마다 달라야 한다.** 새 장비에서는 전수 점검을 한 번 돌려 자기 기준을 만든 뒤 `-Adaptive` 를 쓴다.
