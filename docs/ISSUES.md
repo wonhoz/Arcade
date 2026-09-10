@@ -7,7 +7,7 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **80건** / 미해결 **2건**(13 · 65번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 6차 재점검 2026-09-10
+**진행 현황** — 처리 **81건** / 미해결 **2건**(13 · 65번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 6차 재점검 2026-09-10
 
 > **6차 재점검 (2026-09-10)** — 5차 이후 커밋 15개는 거의 전부 점검 도구 자신이었다(`-Fast` · `-Adaptive`).
 > `validate.ps1` FAIL 0 / WARN 0, `audit.ps1` 11개 섹션에도 새 `ISSUE` 가 없어 **그 도구를 뜯어봤고**,
@@ -2544,6 +2544,58 @@ romlist 원본 줄 · `emulators\<Emulator>.cfg` · 실행파일 · 롬 파일.
 
 > ⚠️ **지문 재료가 늘었으므로 장비마다 한 번은 전부 다시 검사한다.** 옛 보고서의 지문과 안 맞기 때문이다.
 > 그 한 번(`test-roms.cmd` 의 `[3]` 전수, 약 2시간)을 돌리고 나면 그다음부터 다시 `[A]` 가 1분 안팎이다.
+
+**후속 (2026-09-10 같은 날) — 처음 넣은 표에 "매 실행 다시 쓰이는 파일"이 섞여 있었다.**
+
+전수 점검(1시간 57분, PASS 1,096)을 마치고 곧바로 증분 점검을 돌렸더니 **220건이 다시 검사됐다.**
+65초여야 할 것이 40분이 됐다. 내역을 점검 뒤 `git status` 의 `M` 목록과 맞춰 보니 정확히 1:1 이었다.
+
+| 다시 검사 | 건수 | 원인 파일 |
+|---|---|---|
+| PS2 ISO+GZ | 98 | `PCSX2/inis/PCSX2_ui.ini` |
+| GameCube·Wii | 50 | `Dolphin/User/Config/Dolphin.ini` |
+| SEGA MODEL 2 | 22 | `M2/EMULATOR.INI` |
+| PSP | 18 | `PPSSPP/…/ppsspp.ini` |
+| FinalBurn Neo | 10 | `RetroArch/retroarch.cfg` |
+| Saturn 3종 | 8 | `Mednafen/mednafen.cfg` |
+| Wii U | 4 | `Cemu/portable/settings.xml` |
+| (직전 실패분) | 10 | 실패는 원래 매번 다시 본다 |
+
+**넣을 것과 뺄 것의 기준은 "게임이 뜨는지를 결정하는가" 하나다.** 위 여섯(Cemu 제외)은 전부
+입력·화면 상태일 뿐 게임이 뜨는가를 가른 전력이 없어서 뺐다. `Cemu/portable/settings.xml` 만
+남겼다 — 다시 쓰이지만 `gp_download` 가 실제로 4개를 죽인 전력이 있고(66번) 항목이 4개뿐이라 값싸다.
+`Mame/mame.ini`·`TeknoParrot/UserProfiles`·`Demul/*.ini`·`Project64.cfg`·`Supermodel.ini`·`LilyPad.ini` 는
+점검을 돌려도 `M` 이 되지 않아 남겨도 공짜다.
+
+**검증** — Dolphin 계열 11건으로 두 번 돌렸다.
+
+```
+1회차   PASS 11        (지문 재료가 바뀌었으니 다시 검사되는 것이 정상)
+        git status -> M emulators/Dolphin/User/Config/Dolphin.ini
+2회차   PASS 11 · 건너뜀 11    <- Dolphin.ini 가 M 인 상태 그대로인데 다시 띄우지 않았다
+```
+
+고치기 전에는 이 상황에서 11건을 전부 다시 띄웠다.
+
+> **판정 기준을 한 줄로** — 점검을 한 번 돌린 뒤 `git status` 에 뜨는 파일은 지문에 넣지 않는다.
+> `audit.ps1 -Section cfg` 의 필수 목록도 그 기준에 맞춰 13개에서 6개로 줄였다.
+
+---
+
+### - [x] 89. `reset-runtime.ps1` 이 RetroArch 1.22 의 새 경로를 몰랐고, 로그 둘이 추적 중이었다 — ✅ **완료 (2026-09-10)**
+
+전수 점검 뒤 `-Config -Clean` 을 돌렸는데도 `git status` 에 셋이 남았다.
+
+```
+M emulators/RetroArch/playlists/builtin/content_history.lpl
+M emulators/SuperModel/Supermodel.log
+M emulators/Mednafen/stdout.txt
+```
+
+- **RetroArch 1.22 는 최근 실행 목록을 `playlists\builtin\` 에 쓴다.** `$ConfigPaths` 에는 1.10 시절
+  경로인 `emulators/RetroArch/content_history.lpl` 만 있었다. 옛 경로도 아직 추적 중이라 둘 다 둔다.
+- **`Supermodel.log` 과 `stdout.txt` 는 추적 중인 로그였다.** `$JunkPaths` 에 넣어도 `Get-Junk` 가
+  "건너뜀(추적 중)" 만 찍고 아무것도 못 한다(73번과 같은 모양). `.gitignore` 로 보내고 인덱스에서 뺐다.
 
 ---
 

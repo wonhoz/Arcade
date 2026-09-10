@@ -412,19 +412,18 @@ if (Want 'cfg') {
     # that decides whether the game runs AT ALL must be inside that fingerprint, or a machine
     # where it is broken still reports PASS~ for every entry. These are the files that have
     # actually killed games here before, so the list is empirical, not speculative.
+    #
+    # The list is deliberately SHORT. Config files an emulator rewrites on every exit
+    # (Dolphin.ini, EMULATOR.INI, PCSX2_ui.ini, ppsspp.ini, retroarch.cfg, mednafen.cfg) must
+    # stay OUT: a full sweep dirties them, and the next -Adaptive then relaunches that whole
+    # emulator - measured 2026-09-10, 220 of 1,098 re-checked. They are input/video state and
+    # have never decided whether a game starts.
     $mustFp = @(
         'emulators\Mame\mame.ini'                    # rompath typo -> MAME Adult 38 dead (ISSUES 48)
         'emulators\EKMAME\mame.ini'                  # no BOM -> whole file ignored (CLAUDE.md 4.7)
         'emulators\PSXMAME\mame.ini'
         'emulators\Cemu\portable\settings.xml'       # gp_download -> first-run wizard (ISSUES 66)
         'emulators\Dolphin\portable.txt'             # decides where Dolphin reads its config (4.10)
-        'emulators\Demul\padDemul.ini'
-        'emulators\M2\EMULATOR.INI'
-        'emulators\PCSX2\inis\LilyPad.ini'
-        'emulators\Project64\Config\Project64.cfg'
-        'emulators\RetroArch\retroarch.cfg'
-        'emulators\Mednafen\mednafen.cfg'
-        'emulators\SuperModel\Config\Supermodel.ini'
         'emulators\TeknoParrot\UserProfiles'         # <GamePath> is absolute -> 32 dead (ISSUES 68)
     )
     $tr = "$Root\tools\test-roms.ps1"
