@@ -75,7 +75,8 @@ $ConfigPaths = @(
     'emulators/EKMAME/cfg'                      # EKMAME 게임별 입력·딥스위치
     'emulators/EKMAME/ui.ini'                   # EKMAME UI 상태
     'emulators/RetroArch/retroarch.cfg'         # RetroArch 설정 (종료 시 덮어씀)
-    'emulators/RetroArch/content_history.lpl'   # 최근 실행 목록
+    'emulators/RetroArch/playlists'             # 1.22 는 최근 실행 목록을 여기에 쓴다
+    'emulators/RetroArch/content_history.lpl'   # 1.10 시절 경로. 아직 추적 중이라 같이 둔다
     'emulators/RetroArch/content_image_history.lpl'
     'emulators/RetroArch/content_music_history.lpl'
     'emulators/RetroArch/content_video_history.lpl'
@@ -131,7 +132,11 @@ $JunkPaths = @(
     'emulators/Mame/cheat/output.xml'
     'emulators/RetroArch/screenshots'
     'emulators/RetroArch/retroarch.log'
+    'emulators/SuperModel/Supermodel.log'
+    'emulators/Mednafen/stdout.txt'
 )
+# ※ 위 둘(Supermodel.log · stdout.txt)은 2026-09-10 에 .gitignore 로 보내고 인덱스에서 뺐다.
+#    추적 중이면 Get-Junk 가 "건너뜀(추적 중)" 만 매번 찍고 아무것도 하지 못한다.
 
 # ---------------------------------------------------------------------------
 function Get-Changed([string[]]$Paths) {
