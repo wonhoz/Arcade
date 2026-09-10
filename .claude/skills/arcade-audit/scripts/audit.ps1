@@ -15,7 +15,7 @@
     2026-09-09 before it was noticed.
 .PARAMETER Root      repo root (default: 4 levels up from this script = repo root)
 .PARAMETER Section   run one section only:
-                     layout|dispimg|mascot|dupes|fonts|glyph|cfg|demul|case|branch|video|junk
+                     layout|dispimg|mascot|dupes|fonts|glyph|cfg|demul|psgotcha|case|branch|video|junk
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\audit.ps1
     powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\audit.ps1 -Section mascot
@@ -348,6 +348,22 @@ if (Want 'glyph') {
         }
     }
     Cover "$Root\fonts\$df.ttf" $titles "all romlist Titles vs default_font $df (fallback path)"
+    # This script reads the CHECKED-OUT attract.cfg, and default_font is device-specific
+    # (bartop = NanumBarunGothicBold, main = SUIT-Regular). "glyph OK" here does NOT transfer
+    # to the other branches - SUIT-Regular has no U+00BD, which romlists/MAME.txt uses.
+    $mainDf = ''
+    $mainCfg = & git show origin/main:attract.cfg 2>$null
+    if ($mainCfg) {
+        $mm = [regex]::Match((@($mainCfg) -join "`n"), '(?m)^\s*default_font\s+(.+)$')
+        if ($mm.Success) { $mainDf = $mm.Groups[1].Value.Trim() }
+    }
+    if ($mainDf -and $mainDf -ne $df) {
+        "INFO   default_font differs by branch: checked out '$df', origin/main '$mainDf' - checking both"
+        Cover "$Root\fonts\$mainDf.ttf" $ov     "overview/*.txt vs origin/main default_font $mainDf"
+        Cover "$Root\fonts\$mainDf.ttf" $titles "all romlist Titles vs origin/main default_font $mainDf"
+    } elseif ($mainDf) {
+        "OK     default_font is the same on this branch and origin/main ($df)"
+    }
     Cover "$Root\fonts\$df.ttf" ([Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes("$Root\language\kr.msg"))) "language/kr.msg vs $df"
     if (Test-Path -LiteralPath "$Root\layouts\NXL HD\layout.nut") {
         $nxl = [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes("$Root\layouts\NXL HD\layout.nut"))
@@ -390,6 +406,53 @@ if (Want 'cfg') {
         if ($m.Count) { "ISSUE  invalid/locale token  $(Rel $f.FullName): " + ($m -join ' '); $tokBad++ }
     }
     if ($tokBad -eq 0) { "OK     no device/locale-specific JOYCODE tokens in Mame/EKMAME cfg" }
+
+    Hdr "cfg: emulator config files that -Adaptive must fingerprint (test-roms.ps1 AuxConfig)"
+    # test-roms.ps1 -Adaptive skips an item when its "input fingerprint" is unchanged. A file
+    # that decides whether the game runs AT ALL must be inside that fingerprint, or a machine
+    # where it is broken still reports PASS~ for every entry. These are the files that have
+    # actually killed games here before, so the list is empirical, not speculative.
+    $mustFp = @(
+        'emulators\Mame\mame.ini'                    # rompath typo -> MAME Adult 38 dead (ISSUES 48)
+        'emulators\EKMAME\mame.ini'                  # no BOM -> whole file ignored (CLAUDE.md 4.7)
+        'emulators\PSXMAME\mame.ini'
+        'emulators\Cemu\portable\settings.xml'       # gp_download -> first-run wizard (ISSUES 66)
+        'emulators\Dolphin\portable.txt'             # decides where Dolphin reads its config (4.10)
+        'emulators\Demul\padDemul.ini'
+        'emulators\M2\EMULATOR.INI'
+        'emulators\PCSX2\inis\LilyPad.ini'
+        'emulators\Project64\Config\Project64.cfg'
+        'emulators\RetroArch\retroarch.cfg'
+        'emulators\Mednafen\mednafen.cfg'
+        'emulators\SuperModel\Config\Supermodel.ini'
+        'emulators\TeknoParrot\UserProfiles'         # <GamePath> is absolute -> 32 dead (ISSUES 68)
+    )
+    $tr = "$Root\tools\test-roms.ps1"
+    if (-not (Test-Path -LiteralPath $tr)) { "INFO   tools\test-roms.ps1 not present - skipped" }
+    else {
+        $src = [IO.File]::ReadAllText($tr)
+        $aux = @{}
+        $blk = [regex]::Match($src, "(?s)\`$AuxConfig\s*=\s*@\{(.*?)\r?\n\}")
+        if ($blk.Success) {
+            foreach ($bl in ($blk.Groups[1].Value -split "`n")) {
+                $mm = [regex]::Match($bl, "^\s*'([^']+)'\s*=\s*@\((.*)\)")
+                if (-not $mm.Success) { continue }
+                $aux[$mm.Groups[1].Value] = @([regex]::Matches($mm.Groups[2].Value, "'([^']+)'") | ForEach-Object { $_.Groups[1].Value })
+            }
+        }
+        if ($aux.Count -eq 0) { "ISSUE  test-roms.ps1 has no \$AuxConfig table - -Adaptive only fingerprints romlist/cfg/exe/rom" }
+        else {
+            $miss = @()
+            foreach ($p in $mustFp) {
+                $seg = $p -split '\\', 3
+                $dir = $seg[1]; $tail = $seg[2]
+                if (-not $aux.ContainsKey($dir)) { $miss += $p; continue }
+                if (-not (@($aux[$dir]) | Where-Object { $_ -like "$tail*" })) { $miss += $p }
+            }
+            if ($miss.Count) { "ISSUE  outside the -Adaptive fingerprint: " + ($miss -join ', ') + "   (a broken machine would still report PASS~)" }
+            else { "OK     all $($mustFp.Count) machine-critical config files are inside the -Adaptive fingerprint" }
+        }
+    }
 
     Hdr "cfg: layout_config toggles that decide which artwork labels are actually drawn"
     foreach ($k in $layoutCfg.Keys) { foreach ($key in @('select_character', 'boximage_type', 'spinwheelArt', 'bg_art', 'cabScreenType', 'marquee_type', 'enable_flyer', 'bg_media')) { if ($layoutCfg[$k].ContainsKey($key)) { "INFO   $k.$key = $($layoutCfg[$k][$key])" } } }
@@ -436,6 +499,44 @@ if (Want 'demul') {
         "INFO   $($byName.Count) Demul-style definitions, $checked active entries, $($sets.Count) sets listed"
         if ($bad -eq 0) { "OK     every active Demul entry resolves to a set Demul knows" }
     }
+}
+
+# ---------------------------------------------------------------- 7c. PowerShell / cmd traps
+# Two of these have already cost real time here, and both fail SILENTLY - no error, no warning.
+#   Get-Content on a BOM-less UTF-8 file decodes with the ANSI code page (CP949): the trailing
+#     byte of a Korean character swallows the following ';' and a romlist row parses as 20
+#     fields instead of 21, so the row is skipped (ISSUES 79, cost 14 of 59 Demul rows).
+#   cmd /c "... & exit /b %ERRORLEVEL%" expands %ERRORLEVEL% while cmd parses the whole line,
+#     i.e. BEFORE the command runs, so the caller always sees the code cmd started with (0).
+#     Measured with a bogus PID: with the 'exit /b' -> 0, without it -> 128 (ISSUES 84).
+# A line that is deliberately an exception carries the marker  ps-audit-ok  with the reason.
+if (Want 'psgotcha') {
+    Hdr "psgotcha: PowerShell/cmd traps that fail silently (repo scripts only)"
+    $bad = 0
+    $scripts = @(Get-ChildItem -LiteralPath "$Root\tools" -Filter *.ps1 -File -ErrorAction SilentlyContinue) +
+               @(Get-ChildItem -LiteralPath "$Root\.claude" -Filter *.ps1 -File -Recurse -ErrorAction SilentlyContinue)
+    foreach ($f in $scripts) {
+        $ln = 0; $inBlock = $false; $prev = ''
+        foreach ($line in [IO.File]::ReadAllLines($f.FullName)) {
+            $ln++
+            $wasBlock = $inBlock
+            if ($line -match '<#') { $inBlock = $true }
+            if ($line -match '#>') { $inBlock = $false; $wasBlock = $true }
+            $skip = $wasBlock -or $inBlock -or ($line -match '^\s*#') -or
+                    ($line -match 'ps-audit-ok') -or ($prev -match 'ps-audit-ok')
+            $prev = $line
+            if ($skip) { continue }
+            if ($line -match 'exit\s*/b\s*%ERRORLEVEL%') {
+                "ISSUE  %ERRORLEVEL% expands before the command runs  $(Rel $f.FullName):$ln  -> exit code is always 0; drop the 'exit /b'"
+                $bad++
+            }
+            if ($line -match '\bGet-Content\b' -and $line -notmatch '-Encoding') {
+                "ISSUE  Get-Content without -Encoding  $(Rel $f.FullName):$ln  -> PS 5.1 reads BOM-less UTF-8 as ANSI; use [IO.File]::ReadAllLines"
+                $bad++
+            }
+        }
+    }
+    if ($bad -eq 0) { "OK     no known cmd/encoding traps in $($scripts.Count) scripts under tools\ and .claude\" }
 }
 
 # ---------------------------------------------------------------- 8. exact-case consistency
@@ -542,6 +643,30 @@ if (Want 'junk') {
     Hdr "junk: runtime outputs that are tracked (reset-runtime.ps1 must skip them every run)"
     foreach ($p in @('emulators/Mame/cheat/output.json', 'emulators/Mame/cheat/output.xml', 'last_run.log', 'script.nv')) { if (git ls-files -- $p) { "ISSUE  tracked runtime output  $p" } }
     if (-not (Select-String -LiteralPath "$Root\.gitignore" -Pattern '^stats/?\s*$' -Quiet)) { "INFO   stats/ not in .gitignore (play statistics show up as untracked files)" }
+
+    Hdr "junk: untracked files inside reset-runtime.ps1 config folders (leftovers from a launch sweep)"
+    # A full test-roms sweep creates a per-game cfg for every game it starts for the first time.
+    # Those are untracked, so 'git checkout' cannot revert them and they pile up forever
+    # (2026-09-10: 387 of them). reset-runtime.ps1 -Clean now removes exactly these.
+    $rr = "$Root\tools\reset-runtime.ps1"
+    if (-not (Test-Path -LiteralPath $rr)) { "INFO   tools\reset-runtime.ps1 not present - skipped" }
+    else {
+        $cp = [regex]::Match([IO.File]::ReadAllText($rr), "(?s)\`$ConfigPaths\s*=\s*@\((.*?)\r?\n\)")
+        $cdirs = @()
+        if ($cp.Success) {
+            foreach ($v in ([regex]::Matches($cp.Groups[1].Value, "'([^']+)'") | ForEach-Object { $_.Groups[1].Value })) {
+                if (Test-Path -LiteralPath (Join-Path $Root $v) -PathType Container) { $cdirs += $v }
+            }
+        }
+        if ($cdirs.Count -eq 0) { "INFO   no config folders resolved from reset-runtime.ps1" }
+        else {
+            $u = @(& git -c core.quotepath=false ls-files --others --exclude-standard -- $cdirs 2>$null)
+            if ($u.Count) {
+                $where = @($u | ForEach-Object { Split-Path $_ -Parent } | Sort-Object -Unique)
+                "INFO   $($u.Count) untracked files under config folders: " + ($where -join ', ') + "   (clear with tools\reset-runtime.ps1 -Clean)"
+            } else { "OK     no leftover untracked files in the $($cdirs.Count) config folders" }
+        }
+    }
 
     Hdr "junk: tracked files that also match .gitignore (committed before the rule existed - the rule does nothing for them)"
     $ign = @(git ls-files -i -c --exclude-standard)

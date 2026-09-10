@@ -90,3 +90,4 @@ stats/
 logs/
 emulators/PCSX2/logs/
 emulators/Project64/Logs/
+emulators/Project64/Plugin/GFX/GLideN64/shaders/
