@@ -1258,6 +1258,15 @@ powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Fast -Adap
 > 건너뛴다. 정적 점검이면 조립이 됐다는 것(`OK`/`NOCHK`)으로 충분하다 —
 > 정적 `OK` 를 구동 통과로 오인하면 한 번도 안 띄워 본 항목을 건너뛰게 된다.
 >
+> 🚨 **무엇을 넣고 무엇을 빼는지가 이 기능의 전부다.** 기준은 하나 — **"게임이 뜨는지를 결정하는가."**
+> 에뮬레이터가 **종료할 때마다 다시 쓰는 상태 파일**(입력·화면 설정)을 넣으면, 전수 점검이 그것을
+> 건드려 놓아 **바로 이어서 돌린 증분 점검이 그 에뮬레이터 항목을 통째로 다시 띄운다.**
+> 2026-09-10 실측 — 7개를 넣었더니 1,098건 중 **220건**이 다시 검사됐고, 그 내역이 점검 뒤
+> `git status` 의 `M` 목록과 정확히 1:1 로 맞았다(`PCSX2_ui.ini` 98 · `Dolphin.ini` 50 ·
+> `EMULATOR.INI` 22 · `ppsspp.ini` 18 · `retroarch.cfg` 10 · `mednafen.cfg` 8 · `settings.xml` 4).
+> 그래서 여섯을 뺐다. 남은 것은 점검을 돌려도 `M` 이 되지 않아 공짜다.
+> **점검을 한 번 돌린 뒤 `git status` 에 뜨는 파일은 지문에 넣지 않는다** — 이 한 줄이 판정 기준이다.
+>
 > 🚨 **에뮬레이터 설정까지 지문에 넣는 이유** — `emulators/<Emulator>.cfg` 만 보면
 > **지금까지 실제로 게임을 죽여 온 파일들**이 전부 사각지대가 된다. `mame.ini` 의 rompath 오타(48번),
 > EKMAME `mame.ini` 의 BOM 소실(4.7절), TeknoParrot 프로필의 절대경로(68번), Cemu `settings.xml` 의
