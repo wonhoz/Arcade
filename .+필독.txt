@@ -280,25 +280,48 @@
       TeknoParrot 이 "not running TeknoParrotUI as Administrator" 상자를 띄우고
       게임이 끝까지 올라오지 못한다.
 
-      바탕화면의 attract.bat 바로가기 - 속성 - 고급 - "관리자 권한으로 실행" 을 켠다.
-      켜고 나면 그 바로가기로 띄울 때마다 UAC 동의 창이 한 번 뜬다.
+      ■ 자동 시작 - 작업 스케줄러로 등록한다 (bartop 은 2026-09-11 에 이렇게 바꿨다)
 
-      ※ 시작프로그램 폴더의 바로가기에는 켜지 말 것.  ★ 켜면 자동 시작이 깨진다
-        Windows 는 시작프로그램 항목이 승격을 요구하면 로그온 때 UAC 를 띄우지도 않고
-        그냥 건너뛴다. AM 이 아예 뜨지 않는다.
+        ※ 시작프로그램 폴더의 바로가기에 "관리자 권한으로 실행"을 켜면 안 된다.
+          ★ 켜면 자동 시작이 조용히 깨진다. Windows 는 시작프로그램 항목이 승격을
+            요구하면 로그온 때 UAC 를 띄우지도 않고 그냥 건너뛴다 - AM 이 아예 안 뜬다.
 
-        자동 시작과 관리자 권한을 둘 다 원하면 작업 스케줄러를 쓴다 -
-        "가장 높은 권한으로 실행" + "로그온할 때" 트리거면 UAC 창 없이 조용히 승격된다.
-        그 경우 시작프로그램 바로가기는 중복 실행을 막기 위해 치운다.
+        작업 스케줄러는 UAC 창 없이 조용히 승격된다. 관리자 PowerShell 에서:
 
-            schtasks /create /tn "AttractMode" /sc onlogon /rl highest ^
-                /tr "D:\AttractMode\attract.bat"
+            $a = New-ScheduledTaskAction -Execute 'D:\AttractMode\attract.bat' `
+                    -WorkingDirectory 'D:\AttractMode'
+            $t = New-ScheduledTaskTrigger -AtLogOn -User '<컴퓨터>\<계정>'
+            $p = New-ScheduledTaskPrincipal -UserId '<컴퓨터>\<계정>' `
+                    -LogonType Interactive -RunLevel Highest
+            $s = New-ScheduledTaskSettingsSet -ExecutionTimeLimit ([TimeSpan]::Zero) `
+                    -MultipleInstances IgnoreNew -StartWhenAvailable
+            Register-ScheduledTask -TaskName 'AttractMode' -Action $a -Trigger $t `
+                    -Principal $p -Settings $s -Force
 
-      IDZ 를 안 쓴다면 그냥 두어도 된다. 나머지 31개는 권한 없이 정상 동작한다.
+        네 가지가 다 필요하다.
+            RunLevel Highest            승격. 이것이 IDZ 를 살린다
+            LogonType Interactive       화면에 보이게 뜬다 (Service 로 두면 안 보인다)
+            ExecutionTimeLimit 0        AM 은 계속 떠 있어야 한다. 기본값은 3일 뒤 강제 종료
+            MultipleInstances IgnoreNew 이미 떠 있으면 새로 띄우지 않는다
 
-      ※ 확인 (2026-09-11 bartop 실측) - 승격한 상태로 띄우면 IDZ 도 정상 기동한다.
-            test-roms.ps1 -Launch -Name IDZ   ->  PASS, 창이 3.67초에 뜬다
-        승격하지 않은 평소 점검에서는 계속 DIALOG 로 나오는데 그게 맞다.
+        등록했으면 시작프로그램 바로가기는 치운다 (안 치우면 로그온 때 두 번 뜬다).
+
+            Startup 폴더 : %APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup
+
+      ■ 수동 실행 - 바탕화면 바로가기
+
+        바탕화면 attract.bat 바로가기 - 속성 - 고급 - "관리자 권한으로 실행" 을 켜 둔다.
+        이쪽은 띄울 때마다 UAC 동의 창이 한 번 뜬다. 작업 스케줄러 쪽과 달리 피할 수 없다.
+
+      IDZ 를 안 쓴다면 둘 다 안 해도 된다. 나머지 31개는 권한 없이 정상 동작한다.
+
+      ※ 확인 (2026-09-11 bartop 실측)
+            test-roms.ps1 -Launch -Name IDZ  (승격 상태)  ->  PASS, 창이 3.67초
+            Start-ScheduledTask AttractMode              ->  AM 기동, UAC 창 없음
+            승격됐는지 확인하는 법 - 비승격 세션에서 (Get-Process attract).Path 를 읽어 본다.
+            읽히면 비승격, 못 읽으면 승격이다. taskkill /F 도 액세스 거부(1)로 막힌다.
+
+        승격하지 않은 평소 점검에서는 IDZ 가 계속 DIALOG 로 나오는데 그게 맞다.
         고쳐진 것은 캐비닛이 AM 을 띄우는 방식이지 점검 도구가 아니다.
 
   (9) quiztvqq 한글판 롬 넣기                       ★ 없으면 일본판이 뜬다
