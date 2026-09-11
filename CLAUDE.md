@@ -50,6 +50,9 @@ git branch Compact archive/Compact           # 되살리기
   2번의 "장비 브랜치에 갇힌 공통 수정" 같은 어긋남이 다시 생긴다. 한 번에 다 한다.
 
   ```bash
+  #  전파 전에 AM 을 끈다. 떠 있으면 파일이 잠겨 병합이 `fatal: stash failed` 로 죽는다(바로 아래 경고)
+  [ "$(powershell -NoProfile -Command '@(Get-Process attract -ea 0).Count')" = "0" ] \
+    || { echo "attract.exe 가 실행 중이다 — 캐비닛에서 Escape+LShift 로 끝내고 다시 하라"; exit 1; }
   git push origin develop
   git checkout main && git merge --no-ff develop && git push origin main
   for b in bartop desktop desktop-ASUS-TUF desktop-MSI-Sword desktop-MSI-Sword-DriveWheel; do
@@ -60,6 +63,20 @@ git branch Compact archive/Compact           # 되살리기
   done
   git checkout develop && git merge --ff-only main && git push origin develop
   ```
+
+  > ⚠️ **AM 이 실행 중이면 전파가 중간에 죽는다 — `fatal: stash failed`.**
+  > 2026-09-11 에 실제로 그랬다. `main` 병합이 그 한 줄로 죽었는데 **뒤 단계는 멈추지 않고 계속 돌아서**,
+  > 장비 브랜치 5개가 아직 갱신되지 않은 `main` 을 병합하며 `Everything up-to-date` 만 찍었다.
+  > **성공한 것처럼 보이지만 `develop` 만 앞서 있는 상태**가 된다 — 끝나고 `behind` 를 반드시 확인할 것.
+  >
+  > ```bash
+  > for b in bartop desktop desktop-ASUS-TUF desktop-MSI-Sword desktop-MSI-Sword-DriveWheel develop; do
+  >   echo "$b behind=$(git rev-list --count origin/$b..origin/main)"     # 전부 0 이어야 한다
+  > done
+  > ```
+  >
+  > AM 은 승격해서 띄웠으면(4.13절 작업 스케줄러) **밖에서 `taskkill` 로 못 죽인다** — 액세스 거부다.
+  > 캐비닛에서 `Escape+LShift` 로 끝내야 한다.
 
   > ⚠️ **`.exe` 를 바꾸는 병합·체크아웃은 `unable to unlink … : Invalid argument` 로 죽는다.**
   > Windows Defender 실시간 검사가 방금 쓴 실행파일을 붙잡고 있어서다. 재시도해도 잘 안 풀린다.
