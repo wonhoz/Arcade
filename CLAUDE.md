@@ -839,8 +839,15 @@ copy "The Fast and the Furious Drift\winmm.dll" "The Fast & Furious SuperCars\"
 
 > ⚠️ **시작프로그램 폴더의 바로가기에는 이 설정을 켜면 안 된다.** Windows 는 시작프로그램 항목이
 > 승격을 요구하면 로그온 때 UAC 를 띄우지도 않고 **그냥 건너뛴다** — AM 이 아예 뜨지 않는다.
-> 자동 시작과 관리자 권한을 둘 다 원하면 작업 스케줄러("가장 높은 권한으로 실행" + "로그온할 때")를 쓴다.
-> 자세한 것은 `.+필독.txt` 7절 (8).
+>
+> **자동 시작은 작업 스케줄러로 한다** — `RunLevel Highest` + `LogonType Interactive` +
+> `ExecutionTimeLimit 0`(AM 은 계속 떠 있어야 한다) + `MultipleInstances IgnoreNew`.
+> **UAC 창 없이 조용히 승격된다.** 등록했으면 시작프로그램 바로가기는 치운다(안 치우면 두 번 뜬다).
+> bartop 은 2026-09-11 에 이 방식으로 바꿨다 — 등록 명령과 확인 절차는 `.+필독.txt` 7절 (8).
+>
+> **승격됐는지 확인하는 법** — 비승격 세션에서 `(Get-Process attract).Path` 를 읽어 본다.
+> 읽히면 비승격, 못 읽으면 승격이다(무결성 수준이 높은 프로세스는 열리지 않는다). `taskkill /F` 도
+> 액세스 거부로 막힌다. 그래서 **승격해서 띄운 AM 은 캐비닛에서 `Escape+LShift` 로 끝내야 한다.**
 런처형 정의는 게임이 콘솔만 갖거나 창을 늦게 만들 수 있어 `NOWIN` 은 경고로만 센다(7.5절).
 
 ## 5. 자주 하는 작업 레시피
