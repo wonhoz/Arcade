@@ -232,7 +232,10 @@ if (Want 'dupes') {
     # (CLAUDE.md 5.4, ISSUES 35: the drift check below is the guard). A pair whose only
     # difference is the layout name is therefore INFO; anything else (a third copy, another
     # layout, an unrelated path) stays ISSUE.
-    $byDesign = 0
+    # A copy in ANOTHER layout is also required when that layout loads it: AM resolves image
+    # paths against the layout's own folder, so layouts cannot share one file. Every copy
+    # being referenced by a .nut of its own layout -> INFO (black.png x3, 2026-09-13 false alarm).
+    $byDesign = 0; $perLayout = 0; $nutCache = @{}
     foreach ($k in ($h.Keys | Sort-Object { -$h[$_][0].Len })) {
         $g = $h[$k]; if ($g.Count -le 1) { continue }
         $tag = 'ISSUE '
@@ -241,9 +244,21 @@ if (Want 'dupes') {
             $lays  = @($g | ForEach-Object { if ($_.Rel -match '^layouts/(NEVATO|Console Box)/') { $Matches[1] } } | Sort-Object -Unique)
             if ($stems.Count -eq 1 -and $lays.Count -eq 2) { $tag = 'INFO  '; $byDesign++ }
         }
+        if ($tag -eq 'ISSUE ') {
+            $allUsed = $true; $layNames = @()
+            foreach ($x in $g) {
+                if ($x.Rel -notmatch '^layouts/([^/]+)/(.+)$') { $allUsed = $false; break }
+                $ln = $Matches[1]; $inner = $Matches[2]; $layNames += $ln
+                if (-not $nutCache.ContainsKey($ln)) { $nutCache[$ln] = AllNutText "$Root\layouts\$ln" }
+                $leaf = [regex]::Escape(($inner -split '/')[-1])
+                if ($nutCache[$ln] -notmatch "[`"/]$leaf`"") { $allUsed = $false; break }
+            }
+            if ($allUsed -and @($layNames | Sort-Object -Unique).Count -eq $g.Count) { $tag = 'INFO  '; $perLayout++ }
+        }
         "$tag x$($g.Count)  $([math]::Round($g[0].Len/1KB))KB  " + (($g | ForEach-Object { $_.Rel }) -join '  |  ')
     }
     if ($byDesign) { "INFO   $byDesign of the groups are NEVATO <-> Console Box pairs kept identical by design (CLAUDE.md 5.4)" }
+    if ($perLayout) { "INFO   $perLayout of the groups are copies each loaded by its own layout (AM resolves images per layout folder)" }
 
     Hdr "dupes: same relative path in NEVATO and Console Box but DIFFERENT content (the two layouts drifting apart)"
     # The two layouts share their layout-static assets byte-for-byte. A file that exists in both
@@ -413,11 +428,12 @@ if (Want 'cfg') {
     # where it is broken still reports PASS~ for every entry. These are the files that have
     # actually killed games here before, so the list is empirical, not speculative.
     #
-    # The list is deliberately SHORT. Config files an emulator rewrites on every exit
-    # (Dolphin.ini, EMULATOR.INI, PCSX2_ui.ini, ppsspp.ini, retroarch.cfg, mednafen.cfg) must
-    # stay OUT: a full sweep dirties them, and the next -Adaptive then relaunches that whole
-    # emulator - measured 2026-09-10, 220 of 1,098 re-checked. They are input/video state and
-    # have never decided whether a game starts.
+    # Config files an emulator rewrites on every exit (Dolphin.ini, EMULATOR.INI, PCSX2_ui.ini,
+    # ppsspp.ini, retroarch.cfg, mednafen.cfg) must NOT go in WHOLE: a full sweep dirties them,
+    # and the next -Adaptive then relaunches that whole emulator - measured 2026-09-10, 220 of
+    # 1,098 re-checked. But some of them hold ONE value that does decide whether a game starts
+    # (Dolphin's PermissionAsked blocked 50 games, ISSUES 90), so those go in by key:
+    # 'file#Section.Key' hashes only that value (ISSUES 91).
     $mustFp = @(
         'emulators\Mame\mame.ini'                    # rompath typo -> MAME Adult 38 dead (ISSUES 48)
         'emulators\EKMAME\mame.ini'                  # no BOM -> whole file ignored (CLAUDE.md 4.7)
@@ -425,6 +441,10 @@ if (Want 'cfg') {
         'emulators\Cemu\portable\settings.xml'       # gp_download -> first-run wizard (ISSUES 66)
         'emulators\Dolphin\portable.txt'             # decides where Dolphin reads its config (4.10)
         'emulators\TeknoParrot\UserProfiles'         # <GamePath> is absolute -> 32 dead (ISSUES 68)
+        # Files rewritten on every exit go in by KEY ('file#Section.Key'), not whole (ISSUES 91).
+        'emulators\Dolphin\User\Config\Dolphin.ini#Analytics.PermissionAsked'   # False -> modal blocks input (ISSUES 90)
+        'emulators\PCSX2\inis\PCSX2_ui.ini#Filenames.BIOS'                       # BIOS not found -> PS2 98
+        'emulators\RetroArch\retroarch.cfg#libretro_directory'                   # cores / system\fbneo\patched
     )
     $tr = "$Root\tools\test-roms.ps1"
     if (-not (Test-Path -LiteralPath $tr)) { "INFO   tools\test-roms.ps1 not present - skipped" }
@@ -629,6 +649,26 @@ if (Want 'video') {
             if (-not (Test-Path -LiteralPath "$Root\intro\$($m.Groups[1].Value)")) { "ISSUE  intro.nut references missing $($m.Groups[1].Value)  (that aspect ratio -> intro silently skipped)" }
         }
     }
+
+    Hdr "video: tracked mp4 that no .nut names (dead copies)"
+    # bartop kept intro_16x9.mp4 from a 2022 swap while intro.nut only names intro.mp4 (2026-09-13).
+    # Not dead: a name built from a user option ("background/" + my_config["bg_media"] + ".mp4",
+    # where options="...,drop,dust,square,..."), and a file named after an artwork label at the
+    # layout root (NXL HD/snap.mp4) - AM falls back to <label>.* in the layout folder.
+    $allNut = AllNutText "$Root\layouts"
+    foreach ($nf in @('intro', 'screensaver')) { if (Test-Path -LiteralPath "$Root\$nf") { $allNut += (AllNutText "$Root\$nf") } }
+    $optTokens = @{}
+    foreach ($om in [regex]::Matches($allNut, 'options\s*=\s*"([^"]*)"')) { foreach ($tk in ($om.Groups[1].Value -split ',')) { $optTokens[$tk.Trim().ToLower()] = $true } }
+    $artLabels = @('snap', 'marquee', 'flyer', 'wheel', 'title', 'fanart', 'boxart', 'video')
+    $deadVid = 0
+    foreach ($rel in (git ls-files | Where-Object { $_ -match '\.mp4$' })) {
+        $leafName = ($rel -split '/')[-1]; $base = [IO.Path]::GetFileNameWithoutExtension($leafName).ToLower()
+        if ($allNut -match [regex]::Escape($leafName)) { continue }
+        if ($optTokens.ContainsKey($base)) { continue }
+        if ($rel -match '^layouts/[^/]+/[^/]+$' -and $artLabels -contains $base) { continue }
+        "ISSUE  no .nut names  $rel"; $deadVid++
+    }
+    if ($deadVid -eq 0) { "OK     every tracked mp4 is named by some .nut" }
 }
 
 # ---------------------------------------------------------------- 11. junk in our own asset areas
@@ -665,6 +705,25 @@ if (Want 'junk') {
                 "INFO   $($u.Count) untracked files under config folders: " + ($where -join ', ') + "   (clear with tools\reset-runtime.ps1 -Clean)"
             } else { "OK     no leftover untracked files in the $($cdirs.Count) config folders" }
         }
+
+        Hdr "junk: working-tree changes under emulators/ that reset-runtime.ps1 has in NO category"
+        # reset-runtime does nothing with such a path, so it stays in git status forever.
+        # 2026-09-13: Demul/memsaves (tracked save), PSXMAME/nvram, Dolphin/User/Backup,
+        # GLideN64.ini (ISSUES 94). Fix by adding the path to a list or to .gitignore.
+        $rrText = [IO.File]::ReadAllText($rr); $known = @()
+        foreach ($lst in @('ConfigPaths', 'SavePaths', 'JunkPaths')) {
+            $mm = [regex]::Match($rrText, "(?s)\`$$lst\s*=\s*@\((.*?)\r?\n\)")
+            if ($mm.Success) { $known += @([regex]::Matches($mm.Groups[1].Value, "'([^']+)'") | ForEach-Object { $_.Groups[1].Value.TrimEnd('/') }) }
+        }
+        $stray = @(& git -c core.quotepath=false status --porcelain -uall -- emulators attract.am 2>$null | ForEach-Object {
+            $p = $_.Substring(3); if ($p -match '^(.*?)\s->\s(.*)$') { $p = $Matches[2] }; $p = $p.Trim('"')
+            $hit = $false; foreach ($k in $known) { if ($p -eq $k -or $p.StartsWith("$k/")) { $hit = $true; break } }
+            if (-not $hit) { $p }
+        })
+        if ($stray.Count) {
+            $where = @($stray | ForEach-Object { (($_ -split '/') | Select-Object -First 3) -join '/' } | Sort-Object -Unique)
+            "ISSUE  $($stray.Count) changed files in no reset-runtime category: " + ($where -join ', ')
+        } else { "OK     every working-tree change under emulators/ falls in a reset-runtime category ($($known.Count) paths)" }
     }
 
     Hdr "junk: tracked files that also match .gitignore (committed before the rule existed - the rule does nothing for them)"

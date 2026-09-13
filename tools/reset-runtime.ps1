@@ -116,6 +116,8 @@ $SavePaths = @(
     'emulators/SuperModel/NVRAM'
     'emulators/SuperModel/Saves'
     'emulators/Demul/nvram'
+    'emulators/Demul/memsaves'                  # 드림캐스트 VMU (vms00.bin …)
+    'emulators/PSXMAME/nvram'                   # Zinc 게임별 nvram (일부 추적 중)
     'emulators/RetroArch/saves'
     'emulators/RetroArch/states'
     'emulators/Cemu/portable/mlc01'             # Wii U 세이브 (mlc01\usr\save)
@@ -218,6 +220,18 @@ Show-Group "설정   (되돌려도 잃는 것 없음)" $cfgChanged 'Yellow'
 Show-Group "새 설정 (미추적 - 삭제 대상)" $cfgNew 'DarkCyan'
 Show-Group "세이브 (되돌리면 게임 진행이 사라짐)" $savChanged 'Red'
 Show-Group "산출물 (미추적 - 삭제 대상)" $junkFound 'DarkCyan'
+
+# 위 네 갈래 어디에도 속하지 않는 변경. 이 스크립트가 아무것도 하지 않으므로 git status 에 영원히 남는다.
+# 2026-09-13 에 Demul/memsaves · PSXMAME/nvram · Dolphin/User/Backup · GLideN64.ini 가 이렇게 남아 있었다
+# (ISSUES 94). 여기에 뭔가 뜨면 목록 중 하나에 넣거나 .gitignore 로 보낸다. 정리 대상은 아니다.
+$known = @($ConfigPaths + $SavePaths + $JunkPaths | ForEach-Object { $_.TrimEnd('/') })
+$stray = @(& git -c core.quotepath=false status --porcelain -uall -- emulators attract.am 2>$null | ForEach-Object {
+    $p = $_.Substring(3); if ($p -match '^(.*?)\s->\s(.*)$') { $p = $Matches[2] }; $p = $p.Trim('"')
+    $hit = $false
+    foreach ($k in $known) { if ($p -eq $k -or $p.StartsWith("$k/")) { $hit = $true; break } }
+    if (-not $hit) { $p }
+})
+if ($stray.Count) { Show-Group "분류 안 됨 (이 스크립트가 모르는 경로 - 목록에 추가할 것)" $stray 'Magenta' }
 
 Write-Host ""
 Write-Host ("=" * 72)

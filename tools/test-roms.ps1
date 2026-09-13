@@ -159,6 +159,9 @@ public class AmInput {
     [DllImport("user32.dll")] static extern bool EnumWindows(EnumProc cb, IntPtr p);
     [DllImport("user32.dll")] static extern bool EnumChildWindows(IntPtr h, EnumProc cb, IntPtr p);
     [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr h);
+    [DllImport("user32.dll")] static extern bool IsWindowEnabled(IntPtr h);
+    [DllImport("user32.dll")] static extern IntPtr GetWindow(IntPtr h, uint cmd);
+    [DllImport("user32.dll")] static extern int GetWindowLongW(IntPtr h, int index);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern int GetWindowTextW(IntPtr h, StringBuilder s, int n);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern int GetClassNameW(IntPtr h, StringBuilder s, int n);
     delegate bool EnumProc(IntPtr h, IntPtr p);
@@ -192,6 +195,27 @@ public class AmInput {
                 return true; }, IntPtr.Zero);
             string msg = string.Join(" / ", parts.ToArray());
             return msg.Length > 0 ? msg : TextOf(h);
+        }
+        // 툴킷 대화상자(Qt·wx·WPF)는 클래스가 #32770 이 아니다. Dolphin 의 "사용 통계 보고 허용" 창이
+        // 이것으로 50건 전부 PASS 로 지나갔다(ISSUES 90). 모양으로 잡는다 — 두 경우를 실측했다.
+        //  (1) 주인(owner) 창이 있고 그 주인이 비활성: GUI 로 띄웠을 때
+        //        사용 통계 보고 허용 | owner 있음            Dolphin | enabled=False
+        //  (2) 주인이 없다: -b -e 로 게임을 띄웠을 때. 대신 제목줄은 있는데 최소화·최대화 버튼이 없고,
+        //      같은 프로세스에 다른 창이 있으며, 포그라운드를 쥐고 있다.
+        //        사용 통계 보고 허용 | style 0x96C40000 | fg    Dolphin 2606a | style 0x96CF0000
+        var tops = TopWindows(pid);
+        IntPtr fg = GetForegroundWindow();
+        foreach (IntPtr h in tops) {
+            IntPtr owner = GetWindow(h, 4);   // GW_OWNER
+            if (owner != IntPtr.Zero && !IsWindowEnabled(owner)) {
+                return "모달 창 [" + ClassOf(h) + "] " + TextOf(h);
+            }
+            int st = GetWindowLongW(h, -16);  // GWL_STYLE
+            bool caption = (st & 0x00C00000) == 0x00C00000;          // WS_CAPTION
+            bool minmax  = (st & (0x00020000 | 0x00010000)) != 0;    // WS_MINIMIZEBOX | WS_MAXIMIZEBOX
+            if (h == fg && tops.Count >= 2 && caption && !minmax) {
+                return "대화상자 모양의 창 [" + ClassOf(h) + "] " + TextOf(h);
+            }
         }
         return null;
     }
@@ -402,23 +426,48 @@ function Resolve-LauncherRoots([string]$ArgLine) {
 #      PCSX2_ui.ini 98 · Dolphin.ini 50 · EMULATOR.INI 22 · ppsspp.ini 18
 #      retroarch.cfg 10 · mednafen.cfg 8 · settings.xml 4       (= 210 + 직전 실패 10)
 #
-#    그래서 그중 여섯을 뺐다. 남은 것은 점검을 돌려도 M 이 되지 않는 것들이라 공짜다.
-#    Cemu settings.xml 만 예외로 남긴다 — 다시 쓰이지만 gp_download 가 실제로 4개를 죽인
-#    전력이 있고(ISSUES 66) 항목이 4개뿐이라 값싸다.
+#    그래서 그 파일들은 **통째로가 아니라 키 단위로** 넣는다(`파일#섹션.키,섹션.키`).
+#    창 위치·최근 목록처럼 매번 바뀌는 값은 해시에 안 들어가고, 게임이 뜨는지를 가르는 값만 들어간다.
+#    두 기준 — "게임이 뜨는지를 결정하는가"와 "점검이 매번 건드리는가" — 이 한 표 안에서 같이 선다.
+#    예전에는 파일 전체만 넣을 수 있어서 둘 중 하나를 골라야 했고, 그래서 Dolphin.ini 를 통째로 뺐는데
+#    바로 그 안의 PermissionAsked 가 50건을 막고 있었다(ISSUES 90·91).
 $AuxConfig = @{
     'Mame'        = @('mame.ini')                      # rompath 오타 -> MAME Adult 38 (ISSUES 48)
     'EKMAME'      = @('mame.ini')                      # BOM 없으면 통째로 무시 (CLAUDE.md 4.7)
     'PSXMAME'     = @('mame.ini')
     'Cemu'        = @('portable\settings.xml')         # gp_download -> 첫 실행 마법사 (ISSUES 66)
-    'Dolphin'     = @('portable.txt')                  # 설정을 어디서 읽을지 결정 (4.10절)
+    # Dolphin: portable.txt 가 설정 위치를 정한다(4.10절) · PermissionAsked 가 False 면 모달이 입력을 막는다(ISSUES 90)
+    'Dolphin'     = @('portable.txt', 'User\Config\Dolphin.ini#Analytics.PermissionAsked')
     'TeknoParrot' = @('UserProfiles\[name].xml')       # <GamePath> 절대경로 -> 32개 (ISSUES 68)
     'Demul'       = @('padDemul.ini', 'gpuDX11.ini')
     'Project64'   = @('Config\Project64.cfg')
-    'PCSX2'       = @('inis\LilyPad.ini')
+    # PCSX2: BIOS 를 못 찾으면 PS2 98건이 전부 선다
+    'PCSX2'       = @('inis\LilyPad.ini', 'inis\PCSX2_ui.ini#Filenames.BIOS,Folders.Bios,Folders.UseDefaultBios')
+    'RetroArch'   = @('retroarch.cfg#libretro_directory,system_directory')  # 코어 · system\fbneo\patched
     'SuperModel'  = @('Config\Supermodel.ini')
-    # 넣지 않는다(매 실행 다시 쓰인다) — Dolphin User\Config\Dolphin.ini · M2 EMULATOR.INI ·
-    # PCSX2 inis\PCSX2_ui.ini · PPSSPP ppsspp.ini · RetroArch retroarch.cfg · Mednafen mednafen.cfg.
-    # 전부 입력·화면 상태일 뿐 "게임이 뜨는가"를 가른 전력이 없다.
+    # 파일 전체로는 넣지 않는다(매 실행 다시 쓰인다) — Dolphin.ini · M2 EMULATOR.INI · PCSX2_ui.ini ·
+    # PPSSPP ppsspp.ini · retroarch.cfg · mednafen.cfg. 결정 값이 있는 것만 위처럼 키로 넣었다.
+}
+
+# INI/cfg 에서 지정한 키의 값만 뽑아 한 줄로 만든다. 섹션이 없는 형식(retroarch.cfg)은 키만 쓴다.
+# 키가 없는 것도 상태다 — "<없음>" 으로 남긴다.
+function Get-IniKeys([string]$Path, [string]$KeySpec) {
+    $want = @($KeySpec -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+    $found = @{}
+    $section = ''
+    foreach ($line in [IO.File]::ReadAllLines($Path)) {
+        $t = $line.Trim()
+        if ($t -match '^\[(.+)\]$') { $section = $Matches[1].Trim(); continue }
+        if ($t -match '^([^=;#]+?)\s*=\s*(.*)$') {
+            $k = $Matches[1].Trim(); $v = $Matches[2].Trim()
+            foreach ($w in $want) {
+                $ws = ''; $wk = $w
+                if ($w -match '^(.+)\.([^.]+)$') { $ws = $Matches[1]; $wk = $Matches[2] }
+                if ($k -ceq $wk -and ($ws -eq '' -or $section -eq $ws) -and -not $found.ContainsKey($w)) { $found[$w] = $v }
+            }
+        }
+    }
+    return (($want | ForEach-Object { if ($found.ContainsKey($_)) { "$_=$($found[$_])" } else { "$_=<없음>" } }) -join ';')
 }
 
 $script:AuxCache = @{}
@@ -432,15 +481,21 @@ function Get-AuxParts([string]$ExeDir, [string]$ItemName) {
     $key = ($ExeDir.Substring($emuRoot.Length) -split '\\')[0]
     if (-not $key -or -not $AuxConfig.ContainsKey($key)) { return $parts }
     foreach ($rel in $AuxConfig[$key]) {
-        $p = Join-Path (Join-Path $emuRoot $key) ($rel -replace '\[name\]', $ItemName)
-        if (-not $script:AuxCache.ContainsKey($p)) {
+        $file = $rel; $keys = ''
+        if ($rel -match '^(.+?)#(.+)$') { $file = $Matches[1]; $keys = $Matches[2] }
+        $p = Join-Path (Join-Path $emuRoot $key) ($file -replace '\[name\]', $ItemName)
+        $ck = "$p#$keys"
+        if (-not $script:AuxCache.ContainsKey($ck)) {
             $h = '-'   # 없는 것도 상태다 — Dolphin 의 portable.txt 가 사라지면 설정 위치가 통째로 바뀐다
             if (Test-Path -LiteralPath $p -PathType Leaf) {
-                try { $h = (Get-FileHash -LiteralPath $p -Algorithm MD5).Hash } catch { $h = '?' }
+                try {
+                    if ($keys) { $h = Get-IniKeys $p $keys }
+                    else { $h = (Get-FileHash -LiteralPath $p -Algorithm MD5).Hash }
+                } catch { $h = '?' }
             }
-            $script:AuxCache[$p] = $h
+            $script:AuxCache[$ck] = $h
         }
-        $parts += ($rel + '|' + $script:AuxCache[$p])
+        $parts += ($rel + '|' + $script:AuxCache[$ck])
     }
     return $parts
 }
@@ -781,6 +836,8 @@ if (Test-Path -LiteralPath $mameRomsDir) {
 # --- 보고서 경로. -Resume 은 새로 만들지 않고 직전 보고서를 이어 쓴다.
 $logDir = Join-Path $Root 'logs'
 if (-not (Test-Path -LiteralPath $logDir)) { [void](New-Item -ItemType Directory -Path $logDir) }
+# -str 이 남기는 종료 스냅샷을 받을 곳. 저장소 밖(TEMP)이라 쌓여도 아무것도 더럽히지 않는다.
+$SnapDir = Join-Path $env:TEMP 'attractmode-test-snap'
 # 필터가 걸린 실행은 보고서에 romlist 의 "일부"만 담긴다. 그런 보고서가 -Adaptive 의 기준으로
 # 잡히면 다음 증분 점검이 나머지를 전부 다시 띄운다(65초 -> 2시간). 그래서 이름부터 갈라 둔다.
 # test-roms.cmd 의 [2] 표본 · [5] 목록 지정 · [6] 이름으로 · [7] 실패만이 전부 여기 해당한다.
@@ -1098,7 +1155,10 @@ foreach ($it in $items) {
         $launchArgs = $argStr
         $strUsed = $false
         if ($Fast -and $protected -and $StrSeconds -gt 0 -and $launchArgs -notmatch '(^|\s)-(str|seconds_to_run)(\s|$)') {
-            $launchArgs = ($launchArgs + " -str $StrSeconds").Trim()
+            # MAME 은 seconds_to_run 이 끝날 때 마지막 화면을 스냅샷으로 남긴다. 그대로 두면 점검마다
+            # Mame\snap\<게임>\000N.png 가 게임당 한 장씩 쌓이고(2026-09-10 하루 594개 폴더),
+            # PSXMAME\snap\ 은 미추적으로 git status 에 남는다(ISSUES 93). 저장소 밖으로 돌린다.
+            $launchArgs = ($launchArgs + " -str $StrSeconds -snapshot_directory `"$SnapDir`"").Trim()
             $strUsed = $true
         }
 
