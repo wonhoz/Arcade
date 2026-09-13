@@ -294,15 +294,32 @@
             $p = New-ScheduledTaskPrincipal -UserId '<컴퓨터>\<계정>' `
                     -LogonType Interactive -RunLevel Highest
             $s = New-ScheduledTaskSettingsSet -ExecutionTimeLimit ([TimeSpan]::Zero) `
-                    -MultipleInstances IgnoreNew -StartWhenAvailable
+                    -MultipleInstances IgnoreNew -StartWhenAvailable -Priority 4 `
+                    -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
             Register-ScheduledTask -TaskName 'AttractMode' -Action $a -Trigger $t `
                     -Principal $p -Settings $s -Force
 
-        네 가지가 다 필요하다.
+        일곱 가지가 다 필요하다.
             RunLevel Highest            승격. 이것이 IDZ 를 살린다
             LogonType Interactive       화면에 보이게 뜬다 (Service 로 두면 안 보인다)
             ExecutionTimeLimit 0        AM 은 계속 떠 있어야 한다. 기본값은 3일 뒤 강제 종료
             MultipleInstances IgnoreNew 이미 떠 있으면 새로 띄우지 않는다
+            Priority 4                  ★ 기본값 7 은 "보통 이하"(BelowNormal)다. AM 이 띄우는
+                                        에뮬레이터가 전부 그 등급을 물려받아 백그라운드 작업에 밀린다
+            AllowStartIfOnBatteries     ★ 기본값은 배터리일 때 시작하지 않는다 (노트북 장비)
+            DontStopIfGoingOnBatteries  ★ 기본값은 전원을 뽑으면 AM 을 강제 종료한다
+
+        이미 등록했다면 관리자 PowerShell 에서 우선순위만 고친다:
+
+            $t = Get-ScheduledTask -TaskName AttractMode
+            $t.Settings.Priority = 4
+            $t.Settings.DisallowStartIfOnBatteries = $false
+            $t.Settings.StopIfGoingOnBatteries = $false
+            Set-ScheduledTask -InputObject $t
+
+        확인 - AM 이 떠 있을 때 (비승격 세션에서도 된다)
+            Get-CimInstance Win32_Process -Filter "Name='attract.exe'" | select Priority
+            8 이면 보통, 6 이면 BelowNormal 이다.
 
         등록했으면 시작프로그램 바로가기는 치운다 (안 치우면 로그온 때 두 번 뜬다).
 
@@ -319,7 +336,8 @@
             test-roms.ps1 -Launch -Name IDZ  (승격 상태)  ->  PASS, 창이 3.67초
             Start-ScheduledTask AttractMode              ->  AM 기동, UAC 창 없음
             승격됐는지 확인하는 법 - 비승격 세션에서 (Get-Process attract).Path 를 읽어 본다.
-            읽히면 비승격, 못 읽으면 승격이다. taskkill /F 도 액세스 거부(1)로 막힌다.
+            읽히면 비승격, 못 읽으면 승격이다. 비승격 창의 taskkill /F 도 액세스 거부(1)로 막힌다.
+            (관리자 PowerShell 에서는 끝낼 수 있다. 캐비닛에서는 Escape+LShift 로 끝낸다.)
 
         승격하지 않은 평소 점검에서는 IDZ 가 계속 DIALOG 로 나오는데 그게 맞다.
         고쳐진 것은 캐비닛이 AM 을 띄우는 방식이지 점검 도구가 아니다.

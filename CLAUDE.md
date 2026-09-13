@@ -75,8 +75,8 @@ git branch Compact archive/Compact           # 되살리기
   > done
   > ```
   >
-  > AM 은 승격해서 띄웠으면(4.13절 작업 스케줄러) **밖에서 `taskkill` 로 못 죽인다** — 액세스 거부다.
-  > 캐비닛에서 `Escape+LShift` 로 끝내야 한다.
+  > AM 은 승격해서 띄웠으면(4.13절 작업 스케줄러) **비승격 셸의 `taskkill` 로는 못 죽인다** — 액세스 거부다.
+  > 캐비닛에서 `Escape+LShift` 로 끝내거나, 관리자 PowerShell 에서 끝낸다.
 
   > ⚠️ **`.exe` 를 바꾸는 병합·체크아웃은 `unable to unlink … : Invalid argument` 로 죽는다.**
   > Windows Defender 실시간 검사가 방금 쓴 실행파일을 붙잡고 있어서다. 재시도해도 잘 안 풀린다.
@@ -432,7 +432,7 @@ PSXMAME 은 2009년에 개발이 멈춰 더 새로운 버전이 없다. 대신 �
 
 ```
 emulators\Mame\      mame64.exe 0.289   roms\{Arcade, Arcade Adult, Bios, Arcade CHD, Arcade Zinc}
-emulators\EKMAME\    EKMAME64.exe 0.224 roms\Korean   ← 팬 한글화 롬 전용 (30종)
+emulators\EKMAME\    EKMAME64.exe 0.224 roms\Korean   ← 팬 한글화 롬 전용 (활성 31종 · 파일 39개, 부모셋 포함)
 ```
 
 2026-09-07 이전에는 두 벌이 한 폴더에서 `mame.ini`·`plugins`·`cfg`·`roms` 를 공유했고,
@@ -595,7 +595,7 @@ powershell -ExecutionPolicy Bypass -File tools\patch-mame-warnings.ps1 -Revert  
 4. **`.gitignore`** — 폴더 이름으로 걸러내므로 폴더를 추가·개명하면 롬·코어가 추적되기 시작한다(S1 위험).
 5. **`tools/reset-runtime.ps1` 의 `$ConfigPaths`·`$SavePaths`** — 경로가 하드코딩돼 있다.
 6. **세이브** — `PCSX2/memcards`, `ePSXe/memcards`, `Project64/Save`, `Mame/nvram`, `SuperModel/NVRAM`,
-   `Demul/nvram`, `RetroArch/saves`. 갱신 전에 따로 챙긴다.
+   `Demul/nvram`, `Demul/memsaves`, `PSXMAME/nvram`, `RetroArch/saves`. 갱신 전에 따로 챙긴다.
 7. **`stats/<Emulator>/`** — 에뮬레이터 정의 이름이 바뀌면 플레이 통계가 0으로 돌아간다(6절).
 8. 끝나면 `tools\validate.ps1` → `test-roms.cmd` 전수 구동 점검(7.5절) 순으로 확인한다.
    **정적 점검만으로는 부족하다** — 인자가 안 먹는 것은 띄워 봐야 나온다.
@@ -667,7 +667,14 @@ emulators\Dolphin\User\Wii\           Wii NAND — title\ 에 세이브가 들�
 ```
 
 **재생성물은 `.gitignore` 로 뺐다** — `Cache\` · `Dump\` · `Logs\` · `Load\` ·
-`ScreenShots\` · `Shaders\` · `Wii\sd.raw`(134MB 가상 SD) · `Wii\tmp\`(30MB).
+`ScreenShots\` · `Shaders\` · `Backup\`(부팅할 때마다 SYSCONF 사본) · `Wii\sd.raw`(134MB 가상 SD) · `Wii\tmp\`(30MB).
+
+> ⚠️ **`User\Config\Dolphin.ini` 의 `[Analytics] PermissionAsked = True` 를 지우지 말 것.**
+> `False` 면 실행할 때마다 **게임 위에 "사용 통계 보고 허용" 창이 떠 포그라운드를 쥔다.**
+> `BackgroundInput = False` 라 그동안 패드 입력이 안 들어가서, 조이스틱뿐인 캐비닛에서는 게임을 할 수 없다.
+> 2026-09-08 커밋은 메시지로만 `True` 를 넣었다고 했고 **실제로는 `False` 가 커밋돼 그 뒤로 모든 브랜치가 이 상태였다**
+> (`docs/ISSUES.md` 90번). 이 창은 Qt 창이라 `#32770` 판정에 안 걸려 50건이 전부 `PASS` 로 기록됐다.
+> 지금은 `validate.ps1` 이 이 값을 직접 검사한다(`True` 가 아니면 `WARN`).
 그래서 추적되는 것은 **4.1MB / 67개**뿐이다.
 
 > 옮기기 전 원본은 `%USERPROFILE%\Documents\Dolphin Emulator` 에 그대로 남겨 두었다.
@@ -858,13 +865,18 @@ copy "The Fast and the Furious Drift\winmm.dll" "The Fast & Furious SuperCars\"
 > 승격을 요구하면 로그온 때 UAC 를 띄우지도 않고 **그냥 건너뛴다** — AM 이 아예 뜨지 않는다.
 >
 > **자동 시작은 작업 스케줄러로 한다** — `RunLevel Highest` + `LogonType Interactive` +
-> `ExecutionTimeLimit 0`(AM 은 계속 떠 있어야 한다) + `MultipleInstances IgnoreNew`.
+> `ExecutionTimeLimit 0`(AM 은 계속 떠 있어야 한다) + `MultipleInstances IgnoreNew` +
+> **`Priority 4`** + `AllowStartIfOnBatteries` · `DontStopIfGoingOnBatteries`.
+> 작업 스케줄러의 기본 우선순위 7 은 `BelowNormal` 이고, **AM 이 띄우는 에뮬레이터가 전부 그 등급을 물려받는다**
+> (`docs/ISSUES.md` 92번). 배터리 두 값의 기본값은 노트북 장비에서 "전원 없으면 안 뜸 · 뽑으면 강제 종료"다.
 > **UAC 창 없이 조용히 승격된다.** 등록했으면 시작프로그램 바로가기는 치운다(안 치우면 두 번 뜬다).
 > bartop 은 2026-09-11 에 이 방식으로 바꿨다 — 등록 명령과 확인 절차는 `.+필독.txt` 7절 (8).
 >
 > **승격됐는지 확인하는 법** — 비승격 세션에서 `(Get-Process attract).Path` 를 읽어 본다.
-> 읽히면 비승격, 못 읽으면 승격이다(무결성 수준이 높은 프로세스는 열리지 않는다). `taskkill /F` 도
-> 액세스 거부로 막힌다. 그래서 **승격해서 띄운 AM 은 캐비닛에서 `Escape+LShift` 로 끝내야 한다.**
+> 읽히면 비승격, 못 읽으면 승격이다(무결성 수준이 높은 프로세스는 열리지 않는다). 비승격 셸의 `taskkill /F` 도
+> 액세스 거부로 막힌다. 그래서 **승격해서 띄운 AM 은 캐비닛에서 `Escape+LShift` 로 끝내거나 관리자 셸에서 끝낸다.**
+> 우선순위는 비승격 셸에서도 보인다 — `Get-CimInstance Win32_Process -Filter "Name='attract.exe'"` 의 `Priority` 가
+> **8** 이면 보통, **6** 이면 `BelowNormal` 이다.
 런처형 정의는 게임이 콘솔만 갖거나 창을 늦게 만들 수 있어 `NOWIN` 은 경고로만 센다(7.5절).
 
 ## 5. 자주 하는 작업 레시피
@@ -1170,10 +1182,10 @@ powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\aud
 | `mascot` | 480×760·알파 컷아웃 여부(투명 비율), **피사체가 직선으로 잘렸는지**(최외곽 불투명 행/열이 피사체 폭의 20% 이상) |
 | `dupes` | NEVATO↔Console Box 공용 폴더 어긋남, 참조 없는 배경 변형, 바이트 동일 중복(두 레이아웃의 의도된 쌍은 INFO) |
 | `fonts` · `glyph` | 참조 폰트 해석 가능 여부, **표시 텍스트 ↔ 폰트 글리프** |
-| `cfg` · `case` | 값 끝 공백, 형제 cfg 일치, `layout_config` 값, romlist·.gitignore 대소문자, `layout.nut` 철자, **`-Adaptive` 지문이 장비를 죽여 온 설정 파일 13개를 덮는가** |
+| `cfg` · `case` | 값 끝 공백, 형제 cfg 일치, `layout_config` 값, romlist·.gitignore 대소문자, `layout.nut` 철자, **`-Adaptive` 지문이 장비를 죽여 온 설정 9곳(파일 6 · 키 3)을 덮는가** |
 | `demul` | romlist Name 이 Demul 이 아는 롬셋인지 — `arcade_compat.txt` 등재 **또는** `roms\<이름>.{7z,zip}` 존재 (4.12절) |
 | `psgotcha` | `tools\`·`.claude\` 의 PowerShell 이 **조용히 틀리는 두 함정**을 밟았는지 — `Get-Content`(BOM 없는 UTF-8 을 ANSI 로 읽는다) · `cmd /c "… & exit /b %ERRORLEVEL%"`(taskkill 이 돌기 전 값으로 굳는다). 일부러 그런 줄에는 같은 줄이나 바로 윗줄에 `ps-audit-ok` 와 이유를 적는다 |
-| `branch` · `video` · `junk` | 장비 브랜치 전파, mp4 해상도·비트레이트, `(2)`·`bak/`·`.psd`·추적된 런타임 산출물, **설정 폴더에 남은 미추적 파일** |
+| `branch` · `video` · `junk` | 장비 브랜치 전파, mp4 해상도·비트레이트·**아무도 안 부르는 mp4**, `(2)`·`bak/`·`.psd`·추적된 런타임 산출물, **설정 폴더에 남은 미추적 파일**, **reset-runtime 이 모르는 변경** |
 
 출력 태그는 `ISSUE`(보고) / `OK`(측정했고 이상 없음) / `INFO`. 읽기 전용이다.
 Claude Code에서 `/arcade-audit <커밋…>`을 부르면 diff 정독 → validate → audit → 이미지 직접 열기 →
@@ -1207,7 +1219,7 @@ powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1 -All -Force
 | 갈래 | 대상 | 되돌리면 |
 |---|---|---|
 | **설정** | `attract.am`, `Mame\cfg`(게임별 입력·딥스위치), `Mame\ui.ini`, `PSXMAME\cfg`, `RetroArch\retroarch.cfg`·`content_*.lpl`, `PCSX2\inis`, `M2\CFG`·`M2\EMULATOR.INI`, `Project64\Config`, `TeknoParrot\UserProfiles`, `Demul\*.ini`, `PPSSPP\...\SYSTEM` | 잃는 것 없음 |
-| **세이브** | `Mame\{nvram,memcard,diff,sta}`, `PCSX2\{memcards,sstates}`, `ePSXe\{memcards,sstates}`, `Project64\Save`, `SuperModel\{NVRAM,Saves}`, `Demul\nvram`, `RetroArch\{saves,states}` | **게임 진행이 사라진다** |
+| **세이브** | `Mame\{nvram,memcard,diff,sta}`, `PCSX2\{memcards,sstates}`, `ePSXe\{memcards,sstates}`, `Project64\Save`, `SuperModel\{NVRAM,Saves}`, `Demul\{nvram,memsaves}`, `PSXMAME\nvram`, `RetroArch\{saves,states}` | **게임 진행이 사라진다** |
 | **산출물** | `last_run.log`, `script.nv`, `stats\`, `Mame\hiscore`, `Mame\data\history.db`, `Mame\cheat\output.*`, `RetroArch\screenshots` | 미추적이라 삭제 |
 | **새 설정** | 위 **설정** 폴더 안에 새로 생긴 **미추적** 파일 — 처음 띄운 게임의 `Mame\cfg\<게임>.cfg` 등 | 미추적이라 삭제 (`-Clean`) |
 
@@ -1216,6 +1228,9 @@ powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1 -All -Force
 > (`git ls-files --others --exclude-standard`). 전수 구동 점검 한 번이면 387개가 쌓인다(2026-09-10 실측).
 
 - 인자 없이 실행하면 **아무것도 건드리지 않고 목록만** 보여준다.
+- 네 갈래 어디에도 속하지 않는 변경은 **"분류 안 됨"** 으로 따로 보여준다. 이 스크립트가 아무것도 하지 않으므로
+  `git status` 에 영원히 남는다 — 뜨면 목록에 넣거나 `.gitignore` 로 보낸다(`docs/ISSUES.md` 94번).
+  `audit.ps1 -Section junk` 도 같은 것을 잡는다.
 - 평소 정리는 `-Config -Clean`이면 충분하다. `-Saves`는 게임 진행이 날아가니 의식적으로 붙인다.
 - `-Force`를 빼면 실행 전에 한 번 물어본다.
 - 되돌리기는 `git checkout --`이므로 **커밋되지 않은 의도적 수정도 함께 날아간다.**
@@ -1267,6 +1282,9 @@ powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Fast -Adap
 > **`-str` 은 MAME 계열에만 붙는다**(`emulators\Mame` · `EKMAME` · `PSXMAME`). 이 계열은 강제 종료하면
 > `cfg\default.cfg` 가 0바이트로 잘리는데(5.5절), `-str` 로 스스로 끝내면 그 위험 자체가 사라진다 —
 > **빨라지면서 동시에 안전해진 유일한 항목**이다. `-StrSeconds`(기본 2)로 조절한다.
+> MAME 은 `seconds_to_run` 이 끝날 때 **마지막 화면을 스냅샷으로 저장**하므로 `-snapshot_directory "%TEMP%\attractmode-test-snap"` 을
+> 같이 붙인다. 안 붙였을 때는 점검마다 `Mame\snap\<게임>\000N.png` 가 게임당 한 장씩 쌓이고
+> `PSXMAME\snap\` 은 미추적으로 `git status` 에 남았다(`docs/ISSUES.md` 93번).
 >
 > **`-Fast` 가 바꾸지 않는 것** — `Exe`/`Args` 열은 여전히 AM 이 실제로 실행할 명령 그대로다
 > (`-str` 을 붙인 경우 `Detail` 에 그렇게 적힌다). `#32770` 판정도, 상태 값의 뜻도 같다.
@@ -1296,8 +1314,20 @@ powershell -ExecutionPolicy Bypass -File tools\test-roms.ps1 -Launch -Fast -Adap
 > 2026-09-10 실측 — 7개를 넣었더니 1,098건 중 **220건**이 다시 검사됐고, 그 내역이 점검 뒤
 > `git status` 의 `M` 목록과 정확히 1:1 로 맞았다(`PCSX2_ui.ini` 98 · `Dolphin.ini` 50 ·
 > `EMULATOR.INI` 22 · `ppsspp.ini` 18 · `retroarch.cfg` 10 · `mednafen.cfg` 8 · `settings.xml` 4).
-> 그래서 여섯을 뺐다. 남은 것은 점검을 돌려도 `M` 이 되지 않아 공짜다.
-> **점검을 한 번 돌린 뒤 `git status` 에 뜨는 파일은 지문에 넣지 않는다** — 이 한 줄이 판정 기준이다.
+> 그래서 여섯을 파일째로 넣지 않는다.
+>
+> **대신 그 안의 결정 값은 키 단위로 넣는다** — `'파일#섹션.키,섹션.키'`. 그 값만 해시에 들어가고
+> 창 위치·최근 목록처럼 매번 바뀌는 값은 빠진다(`docs/ISSUES.md` 91번).
+> 예전에는 파일째 넣거나 빼거나 둘 중 하나라 "점검 뒤 `M` 이 되면 뺀다"는 규칙이 앞의 기준을 이겼고,
+> 그렇게 뺀 `Dolphin.ini` 안의 `PermissionAsked` 가 실제로 50건을 막고 있었다(90번).
+>
+> | 파일 | 넣는 키 | 어긋나면 |
+> |---|---|---|
+> | `Dolphin\User\Config\Dolphin.ini` | `Analytics.PermissionAsked` | 동의 창이 입력을 막는다 |
+> | `PCSX2\inis\PCSX2_ui.ini` | `Filenames.BIOS` · `Folders.Bios` · `Folders.UseDefaultBios` | PS2 98건이 BIOS 를 못 찾는다 |
+> | `RetroArch\retroarch.cfg` | `libretro_directory` · `system_directory` | 코어 · `system\fbneo\patched` |
+>
+> **판정 기준은 하나다 — "게임이 뜨는지를 결정하는가."** 결정하는 값이 매번 다시 쓰이는 파일에 들어 있으면 키로 넣는다.
 >
 > 🚨 **에뮬레이터 설정까지 지문에 넣는 이유** — `emulators/<Emulator>.cfg` 만 보면
 > **지금까지 실제로 게임을 죽여 온 파일들**이 전부 사각지대가 된다. `mame.ini` 의 rompath 오타(48번),
@@ -1353,6 +1383,10 @@ CSV 에는 진단용 계측도 함께 남는다 — `ElapsedMs`(판정까지), `
   하나라도 있으면 `DIALOG`(실패), 대화상자가 아닌 창이 있으면 `PASS` 로 한다.
   `Process.MainWindowHandle` 만으로는 그 창이 게임 화면인지 오류 상자인지 구별하지 못한다 —
   실제로 EKMAME 45개가 이 때문에 첫 전수 점검에서 `PASS` 로 잡혔다(`docs/ISSUES.md` 46번).
+- **툴킷 대화상자(Qt·wx·WPF)는 `#32770` 이 아니다.** 그래서 모양으로도 잡는다 — ① 주인(owner) 창이 있고 그 주인이 비활성,
+  ② 제목줄은 있는데 최소화·최대화 버튼이 없고, 같은 프로세스에 다른 창이 있으며, 포그라운드를 쥔 창.
+  Dolphin 의 "사용 통계 보고 허용" 창이 이 구멍으로 50건 전부 `PASS` 가 됐다(`docs/ISSUES.md` 90번).
+  GUI 로 띄우면 ①, `-b -e` 로 게임을 띄우면 ② 모양이었다(실측). `Detail` 에 `대화상자 모양의 창 [클래스] 제목` 으로 남는다.
 - 🚨 **점검이 도는 동안 화면을 클릭하지 않는다.** 판정은 그 순간의 창만 본다 —
   사람이 대화상자를 닫거나 선택 목록에서 게임을 골라 주면 **실패가 `PASS` 로 기록되고 흔적이 남지 않는다.**
   실제로 `srtshot`(존재하지 않는 롬셋 이름)이 Demul 의 `Select ROM` 창을 띄웠는데
