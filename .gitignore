@@ -93,3 +93,7 @@ emulators/Project64/Logs/
 emulators/Project64/Plugin/GFX/GLideN64/shaders/
 emulators/SuperModel/Supermodel.log
 emulators/Mednafen/stdout.txt
+emulators/PSXMAME/snap/
+emulators/Dolphin/User/Backup/
+emulators/Dolphin/Updater.log
+emulators/Project64/Plugin/GFX/GLideN64/GLideN64.ini
