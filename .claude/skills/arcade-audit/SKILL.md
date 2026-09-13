@@ -57,16 +57,16 @@ powershell -ExecutionPolicy Bypass -File .claude\skills\arcade-audit\scripts\aud
 | `layout` | `.nut` 의 리터럴 이미지/영상/셰이더 참조(옵션 자리표시자 `my-own-marquee.jpg` 는 INFO 로 분리) · `do_nut`/`load_module` 대상 존재 · 로드 불가 위치의 layout*.nut · 어디서도 안 부르는 .nut | 레이아웃 내부는 검사 안 함. `do_nut` 대상 부재는 Squirrel 예외 → 그 아래 전부 미실행 |
 | `dispimg` | `character/ system/ wheel/[DisplayName]` 21개 디스플레이별 존재 · 디스플레이 이름과 안 맞는 죽은 복사본 | 마스코트 존재만 봄 |
 | `mascot` | 480×760 · 알파 컷아웃 여부(투명 비율·가장자리 투명) · **피사체가 직선으로 잘렸는지**(최외곽 불투명 행/열이 피사체 폭의 20% 이상) · 파일 크기 이상치 | 존재만 봄. **불투명 플라이어를 잘라 넣어도 통과** |
-| `dupes` | 바이트 동일 미디어(NEVATO↔Console Box 쌍은 정책상 의도된 것이라 INFO, 그 외는 ISSUE) · 두 레이아웃 공용 폴더 드리프트 · 참조 없는 `background/{1280,1920,2xScale}` | — |
+| `dupes` | 바이트 동일 미디어(NEVATO↔Console Box 쌍, 그리고 각 레이아웃이 자기 폴더 경로로 부르는 복제는 INFO, 그 외는 ISSUE) · 두 레이아웃 공용 폴더 드리프트 · 참조 없는 `background/{1280,1920,2xScale}` | — |
 | `fonts` | 참조 폰트 해석 가능 여부 · font_path 안의 미사용 폰트 · font_path 밖 폰트 파일 | — |
 | `glyph` | 실제 표시 텍스트(overview·romlist Title·kr.msg·NXL HD 한글 리터럴) ↔ 그 텍스트를 그리는 폰트의 글리프 · **`origin/main` 의 `default_font` 로도 한 번 더** | AM 은 글리프 폴백이 없다(CLAUDE.md 5.4). `default_font` 는 장비 전용이라 체크아웃한 브랜치에서만 재면 결론이 갈린다 |
-| `cfg` | artwork 경로 후행 공백 · 형제 cfg(CUE/CCD/PBP…) artwork 블록 일치 · 어떤 라벨이 실제 그려지는지 결정하는 layout_config 값 · 장치·로케일 종속 JOYCODE 토큰 · **`-Adaptive` 지문이 "장비를 죽여 온 설정 파일 13개"를 덮는가** | validate 는 `Trim()` 해서 후행 공백을 영원히 못 본다. 지문에 빠진 파일은 깨져도 전부 `PASS~` 로 지나간다(ISSUES 86) |
+| `cfg` | artwork 경로 후행 공백 · 형제 cfg(CUE/CCD/PBP…) artwork 블록 일치 · 어떤 라벨이 실제 그려지는지 결정하는 layout_config 값 · 장치·로케일 종속 JOYCODE 토큰 · **`-Adaptive` 지문이 "장비를 죽여 온 설정 9곳(파일 6 · 키 3)"을 덮는가** | validate 는 `Trim()` 해서 후행 공백을 영원히 못 본다. 지문에 빠진 파일은 깨져도 전부 `PASS~` 로 지나간다(ISSUES 86) |
 | `demul` | romlist Name 이 Demul 이 아는 롬셋인지 — `arcade_compat.txt` 등재 **또는** `roms\<이름>.{7z,zip}` 존재 | Demul 정의는 `romext` 가 없어 정적 점검이 `NOCHK` 로 넘긴다(ISSUES 78) |
 | `psgotcha` | `tools\`·`.claude\` 의 PowerShell 이 **조용히 틀리는 두 함정**을 밟았는지 — `Get-Content`(BOM 없는 UTF-8 을 ANSI 로 읽는다, ISSUES 79) · `cmd /c "… & exit /b %ERRORLEVEL%"`(taskkill 이 돌기 전 값으로 굳는다, ISSUES 87) | 둘 다 오류를 내지 않는다. 일부러 그런 줄에는 같은 줄이나 바로 윗줄에 `ps-audit-ok` 와 이유를 적어 면제한다 |
 | `case` | attract.cfg romlist 이름 ↔ 파일명 **대소문자 정확** 일치 · .gitignore 경로 대소문자 · `layouts/<name>/layout.nut` 철자(NXL HD 의 `Layout.nut`) | Windows 가 가려 줌 |
 | `branch` | 장비 브랜치 5개 behind main = 0 · 장비 브랜치에만 있는 공통성 커밋 | — |
-| `video` | 추적 mp4 해상도/길이/비트레이트(ffprobe 없이 tkhd 파싱) · intro.nut 이 가리키는 영상 존재 | — |
-| `junk` | 자체 자산 영역의 `(2)`·`bak/`·`.psd`·`Thumbs.db` · 추적 중인 런타임 산출물 · 추적 ∩ `.gitignore` · **설정 폴더에 남은 미추적 파일**(전수 점검 잔재, `reset-runtime.ps1 -Clean` 으로 정리) | — |
+| `video` | 추적 mp4 해상도/길이/비트레이트(ffprobe 없이 tkhd 파싱) · intro.nut 이 가리키는 영상 존재 · **어떤 .nut 도 부르지 않는 mp4** | — |
+| `junk` | 자체 자산 영역의 `(2)`·`bak/`·`.psd`·`Thumbs.db` · 추적 중인 런타임 산출물 · 추적 ∩ `.gitignore` · **설정 폴더에 남은 미추적 파일**(전수 점검 잔재, `reset-runtime.ps1 -Clean` 으로 정리) · **reset-runtime 네 갈래 어디에도 없는 변경**(ISSUES 94) | — |
 
 `layout` 섹션의 `my-own-marquee.jpg` 류는 **설정 옵션 분기**라 오탐이다 — 옵션값(`layout_config`)을 보고 판단한다.
 `layout_vewlix_*.nut` 는 `toggle_layout`(L 키)로 도달 가능하고 `attract.am` 에 어느 파일을 쓰는지 기록되므로 **살아 있는 코드**다.

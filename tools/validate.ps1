@@ -361,6 +361,21 @@ foreach ($name in ($emulators.Keys | Sort-Object)) {
     }
 }
 
+# 값이 하나로 정해진 에뮬레이터 설정 — 틀리면 게임이 뜨지 않는데 구동 점검에는 잘 안 잡힌다.
+# Dolphin 의 동의 창은 Qt 창이라 #32770 판정을 빠져나가 50건이 PASS 로 기록됐다(ISSUES 90).
+# 커밋 메시지는 True 를 넣었다고 했지만 실제 커밋은 False 였다 — 그래서 값 자체를 본다.
+$fixedValues = @(
+    @{ File = 'emulators\Dolphin\User\Config\Dolphin.ini'; Pattern = '(?m)^PermissionAsked\s*=\s*True\s*$'
+       Why  = '[Analytics] PermissionAsked = True 가 아닙니다 - 게임 위에 "사용 통계 보고 허용" 창이 떠 패드 입력을 막습니다 (ISSUES 90)' }
+    @{ File = 'emulators\Cemu\portable\settings.xml'; Pattern = '<gp_download>true</gp_download>'
+       Why  = '<gp_download>true</gp_download> 가 아닙니다 - 실행할 때마다 첫 실행 마법사가 떠 게임이 시작되지 않습니다 (ISSUES 66)' }
+)
+foreach ($fv in $fixedValues) {
+    $fp = Join-Path $Root $fv.File
+    if (-not (Test-Path -LiteralPath $fp)) { continue }
+    if ([System.IO.File]::ReadAllText($fp) -notmatch $fv.Pattern) { Add-Warn 'emulator' "$($fv.File) : $($fv.Why)" }
+}
+
 # 비활성 행이 참조하는 미정의 에뮬레이터 집계
 if ($script:ParkedEmu.Count -gt 0) {
     $rows  = ($script:ParkedEmu.Values | Measure-Object -Sum).Sum
