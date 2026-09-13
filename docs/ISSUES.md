@@ -1,13 +1,21 @@
 # 개선 과제 / 알려진 문제 (심각도순)
 
-최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 시각 자산 재스크리닝 2026-09-03 · 3차 재점검 2026-09-04 · 4차 재점검 2026-09-04 · 전수 구동 점검 2026-09-06 · 5차 재점검 2026-09-08~09 · 6차 재점검 2026-09-10 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
+최초 점검 2026-09-02 · 전체 재검수 2026-09-03 · 시각 자산 재스크리닝 2026-09-03 · 3차 재점검 2026-09-04 · 4차 재점검 2026-09-04 · 전수 구동 점검 2026-09-06 · 5차 재점검 2026-09-08~09 · 6차 재점검 2026-09-10 · 7차 재점검 2026-09-13 · 브랜치 `develop` (main 기반) · Attract-Mode v2.7.0
 근거: `attract.cfg`, `emulators/*.cfg`, `romlists/*`, `last_run.log`, `mame64 -verifyroms`, git 메타데이터 실측
 
 > 항목이 해소되면 체크박스를 갱신하고, 구조가 바뀌었으면 [`../CLAUDE.md`](../CLAUDE.md)도 같은 커밋에서 함께 고친다.
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **81건** / 미해결 **2건**(13 · 65번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 6차 재점검 2026-09-10
+**진행 현황** — 처리 **86건** / 미해결 **3건**(13 · 65 · 92번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 7차 재점검 2026-09-13
+
+> **7차 재점검 (2026-09-13)** — 6차 이후 커밋 5개를 다시 봤다. 도구는 새 `ISSUE` 를 내지 않았고, 전부 diff 대조와 실행으로 찾았다.
+> **가장 큰 것은 Dolphin 이다(90번)** — 커밋 메시지가 "넣었다"고 한 `PermissionAsked = True` 가 실제로는 `False` 로 커밋돼
+> 게임 위에 동의 창이 떠 입력을 막고 있었는데, 그 창이 Qt 창이라 **50건이 전부 `PASS`** 로 기록됐다.
+> 같은 파일을 지문에서 뺀 근거도 이 사실과 어긋났다(91번). 그 밖에 작업 스케줄러의 낮은 우선순위(92번),
+> `-str` 스냅샷 누적(93번), `reset-runtime` 이 모르는 경로 다섯(94번), bartop 의 죽은 인트로 영상(95번).
+> 문서 어긋남 — 이 머리말의 IDZ 서술, 77번 끝의 옛 문장, `CLAUDE.md`·`SKILL.md` 의 "13개", 4.7 트리의 "(30종)",
+> "승격한 AM 은 밖에서 못 죽인다"(비승격 셸 한정) — 은 같은 커밋에서 고쳤다.
 
 > **6차 재점검 (2026-09-10)** — 5차 이후 커밋 15개는 거의 전부 점검 도구 자신이었다(`-Fast` · `-Adaptive`).
 > `validate.ps1` FAIL 0 / WARN 0, `audit.ps1` 11개 섹션에도 새 `ISSUE` 가 없어 **그 도구를 뜯어봤고**,
@@ -15,7 +23,9 @@
 > 손으로 찾은 것은 다음부터 `audit.ps1` 이 잡는다 — `psgotcha` 섹션 신설, `cfg`·`junk`·`glyph` 에 검사 3건 추가.
 
 > **첫 전수 구동 점검 완료 (2026-09-09)** — DIALOG 판정을 갖춘 뒤 33종 1,098건을 처음으로 전부 띄웠다.
-> **1,098건 중 1,097건 통과(99.9%)**. 남은 하나 `IDZ` 는 프로필이 `RequiresAdmin=true` 라 AM 을 관리자 권한으로 띄워야 한다(77번).
+> **1,098건 중 1,097건 통과(99.9%)**. 남은 하나 `IDZ` 는 프로필이 `RequiresAdmin=true` 라 AM 을 관리자 권한으로 띄워야 하는데,
+> 2026-09-11 에 작업 스케줄러로 승격해 띄워 해소를 확인했다(77번).
+> ⚠️ 다만 이 가운데 **Dolphin 50건의 `PASS` 는 동의 창을 못 본 거짓 통과**였다 — 2026-09-13 에 판정을 고치고 다시 확인했다(90번).
 > 2026-09-10 전수 재점검을 `-Fast` 로 다시 돌려 같은 결과를 확인했다 — **10시간 12분 -> 1시간 53분**(81번).
 > 처음에는 Demul 60건이 무더기로 실패했는데 원인이 **캐비닛에 마우스가 없는 것**이었고(76번), 꽂자 62/62 로 돌아섰다.
 > 롬 6종은 사용자가 온전한 세트를 구해 와 교체했다. srtshot 은 romlist 의 이름 오타였다(78번).
@@ -1464,6 +1474,9 @@ Support for ISOs in CHD format` 이라고 적혀 있다.
 > ⚠️ **첫 실행에 "사용 통계 보고 허용" 창이 뜬다.** 그대로 두면 게임이 시작되지 않는다.
 > `User\Config\Dolphin.ini` 의 `[Analytics] PermissionAsked` 를 `True` 로 두어 껐다
 > (`Enabled` 는 `False` 그대로). 이 설정은 4.10절 덕분에 저장소에 남아 장비로 따라간다.
+>
+> 🚨 **정정 (2026-09-13)** — 위 문장은 사실이 아니었다. 이 커밋(`64935ab1`)의 diff 는 `+PermissionAsked = False` 였고,
+> 7개 브랜치 전부 `False` 로 남아 창이 계속 뜨고 있었다. 90번에서 실제로 `True` 로 고쳤다.
 
 
 `dolphin-2606a-x64.7z`(**5.0-12188**, 2026-08-11)을 넣어 봤더니 **50개가 전부 즉시 CRASH** 했다.
@@ -2109,12 +2122,15 @@ copy "The Fast and the Furious Drift\winmm.dll" "The Fast & Furious SuperCars\"
 > 읽어 보면** 갈린다 — 읽히면 비승격, 못 읽으면 승격이다(무결성 수준이 높은 프로세스는 열리지 않는다).
 > 실측에서 이 세션(Medium)은 자기 `powershell.exe` 경로는 읽었지만 작업이 띄운 `attract.exe` 는 못 읽었고,
 > `consent.exe`(UAC 창)는 **0개**였으며, `taskkill /F` 는 **액세스 거부(1)** 로 막혔다.
-> 그래서 **승격해서 띄운 AM 은 캐비닛에서 `Escape+LShift` 로 끝내야 한다** — 밖에서는 못 죽인다.
+> 그래서 **승격해서 띄운 AM 은 캐비닛에서 `Escape+LShift` 로 끝내야 한다** — 비승격 셸에서는 못 죽인다.
 >
 > > 이 확인 중에 `cmd /c "taskkill … & echo %ERRORLEVEL%"` 로 종료 코드를 재다가 **성공(0)이라는
 > > 거짓 결과**를 받았다. 87번에서 고친 바로 그 함정이다. `audit.ps1 -Section psgotcha` 는 저장소
 > > 스크립트만 보므로 이렇게 일회성으로 치는 명령은 못 잡는다 — 손으로 칠 때도 조심한다.
-> **캐비닛에서 IDZ 를 쓰려면 `attract.bat` 바로가기를 "관리자 권한으로 실행" 으로 두어야 한다** — 저장소로 안 따라가는 장비 설정이다.
+>
+> **캐비닛에서 IDZ 를 쓰려면 자동 시작은 작업 스케줄러(승격), 수동 실행은 바탕화면 바로가기 "관리자 권한으로 실행"** 이다 —
+> 저장소로 안 따라가는 장비 설정이다. 작업 스케줄러는 우선순위도 같이 고친다(92번).
+> 위의 "비승격 셸의 `taskkill` 은 액세스 거부"는 맞지만 **관리자 셸에서는 끝낼 수 있다** — "밖에서는 못 죽인다"는 과장이었다.
 
 > **오탐 기록** — 처음에 `FNFSC` 의 `<GamePath>` 를 "없음"으로 잡았다. `UserProfiles/*.xml` 이
 > `The Fast &amp; Furious SuperCars` 로 저장하는데 grep 으로 `&` 를 찾아 어긋난 것이다.
@@ -2705,6 +2721,140 @@ emulators/PSXMAME/{nvram,cfg} · Demul/nvram · Mednafen/b …
 
 > `git ls-files` 는 `core.quotepath` 가 켜져 있으면 비 ASCII 이름을 `"\355\234…"` 로 내놓는다.
 > 경로가 깨지므로 `git -c core.quotepath=false` 로 부른다.
+
+### - [x] 90. Dolphin 이 게임마다 "사용 통계 보고 허용" 창을 띄웠고, 점검은 그것을 `PASS` 로 적었다 — ✅ **완료 (2026-09-13)**
+
+61번은 `User\Config\Dolphin.ini` 의 `[Analytics] PermissionAsked` 를 `True` 로 두어 창을 껐다고 적었고,
+커밋 `64935ab1` 의 메시지도 같다. **그런데 그 커밋의 diff 는 `+PermissionAsked = False` 였다.**
+이 줄을 건드린 커밋은 그것 하나뿐이고, 7개 브랜치 전부 `False` 였다.
+
+**재현** — 저장소의 `Dolphin.ini` 를 스크래치 폴더에 복사해 `-u` 로 띄웠다(저장소 파일은 건드리지 않음).
+
+```
+Dolphin.exe -u <사본> -b -e "Luigis Mansion (USA).iso"
+ 1613ms  Dolphin
+ 2090ms  사용 통계 보고 허용 + Dolphin                  <- 포그라운드는 창이 쥔다
+ 4294ms  사용 통계 보고 허용 + Dolphin 2606a | JIT64 DC | Direct3D 11 | HLE | Luigi's Mansion (GLME01)
+```
+
+게임은 뒤에서 부팅되지만 `BackgroundInput = False` 라 **포커스를 뺏긴 동안 패드 입력이 안 들어간다.**
+조이스틱뿐인 캐비닛에서는 마우스로 창을 닫기 전까지 게임을 할 수 없다.
+
+**왜 못 잡았나** — `test-roms.ps1` 은 창 클래스가 `#32770` 일 때만 대화상자로 봤다. 이 창은 `Qt651QWindowIcon` 이다.
+그래서 5차·6차 전수 점검이 GameCube·Wii **50건을 전부 `PASS`** 로 적었다.
+
+**조치**
+
+- `Dolphin.ini` 를 `PermissionAsked = True` 로 고쳤다(한 줄).
+- `test-roms.ps1` 의 대화상자 판정에 **모양 규칙** 둘을 더했다. 두 경우를 실측했다.
+
+  | 띄운 방식 | 동의 창 | 본창 |
+  |---|---|---|
+  | GUI (`Dolphin.exe`) | owner 있음 · 567×262 | owner 없음 · **enabled=False** |
+  | 게임 (`-b -e`) | owner **없음** · style `0x96C40000` · 포그라운드 | style `0x96CF0000` · enabled=True |
+
+  ① 주인 창이 있고 그 주인이 비활성 ② 제목줄(`WS_CAPTION`)은 있는데 최소화·최대화 버튼이 없고, 같은 프로세스에 다른 창이 있으며, 포그라운드인 창.
+  캐비닛에서 실제로 쓰는 것은 ② 쪽이다 — ①만 넣었을 때는 여전히 `PASS` 가 나와서 ②를 더했다.
+- `validate.ps1` 이 이 값과 Cemu `gp_download` 를 **직접 검사**한다(아니면 `WARN`). 커밋 메시지와 실제 값이 달랐던 것이 이번 원인이라, 구동 점검에 기대지 않는다.
+
+**검증**
+
+```
+고치기 전 판정 · False  ->  PASS    (창 3.5초, 4.1초에 판정 — 동의 창을 못 봄)
+고친 판정    · False  ->  DIALOG  "대화상자 모양의 창 [Qt651QWindowIcon] 사용 통계 보고 허용"
+고친 판정    · True   ->  PASS
+```
+
+### - [x] 91. 증분 점검 지문에서 **게임이 뜨는지를 가르는 값**까지 같이 빠져 있었다 — ✅ **완료 (2026-09-13)**
+
+86번 후속(`24a9a658`)이 매 실행 다시 쓰이는 파일 여섯을 지문에서 뺐다. 근거는 "입력·화면 상태일 뿐 게임이 뜨는가를 가른 전력이 없다"였다.
+**그 안에 결정 값이 들어 있었다.**
+
+| 파일 | 결정 값 | 어긋나면 |
+|---|---|---|
+| `Dolphin\User\Config\Dolphin.ini` | `[Analytics] PermissionAsked` | 동의 창이 입력을 막는다 — **90번, 실제로 그 상태였다** |
+| `PCSX2\inis\PCSX2_ui.ini` | `[Filenames] BIOS` · `[Folders] Bios` · `UseDefaultBios` | PS2 98건이 BIOS 를 못 찾는다 |
+| `RetroArch\retroarch.cfg` | `libretro_directory` · `system_directory` | 코어 · `system\fbneo\patched` |
+
+문서가 기준을 둘로 적어 둔 것이 뿌리였다 — "게임이 뜨는지를 결정하는가"와 "점검 뒤 `git status` 에 뜨면 넣지 않는다".
+파일째로만 넣을 수 있어서 둘이 부딪히면 뒤의 것이 이겼다.
+
+**조치** — `$AuxConfig` 가 **키 단위**를 받는다. `'User\Config\Dolphin.ini#Analytics.PermissionAsked'` 처럼 쓰면
+`Get-IniKeys` 가 그 값만 뽑아 해시한다(섹션 없는 형식은 키만, 없는 키는 `<없음>`). 창 위치·최근 목록은 해시에 안 들어가므로
+220건 재검사(86번 후속)는 다시 생기지 않는다. `audit.ps1 -Section cfg` 의 필수 목록에도 세 키를 넣었다(6 -> 9).
+
+```
+Get-IniKeys Dolphin.ini    Analytics.PermissionAsked=False                         <- 고치기 전 값
+Get-IniKeys PCSX2_ui.ini   Filenames.BIOS=SCPH-90001_BIOS_V18_USA_230.ROM0;Folders.Bios=bios;Folders.UseDefaultBios=enabled
+Get-IniKeys retroarch.cfg  libretro_directory=":\cores";system_directory=":\system"
+```
+
+### - [ ] 92. 작업 스케줄러가 AM 과 모든 에뮬레이터를 **BelowNormal** 로 띄운다 — ⏳ **문서 완료 · 장비에서 관리자 권한으로 실행 필요**
+
+99e00bca 가 자동 시작을 작업 스케줄러로 바꿨는데 우선순위를 지정하지 않았다.
+
+```
+                              bartop 의 실제 작업     .+필독.txt 명령 그대로
+Priority                      7                       7
+DisallowStartIfOnBatteries    False                   True
+StopIfGoingOnBatteries        False                   True
+```
+
+- **우선순위 7** 은 작업 스케줄러 기본값으로 `BELOW_NORMAL_PRIORITY_CLASS` 다(I/O·메모리 우선순위도 낮아진다).
+  `CreateProcess` 는 부모가 BelowNormal 이면 자식에게 그 등급을 물려주므로 `attract.bat` -> `attract.exe` -> 에뮬레이터 전부가 이 등급으로 돈다.
+- **배터리 두 값**은 bartop(배터리 없음)에서는 드러나지 않았지만 문서는 모든 장비가 따라 하는 절차다.
+  노트북 장비에서는 전원 없이 로그온하면 AM 이 안 뜨고, 전원을 뽑으면 강제 종료된다.
+
+**조치** — `.+필독.txt` 7절 (8) 의 등록 명령에 `-Priority 4 -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries` 를 넣고,
+이미 등록한 장비용 수정 명령과 확인법(`Win32_Process.Priority` 가 8 이면 보통, 6 이면 BelowNormal)을 적었다. CLAUDE.md 4.13 도 같이.
+
+**남은 것** — bartop 의 실제 작업은 이 세션(비승격)에서 `Set-ScheduledTask` 가 `Access is denied` 로 거부됐다.
+**관리자 PowerShell 에서 `.+필독.txt` 의 수정 명령을 한 번 돌리면** 체크한다.
+
+### - [x] 93. `-Fast` 의 `-str` 이 점검마다 스크린샷을 게임당 한 장씩 남겼다 — ✅ **완료 (2026-09-13)**
+
+MAME 은 `seconds_to_run` 이 끝날 때 마지막 화면을 스냅샷으로 저장한다(`snapname %g/%i`).
+
+```
+emulators/Mame/snap/2020bb/0000.png   09-10 01:52   -Fast 전수
+                           0001.png   09-10 09:16
+                           0002.png   09-10 20:23
+Mame/snap     게임 폴더 598개 · 파일 1,846장 (gitignore 라 안 보였다)
+PSXMAME/snap  폴더 33개 · final.png (0.139 는 번호 대신 덮어쓴다) — 미추적으로 git status 에 남음
+```
+
+`Mame/snap` 최상위의 스냅 아트 8,673장과 섞여 있었지만 AM 은 이 폴더를 읽지 않아(`snap` 라벨은 `video` 를 본다) 화면 영향은 없었다.
+
+**조치**
+
+- `-str` 을 붙일 때 `-snapshot_directory "%TEMP%\attractmode-test-snap"` 을 같이 붙인다. 세 빌드(0.289 · EKMAME 0.224 · PSXMAME 0.139) 모두 이 옵션이 있음을 확인했다.
+- 쌓인 게임별 하위 폴더 631개(Mame 598 · PSXMAME 33)를 저장소 밖으로 옮겼다. 최상위 아트 8,673장은 그대로다.
+- `emulators/PSXMAME/snap/` 을 `.gitignore` 에 넣었다(`Mame/snap/` 은 이미 있었다).
+
+### - [x] 94. `reset-runtime.ps1` 이 **어느 갈래에도 넣지 않은 경로** 다섯이 `git status` 에 남아 있었다 — ✅ **완료 (2026-09-13)**
+
+| 경로 | 상태 | 조치 |
+|---|---|---|
+| `emulators/Demul/memsaves/vms00.bin` | `M` (추적) | 드림캐스트 VMU 세이브 -> `$SavePaths` |
+| `emulators/PSXMAME/nvram/*.nv` | 추적 20 · 미추적 13 | Zinc nvram -> `$SavePaths` |
+| `emulators/Dolphin/User/Backup/` | 미추적 | 부팅할 때마다 쓰는 SYSCONF 사본 -> `.gitignore` |
+| `emulators/Project64/Plugin/GFX/GLideN64/GLideN64.ini` | 미추적 | GLideN64 화면 설정(09-09 처음 생성). 텍스처 경로가 `D:/AttractMode/...` **절대경로**라 장비마다 달라야 한다 -> `.gitignore` |
+| `emulators/Dolphin/Updater.log` | `D` (추적) | Dolphin 이 시작할 때 지우는 갱신 로그 -> 인덱스에서 빼고 `.gitignore` (89번과 같은 처리) |
+
+88·89번과 같은 모양이다 — 목록에 없는 경로는 스크립트가 아무것도 안 하므로 영원히 남는다.
+**이번에는 모양 자체를 잡는 장치를 넣었다.** `reset-runtime.ps1` 이 네 갈래 어디에도 속하지 않는 변경을
+**"분류 안 됨"** 으로 따로 보여 주고, `audit.ps1 -Section junk` 도 같은 것을 `ISSUE` 로 낸다.
+
+### - [x] 95. bartop 의 `intro/intro_16x9.mp4` 는 어떤 `.nut` 도 부르지 않는다 — ✅ **완료 (2026-09-13, bartop 전용)**
+
+2022년 `ee269845`(동영상 변경)가 bartop 에서 `intro.mp4` 와 `intro_4x3.mp4.mp4` 를 바꿔 치우며 남긴 것이다.
+bartop 모니터는 1280×1024(5:4)라 `intro.nut` 의 `video_default = "intro.mp4"`(1440×1080) 가 쓰이고,
+`intro_16x9.mp4` 는 이름이 불리는 곳이 없다. bartop 브랜치에서만 지웠다(다른 브랜치에는 없는 파일).
+`audit.ps1 -Section video` 가 "어떤 `.nut` 도 부르지 않는 mp4" 를 잡는다.
+
+> **오탐 기록 (7차)** — `dupes` 의 `black.png` ×3(1,990KB)은 NEVATO `layout_vewlix_black.nut` · Console Box · Mega-Display Advanced
+> `snap.nut`(`bg.png`)가 **각자 자기 폴더 경로로 부르는 복제**다. AM 은 이미지 경로를 레이아웃 폴더 기준으로 풀어서 공유할 수 없다.
+> 이름과 달리 제조사 로고 배경(2048×1536)이다. `audit.ps1` 이 이런 복제를 `INFO` 로 내리게 고쳤다.
 
 
 ---
