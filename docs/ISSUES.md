@@ -7,7 +7,7 @@
 > 점검은 `powershell -ExecutionPolicy Bypass -File tools\validate.ps1`(설정 무결성)과
 > `test-roms.cmd`(롬 구동 검증, E 항목)로 자동화되어 있다.
 
-**진행 현황** — 처리 **86건** / 미해결 **3건**(13 · 65 · 92번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 7차 재점검 2026-09-13
+**진행 현황** — 처리 **87건** / 미해결 **2건**(13 · 65번) · 보류 3건(1 · 2 · 70번) · 재분류 3건(11 · 14 · 27번) · 개선 포인트 8건 — 7차 재점검 2026-09-13
 
 > **7차 재점검 (2026-09-13)** — 6차 이후 커밋 5개를 다시 봤다. 도구는 새 `ISSUE` 를 내지 않았고, 전부 diff 대조와 실행으로 찾았다.
 > **가장 큰 것은 Dolphin 이다(90번)** — 커밋 메시지가 "넣었다"고 한 `PermissionAsked = True` 가 실제로는 `False` 로 커밋돼
@@ -2789,7 +2789,7 @@ Get-IniKeys PCSX2_ui.ini   Filenames.BIOS=SCPH-90001_BIOS_V18_USA_230.ROM0;Folde
 Get-IniKeys retroarch.cfg  libretro_directory=":\cores";system_directory=":\system"
 ```
 
-### - [ ] 92. 작업 스케줄러가 AM 과 모든 에뮬레이터를 **BelowNormal** 로 띄운다 — ⏳ **문서 완료 · 장비에서 관리자 권한으로 실행 필요**
+### - [x] 92. 작업 스케줄러가 AM 과 모든 에뮬레이터를 **BelowNormal** 로 띄웠다 — ✅ **완료 (2026-09-13, bartop)**
 
 99e00bca 가 자동 시작을 작업 스케줄러로 바꿨는데 우선순위를 지정하지 않았다.
 
@@ -2808,8 +2808,19 @@ StopIfGoingOnBatteries        False                   True
 **조치** — `.+필독.txt` 7절 (8) 의 등록 명령에 `-Priority 4 -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries` 를 넣고,
 이미 등록한 장비용 수정 명령과 확인법(`Win32_Process.Priority` 가 8 이면 보통, 6 이면 BelowNormal)을 적었다. CLAUDE.md 4.13 도 같이.
 
-**남은 것** — bartop 의 실제 작업은 이 세션(비승격)에서 `Set-ScheduledTask` 가 `Access is denied` 로 거부됐다.
-**관리자 PowerShell 에서 `.+필독.txt` 의 수정 명령을 한 번 돌리면** 체크한다.
+**bartop 적용 (2026-09-13)** — 이 세션(비승격)의 `Set-ScheduledTask` 는 `Access is denied` 로 거부돼, 사용자가 관리자 PowerShell 에서
+`.+필독.txt` 의 수정 명령을 돌렸다. 다시 읽어 확인했다.
+
+```
+Priority 4 · DisallowStartIfOnBatteries False · StopIfGoingOnBatteries False
+```
+
+나머지 장비 넷은 각자 `.+필독.txt` 7절 (8) 을 따른다(작업을 등록한 장비만 해당).
+
+> **같은 날 증분 점검** — 이 수정 뒤 `-Launch -Fast -Adaptive` 로 **PASS 1,097 / NOWIN 1**(`IDZ`, 비승격 점검이라 예상대로).
+> 지문에 키가 추가된 PS2 98 · Dolphin 50 · FBNeo 10 과 롬이 바뀐 `quiztvqq` 까지 **160건을 실제로 띄워 전부 통과**했다.
+> 90번 표본에서 실패했던 Demul `mushitam` · `Bangai-O` 와 PSXMAME `rvschool`(코드 100)은 **마우스를 꽂은 뒤 전부 `PASS`** —
+> 원인은 입력장치 연결 0개(76번과 같은 상태)였고 이번 수정과는 무관했다.
 
 ### - [x] 93. `-Fast` 의 `-str` 이 점검마다 스크린샷을 게임당 한 장씩 남겼다 — ✅ **완료 (2026-09-13)**
 
