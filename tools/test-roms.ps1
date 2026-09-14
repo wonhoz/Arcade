@@ -909,8 +909,17 @@ $baseMap = @{}
 
 # 보고서 두 벌을 지금 상태로 써 낸다. 전수 구동 점검은 몇 시간짜리라
 # 중간에 끊겨도(Ctrl+C, 정전) 여기까지의 결과는 남아 있어야 한다.
-function Save-Reports {
-    $results | Export-Csv -LiteralPath $csvPath -NoTypeInformation -Encoding UTF8
+$script:CsvCount = -1; $script:HtmlCount = -1
+$script:HtmlAt = [Diagnostics.Stopwatch]::StartNew()
+$script:LaunchedSinceHtml = 0
+function Save-Reports([switch]$CsvOnly) {
+    # 결과가 그대로면 다시 쓰지 않는다 — 끝에서 finally 와 본문이 같은 내용을 두 번 쓰던 것.
+    if ($script:CsvCount -ne $results.Count -or -not (Test-Path -LiteralPath $csvPath)) {
+        $results | Export-Csv -LiteralPath $csvPath -NoTypeInformation -Encoding UTF8
+        $script:CsvCount = $results.Count
+    }
+    if ($CsvOnly -or $script:HtmlCount -eq $results.Count) { return }
+    $script:HtmlCount = $results.Count; $script:HtmlAt.Restart(); $script:LaunchedSinceHtml = 0
     if (-not $NoHtml) {
         $span = (Get-Date) - $startedAt
         Write-HtmlReport $results $htmlPath ([pscustomobject]@{
@@ -1065,7 +1074,7 @@ if ($Launch -and -not $Force) {
     Write-Host "    이 PC 로 다른 일을 할 수 없습니다." -ForegroundColor Yellow
     Write-Host ("    예상 소요 {0:hh\:mm\:ss} ~ {1:hh\:mm\:ss}  ({2}건)" -f $lo, $hi, $items.Count) -ForegroundColor Yellow
     if ($items.Count -ge 50) {
-        Write-Host "    중단은 Ctrl+C. 5건마다 보고서를 써 두므로 -Resume 으로 이어서 할 수 있습니다." -ForegroundColor Yellow
+        Write-Host "    중단은 Ctrl+C. 5건마다 CSV 보고서를 써 두므로 -Resume 으로 이어서 할 수 있습니다." -ForegroundColor Yellow
     } else {
         Write-Host "    중단은 Ctrl+C." -ForegroundColor Yellow
     }
@@ -1292,10 +1301,23 @@ foreach ($it in $items) {
         Write-Progress -Activity "구동 점검" -Status ("{0} / {1}  {2}" -f $i, $items.Count, $it.Name) -PercentComplete (100 * $i / $items.Count)
     }
 
-    # 긴 구동 점검은 중간에 끊길 수 있다. 몇 건마다 지금까지의 결과를 써 둔다.
-    # 쓰는 비용은 0.2초 남짓인데, 항목 하나가 30초 넘게 걸리기도 해서 자주 쓰는 편이 남는다.
+    # 긴 구동 점검은 중간에 끊길 수 있다. 지금까지의 결과를 주기적으로 써 둔다.
     # (강제 종료되면 아래 finally 는 돌지 않는다. 실질적인 보호막은 이 주기 저장이다.)
-    if ($Launch -and ($i % 5 -eq 0)) { Save-Reports }
+    #
+    # CSV 와 HTML 을 나눠 쓴다. 예전에는 5건마다 둘 다 썼는데, 1,098행 기준 한 번에 0.25초
+    # (CSV 0.05 + HTML 0.2)라 거의 다 건너뛰는 증분 점검에서는 220번 x 0.25초 = 약 55초 —
+    # 65초짜리 실행의 대부분이 보고서 쓰기였다(2026-09-14 실측).
+    #  - CSV 는 -Resume 이 이어 쓸 근거라 5건마다 그대로 쓴다. [4] 이어하기는 -Adaptive 없이
+    #    -Resume 만 쓰므로, 저장 안 된 "건너뛴 항목"은 이어하기에서 실제로 띄워진다 — 잃으면 비싸다.
+    #  - HTML 은 사람이 보는 것이라, 실제로 띄운 항목이 5건 쌓였거나 하나라도 띄운 채 60초가 지났을 때만.
+    #    끝에서는 finally 가 한 번 쓴다.
+    if ($Launch) {
+        if ($elapsed -gt 0) { $script:LaunchedSinceHtml++ }
+        if ($i % 5 -eq 0) {
+            $html = ($script:LaunchedSinceHtml -ge 5) -or ($script:LaunchedSinceHtml -gt 0 -and $script:HtmlAt.Elapsed.TotalSeconds -ge 60)
+            Save-Reports -CsvOnly:(-not $html)
+        }
+    }
 }
 } finally {
     # Ctrl+C 로 빠져나가도 여기까지는 남긴다
