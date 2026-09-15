@@ -535,7 +535,39 @@ function Get-Fingerprint([string]$Raw, [string]$EmuName, [string]$ExePath, [stri
 }
 
 # ESC 로 끝난 적이 있는지 에뮬레이터별로 기억한다. -Fast 에서 사다리를 건너뛸지 정하는 근거다.
+#
+# 실행 사이에도 유지한다 — logs\esc-memory.json (logs\ 는 gitignore 라 장비마다 따로 쌓인다).
+# 예전에는 실행마다 비어서, IDZ 한 건만 다시 띄우는 평소 증분 점검이 매번 ESC 사다리
+# (6회 x 2.85초 + 창 닫기 2초 + 강제 종료)를 끝까지 올라 종료에만 21초를 썼다(ISSUES 97).
+#   Fails   연속으로 ESC 로 못 끝낸 횟수. 2 이상이면 -Fast 에서 사다리를 건너뛴다
+#   Exe     실행파일 크기:수정시각 — 에뮬레이터를 갈면 기억을 버린다(새 판은 ESC 를 받을 수 있다)
+#   TriedAt 마지막으로 실제로 ESC 를 보내 본 시각 — 7일이 지나면 한 번 다시 시도한다
+# 잊게 하려면 이 파일을 지운다.
 $script:EscFail = @{}
+$script:EscMemPath = $null
+$EscReprobeDays = 7
+function Get-ExeStamp([string]$Path) {
+    try { $fi = Get-Item -LiteralPath $Path -ErrorAction Stop; return "$($fi.Length):$($fi.LastWriteTimeUtc.Ticks)" } catch { return '' }
+}
+function Import-EscMemory([string]$Path) {
+    $script:EscMemPath = $Path
+    if (-not (Test-Path -LiteralPath $Path)) { return }
+    try {
+        $o = [IO.File]::ReadAllText($Path) | ConvertFrom-Json
+        foreach ($p in $o.PSObject.Properties) {
+            $script:EscFail[$p.Name] = @{ Fails = [int]$p.Value.Fails; Exe = [string]$p.Value.Exe; TriedAt = [string]$p.Value.TriedAt }
+        }
+    } catch {
+        Write-Host "  esc-memory.json 을 읽지 못해 비우고 시작합니다: $($_.Exception.Message)" -ForegroundColor DarkYellow
+        $script:EscFail = @{}
+    }
+}
+function Save-EscMemory {
+    if (-not $script:EscMemPath) { return }
+    $o = [ordered]@{}
+    foreach ($k in ($script:EscFail.Keys | Sort-Object)) { $o[$k] = [pscustomobject]$script:EscFail[$k] }
+    try { [IO.File]::WriteAllText($script:EscMemPath, ([pscustomobject]$o | ConvertTo-Json -Depth 3), (New-Object Text.UTF8Encoding $false)) } catch {}
+}
 
 # taskkill 은 못 죽이는 프로세스를 만나면 stderr 에 쓴다. PowerShell 5.1 은 네이티브 명령의
 # stderr 를 ErrorRecord 로 바꾸고, $ErrorActionPreference='Stop' 아래에서는 그것이 종료성 오류가 된다.
@@ -561,7 +593,19 @@ function Stop-Emulator($Proc, [string]$ExePath, $Preexisting, $Kids, [string]$Em
 
     # 이 에뮬레이터가 두 번 연속 ESC 로 안 끝났으면 사다리를 건너뛴다.
     #   Protected(=MAME 계열)는 예외다 — 강제 종료하면 cfg\default.cfg 가 0바이트로 잘린다(CLAUDE.md 5.5절).
-    $skipEsc = $FastMode -and (-not $Protected) -and ([int]$script:EscFail[$EmuName] -ge 2)
+    $mem = $null
+    if (-not $Protected -and $EmuName) {
+        $stamp = Get-ExeStamp $ExePath
+        $mem = $script:EscFail[$EmuName]
+        if (-not $mem -or $mem.Exe -ne $stamp) { $mem = @{ Fails = 0; Exe = $stamp; TriedAt = '' }; $script:EscFail[$EmuName] = $mem }
+    }
+    $skipEsc = $FastMode -and $mem -and ($mem.Fails -ge 2)
+    if ($skipEsc) {
+        # 오래 건너뛰었으면 한 번은 다시 보낸다 — 입력 설정이나 창 처리가 바뀌어 이제 받을 수도 있다.
+        $last = [datetime]::MinValue
+        if ($mem.TriedAt) { [void][datetime]::TryParse($mem.TriedAt, [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::RoundtripKind, [ref]$last) }
+        if (((Get-Date) - $last).TotalDays -ge $EscReprobeDays) { $skipEsc = $false }
+    }
     $tries   = 6
     $escOut  = $false
 
@@ -602,9 +646,11 @@ function Stop-Emulator($Proc, [string]$ExePath, $Preexisting, $Kids, [string]$Em
         Start-Sleep -Milliseconds 500
     }
     # ESC 성적을 기억한다. MAME 계열은 어차피 건너뛰지 않으므로 세지 않는다.
-    if (-not $Protected -and $EmuName) {
-        if ($escOut) { $script:EscFail[$EmuName] = 0 }
-        elseif (-not $skipEsc) { $script:EscFail[$EmuName] = 1 + [int]$script:EscFail[$EmuName] }
+    if ($mem -and -not $skipEsc) {
+        # 실제로 ESC 를 보내 본 경우에만 성적을 고친다(건너뛴 판은 새 정보가 없다).
+        if ($escOut) { $mem.Fails = 0 } else { $mem.Fails = 1 + $mem.Fails }
+        $mem.TriedAt = (Get-Date).ToString('o')
+        Save-EscMemory
     }
     # 런처형(cmd /c, TeknoParrotUi)은 자식 프로세스를 남긴다. 이번에 새로 생긴 것만 정리한다.
     $base = [IO.Path]::GetFileNameWithoutExtension($ExePath)
@@ -838,6 +884,7 @@ $logDir = Join-Path $Root 'logs'
 if (-not (Test-Path -LiteralPath $logDir)) { [void](New-Item -ItemType Directory -Path $logDir) }
 # -str 이 남기는 종료 스냅샷을 받을 곳. 저장소 밖(TEMP)이라 쌓여도 아무것도 더럽히지 않는다.
 $SnapDir = Join-Path $env:TEMP 'attractmode-test-snap'
+Import-EscMemory (Join-Path $logDir 'esc-memory.json')
 # 필터가 걸린 실행은 보고서에 romlist 의 "일부"만 담긴다. 그런 보고서가 -Adaptive 의 기준으로
 # 잡히면 다음 증분 점검이 나머지를 전부 다시 띄운다(65초 -> 2시간). 그래서 이름부터 갈라 둔다.
 # test-roms.cmd 의 [2] 표본 · [5] 목록 지정 · [6] 이름으로 · [7] 실패만이 전부 여기 해당한다.
