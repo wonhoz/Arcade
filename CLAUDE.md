@@ -1233,6 +1233,10 @@ powershell -ExecutionPolicy Bypass -File tools\reset-runtime.ps1 -All -Force
   `audit.ps1 -Section junk` 도 같은 것을 잡는다.
 - 평소 정리는 `-Config -Clean`이면 충분하다. `-Saves`는 게임 진행이 날아가니 의식적으로 붙인다.
 - `-Force`를 빼면 실행 전에 한 번 물어본다.
+- **"N건 되돌림" 은 다시 세어 본 결과다.** 되돌린 뒤 `git status` 로 남은 것을 다시 세고, 남으면 몇 초 간격으로 최대 네 번 더 시도한다.
+  끝내 남으면 빨간 줄로 건수·git 메시지·남은 파일을 보여 주고 **종료 코드 1** 로 끝난다.
+  예전에는 다른 git 프로세스가 `.git\index.lock` 을 쥔 순간 `git checkout` 이 한 건도 못 되돌려도 성공이라고 찍었다
+  — 2026-09-15 전수 점검 뒤 276건이 그대로 남았다(`docs/ISSUES.md` 98번). 떠 있는 git 이 없는데 계속 잠금 오류가 나면 `.git\index.lock` 이 남은 것이다.
 - 되돌리기는 `git checkout --`이므로 **커밋되지 않은 의도적 수정도 함께 날아간다.**
   런타임 파일을 일부러 고쳤다면 먼저 커밋할 것.
 ### 7.4 실행 점검 — 레이아웃 수정 뒤 캐비닛 없이 로그 보기
