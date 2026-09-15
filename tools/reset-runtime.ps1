@@ -154,13 +154,63 @@ function Get-Changed([string[]]$Paths) {
     #   error: pathspec '... -> ...' did not match any file(s) known to git
     # 로 git checkout 이 통째로 실패하고, 같이 넘긴 나머지 파일도 하나도 안 되돌아간다.
     # (2026-09-06 sfex.cfg -> sfexu.cfg 개명 때 실제로 그랬다.)
-    $out = & git status --porcelain -- $Paths 2>$null
+    #
+    # --no-optional-locks: status 는 기본으로 index 를 갱신하며 index.lock 을 잡는다. 읽기만 하는
+    # 이 스크립트가 잠금을 잡을 이유가 없고, 잡으면 바로 뒤의 checkout 과 부딪칠 수 있다.
+    # quotepath=false: 비 ASCII 이름이 "\355\234..." 로 나오면 pathspec 이 깨진다.
+    $out = & git --no-optional-locks -c core.quotepath=false status --porcelain -- $Paths 2>$null
     if (-not $out) { return @() }
     @($out | Where-Object { $_ -notmatch '^\?\?' } | ForEach-Object {
         $p = $_.Substring(3)
         if ($p -match '^(.*?)\s->\s(.*)$') { $p = $Matches[2] }
         $p.Trim('"')
     })
+}
+
+function Restore-Tracked([string[]]$Files, [string]$Label) {
+    # 추적 파일을 커밋 상태로 되돌린다. 되돌렸는지는 git 의 종료 코드가 아니라 **다시 세어서** 판단한다.
+    #
+    # 예전에는 `& git checkout -- $files` 한 줄 뒤에 무조건 "N건 되돌림" 을 찍었다. 다른 git 프로세스
+    # (편집기·세션 도구가 도는 git status 등)가 그 순간 .git/index.lock 을 쥐고 있으면 checkout 은
+    #   fatal: Unable to create 'D:/AttractMode/.git/index.lock': File exists.
+    # 로 **한 건도 되돌리지 않는데** 성공이라고 찍혔다. 2026-09-15 전수 점검 뒤 276건이 그대로 남았다(ISSUES 98).
+    # 그래서 (1) 남은 것만 골라 몇 번 다시 시도하고 (2) 끝내 남으면 건수와 git 의 메시지를 그대로 보여 주고
+    # (3) 스크립트 종료 코드를 1 로 만든다.
+    #
+    # 경로는 명령행이 아니라 NUL 로 구분한 파일로 넘긴다(--pathspec-from-file). 수백 건이어도 길이 제한이 없고,
+    # 공백·괄호·대괄호가 든 이름(Project64 의 "[!]" 치트 파일 등)을 --literal-pathspecs 로 글자 그대로 맞춘다.
+    $want = @($Files)
+    $delays = @(0, 1, 2, 4, 8)
+    $lastErr = ''
+    foreach ($d in $delays) {
+        if ($d) { Start-Sleep -Seconds $d }
+        $left = @(Get-Changed $want)
+        if ($left.Count -eq 0) { break }
+        $tmp = [IO.Path]::GetTempFileName()
+        try {
+            [IO.File]::WriteAllText($tmp, (($left -join "`0") + "`0"), (New-Object Text.UTF8Encoding $false))
+            $eap = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+            try {
+                # PS 5.1 은 stderr 한 줄마다 ErrorRecord 로 감싸고, 빈 줄은 "System.Management.Automation.RemoteException" 으로 찍힌다.
+                $msg = @(& git --literal-pathspecs checkout "--pathspec-from-file=$tmp" --pathspec-file-nul 2>&1 |
+                    ForEach-Object { "$_".Trim() } | Where-Object { $_ -and $_ -ne 'System.Management.Automation.RemoteException' })
+                if ($LASTEXITCODE -ne 0) { $lastErr = ($msg | Select-Object -First 2) -join ' / ' }
+            } finally { $ErrorActionPreference = $eap }
+        } finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }
+    }
+    $left = @(Get-Changed $want)
+    $done = $want.Count - $left.Count
+    if ($left.Count -eq 0) {
+        Write-Host ("  {0} {1}건 되돌림" -f $Label, $done) -ForegroundColor Green
+        return $true
+    }
+    Write-Host ("  {0} {1}건 중 {2}건을 되돌리지 못했습니다" -f $Label, $want.Count, $left.Count) -ForegroundColor Red
+    if ($lastErr) { Write-Host ("    git: {0}" -f $lastErr) -ForegroundColor Red }
+    if ($lastErr -match 'index\.lock') {
+        Write-Host "    다른 git 프로세스가 끝난 뒤 다시 실행하세요. 떠 있는 git 이 없는데도 계속되면 .git\index.lock 이 남은 것이니 지웁니다." -ForegroundColor Yellow
+    }
+    $left | Select-Object -First 5 | ForEach-Object { Write-Host ("    $_") -ForegroundColor DarkRed }
+    return $false
 }
 
 function Get-NewConfig([string[]]$Paths) {
@@ -271,13 +321,12 @@ if (-not $Force) {
     if ($ans -ne 'y' -and $ans -ne 'Y') { Write-Host "취소했습니다."; exit 0 }
 }
 
+$restoreFailed = $false
 if ($Config -and $cfgChanged.Count) {
-    & git checkout -- $cfgChanged
-    Write-Host ("  설정 {0}건 되돌림" -f $cfgChanged.Count) -ForegroundColor Green
+    if (-not (Restore-Tracked $cfgChanged '설정')) { $restoreFailed = $true }
 }
 if ($Saves -and $savChanged.Count) {
-    & git checkout -- $savChanged
-    Write-Host ("  세이브 {0}건 되돌림" -f $savChanged.Count) -ForegroundColor Green
+    if (-not (Restore-Tracked $savChanged '세이브')) { $restoreFailed = $true }
 }
 if ($Clean -and $cfgNew.Count) {
     foreach ($f in $cfgNew) {
@@ -293,7 +342,7 @@ if ($Clean -and $junkFound.Count) {
 }
 
 Write-Host ""
-$left = & git status --porcelain 2>$null | Where-Object { $_ -notmatch '^\?\?' }
+$left = & git --no-optional-locks status --porcelain 2>$null | Where-Object { $_ -notmatch '^\?\?' }
 if ($left) {
     Write-Host "아직 남은 변경 (런타임 대상이 아님 - 직접 확인하세요):" -ForegroundColor Yellow
     $left | ForEach-Object { Write-Host ("  $_") -ForegroundColor DarkYellow }
@@ -301,4 +350,6 @@ if ($left) {
     Write-Host "추적 파일에 남은 변경 없음" -ForegroundColor Green
 }
 Write-Host ""
+# 되돌리지 못한 것이 있으면 실패로 끝낸다 — 호출한 쪽(사람·스크립트)이 성공으로 오인하지 않게.
+if ($restoreFailed) { exit 1 }
 exit 0
