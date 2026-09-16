@@ -130,8 +130,9 @@ $BOM = [char]0xFEFF
 #         NOWIN 살아 있으나 창이 없다. 런처가 다른 프로세스를 띄웠을 수 있어 경고에 그친다.
 #         DIALOG 살아 있지만 떠 있는 것이 오류 대화상자다. 게임은 시작되지 않았다.
 #               "살아 있으면 PASS" 로만 보면 이것을 정상으로 세게 된다(실제로 그랬다 — ISSUES 46번).
+#         NOINPUT 이 에뮬레이터가 요구하는 입력장치(마우스·키보드)가 연결돼 있지 않아 띄우지 않았다.
 $FailStatus = @('NOEMU', 'NOEXE', 'NOROM', 'EXIT0', 'CRASH', 'LAUNCHERR', 'DIALOG')
-$WarnStatus = @('NOWIN')
+$WarnStatus = @('NOWIN', 'NOINPUT')
 # 실패도 경고도 아닌 상태. -Adaptive 로 건너뛴 항목은 직전 상태를 그대로 물려받으므로
 # 여기에 따로 값을 두지 않는다 — 다시 띄우지 않았다는 사실은 Skipped 열에만 남는다.
 $SkipStatus = @('NOCHK')
@@ -772,7 +773,7 @@ code{background:var(--skipbg);border-radius:5px;padding:1px 5px;font-size:12px}
 </div>
 </div><script>
 const ROWS = __ROWS__, META = __META__;
-const KIND = {OK:'ok',PASS:'ok',NOCHK:'skip',SKIP:'skip',NOWIN:'warn'};
+const KIND = {OK:'ok',PASS:'ok',NOCHK:'skip',SKIP:'skip',NOWIN:'warn',NOINPUT:'warn'};
 const kind = s => KIND[s] || 'fail';
 const ORDER = {fail:0,warn:1,skip:2,ok:3};
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -956,6 +957,69 @@ $baseMap = @{}
 
 # 보고서 두 벌을 지금 상태로 써 낸다. 전수 구동 점검은 몇 시간짜리라
 # 중간에 끊겨도(Ctrl+C, 정전) 여기까지의 결과는 남아 있어야 한다.
+# 입력장치가 없으면 게임이 뜨지 않는 에뮬레이터. 키는 emulators\ 바로 아래 폴더 이름.
+#
+#   Demul    padDemul 이 시작할 때 조건 없이 마우스를 연다. 없으면 게임마다
+#            "Error! (HRESULT = 80040154) IDirectInput CreateDevice mouse FAILED" 상자를 띄운다 — 60여 건이 통째로 실패한다(ISSUES 76).
+#   PSXMAME  2026-09-13 실측 — 마우스·키보드 연결 0 일 때 cfg 가 있는 게임이 코드 100 으로 끝났다(rvschool).
+#            마우스를 꽂자 같은 항목이 PASS. mame.exe 를 도구 없이 직접 띄워도 같았다.
+#
+# 장치가 없는데 띄우면 "저장소가 깨진 것처럼 보이는 실패"가 무더기로 남는다. 그래서 띄우지 않고 NOINPUT 으로 적는다.
+# NOINPUT 은 실패가 아니라 경고다. 통과로도 세지 않으므로 다음 -Adaptive 가 그 항목을 다시 검사한다.
+$NeedsInput = @{
+    'Demul'   = @('Mouse')
+    'PSXMAME' = @('Mouse')
+}
+# 장치 수는 Raw Input 으로 센다. GetRawInputDeviceList 는 이 PC 에서 15ms 다 —
+# Get-PnpDevice 는 두 클래스에 7.2초, Win32_PnPEntity 는 3.2초로 점검 자체보다 비쌌다(2026-09-16 실측).
+# 세 방법이 같은 값(마우스 1 · 키보드 0)을 내는 것을 확인하고 골랐다.
+if (-not ('AmInputDev' -as [type])) {
+    Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+public class AmInputDev {
+    [StructLayout(LayoutKind.Sequential)] public struct RAWINPUTDEVICELIST { public IntPtr hDevice; public uint dwType; }
+    [DllImport("user32.dll")] static extern uint GetRawInputDeviceList([In, Out] RAWINPUTDEVICELIST[] list, ref uint num, uint size);
+    // dwType: 0 = RIM_TYPEMOUSE, 1 = RIM_TYPEKEYBOARD
+    public static int[] Count() {
+        uint n = 0; uint sz = (uint)Marshal.SizeOf(typeof(RAWINPUTDEVICELIST));
+        GetRawInputDeviceList(null, ref n, sz);
+        var a = new RAWINPUTDEVICELIST[n];
+        if (GetRawInputDeviceList(a, ref n, sz) == uint.MaxValue) { return new int[] { -1, -1 }; }
+        int m = 0, k = 0;
+        foreach (var d in a) { if (d.dwType == 0) { m++; } else if (d.dwType == 1) { k++; } }
+        return new int[] { m, k };
+    }
+}
+'@
+}
+$script:InputSeen = @{}     # 클래스 -> 연결 개수
+$script:InputAt = $null
+function Get-InputCount([string]$Class) {
+    # 30초 캐시. 장치가 없다고 판정한 뒤 사용자가 꽂으면 다음 갱신에서 알아본다.
+    if ($script:InputAt -and ((Get-Date) - $script:InputAt).TotalSeconds -lt 30) {
+        if ($script:InputSeen.ContainsKey($Class)) { return $script:InputSeen[$Class] }
+    }
+    $m = -1; $k = -1     # -1 = 셀 수 없음. 그런 환경에서는 건너뛰지 않는다(막연히 막지 않기 위해)
+    try { $c = [AmInputDev]::Count(); $m = $c[0]; $k = $c[1] } catch {}
+    if ($m -lt 0) {
+        # Raw Input 이 안 되면 WMI 로 물러선다(약 0.1초). Get-PnpDevice 는 너무 느려 쓰지 않는다.
+        try { $m = @(Get-CimInstance Win32_PointingDevice -ErrorAction Stop | Where-Object { $_.Status -eq 'OK' }).Count } catch {}
+        try { $k = @(Get-CimInstance Win32_Keyboard -ErrorAction Stop | Where-Object { $_.Status -eq 'OK' }).Count } catch {}
+    }
+    $script:InputSeen['Mouse'] = $m; $script:InputSeen['Keyboard'] = $k
+    $script:InputAt = Get-Date
+    return $script:InputSeen[$Class]
+}
+function Get-MissingInput([string]$ExeDir) {
+    if (-not $ExeDir) { return @() }
+    $emuRoot = (Join-Path $Root 'emulators').TrimEnd('\') + '\'
+    if (-not $ExeDir.StartsWith($emuRoot, [StringComparison]::OrdinalIgnoreCase)) { return @() }
+    $key = ($ExeDir.Substring($emuRoot.Length) -split '\\')[0]
+    if (-not $key -or -not $NeedsInput.ContainsKey($key)) { return @() }
+    @($NeedsInput[$key] | Where-Object { (Get-InputCount $_) -eq 0 })
+}
+
 $script:CsvCount = -1; $script:HtmlCount = -1
 $script:HtmlAt = [Diagnostics.Stopwatch]::StartNew()
 $script:LaunchedSinceHtml = 0
@@ -1111,6 +1175,22 @@ if ($items.Count -eq 0) {
     exit 0
 }
 
+if ($Launch) {
+    # 입력장치를 먼저 본다. 없으면 그 에뮬레이터 항목은 띄우지 않고 NOINPUT 으로 적는다 —
+    # 장치가 잠든 채 돌린 점검은 "저장소가 깨진 것처럼 보이는 실패"를 무더기로 남긴다(ISSUES 76 · 99).
+    $devLines = @()
+    foreach ($c in @('Mouse', 'Keyboard')) {
+        $n = Get-InputCount $c
+        $kor = if ($c -eq 'Mouse') { '마우스' } else { '키보드' }
+        $devLines += if ($n -lt 0) { "$kor 조회 불가" } else { "$kor $n" }
+    }
+    Write-Host ("입력장치 연결: {0}" -f ($devLines -join ' · ')) -ForegroundColor DarkGray
+    $blocked = @($NeedsInput.Keys | Where-Object { @($NeedsInput[$_] | Where-Object { (Get-InputCount $_) -eq 0 }).Count -gt 0 } | Sort-Object)
+    if ($blocked.Count) {
+        Write-Host ("  [!] {0} 계열은 입력장치가 없어 건너뜁니다 — 꽂고 다시 돌리면 그 항목만 다시 검사합니다." -f ($blocked -join ' · ')) -ForegroundColor Yellow
+    }
+}
+
 if ($Launch -and -not $Force) {
     # 항목당 = 생존 판정 시간 + 종료 처리. 종료는 ESC 로 바로 끝나면 2~3초,
     # ESC 를 안 받는 에뮬레이터(PSXMAME)는 재전송·창닫기를 거쳐 20초를 넘기기도 한다.
@@ -1187,6 +1267,17 @@ foreach ($it in $items) {
                     }
                 }
             }
+        }
+    }
+
+    # --- 입력장치 확인. 없으면 띄우지 않는다(위 $NeedsInput).
+    if ($Launch -and -not $skipped -and ($status -eq 'OK' -or $status -eq 'NOCHK') -and $exe) {
+        $missing = @(Get-MissingInput $exe.Dir)
+        if ($missing.Count) {
+            $kor = @{ 'Mouse' = '마우스'; 'Keyboard' = '키보드' }
+            $names = ($missing | ForEach-Object { if ($kor.ContainsKey($_)) { $kor[$_] } else { $_ } }) -join '·'
+            $status = 'NOINPUT'
+            $detail = "{0}가 연결돼 있지 않아 띄우지 않음 — 꽂고 다시 점검한다(ISSUES 76·99)" -f $names
         }
     }
 
