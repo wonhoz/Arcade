@@ -70,10 +70,19 @@ git branch Compact archive/Compact           # 되살리기
   > **성공한 것처럼 보이지만 `develop` 만 앞서 있는 상태**가 된다 — 끝나고 `behind` 를 반드시 확인할 것.
   >
   > ```bash
+  > git rev-list --count origin/main..origin/develop     # ★ 0 이어야 한다 — main 이 안 움직였는지부터 본다
   > for b in bartop desktop desktop-ASUS-TUF desktop-MSI-Sword desktop-MSI-Sword-DriveWheel develop; do
   >   echo "$b behind=$(git rev-list --count origin/$b..origin/main)"     # 전부 0 이어야 한다
   > done
   > ```
+  >
+  > ⚠️ **`behind` 만 보면 이 실패를 못 잡는다.** `main` 병합이 죽으면 `main` 이 제자리에 있고,
+  > 장비 브랜치는 그 `main` 을 이미 담고 있으므로 **여섯 줄 전부 `behind=0`** 이 나온다.
+  > 2026-09-16 에 `.git/index.lock` 때문에 `git checkout main` 이 `fatal: stash failed` 로 죽었을 때 실제로 그랬다 —
+  > `behind=0` 여섯 줄을 받았지만 `develop` 만 1커밋 앞서 있었다. **그래서 `origin/main..origin/develop` 을 먼저 센다.**
+  >
+  > 잠금은 다른 git 프로세스(편집기·세션 도구)가 쥔 것이다. 남아 있기만 한 것이면 `.git/index.lock` 을 지우고 다시 돌린다
+  > (`docs/ISSUES.md` 98번 — 같은 잠금이 `reset-runtime` 의 되돌리기도 조용히 실패시켰다).
   >
   > AM 은 승격해서 띄웠으면(4.13절 작업 스케줄러) **비승격 셸의 `taskkill` 로는 못 죽인다** — 액세스 거부다.
   > 캐비닛에서 `Escape+LShift` 로 끝내거나, 관리자 PowerShell 에서 끝낸다.
